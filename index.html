@@ -86,11 +86,11 @@
     <div class="header-row">
         <div class="metric-card">
             <div class="metric-label">Total Wealth</div>
-            <div class="metric-value">$150,000.00</div>
+            <div class="metric-value">$0.00</div>
         </div>
         <div class="metric-card">
             <div class="metric-label">Cash Reserve</div>
-            <div class="metric-value">$12,000.00</div>
+            <div class="metric-value">$0.00</div>
         </div>
         <div class="metric-card">
             <div class="metric-label">Est. Income</div>
@@ -98,7 +98,7 @@
         </div>
         <div class="metric-card">
             <div class="metric-label">Last Updated</div>
-            <div class="metric-value" style="font-size: 1rem;">2026-01-22 20:10 UTC</div>
+            <div class="metric-value" style="font-size: 1rem;">2026-01-22 21:19 UTC</div>
         </div>
     </div>
 
@@ -115,56 +115,6 @@
             <table>
                 <thead><tr><th>ASSET</th><th>PRICE</th><th>VERDICT</th></tr></thead>
                 <tbody>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">RIO</span></td>
-                        <td>$64.50</td>
-                        <td>
-                            <span class="status-pill status-green">
-                                Fair Value
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">BATS</span></td>
-                        <td>$32.10</td>
-                        <td>
-                            <span class="status-pill status-green">
-                                Fair Value
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">TSLA</span></td>
-                        <td>$215.00</td>
-                        <td>
-                            <span class="status-pill status-red">
-                                Yield Erosion
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">O</span></td>
-                        <td>$52.00</td>
-                        <td>
-                            <span class="status-pill status-green">
-                                Fair Value
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">NUE</span></td>
-                        <td>$175.00</td>
-                        <td>
-                            <span class="status-pill status-red">
-                                Yield Erosion
-                            </span>
-                        </td>
-                    </tr>
                     
                 </tbody>
             </table>
@@ -184,14 +134,14 @@
 </div>
 
 <script>
-    const treeData = [{"x": "RIO", "v": 9675.0, "p": 9.63}, {"x": "BATS", "v": 9630.0, "p": 4.56}, {"x": "TSLA", "v": 10750.0, "p": -10.42}, {"x": "O", "v": 10400.0, "p": 1.46}, {"x": "NUE", "v": 7000.0, "p": -6.04}];
+    const treeData = [];
     const ctx = document.getElementById('empireHeatmap').getContext('2d');
 
     function getColor(context) {
         if(context.type !== 'data') return 'transparent';
         const value = context.raw.p;
         // 0 = Neutral (Grey)
-        if (Math.abs(value) < 0.01) return 'rgba(120, 144, 156, 0.5)';
+        if (Math.abs(value) < 0.01) return 'rgba(120, 144, 156, 0.4)';
         // Green for Gain, Red for Loss
         return value >= 0 ? 'rgba(0, 230, 118, 0.6)' : 'rgba(255, 23, 68, 0.6)';
     }
@@ -213,7 +163,10 @@
                     position: 'center',
                     color: '#fff',
                     font: { family: 'JetBrains Mono', weight: 'bold', size: 14 },
-                    formatter: (ctx) => [ctx.raw.x, ctx.raw.p + '%']
+                    formatter: (ctx) => {
+                        if (!ctx.raw) return "N/A";
+                        return [ctx.raw.x, (ctx.raw.p || 0) + '%'];
+                    }
                 }
             }]
         },
