@@ -171,11 +171,11 @@
         <div class="header-row">
             <div class="metric-card">
                 <div class="metric-label">Total Wealth</div>
-                <div class="metric-value">£176,313.90</div>
+                <div class="metric-value">£176,309.56</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">Cash Reserve</div>
-                <div class="metric-value">£14,903.87</div>
+                <div class="metric-value">£14,904.68</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">Est. Income</div>
@@ -183,7 +183,7 @@
             </div>
             <div class="metric-card">
                 <div class="metric-label">Last Updated</div>
-                <div class="metric-value" style="font-size: 1rem;">2026-01-22 22:42 UTC</div>
+                <div class="metric-value" style="font-size: 1rem;">2026-01-22 23:19 UTC</div>
             </div>
         </div>
 
@@ -375,17 +375,17 @@
 
     <script>
         // DYNAMIC DATA
-        const treeData = [{"x": "BMY", "v": 10427.2, "p": 5.72}, {"x": "RIO", "v": 663969.59, "p": 0.3}, {"x": "LGEN", "v": 258100.0, "p": -0.01}, {"x": "QELL", "v": 0.14, "p": -99.94}, {"x": "BATS", "v": 431300.0, "p": 0.03}, {"x": "VSNTV", "v": 3479.85, "p": -4.97}, {"x": "NUE", "v": 17863.91, "p": 21.56}, {"x": "SOLV", "v": 8026.0, "p": -0.43}, {"x": "RE", "v": 21523.25, "p": -4.68}, {"x": "QCOM", "v": 14202.0, "p": -6.69}, {"x": "NFLX", "v": 15872.6, "p": -7.94}, {"x": "CRM", "v": 17558.31, "p": -6.51}, {"x": "EOG", "v": 17834.37, "p": -5.62}, {"x": "CTVA", "v": 12523.0, "p": 1.93}, {"x": "CNNE", "v": 19141.83, "p": -0.72}];
+        const treeData = [{"x": "BMY", "v": 10427.2, "p": 5.71}, {"x": "RIO", "v": 663969.59, "p": 0.3}, {"x": "LGEN", "v": 258100.0, "p": -0.01}, {"x": "QELL", "v": 0.14, "p": -99.94}, {"x": "BATS", "v": 431300.0, "p": 0.03}, {"x": "VSNTV", "v": 3479.85, "p": -4.98}, {"x": "NUE", "v": 17863.91, "p": 21.55}, {"x": "SOLV", "v": 8026.0, "p": -0.44}, {"x": "RE", "v": 21523.25, "p": -4.68}, {"x": "QCOM", "v": 14202.0, "p": -6.7}, {"x": "NFLX", "v": 15872.6, "p": -7.95}, {"x": "CRM", "v": 17558.31, "p": -6.51}, {"x": "EOG", "v": 17834.37, "p": -5.62}, {"x": "CTVA", "v": 12523.0, "p": 1.93}, {"x": "CNNE", "v": 19141.83, "p": -0.72}];
 
         const ctx = document.getElementById('empireHeatmap').getContext('2d');
 
         function getColor(context) {
             if (context.type !== 'data') return 'transparent';
-            const value = context.raw.p;
-            // 0 = Neutral (Grey)
-            if (Math.abs(value) < 0.01) return 'rgba(120, 144, 156, 0.4)';
-            // Green for Gain, Red for Loss
-            return value > 0 ? 'rgba(0, 230, 118, 0.6)' : 'rgba(255, 23, 68, 0.6)';
+            const p = context.raw.p; // Performance %
+
+            if (p > 0.01) return 'rgba(0, 230, 118, 0.6)';  // Green (Positive)
+            if (p < -0.01) return 'rgba(255, 23, 68, 0.6)'; // Red (Negative)
+            return 'rgba(120, 144, 156, 0.4)';              // Grey (Neutral/Zero)
         }
 
         new Chart(ctx, {
@@ -406,15 +406,13 @@
                         color: '#fff',
                         font: { family: 'JetBrains Mono', weight: 'bold', size: 14 },
                         formatter: (ctx) => {
-                            if (!ctx.raw) return "N/A";
-                            // Line 1: Ticker
-                            // Line 2: Value (GBP)
-                            // Line 3: Percentage (%)
-                            return [
-                                ctx.raw.x,
-                                '£' + ctx.raw.v.toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2}), 
-                                (ctx.raw.p || 0) + '%'
-                            ];
+                            if (!ctx.raw) return "";
+                            // Line 1: Ticker (e.g. RIO)
+                            // Line 2: Value formatted as £1,234.56
+                            // Line 3: Percent formatted as 5.4%
+                            const val = "£" + ctx.raw.v.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                            const pct = (ctx.raw.p || 0).toFixed(2) + '%'; 
+                            return [ ctx.raw.x, val, pct ];
                         }
                     }
                 }]
@@ -426,8 +424,8 @@
                     tooltip: {
                         callbacks: {
                             title: (items) => items[0].raw.x,
-                            // Tooltip Value in GBP
-                            label: (item) => [`£${item.raw.v.toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, `${item.raw.p}% Return`]
+                            // Tooltip Value in £
+                            label: (item) => [`£${item.raw.v.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, `${item.raw.p}% Return`]
                         }
                     }
                 }
