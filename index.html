@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SOVEREIGN SENTINEL | Portfolio Oracle</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --bg-color: #05070a;
@@ -30,12 +33,14 @@
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
         }
 
-        h1, h2, h3 {
+        h1,
+        h2,
+        h3 {
             font-family: 'Outfit', sans-serif;
             letter-spacing: -0.02em;
         }
@@ -82,9 +87,17 @@
         }
 
         @keyframes pulse {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
         }
 
         .grid {
@@ -157,12 +170,28 @@
             text-transform: uppercase;
         }
 
-        .status-pass { background: rgba(16, 185, 129, 0.1); color: var(--accent-success); }
-        .status-fail { background: rgba(239, 68, 68, 0.1); color: var(--accent-danger); }
-        .status-wait { background: rgba(245, 158, 11, 0.1); color: var(--accent-warning); }
+        .status-pass {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-success);
+        }
 
-        .price { font-weight: 600; }
-        .yield { color: var(--text-muted); }
+        .status-fail {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-danger);
+        }
+
+        .status-wait {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent-warning);
+        }
+
+        .price {
+            font-weight: 600;
+        }
+
+        .yield {
+            color: var(--text-muted);
+        }
 
         .alerts-section {
             margin-top: 3rem;
@@ -177,152 +206,259 @@
             animation: slideIn 0.5s ease;
         }
 
-        .alert-violation { border-color: var(--accent-danger); }
-        .alert-opportunity { border-color: var(--accent-success); }
+        .alert-violation {
+            border-color: var(--accent-danger);
+        }
+
+        .alert-opportunity {
+            border-color: var(--accent-success);
+        }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         @media (max-width: 768px) {
-            .grid { grid-template-columns: 1fr; }
-            header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
             <div class="logo">SOVEREIGN SENTINEL</div>
             <div class="last-update">
                 <div class="status-dot"></div>
-                Updated: <span id="time-display">2026-01-22 13:29:29 UTC</span>
+                Updated: <span id="time-display">2026-01-22 15:00:29 UTC</span>
             </div>
-        </header>
-
-        <div class="grid">
-            <!-- Portfolio Section -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Internal Reality (Portfolio)</h2>
-                    <span class="status-pill status-pass">Live</span>
+            <div class="account-vitals"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                <div class="card" style="padding: 1rem; text-align: center;">
+                    <div style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Total Value
+                    </div>
+                    <div style="font-size: 1.8rem; font-weight: 700; font-family: 'Outfit';">$0.00</div>
                 </div>
-                <div id="portfolio-vitals">
+                <div class="card" style="padding: 1rem; text-align: center;">
+                    <div style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Cash Reserve
+                    </div>
+                    <div style="font-size: 1.8rem; font-weight: 700; font-family: 'Outfit';">$0.00</div>
+                </div>
+                <div class="card" style="padding: 1rem; text-align: center;">
+                    <div style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Unrealized P/L
+                    </div>
+                    <div
+                        style="font-size: 1.8rem; font-weight: 700; font-family: 'Outfit'; color: var(--accent-success)">
+                        $0.00</div>
+                </div>
+                <div class="card" style="padding: 1rem; text-align: center;">
+                    <div style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Realized
+                        (Profit)</div>
+                    <div
+                        style="font-size: 1.8rem; font-weight: 700; font-family: 'Outfit'; color: var(--accent-success)">
+                        $0.00</div>
+                </div>
+                <div class="card" style="padding: 1rem; text-align: center;">
+                    <div style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Projected
+                        Income (Yearly)</div>
+                    <div
+                        style="font-size: 1.8rem; font-weight: 700; font-family: 'Outfit'; color: var(--accent-success);">
+                        $7680824.10</div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <!-- Portfolio Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Internal Reality (Portfolio)</h2>
+                        <span class="status-pill status-pass">Live</span>
+                    </div>
+                    <div id="portfolio-vitals">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ticker</th>
+                                    <th>Price</th>
+                                    <th>Net Yield</th>
+                                    <th>Oracle</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">BMY_US_EQ</span></td>
+                                    <td class="price">$55.06</td>
+                                    <td class="yield">392.7%</td>
+                                    <td><span class="status-pill status-pass">Fair Value</span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">RIOl_EQ</span></td>
+                                    <td class="price">$6475.70</td>
+                                    <td class="yield">429.0%</td>
+                                    <td><span class="status-pill status-pass">Fair Value</span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">LGENl_EQ</span></td>
+                                    <td class="price">$259.10</td>
+                                    <td class="yield">823.0%</td>
+                                    <td><span class="status-pill status-pass">Fair Value</span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">QELL_US_EQ</span></td>
+                                    <td class="price">$0.00</td>
+                                    <td class="yield">0.0%</td>
+                                    <td><span class="status-pill status-fail">Yield Erosion</span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">BATSl_EQ</span></td>
+                                    <td class="price">$4302.70</td>
+                                    <td class="yield">566.0%</td>
+                                    <td><span class="status-pill status-pass">Fair Value</span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">VSNTV_US_EQ</span></td>
+                                    <td class="price">$32.55</td>
+                                    <td class="yield">0.0%</td>
+                                    <td><span class="status-pill status-fail">Yield Erosion</span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">NUE_US_EQ</span></td>
+                                    <td class="price">$180.60</td>
+                                    <td class="yield">105.4%</td>
+                                    <td><span class="status-pill status-pass">Fair Value</span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">SOLV_US_EQ</span></td>
+                                    <td class="price">$81.10</td>
+                                    <td class="yield">0.0%</td>
+                                    <td><span class="status-pill status-fail">Yield Erosion</span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">RE_US_EQ</span></td>
+                                    <td class="price">$320.88</td>
+                                    <td class="yield">0.0%</td>
+                                    <td><span class="status-pill status-fail">Yield Erosion</span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">QCOM_US_EQ</span></td>
+                                    <td class="price">$158.83</td>
+                                    <td class="yield">193.8%</td>
+                                    <td><span class="status-pill status-pass">Fair Value</span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">NFLX_US_EQ</span></td>
+                                    <td class="price">$84.42</td>
+                                    <td class="yield">0.0%</td>
+                                    <td><span class="status-pill status-fail">Yield Erosion</span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">CRM_US_EQ</span></td>
+                                    <td class="price">$222.74</td>
+                                    <td class="yield">63.7%</td>
+                                    <td><span class="status-pill status-pass">Fair Value</span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">EOG_US_EQ</span></td>
+                                    <td class="price">$106.56</td>
+                                    <td class="yield">321.3%</td>
+                                    <td><span class="status-pill status-pass">Fair Value</span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">CTVA_US_EQ</span></td>
+                                    <td class="price">$71.95</td>
+                                    <td class="yield">85.8%</td>
+                                    <td><span class="status-pill status-pass">Fair Value</span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td><span class="ticker-badge">CNNE_US_EQ</span></td>
+                                    <td class="price">$15.86</td>
+                                    <td class="yield">323.9%</td>
+                                    <td><span class="status-pill status-pass">Fair Value</span></td>
+                                </tr>
+                                
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Watchlist Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">External Truth (Watchlist)</h2>
+                    </div>
                     <table>
                         <thead>
                             <tr>
                                 <th>Ticker</th>
-                                <th>Price</th>
-                                <th>Net Yield</th>
-                                <th>Oracle</th>
+                                <th>Current</th>
+                                <th>Target</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             
                             <tr>
-                                <td><span class="ticker-badge">BMY_US_EQ</span></td>
-                                <td class="price">$54.50</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
+                                <td><span class="ticker-badge">AAPL</span></td>
+                                <td class="price">$249.92</td>
+                                <td class="yield">$180.00</td>
+                                <td><span class="status-pill status-wait">WAIT</span>
+                                </td>
                             </tr>
                             
                             <tr>
-                                <td><span class="ticker-badge">RIOl_EQ</span></td>
-                                <td class="price">$6545.70</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
+                                <td><span class="ticker-badge">MSFT</span></td>
+                                <td class="price">$446.46</td>
+                                <td class="yield">$350.00</td>
+                                <td><span class="status-pill status-wait">WAIT</span>
+                                </td>
                             </tr>
                             
                             <tr>
-                                <td><span class="ticker-badge">LGENl_EQ</span></td>
-                                <td class="price">$260.30</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
+                                <td><span class="ticker-badge">GOOGL</span></td>
+                                <td class="price">$331.93</td>
+                                <td class="yield">$130.00</td>
+                                <td><span class="status-pill status-wait">WAIT</span>
+                                </td>
                             </tr>
                             
                             <tr>
-                                <td><span class="ticker-badge">QELL_US_EQ</span></td>
-                                <td class="price">$0.00</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
-                            </tr>
-                            
-                            <tr>
-                                <td><span class="ticker-badge">BATSl_EQ</span></td>
-                                <td class="price">$4324.10</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
-                            </tr>
-                            
-                            <tr>
-                                <td><span class="ticker-badge">VSNTV_US_EQ</span></td>
-                                <td class="price">$32.52</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
-                            </tr>
-                            
-                            <tr>
-                                <td><span class="ticker-badge">NUE_US_EQ</span></td>
-                                <td class="price">$180.24</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
-                            </tr>
-                            
-                            <tr>
-                                <td><span class="ticker-badge">SOLV_US_EQ</span></td>
-                                <td class="price">$80.29</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
-                            </tr>
-                            
-                            <tr>
-                                <td><span class="ticker-badge">RE_US_EQ</span></td>
-                                <td class="price">$323.04</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
-                            </tr>
-                            
-                            <tr>
-                                <td><span class="ticker-badge">QCOM_US_EQ</span></td>
-                                <td class="price">$156.33</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
-                            </tr>
-                            
-                            <tr>
-                                <td><span class="ticker-badge">NFLX_US_EQ</span></td>
-                                <td class="price">$85.38</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
-                            </tr>
-                            
-                            <tr>
-                                <td><span class="ticker-badge">CRM_US_EQ</span></td>
-                                <td class="price">$221.57</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
-                            </tr>
-                            
-                            <tr>
-                                <td><span class="ticker-badge">EOG_US_EQ</span></td>
-                                <td class="price">$107.99</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
-                            </tr>
-                            
-                            <tr>
-                                <td><span class="ticker-badge">CTVA_US_EQ</span></td>
-                                <td class="price">$71.47</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
-                            </tr>
-                            
-                            <tr>
-                                <td><span class="ticker-badge">CNNE_US_EQ</span></td>
-                                <td class="price">$15.73</td>
-                                <td class="yield">0.0%</td>
-                                <td><span class="status-pill status-fail">Yield Erosion</span></td>
+                                <td><span class="ticker-badge">BATS.L</span></td>
+                                <td class="price">$4309.00</td>
+                                <td class="yield">$20.00</td>
+                                <td><span class="status-pill status-wait">WAIT</span>
+                                </td>
                             </tr>
                             
                             
@@ -331,113 +467,222 @@
                 </div>
             </div>
 
-            <!-- Watchlist Section -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">External Truth (Watchlist)</h2>
+            <div class="grid">
+                <!-- Recent Operations (Dividends & Orders) -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Passive Income Stream (Dividends)</h2>
+                        <span class="status-pill status-pass">Cash Flow</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticker</th>
+                                <th>Amount</th>
+                                <th>Paid Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <tr>
+                                <td><span class="ticker-badge" style="background: rgba(16, 185, 129, 0.2);">PEP_US_EQ</span></td>
+                                <td class="price" style="color: var(--accent-success);">+28.54 GBP</td>
+                                <td class="yield">2026-01-06</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge" style="background: rgba(16, 185, 129, 0.2);">KMB_US_EQ</span></td>
+                                <td class="price" style="color: var(--accent-success);">+119.59 GBP</td>
+                                <td class="yield">2026-01-05</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge" style="background: rgba(16, 185, 129, 0.2);">LMT_US_EQ</span></td>
+                                <td class="price" style="color: var(--accent-success);">+57.93 GBP</td>
+                                <td class="yield">2025-12-30</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge" style="background: rgba(16, 185, 129, 0.2);">PMLPl_EQ</span></td>
+                                <td class="price" style="color: var(--accent-success);">+176.66 GBP</td>
+                                <td class="yield">2025-12-29</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge" style="background: rgba(16, 185, 129, 0.2);">RE_US_EQ</span></td>
+                                <td class="price" style="color: var(--accent-success);">+62.66 GBP</td>
+                                <td class="yield">2025-12-12</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge" style="background: rgba(16, 185, 129, 0.2);">COP_US_EQ</span></td>
+                                <td class="price" style="color: var(--accent-success);">+111.30 GBP</td>
+                                <td class="yield">2025-12-01</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge" style="background: rgba(16, 185, 129, 0.2);">UKWl_EQ</span></td>
+                                <td class="price" style="color: var(--accent-success);">+58.05 GBP</td>
+                                <td class="yield">2025-11-28</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge" style="background: rgba(16, 185, 129, 0.2);">UNM_US_EQ</span></td>
+                                <td class="price" style="color: var(--accent-success);">+17.86 GBP</td>
+                                <td class="yield">2025-11-14</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge" style="background: rgba(16, 185, 129, 0.2);">NUE_US_EQ</span></td>
+                                <td class="price" style="color: var(--accent-success);">+35.25 GBP</td>
+                                <td class="yield">2025-11-10</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge" style="background: rgba(16, 185, 129, 0.2);">GIS_US_EQ</span></td>
+                                <td class="price" style="color: var(--accent-success);">+81.01 GBP</td>
+                                <td class="yield">2025-11-03</td>
+                            </tr>
+                            
+                            
+                        </tbody>
+                    </table>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Ticker</th>
-                            <th>Current</th>
-                            <th>Target</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">AAPL</span></td>
-                            <td class="price">$247.65</td>
-                            <td class="yield">$180.00</td>
-                            <td><span class="status-pill status-wait">WAIT</span></td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">MSFT</span></td>
-                            <td class="price">$444.11</td>
-                            <td class="yield">$350.00</td>
-                            <td><span class="status-pill status-wait">WAIT</span></td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">GOOGL</span></td>
-                            <td class="price">$328.38</td>
-                            <td class="yield">$130.00</td>
-                            <td><span class="status-pill status-wait">WAIT</span></td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">BATS.L</span></td>
-                            <td class="price">$4328.00</td>
-                            <td class="yield">$20.00</td>
-                            <td><span class="status-pill status-wait">WAIT</span></td>
-                        </tr>
-                        
-                         
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
-        <div class="alerts-section">
-            <h2 class="card-title" style="margin-bottom: 1.5rem;">Sovereign Intelligence Log</h2>
-            <div id="alerts-container">
-                
-                <div class="alert-item alert-violation">
-                    <p>⚠️ CNNE_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
-                    <small style="color: var(--text-muted);">2026-01-22T13:29:28.276477</small>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Strategic Moves (Orders)</h2>
+                        <span class="status-pill status-wait">Log</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticker</th>
+                                <th>Action</th>
+                                <th>Shares</th>
+                                <th>Filled</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <tr>
+                                <td><span class="ticker-badge"></span></td>
+                                <td><span class="status-pill status-fail"
+                                        style="font-size: 0.7rem;"></span></td>
+                                <td class="price"></td>
+                                <td class="yield"></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge"></span></td>
+                                <td><span class="status-pill status-fail"
+                                        style="font-size: 0.7rem;"></span></td>
+                                <td class="price"></td>
+                                <td class="yield"></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge"></span></td>
+                                <td><span class="status-pill status-fail"
+                                        style="font-size: 0.7rem;"></span></td>
+                                <td class="price"></td>
+                                <td class="yield"></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge"></span></td>
+                                <td><span class="status-pill status-fail"
+                                        style="font-size: 0.7rem;"></span></td>
+                                <td class="price"></td>
+                                <td class="yield"></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge"></span></td>
+                                <td><span class="status-pill status-fail"
+                                        style="font-size: 0.7rem;"></span></td>
+                                <td class="price"></td>
+                                <td class="yield"></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge"></span></td>
+                                <td><span class="status-pill status-fail"
+                                        style="font-size: 0.7rem;"></span></td>
+                                <td class="price"></td>
+                                <td class="yield"></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge"></span></td>
+                                <td><span class="status-pill status-fail"
+                                        style="font-size: 0.7rem;"></span></td>
+                                <td class="price"></td>
+                                <td class="yield"></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge"></span></td>
+                                <td><span class="status-pill status-fail"
+                                        style="font-size: 0.7rem;"></span></td>
+                                <td class="price"></td>
+                                <td class="yield"></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge"></span></td>
+                                <td><span class="status-pill status-fail"
+                                        style="font-size: 0.7rem;"></span></td>
+                                <td class="price"></td>
+                                <td class="yield"></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="ticker-badge"></span></td>
+                                <td><span class="status-pill status-fail"
+                                        style="font-size: 0.7rem;"></span></td>
+                                <td class="price"></td>
+                                <td class="yield"></td>
+                            </tr>
+                            
+                            
+                        </tbody>
+                    </table>
                 </div>
-                
-                <div class="alert-item alert-violation">
-                    <p>⚠️ CTVA_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
-                    <small style="color: var(--text-muted);">2026-01-22T13:29:27.873546</small>
-                </div>
-                
-                <div class="alert-item alert-violation">
-                    <p>⚠️ EOG_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
-                    <small style="color: var(--text-muted);">2026-01-22T13:29:27.452890</small>
-                </div>
-                
-                <div class="alert-item alert-violation">
-                    <p>⚠️ CRM_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
-                    <small style="color: var(--text-muted);">2026-01-22T13:29:26.972444</small>
-                </div>
-                
-                <div class="alert-item alert-violation">
-                    <p>⚠️ NFLX_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
-                    <small style="color: var(--text-muted);">2026-01-22T13:29:26.502841</small>
-                </div>
-                
-                <div class="alert-item alert-violation">
-                    <p>⚠️ QCOM_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
-                    <small style="color: var(--text-muted);">2026-01-22T13:29:26.119706</small>
-                </div>
-                
-                <div class="alert-item alert-violation">
-                    <p>⚠️ RE_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
-                    <small style="color: var(--text-muted);">2026-01-22T13:29:25.647715</small>
-                </div>
-                
-                <div class="alert-item alert-violation">
-                    <p>⚠️ SOLV_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
-                    <small style="color: var(--text-muted);">2026-01-22T13:29:25.263730</small>
-                </div>
-                
-                <div class="alert-item alert-violation">
-                    <p>⚠️ NUE_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
-                    <small style="color: var(--text-muted);">2026-01-22T13:29:24.811712</small>
-                </div>
-                
-                <div class="alert-item alert-violation">
-                    <p>⚠️ VSNTV_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
-                    <small style="color: var(--text-muted);">2026-01-22T13:29:24.389874</small>
-                </div>
-                
-                
             </div>
-        </div>
+
+            <div class="alerts-section">
+                <h2 class="card-title" style="margin-bottom: 1.5rem;">Sovereign Intelligence Log</h2>
+                <div id="alerts-container">
+                    
+                    <div class="alert-item alert-violation">
+                        <p>⚠️ NFLX_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
+                        <small style="color: var(--text-muted);">2026-01-22T15:00:28.535396</small>
+                    </div>
+                    
+                    <div class="alert-item alert-violation">
+                        <p>⚠️ RE_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
+                        <small style="color: var(--text-muted);">2026-01-22T15:00:28.175930</small>
+                    </div>
+                    
+                    <div class="alert-item alert-violation">
+                        <p>⚠️ SOLV_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
+                        <small style="color: var(--text-muted);">2026-01-22T15:00:28.010240</small>
+                    </div>
+                    
+                    <div class="alert-item alert-violation">
+                        <p>⚠️ VSNTV_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
+                        <small style="color: var(--text-muted);">2026-01-22T15:00:27.668110</small>
+                    </div>
+                    
+                    <div class="alert-item alert-violation">
+                        <p>⚠️ QELL_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.</p>
+                        <small style="color: var(--text-muted);">2026-01-22T15:00:27.355438</small>
+                    </div>
+                    
+                    
+                </div>
+            </div>
     </div>
 
     <script>
@@ -446,7 +691,7 @@
             try {
                 const response = await fetch('/api/state');
                 const data = await response.json();
-                
+
                 if (data.last_update) {
                     document.getElementById('time-display').innerText = data.last_update;
                     // In a full implementation, we would re-render the tables here.
@@ -460,4 +705,5 @@
         setInterval(refreshData, 30000);
     </script>
 </body>
+
 </html>
