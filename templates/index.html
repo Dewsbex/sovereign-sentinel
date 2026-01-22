@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOVEREIGN SENTINEL | Portfolio Oracle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #05070a;
+            --card-bg: rgba(15, 20, 28, 0.7);
+            --accent-primary: #3b82f6;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .last-update {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-success);
+            box-shadow: 0 0 10px var(--accent-success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .card-header {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 0.75rem 0.5rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 1rem 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .ticker-badge {
+            font-weight: 700;
+            color: #fff;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pass { background: rgba(16, 185, 129, 0.1); color: var(--accent-success); }
+        .status-fail { background: rgba(239, 68, 68, 0.1); color: var(--accent-danger); }
+        .status-wait { background: rgba(245, 158, 11, 0.1); color: var(--accent-warning); }
+
+        .price { font-weight: 600; }
+        .yield { color: var(--text-muted); }
+
+        .alerts-section {
+            margin-top: 3rem;
+        }
+
+        .alert-item {
+            padding: 1rem;
+            border-left: 3px solid var(--accent-primary);
+            background: rgba(255, 255, 255, 0.02);
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+            animation: slideIn 0.5s ease;
+        }
+
+        .alert-violation { border-color: var(--accent-danger); }
+        .alert-opportunity { border-color: var(--accent-success); }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+            header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">SOVEREIGN SENTINEL</div>
+            <div class="last-update">
+                <div class="status-dot"></div>
+                Updated: <span id="time-display">{{ last_update or 'Awaiting Data...' }}</span>
+            </div>
+        </header>
+
+        <div class="grid">
+            <!-- Portfolio Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Internal Reality (Portfolio)</h2>
+                    <span class="status-pill status-pass">Live</span>
+                </div>
+                <div id="portfolio-vitals">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticker</th>
+                                <th>Price</th>
+                                <th>Net Yield</th>
+                                <th>Oracle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in portfolio %}
+                            <tr>
+                                <td><span class="ticker-badge">{{ item.ticker }}</span></td>
+                                <td class="price">${{ "%.2f"|format(item.price) }}</td>
+                                <td class="yield">{{ "%.1f"|format(item.net_yield * 100) }}%</td>
+                                <td><span class="status-pill status-{{ item.status|lower }}">{{ item.verdict }}</span></td>
+                            </tr>
+                            {% endfor %}
+                            {% if not portfolio %}
+                            <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Fetching portfolio data...</td></tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Watchlist Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">External Truth (Watchlist)</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ticker</th>
+                            <th>Current</th>
+                            <th>Target</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in watchlist %}
+                        <tr>
+                            <td><span class="ticker-badge">{{ item.ticker }}</span></td>
+                            <td class="price">${{ "%.2f"|format(item.price) }}</td>
+                            <td class="yield">${{ "%.2f"|format(item.target) }}</td>
+                            <td><span class="status-pill status-{{ item.status|lower }}">{{ item.action }}</span></td>
+                        </tr>
+                        {% endfor %}
+                         {% if not watchlist %}
+                        <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No items in watchlist.</td></tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="alerts-section">
+            <h2 class="card-title" style="margin-bottom: 1.5rem;">Sovereign Intelligence Log</h2>
+            <div id="alerts-container">
+                {% for alert in alerts|reverse %}
+                <div class="alert-item alert-{{ alert.type|lower }}">
+                    <p>{{ alert.message }}</p>
+                    <small style="color: var(--text-muted);">{{ alert.time }}</small>
+                </div>
+                {% endfor %}
+                {% if not alerts %}
+                <p style="color: var(--text-muted);">System silent. Monitoring for violations...</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh every 30 seconds for UI smoothness
+        async function refreshData() {
+            try {
+                const response = await fetch('/api/state');
+                const data = await response.json();
+                
+                if (data.last_update) {
+                    document.getElementById('time-display').innerText = data.last_update;
+                    // In a full implementation, we would re-render the tables here.
+                    // For now, we'll suggest a page reload if there's new data.
+                    // location.reload(); 
+                }
+            } catch (e) {
+                console.error("Refresh failed", e);
+            }
+        }
+        setInterval(refreshData, 30000);
+    </script>
+</body>
+</html>
