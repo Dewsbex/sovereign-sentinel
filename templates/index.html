@@ -9,6 +9,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.0/dist/chartjs-chart-treemap.min.js"></script>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -187,7 +188,8 @@
             .dashboard-grid {
                 display: flex;
                 flex-direction: column;
-                height: auto; /* Allow scrolling on mobile */
+                height: auto;
+                /* Allow scrolling on mobile */
                 overflow-y: auto;
             }
 
@@ -199,7 +201,8 @@
             /* 3. Adjust Panel Heights */
             .glass-panel {
                 height: auto;
-                min-height: 300px; /* Give charts room to breathe */
+                min-height: 300px;
+                /* Give charts room to breathe */
             }
 
             /* 4. Fix Chart Container */
@@ -209,11 +212,15 @@
 
             /* 5. Typography Tweaks */
             body {
-                padding: 10px; /* Less padding on mobile edges */
-                overflow: auto; /* Re-enable body scroll for mobile */
+                padding: 10px;
+                /* Less padding on mobile edges */
+                overflow: auto;
+                /* Re-enable body scroll for mobile */
             }
-            
-            .metric-value { font-size: 1.2rem; }
+
+            .metric-value {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
@@ -375,53 +382,57 @@
         }
         setInterval(refreshData, 30000);
 
-        // --- CHART CORTEX ---
-        // Verify data before render
-        const portfolioLabels = {{ chart_labels | safe }};
-        const portfolioValues = {{ chart_data | safe }};
+        // --- CHART CORTEX (TREEMAP EDITION) ---
+        const treeData = {{ treemap_dataset | safe }};
 
-        if(portfolioLabels.length > 0) {
+        if (treeData.length > 0) {
             const ctx = document.getElementById('allocationChart').getContext('2d');
-            
-            // Premium Gradient
-            let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(0, 230, 118, 0.5)'); // Neon Green
-            gradient.addColorStop(1, 'rgba(0, 230, 118, 0.05)');
+
+            // Color Logic: Gain = Green, Loss = Red
+            function getColor(context) {
+                if (context.type !== 'data') return 'transparent';
+                const value = context.raw.p; // Performance %
+                return value >= 0 ? 'rgba(0, 230, 118, 0.6)' : 'rgba(255, 23, 68, 0.6)';
+            }
 
             new Chart(ctx, {
-                type: 'bar', 
+                type: 'treemap',
                 data: {
-                    labels: portfolioLabels,
                     datasets: [{
-                        label: 'Asset Value ($)',
-                        data: portfolioValues,
-                        backgroundColor: gradient,
-                        borderColor: '#00E676',
+                        tree: treeData,
+                        key: 'v',      // Size = Value
+                        groups: ['x'], // Group by Ticker
+                        backgroundColor: getColor,
+                        borderColor: 'rgba(0,0,0,0.3)',
                         borderWidth: 1,
-                        borderRadius: 4
+                        spacing: 2,
+                        labels: {
+                            display: true,
+                            align: 'center',
+                            position: 'center',
+                            color: '#fff',
+                            font: { family: 'JetBrains Mono', weight: 'bold', size: 14 },
+                            formatter: (ctx) => {
+                                return [ctx.raw.x, ctx.raw.p + '%'];
+                            }
+                        }
                     }]
                 },
                 options: {
-                    responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            backgroundColor: 'rgba(18, 18, 24, 0.9)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            borderColor: 'rgba(255,255,255,0.1)',
-                            borderWidth: 1
-                        }
-                    },
-                    scales: {
-                        y: {
-                            grid: { color: 'rgba(255,255,255,0.05)' },
-                            ticks: { color: '#8b9bb4', font: { family: 'JetBrains Mono' } }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#8b9bb4', font: { family: 'JetBrains Mono' } }
+                            callbacks: {
+                                title: (items) => items[0].raw.x,
+                                label: (item) => {
+                                    const d = item.raw;
+                                    return [
+                                        `Value: $${d.v.toLocaleString()}`,
+                                        `Return: ${d.p}%`
+                                    ];
+                                }
+                            }
                         }
                     }
                 }

@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | Command Center</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap"
-        rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Sovereign Sentinel | Command Center</title>
+    
     <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Sentinel">
     <meta name="theme-color" content="#0a0a0f">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.0/dist/chartjs-chart-treemap.min.js"></script>
 
     <style>
         :root {
@@ -30,645 +28,157 @@
             background-image: radial-gradient(circle at 50% 0%, #1a1f35 0%, #0a0a0f 70%);
             color: var(--text-primary);
             font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 20px;
-            height: 100vh;
-            box-sizing: border-box;
+            margin: 0; padding: 20px; height: 100vh; box-sizing: border-box;
             overflow: hidden;
-            /* Prevent scrolling for dashboard feel */
         }
 
-        /* --- THE BENTO GRID --- */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 1.5fr 1fr;
-            /* 60% Left, 40% Right */
-            grid-template-rows: auto 1fr auto;
-            /* Header, Main, Footer */
-            gap: 20px;
-            height: 100%;
+            grid-template-rows: auto 2fr 1.5fr; /* Resized for Heatmap */
+            gap: 20px; height: 100%;
         }
 
-        /* Glass Panel Base Class */
         .glass-panel {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             backdrop-filter: blur(12px);
             border-radius: 16px;
             padding: 20px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column; overflow: hidden;
         }
 
-        /* --- HEADER CARDS (Account Vitals) --- */
+        /* HEADER */
         .header-row {
             grid-column: 1 / -1;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
         }
-
         .metric-card {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
+        .metric-value { font-family: 'JetBrains Mono'; font-size: 1.5rem; font-weight: 700; margin-top: 5px; }
+        .metric-label { font-size: 0.8rem; color: var(--text-secondary); letter-spacing: 1px; text-transform: uppercase; }
 
-        .metric-label {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        /* TABLES */
+        .scrollable { overflow-y: auto; flex-grow: 1; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; color: var(--text-secondary); font-size: 0.75rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; }
+        td { padding: 10px 0; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .ticker-badge { font-family: 'JetBrains Mono'; background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; }
+        .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .status-green { background: rgba(0, 230, 118, 0.15); color: var(--neon-green); border: 1px solid rgba(0, 230, 118, 0.3); }
+        .status-red { background: rgba(255, 23, 68, 0.15); color: var(--neon-red); border: 1px solid rgba(255, 23, 68, 0.3); }
 
-        .metric-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-top: 5px;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* --- TABLES --- */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th {
-            text-align: left;
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        td {
-            padding: 12px 0;
-            font-size: 0.9rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-        }
-
-        .ticker-badge {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: bold;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-
-        /* --- STATUS PILLS --- */
-        .status-pill {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .status-green {
-            background: rgba(0, 230, 118, 0.15);
-            color: var(--neon-green);
-            border: 1px solid rgba(0, 230, 118, 0.3);
-        }
-
-        .status-red {
-            background: rgba(255, 23, 68, 0.15);
-            color: var(--neon-red);
-            border: 1px solid rgba(255, 23, 68, 0.3);
-        }
-
-        .status-wait {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-secondary);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* --- SCROLL ZONES --- */
-        .scrollable {
-            overflow-y: auto;
-            flex-grow: 1;
-            padding-right: 5px;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-        }
-
-        @media (max-width: 1024px) {
-            body {
-                overflow: auto;
-                height: auto;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .header-row {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        /* --- MOBILE OPTIMIZATION (The Pocket Sentinel) --- */
+        /* MOBILE */
         @media (max-width: 768px) {
-            /* 1. Unstack the Main Grid */
-            .dashboard-grid {
-                display: flex;
-                flex-direction: column;
-                height: auto; /* Allow scrolling on mobile */
-                overflow-y: auto;
-            }
-
-            /* 2. Break the Header Cards (2x2 Grid instead of 1x4) */
-            .header-row {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            /* 3. Adjust Panel Heights */
-            .glass-panel {
-                height: auto;
-                min-height: 300px; /* Give charts room to breathe */
-            }
-
-            /* 4. Fix Chart Container */
-            #allocationChart {
-                height: 250px !important;
-            }
-
-            /* 5. Typography Tweaks */
-            body {
-                padding: 10px; /* Less padding on mobile edges */
-                overflow: auto; /* Re-enable body scroll for mobile */
-            }
-            
-            .metric-value { font-size: 1.2rem; }
+            .dashboard-grid { display: flex; flex-direction: column; overflow-y: auto; }
+            body { overflow: auto; height: auto; }
+            .header-row { grid-template-columns: 1fr 1fr; }
+            .glass-panel { min-height: 300px; }
         }
     </style>
 </head>
-
 <body>
-    <div class="dashboard-grid">
-        <!-- ROW 1: HEADS-UP DISPLAY -->
-        <div class="header-row">
-            <div class="metric-card">
-                <div class="metric-label">Total Wealth</div>
-                <div class="metric-value">
-                     
-                        <span style="color: var(--neon-red); font-size: 1.2rem;">⚠ SYNC ERROR</span>
-                     
-                </div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">Cash Dry Powder</div>
-                <div class="metric-value">
-                    $0.00
-                </div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">Proj. Income</div>
-                <div class="metric-value" style="color: var(--neon-green);">
-                    $7682792.40
-                </div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">Total P/L</div>
-                <div class="metric-value"
-                    style="color: var(--neon-green)">
-                    ---
-                </div>
-            </div>
-        </div>
 
-        <!-- ROW 1.5: VISUAL CORTEX (Chart) -->
-        <div class="glass-panel" style="grid-column: 1 / -1; height: 320px;">
-            <h3 style="margin-top:0; margin-bottom: 10px; color: var(--text-primary);">Empire Allocation</h3>
-            <div style="position: relative; height: 100%; width: 100%; display: flex; justify-content: center;">
-                <canvas id="allocationChart"></canvas>
-            </div>
-        </div>
+<div class="dashboard-grid">
 
-        <!-- ROW 2 COL 1: INTERNAL REALITY (Main Portfolio) -->
-        <div class="glass-panel" style="grid-row: 2 / 4;">
-            <h3
-                style="margin-top:0; color: var(--text-primary); border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 10px;">
-                INTERNAL REALITY</h3>
-            <div class="scrollable">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ASSET</th>
-                            <th>PRICE</th>
-                            <th>NET YIELD</th>
-                            <th>VERDICT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">BMY</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$55.05</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--text-secondary)">
-                                392.7%
-                            </td>
-                            <td>
-                                <span class="status-pill status-green">
-                                    Fair Value
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">RIO</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$6486.00</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--text-secondary)">
-                                429.0%
-                            </td>
-                            <td>
-                                <span class="status-pill status-green">
-                                    Fair Value
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">LGEN</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$258.10</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--text-secondary)">
-                                823.0%
-                            </td>
-                            <td>
-                                <span class="status-pill status-green">
-                                    Fair Value
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">QELL</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$0.00</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--neon-red)">
-                                0.0%
-                            </td>
-                            <td>
-                                <span class="status-pill status-red">
-                                    Yield Erosion
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">BATS</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$4313.00</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--text-secondary)">
-                                566.0%
-                            </td>
-                            <td>
-                                <span class="status-pill status-green">
-                                    Fair Value
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">VSNTV</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$32.29</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--neon-red)">
-                                0.0%
-                            </td>
-                            <td>
-                                <span class="status-pill status-red">
-                                    Yield Erosion
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">NUE</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$181.25</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--text-secondary)">
-                                105.4%
-                            </td>
-                            <td>
-                                <span class="status-pill status-green">
-                                    Fair Value
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">SOLV</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$80.83</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--neon-red)">
-                                0.0%
-                            </td>
-                            <td>
-                                <span class="status-pill status-red">
-                                    Yield Erosion
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">RE</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$321.53</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--neon-red)">
-                                0.0%
-                            </td>
-                            <td>
-                                <span class="status-pill status-red">
-                                    Yield Erosion
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">QCOM</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$158.44</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--text-secondary)">
-                                193.8%
-                            </td>
-                            <td>
-                                <span class="status-pill status-green">
-                                    Fair Value
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">NFLX</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$84.01</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--neon-red)">
-                                0.0%
-                            </td>
-                            <td>
-                                <span class="status-pill status-red">
-                                    Yield Erosion
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">CRM</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$225.57</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--text-secondary)">
-                                63.7%
-                            </td>
-                            <td>
-                                <span class="status-pill status-green">
-                                    Fair Value
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">EOG</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$105.88</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--text-secondary)">
-                                321.3%
-                            </td>
-                            <td>
-                                <span class="status-pill status-green">
-                                    Fair Value
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">CTVA</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$71.86</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--text-secondary)">
-                                85.8%
-                            </td>
-                            <td>
-                                <span class="status-pill status-green">
-                                    Fair Value
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">CNNE</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$15.89</td>
-                            <td
-                                style="font-family: 'JetBrains Mono'; color: var(--text-secondary)">
-                                323.9%
-                            </td>
-                            <td>
-                                <span class="status-pill status-green">
-                                    Fair Value
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        
-                    </tbody>
-                </table>
-            </div>
+    <div class="header-row">
+        <div class="metric-card">
+            <div class="metric-label">Total Wealth</div>
+            <div class="metric-value">$0.00</div>
         </div>
-
-        <!-- ROW 2 COL 2: WATCHLIST -->
-        <div class="glass-panel">
-            <h3
-                style="margin-top:0; color: var(--text-primary); border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 10px;">
-                EXTERNAL TRUTH</h3>
-            <div class="scrollable">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>TARGET</th>
-                            <th>CURRENT</th>
-                            <th>ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">AAPL</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$249.66</td>
-                            <td>
-                                
-                                    <span class="status-pill status-wait">WAIT</span>
-                                    
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">MSFT</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$448.87</td>
-                            <td>
-                                
-                                    <span class="status-pill status-wait">WAIT</span>
-                                    
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">GOOGL</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$331.88</td>
-                            <td>
-                                
-                                    <span class="status-pill status-wait">WAIT</span>
-                                    
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td><span class="ticker-badge">BATS.L</span></td>
-                            <td style="font-family: 'JetBrains Mono';">$4299.00</td>
-                            <td>
-                                
-                                    <span class="status-pill status-wait">WAIT</span>
-                                    
-                            </td>
-                        </tr>
-                        
-                    </tbody>
-                </table>
-            </div>
+        <div class="metric-card">
+            <div class="metric-label">Cash Reserve</div>
+            <div class="metric-value">$0.00</div>
         </div>
-
-        <!-- ROW 3 COL 2: INTELLIGENCE LOG -->
-        <div class="glass-panel">
-            <h3
-                style="margin-top:0; color: var(--text-primary); border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 10px;">
-                SENTINEL LOG</h3>
-            <div class="scrollable"
-                style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-secondary);">
-                
-                
-                <div
-                    style="margin-bottom: 8px; border-left: 2px solid var(--neon-red); padding-left: 10px;">
-                    <span style="color: var(--neon-red);">
-                        ⚠
-                    </span> ⚠️ NFLX_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.
-                </div>
-                
-                <div
-                    style="margin-bottom: 8px; border-left: 2px solid var(--neon-red); padding-left: 10px;">
-                    <span style="color: var(--neon-red);">
-                        ⚠
-                    </span> ⚠️ RE_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.
-                </div>
-                
-                <div
-                    style="margin-bottom: 8px; border-left: 2px solid var(--neon-red); padding-left: 10px;">
-                    <span style="color: var(--neon-red);">
-                        ⚠
-                    </span> ⚠️ SOLV_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.
-                </div>
-                
-                <div
-                    style="margin-bottom: 8px; border-left: 2px solid var(--neon-red); padding-left: 10px;">
-                    <span style="color: var(--neon-red);">
-                        ⚠
-                    </span> ⚠️ VSNTV_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.
-                </div>
-                
-                <div
-                    style="margin-bottom: 8px; border-left: 2px solid var(--neon-red); padding-left: 10px;">
-                    <span style="color: var(--neon-red);">
-                        ⚠
-                    </span> ⚠️ QELL_US_EQ Yield Erosion. Net Yield now 0.0%. Below Cash Hurdle (3.8%). Investigate.
-                </div>
-                
-                
-            </div>
+        <div class="metric-card">
+            <div class="metric-label">Est. Income</div>
+            <div class="metric-value" style="color: var(--neon-green);">$0.00</div>
         </div>
-
+        <div class="metric-card">
+            <div class="metric-label">Last Updated</div>
+            <div class="metric-value" style="font-size: 1rem;">2026-01-22 18:34 UTC</div>
+        </div>
     </div>
 
-    <!-- Auto-Refresh Script -->
-    <script>
-        async function refreshData() {
-            try {
-                const response = await fetch('/api/state');
-                const data = await response.json();
-                if (data.last_update) {
-                    // Flash effect could go here
+    <div class="glass-panel" style="grid-column: 1 / -1; height: 350px;">
+        <h3 style="margin-top:0; color: var(--text-secondary);">Empire Map (Size = Value | Color = Profit/Loss)</h3>
+        <div style="flex-grow: 1; position: relative;">
+            <canvas id="empireHeatmap"></canvas>
+        </div>
+    </div>
+
+    <div class="glass-panel" style="grid-row: 3; grid-column: 1;">
+        <h3 style="margin-top:0;">Internal Reality</h3>
+        <div class="scrollable">
+            <table>
+                <thead><tr><th>ASSET</th><th>PRICE</th><th>VERDICT</th></tr></thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="glass-panel" style="grid-row: 3; grid-column: 2;">
+        <h3 style="margin-top:0;">Intelligence Log</h3>
+        <div class="scrollable">
+            <div style="margin-bottom: 10px; border-left: 2px solid var(--neon-green); padding-left: 10px;">
+                <span style="color: var(--neon-green);">SYSTEM ACTIVE</span><br>
+                <span style="font-size: 0.8rem; color: #888;">Monitoring logic engaged.</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const treeData = [];
+    const ctx = document.getElementById('empireHeatmap').getContext('2d');
+
+    function getColor(context) {
+        if(context.type !== 'data') return 'transparent';
+        const value = context.raw.p;
+        // Green for Gain, Red for Loss
+        return value >= 0 ? 'rgba(0, 230, 118, 0.6)' : 'rgba(255, 23, 68, 0.6)';
+    }
+
+    new Chart(ctx, {
+        type: 'treemap',
+        data: {
+            datasets: [{
+                tree: treeData,
+                key: 'v',      // Size = Value
+                groups: ['x'], // Label = Ticker
+                backgroundColor: getColor,
+                borderColor: '#0a0a0f',
+                borderWidth: 2,
+                spacing: 1,
+                labels: {
+                    display: true,
+                    align: 'center',
+                    position: 'center',
+                    color: '#fff',
+                    font: { family: 'JetBrains Mono', weight: 'bold', size: 14 },
+                    formatter: (ctx) => [ctx.raw.x, ctx.raw.p + '%']
                 }
-            } catch (e) { }
-        }
-        setInterval(refreshData, 30000);
-
-        // --- CHART CORTEX ---
-        // Verify data before render
-        const portfolioLabels = ["RIO", "BATS", "LGEN", "RE", "CNNE", "NUE", "EOG", "CRM", "NFLX", "QCOM", "CTVA", "BMY", "SOLV", "VSNTV", "QELL"];
-        const portfolioValues = [663969.59355078, 431300.0, 258100.00000000003, 21527.270783411797, 19165.9560696947, 17970.990878125, 17770.5874755156, 17368.89, 15961.900000000001, 14259.6, 12575.5, 10459.5, 8083.0, 3584.19, 0.14043518610000003];
-
-        if(portfolioLabels.length > 0) {
-            const ctx = document.getElementById('allocationChart').getContext('2d');
-            
-            // Premium Gradient
-            let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(0, 230, 118, 0.5)'); // Neon Green
-            gradient.addColorStop(1, 'rgba(0, 230, 118, 0.05)');
-
-            new Chart(ctx, {
-                type: 'bar', 
-                data: {
-                    labels: portfolioLabels,
-                    datasets: [{
-                        label: 'Asset Value ($)',
-                        data: portfolioValues,
-                        backgroundColor: gradient,
-                        borderColor: '#00E676',
-                        borderWidth: 1,
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: 'rgba(18, 18, 24, 0.9)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            borderColor: 'rgba(255,255,255,0.1)',
-                            borderWidth: 1
-                        }
-                    },
-                    scales: {
-                        y: {
-                            grid: { color: 'rgba(255,255,255,0.05)' },
-                            ticks: { color: '#8b9bb4', font: { family: 'JetBrains Mono' } }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#8b9bb4', font: { family: 'JetBrains Mono' } }
-                        }
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        title: (items) => items[0].raw.x,
+                        label: (item) => [`$${item.raw.v.toLocaleString()}`, `${item.raw.p}% Return`]
                     }
                 }
-            });
+            }
         }
-    </script>
-</body>
+    });
+</script>
 
+</body>
 </html>
