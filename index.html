@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sovereign Sentinel | Command Center</title>
-    
+
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0a0a0f">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.0/dist/chartjs-chart-treemap.min.js"></script>
 
@@ -28,15 +31,20 @@
             background-image: radial-gradient(circle at 50% 0%, #1a1f35 0%, #0a0a0f 70%);
             color: var(--text-primary);
             font-family: 'Inter', sans-serif;
-            margin: 0; padding: 20px; height: 100vh; box-sizing: border-box;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            box-sizing: border-box;
             overflow: hidden;
         }
 
+        /* BENTO BOX GRID */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 1.5fr 1fr;
-            grid-template-rows: auto 2fr 1.5fr; /* Resized for Heatmap */
-            gap: 20px; height: 100%;
+            grid-template-rows: auto 2fr 1.5fr;
+            gap: 20px;
+            height: 100%;
         }
 
         .glass-panel {
@@ -45,295 +53,386 @@
             backdrop-filter: blur(12px);
             border-radius: 16px;
             padding: 20px;
-            display: flex; flex-direction: column; overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
         /* HEADER */
         .header-row {
             grid-column: 1 / -1;
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
         }
+
         .metric-card {
-            background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .metric-value { font-family: 'JetBrains Mono'; font-size: 1.5rem; font-weight: 700; margin-top: 5px; }
-        .metric-label { font-size: 0.8rem; color: var(--text-secondary); letter-spacing: 1px; text-transform: uppercase; }
+
+        .metric-value {
+            font-family: 'JetBrains Mono';
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
         /* TABLES */
-        .scrollable { overflow-y: auto; flex-grow: 1; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { text-align: left; color: var(--text-secondary); font-size: 0.75rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; }
-        td { padding: 10px 0; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .ticker-badge { font-family: 'JetBrains Mono'; background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; }
-        .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-        .status-green { background: rgba(0, 230, 118, 0.15); color: var(--neon-green); border: 1px solid rgba(0, 230, 118, 0.3); }
-        .status-red { background: rgba(255, 23, 68, 0.15); color: var(--neon-red); border: 1px solid rgba(255, 23, 68, 0.3); }
+        .scrollable {
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            text-align: left;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 8px;
+        }
+
+        td {
+            padding: 10px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .ticker-badge {
+            font-family: 'JetBrains Mono';
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-green {
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--neon-green);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+        }
+
+        .status-red {
+            background: rgba(255, 23, 68, 0.15);
+            color: var(--neon-red);
+            border: 1px solid rgba(255, 23, 68, 0.3);
+        }
 
         /* MOBILE */
         @media (max-width: 768px) {
-            .dashboard-grid { display: flex; flex-direction: column; overflow-y: auto; }
-            body { overflow: auto; height: auto; }
-            .header-row { grid-template-columns: 1fr 1fr; }
-            .glass-panel { min-height: 300px; }
+            .dashboard-grid {
+                display: flex;
+                flex-direction: column;
+                overflow-y: auto;
+            }
+
+            body {
+                overflow: auto;
+                height: auto;
+            }
+
+            .header-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .glass-panel {
+                min-height: 300px;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<div class="dashboard-grid">
+    <div class="dashboard-grid">
 
-    <div class="header-row">
-        <div class="metric-card">
-            <div class="metric-label">Total Wealth</div>
-            <div class="metric-value">$176,289.59</div>
-        </div>
-        <div class="metric-card">
-            <div class="metric-label">Cash Reserve</div>
-            <div class="metric-value">$14,908.26</div>
-        </div>
-        <div class="metric-card">
-            <div class="metric-label">Est. Income</div>
-            <div class="metric-value" style="color: var(--neon-green);">$0.00</div>
-        </div>
-        <div class="metric-card">
-            <div class="metric-label">Last Updated</div>
-            <div class="metric-value" style="font-size: 1rem;">2026-01-22 22:04 UTC</div>
-        </div>
-    </div>
-
-    <div class="glass-panel" style="grid-column: 1 / -1; height: 350px;">
-        <h3 style="margin-top:0; color: var(--text-secondary);">Empire Map (Size = Value | Color = Profit/Loss)</h3>
-        <div style="flex-grow: 1; position: relative;">
-            <canvas id="empireHeatmap"></canvas>
-        </div>
-    </div>
-
-    <div class="glass-panel" style="grid-row: 3; grid-column: 1;">
-        <h3 style="margin-top:0;">Internal Reality</h3>
-        <div class="scrollable">
-            <table>
-                <thead><tr><th>ASSET</th><th>PRICE</th><th>VERDICT</th></tr></thead>
-                <tbody>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">BMY</span></td>
-                        <td>$54.88</td>
-                        <td>
-                            <span class="status-pill status-green">
-                                Fair Value
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">RIO</span></td>
-                        <td>$6486.00</td>
-                        <td>
-                            <span class="status-pill status-green">
-                                Fair Value
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">LGEN</span></td>
-                        <td>$258.10</td>
-                        <td>
-                            <span class="status-pill status-red">
-                                Yield Erosion
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">QELL</span></td>
-                        <td>$0.00</td>
-                        <td>
-                            <span class="status-pill status-red">
-                                Yield Erosion
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">BATS</span></td>
-                        <td>$4313.00</td>
-                        <td>
-                            <span class="status-pill status-green">
-                                Fair Value
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">VSNTV</span></td>
-                        <td>$31.35</td>
-                        <td>
-                            <span class="status-pill status-red">
-                                Yield Erosion
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">NUE</span></td>
-                        <td>$180.17</td>
-                        <td>
-                            <span class="status-pill status-green">
-                                Fair Value
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">SOLV</span></td>
-                        <td>$80.26</td>
-                        <td>
-                            <span class="status-pill status-red">
-                                Yield Erosion
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">RE</span></td>
-                        <td>$321.47</td>
-                        <td>
-                            <span class="status-pill status-red">
-                                Yield Erosion
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">QCOM</span></td>
-                        <td>$157.80</td>
-                        <td>
-                            <span class="status-pill status-red">
-                                Yield Erosion
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">NFLX</span></td>
-                        <td>$83.54</td>
-                        <td>
-                            <span class="status-pill status-red">
-                                Yield Erosion
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">CRM</span></td>
-                        <td>$228.03</td>
-                        <td>
-                            <span class="status-pill status-red">
-                                Yield Erosion
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">EOG</span></td>
-                        <td>$106.26</td>
-                        <td>
-                            <span class="status-pill status-red">
-                                Yield Erosion
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">CTVA</span></td>
-                        <td>$71.56</td>
-                        <td>
-                            <span class="status-pill status-green">
-                                Fair Value
-                            </span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="ticker-badge">CNNE</span></td>
-                        <td>$15.87</td>
-                        <td>
-                            <span class="status-pill status-red">
-                                Yield Erosion
-                            </span>
-                        </td>
-                    </tr>
-                    
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="glass-panel" style="grid-row: 3; grid-column: 2;">
-        <h3 style="margin-top:0;">Intelligence Log</h3>
-        <div class="scrollable">
-            <div style="margin-bottom: 10px; border-left: 2px solid var(--neon-green); padding-left: 10px;">
-                <span style="color: var(--neon-green);">SYSTEM ACTIVE</span><br>
-                <span style="font-size: 0.8rem; color: #888;">Monitoring logic engaged.</span>
+        <div class="header-row">
+            <div class="metric-card">
+                <div class="metric-label">Total Wealth</div>
+                <div class="metric-value">$176,319.11</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Cash Reserve</div>
+                <div class="metric-value">$14,902.91</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Est. Income</div>
+                <div class="metric-value" style="color: var(--neon-green);">$0.00</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Last Updated</div>
+                <div class="metric-value" style="font-size: 1rem;">2026-01-22 22:28 UTC</div>
             </div>
         </div>
+
+        <div class="glass-panel" style="grid-column: 1 / -1; height: 350px;">
+            <div style="flex-grow: 1; position: relative;">
+                <canvas id="empireHeatmap"></canvas>
+            </div>
+        </div>
+
+        <div class="glass-panel" style="grid-row: 3; grid-column: 1;">
+            <h3 style="margin-top:0;">Internal Reality</h3>
+            <div class="scrollable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ASSET</th>
+                            <th>PRICE</th>
+                            <th>VERDICT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">BMY</span></td>
+                            <td>$54.88</td>
+                            <td>
+                                
+                                <span class="status-pill status-green">Fair Value</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">RIO</span></td>
+                            <td>$6486.00</td>
+                            <td>
+                                
+                                <span class="status-pill status-green">Fair Value</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">LGEN</span></td>
+                            <td>$258.10</td>
+                            <td>
+                                
+                                <span class="status-pill status-red">Yield Erosion</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">QELL</span></td>
+                            <td>$0.00</td>
+                            <td>
+                                
+                                <span class="status-pill status-red">Yield Erosion</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">BATS</span></td>
+                            <td>$4313.00</td>
+                            <td>
+                                
+                                <span class="status-pill status-green">Fair Value</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">VSNTV</span></td>
+                            <td>$31.35</td>
+                            <td>
+                                
+                                <span class="status-pill status-red">Yield Erosion</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">NUE</span></td>
+                            <td>$180.17</td>
+                            <td>
+                                
+                                <span class="status-pill status-green">Fair Value</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">SOLV</span></td>
+                            <td>$80.26</td>
+                            <td>
+                                
+                                <span class="status-pill status-red">Yield Erosion</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">RE</span></td>
+                            <td>$321.47</td>
+                            <td>
+                                
+                                <span class="status-pill status-red">Yield Erosion</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">QCOM</span></td>
+                            <td>$157.80</td>
+                            <td>
+                                
+                                <span class="status-pill status-red">Yield Erosion</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">NFLX</span></td>
+                            <td>$83.54</td>
+                            <td>
+                                
+                                <span class="status-pill status-red">Yield Erosion</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">CRM</span></td>
+                            <td>$228.03</td>
+                            <td>
+                                
+                                <span class="status-pill status-red">Yield Erosion</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">EOG</span></td>
+                            <td>$106.26</td>
+                            <td>
+                                
+                                <span class="status-pill status-red">Yield Erosion</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">CTVA</span></td>
+                            <td>$71.56</td>
+                            <td>
+                                
+                                <span class="status-pill status-green">Fair Value</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><span class="ticker-badge">CNNE</span></td>
+                            <td>$15.87</td>
+                            <td>
+                                
+                                <span class="status-pill status-red">Yield Erosion</span>
+                                
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="glass-panel" style="grid-row: 3; grid-column: 2;">
+            <h3 style="margin-top:0;">Intelligence Log</h3>
+            <div class="scrollable">
+                <div style="margin-bottom: 10px; border-left: 2px solid var(--neon-green); padding-left: 10px;">
+                    <span style="color: var(--neon-green);">SYSTEM ACTIVE</span><br>
+                    <span style="font-size: 0.8rem; color: #888;">Monitoring logic engaged.</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-</div>
+    <script>
+        // DYNAMIC DATA
+        const treeData = [{"x": "BMY", "v": 10427.2, "p": 5.72}, {"x": "RIO", "v": 663969.59, "p": 0.3}, {"x": "LGEN", "v": 258100.0, "p": -0.01}, {"x": "QELL", "v": 0.14, "p": -99.94}, {"x": "BATS", "v": 431300.0, "p": 0.03}, {"x": "VSNTV", "v": 3479.85, "p": -4.97}, {"x": "NUE", "v": 17863.91, "p": 21.57}, {"x": "SOLV", "v": 8026.0, "p": -0.43}, {"x": "RE", "v": 21523.25, "p": -4.68}, {"x": "QCOM", "v": 14202.0, "p": -6.69}, {"x": "NFLX", "v": 15872.6, "p": -7.94}, {"x": "CRM", "v": 17558.31, "p": -6.5}, {"x": "EOG", "v": 17834.37, "p": -5.61}, {"x": "CTVA", "v": 12523.0, "p": 1.94}, {"x": "CNNE", "v": 19141.83, "p": -0.72}];
 
-<script>
-    const treeData = [{"x": "BMY", "v": 10427.2, "p": 5.7}, {"x": "RIO", "v": 663969.59, "p": 0.3}, {"x": "LGEN", "v": 258100.0, "p": -0.01}, {"x": "QELL", "v": 0.15, "p": -99.93}, {"x": "BATS", "v": 431300.0, "p": 0.03}, {"x": "VSNTV", "v": 3479.85, "p": -4.99}, {"x": "NUE", "v": 17863.91, "p": 21.54}, {"x": "SOLV", "v": 8026.0, "p": -0.45}, {"x": "RE", "v": 21523.25, "p": -4.7}, {"x": "QCOM", "v": 14202.0, "p": -6.71}, {"x": "NFLX", "v": 15872.6, "p": -7.96}, {"x": "CRM", "v": 17558.31, "p": -6.52}, {"x": "EOG", "v": 17834.37, "p": -5.63}, {"x": "CTVA", "v": 12523.0, "p": 1.92}, {"x": "CNNE", "v": 19141.83, "p": -0.74}];
-    const ctx = document.getElementById('empireHeatmap').getContext('2d');
+        const ctx = document.getElementById('empireHeatmap').getContext('2d');
 
-    function getColor(context) {
-        if(context.type !== 'data') return 'transparent';
-        const value = context.raw.p;
-        // 0 = Neutral (Grey)
-        if (Math.abs(value) < 0.01) return 'rgba(120, 144, 156, 0.4)';
-        // Green for Gain, Red for Loss
-        return value >= 0 ? 'rgba(0, 230, 118, 0.6)' : 'rgba(255, 23, 68, 0.6)';
-    }
+        function getColor(context) {
+            if (context.type !== 'data') return 'transparent';
+            const value = context.raw.p;
+            // 0 = Neutral (Grey)
+            if (Math.abs(value) < 0.01) return 'rgba(120, 144, 156, 0.4)';
+            // Green for Gain, Red for Loss
+            return value > 0 ? 'rgba(0, 230, 118, 0.6)' : 'rgba(255, 23, 68, 0.6)';
+        }
 
-    new Chart(ctx, {
-        type: 'treemap',
-        data: {
-            datasets: [{
-                tree: treeData,
-                key: 'v',      // Size = Value
-                groups: ['x'], // Label = Ticker
-                backgroundColor: getColor,
-                borderColor: '#0a0a0f',
-                borderWidth: 2,
-                spacing: 1,
-                labels: {
-                    display: true,
-                    align: 'center',
-                    position: 'center',
-                    color: '#fff',
-                    font: { family: 'JetBrains Mono', weight: 'bold', size: 14 },
-                    formatter: (ctx) => {
-                        if (!ctx.raw) return "N/A";
-                        return [ctx.raw.x, (ctx.raw.p || 0) + '%'];
+        new Chart(ctx, {
+            type: 'treemap',
+            data: {
+                datasets: [{
+                    tree: treeData,
+                    key: 'v',      // Size = Value
+                    groups: ['x'], // Label = Ticker
+                    backgroundColor: getColor,
+                    borderColor: '#0a0a0f',
+                    borderWidth: 2,
+                    spacing: 1,
+                    labels: {
+                        display: true,
+                        align: 'center',
+                        position: 'center',
+                        color: '#fff',
+                        font: { family: 'JetBrains Mono', weight: 'bold', size: 14 },
+                        formatter: (ctx) => {
+                            if (!ctx.raw) return "N/A";
+                            // Line 1: Ticker
+                            // Line 2: Value (GBP)
+                            // Line 3: Percentage (%)
+                            return [
+                                ctx.raw.x,
+                                '£' + ctx.raw.v.toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2}), 
+                                (ctx.raw.p || 0) + '%'
+                            ];
+                        }
                     }
-                }
-            }]
-        },
-        options: {
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        title: (items) => items[0].raw.x,
-                        label: (item) => [`$${item.raw.v.toLocaleString()}`, `${item.raw.p}% Return`]
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: (items) => items[0].raw.x,
+                            // Tooltip Value in GBP
+                            label: (item) => [`£${item.raw.v.toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, `${item.raw.p}% Return`]
+                        }
                     }
                 }
             }
-        }
-    });
-</script>
-
+        });
+    </script>
 </body>
 </html>
