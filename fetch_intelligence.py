@@ -49,6 +49,21 @@ def fetch_live_prices(strategy_data):
             live_price = target # Safety fallback to avoid breaking UI
         
         # 2. Logic (Distance Calculation)
+        # --- CURRENCY NORMALIZER (FORENSIC AUDIT FIX) ---
+        is_uk = ticker.endswith('.L')
+        
+        # If UK, we assume data is in Pence (GBX) and we want Pounds (GBP)
+        # We apply this to both LIVE and TARGET to maintain ratio, 
+        # and to ensure the UI shows "£4.20" not "£420.00"
+        if is_uk:
+             # Heuristic: If price > 20, it's likely Pence. 
+             # (Penny stocks < 20p exist, but usually > £0.20)
+             if live_price > 20: 
+                 live_price /= 100.0
+             
+             if target > 20:
+                 target /= 100.0
+        
         # (Live - Target) / Target
         distance_pct = ((live_price - target) / target) * 100
         
@@ -71,6 +86,7 @@ def fetch_live_prices(strategy_data):
             
         enriched_watchlist.append({
             **item,
+            'target_price': f"{target:.2f}", # Store normalized target for UI
             'live_price': f"{live_price:.2f}",
             'distance_pct': f"{distance_pct:+.2f}%",
             'verdict': verdict,
@@ -112,7 +128,7 @@ def fetch_news(strategy_data):
                 news_headline = f"{pub}: {title}"
                 news_sentiment = "Realtime" # Placeholder for sentiment analysis
             else:
-                 raise ValueError("No news found")
+                raise ValueError("No news found")
         except:
              # Fallback to Synth if data fetch fails
             if "BUY ZONE" in item.get('status', ''):

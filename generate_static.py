@@ -123,18 +123,23 @@ def main():
             
             # 2. Financials (Live)
             qty = safe_float(pos.get('quantity', 0))
-            avg_price = safe_float(pos.get('averagePrice', 0))
-            cur_price = safe_float(pos.get('currentPrice', 0))
+            raw_avg_price = safe_float(pos.get('averagePrice', 0))
+            raw_cur_price = safe_float(pos.get('currentPrice', 0))
             
-            # Pence Fix
-            is_pence = False
-            if currency in ['GBX', 'GBp'] or (cur_price > 1000 and currency == 'GBP'):
-                is_pence = True
-                cur_price /= 100.0
-                avg_price /= 100.0
+            # --- CURRENCY NORMALIZER (FORENSIC AUDIT FIX) ---
+            # UK stocks often trade in Pence (GBX) but we want Pounds (GBP)
+            is_uk = ticker.endswith('.L') or currency in ['GBX', 'GBp'] or (raw_cur_price > 500 and currency == 'GBP')
+            
+            if is_uk:
+                cur_price = raw_cur_price / 100.0
+                avg_price = raw_avg_price / 100.0
+            else:
+                cur_price = raw_cur_price
+                avg_price = raw_avg_price
             
             invested = qty * avg_price
             market_val = qty * cur_price
+            total_value += market_val # Add to Total Wealth
             
             # 3. The Yield Calculation (Simulated)
             raw_yield_mock = (hash(ticker) % 400) / 10000.0 + 0.01 
