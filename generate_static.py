@@ -38,6 +38,7 @@ def main():
     total_fees_str = "£0.00"
     heatmap_data = []
     architect_audit = []
+    t212_error = None  # Track T212 failures explicitly
     
     try:
         # 1. FETCH DATA FROM TRADING 212 (LIVE SERVER ONLY)
@@ -48,7 +49,7 @@ def main():
         if not api_id or not api_secret:
             print("CRITICAL WARNING: Missing API credentials. Rendering Fallback Mode.")
             # We DONT exit, we just let the try block finish or skip to render
-            raise ValueError("Missing API Keys")
+            raise ValueError("Missing API Keys (Check GitHub Secrets)")
 
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SovereignSentinel/1.0",
@@ -192,7 +193,7 @@ def main():
         # import traceback
         # traceback.print_exc()
         print(f"Error: {e}")
-        # Even if T212 fails, we run the Intelligence Engine (Mock Mode)
+        t212_error = str(e) # Capture for dashboard display
     
     # --- INTELLIGENCE ENGINE (PHASE 2 - ALWAYS RUN) ---
     try:
@@ -228,6 +229,16 @@ def main():
             "status_color": "text-rose-500"
         }}
 
+    # --- STATUS REPORT LOGIC ---
+    if t212_error:
+        system_status = "ERROR"
+        status_sub = t212_error
+        status_color = "text-rose-500"
+    else:
+        system_status = "ONLINE"
+        status_sub = f"Synced: {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}"
+        status_color = "text-emerald-500"
+
     # 3. GENERATE HTML (Fail Safe)
     with open('templates/base.html', 'r', encoding='utf-8') as f:
         template_str = f.read()
@@ -241,6 +252,11 @@ def main():
         projected_income=f"£{projected_income:,.2f}", 
         last_updated=datetime.now().strftime("%Y-%m-%d %H:%M UTC"),
         total_fees_str=total_fees_str,
+        # System Status Injection
+        system_status=system_status,
+        status_sub=status_sub,
+        status_color=status_color,
+        # Datasets
         heatmap_dataset=json.dumps(heatmap_data),
         # Architect Data
         moat_audit=architect_audit,
