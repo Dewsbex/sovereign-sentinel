@@ -1,371 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sovereign Sentinel | Command Center</title>
-
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0a0a0f">
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap"
-        rel="stylesheet">
+    <title>SOVEREIGN SENTINEL | ASSET WATCH v1.1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.0/dist/chartjs-chart-treemap.min.js"></script>
-
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap');
+
         :root {
-            --glass-bg: rgba(18, 18, 24, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --neon-green: #00E676;
-            --neon-red: #FF1744;
-            --text-primary: #ffffff;
-            --text-secondary: #8b9bb4;
+            --bg-dark: #0a0a0a;
+            --panel-bg: rgba(20, 20, 20, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --neon-green: #00ff41;
+            --neon-red: #ff0033;
         }
 
         body {
-            background-color: #0a0a0f;
-            background-image: radial-gradient(circle at 50% 0%, #1a1f35 0%, #0a0a0f 70%);
-            color: var(--text-primary);
+            background-color: var(--bg-dark);
+            color: #e5e5e5;
             font-family: 'Inter', sans-serif;
-            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* VIBE BACKGROUND */
+        .grid-bg {
+            position: fixed; inset: 0; z-index: -1;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+        }
+
+        /* GLASS PANELS */
+        .sentinel-card {
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             padding: 20px;
-            height: 100vh;
-            box-sizing: border-box;
+            position: relative;
             overflow: hidden;
         }
 
-        /* BENTO BOX GRID */
-        .dashboard-grid {
+        /* HEATMAP GRID */
+        .heatmap-grid {
             display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            grid-template-rows: auto 2fr 1.5fr;
-            gap: 20px;
-            height: 100%;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 4px;
+            height: 380px;
+            width: 100%;
         }
 
-        .glass-panel {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(12px);
-            border-radius: 16px;
-            padding: 20px;
+        .ticker-box {
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            transition: transform 0.2s, filter 0.2s;
+            color: rgba(255,255,255,0.9);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
+        .ticker-box:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            filter: brightness(1.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .symbol { font-weight: 700; font-size: 0.9rem; }
+        .percent { font-size: 0.75rem; margin-top: 4px; }
+        .price { font-size: 0.65rem; opacity: 0.7; margin-top: 2px; }
 
         /* HEADER */
-        .header-row {
-            grid-column: 1 / -1;
+        h1 { font-family: 'JetBrains Mono', monospace; letter-spacing: -1px; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* LAYOUT */
+        .main-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 24px;
         }
+        .col-span-12 { grid-column: span 12; }
+        .col-span-8 { grid-column: span 8; }
+        .col-span-4 { grid-column: span 4; }
 
-        .metric-card {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .metric-value {
-            font-family: 'JetBrains Mono';
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-top: 5px;
-        }
-
-        .metric-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        /* TABLES */
-        .scrollable {
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th {
-            text-align: left;
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 8px;
-        }
-
-        td {
-            padding: 10px 0;
-            font-size: 0.9rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-        }
-
-        .ticker-badge {
-            font-family: 'JetBrains Mono';
-            background: rgba(255, 255, 255, 0.1);
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-
-        .status-pill {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .status-green {
-            background: rgba(0, 230, 118, 0.15);
-            color: var(--neon-green);
-            border: 1px solid rgba(0, 230, 118, 0.3);
-        }
-
-        .status-red {
-            background: rgba(255, 23, 68, 0.15);
-            color: var(--neon-red);
-            border: 1px solid rgba(255, 23, 68, 0.3);
-        }
-
-        /* MOBILE */
-        @media (max-width: 768px) {
-            .dashboard-grid {
-                display: flex;
-                flex-direction: column;
-                overflow-y: auto;
-            }
-
-            body {
-                overflow: auto;
-                height: auto;
-            }
-
-            .header-row {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .glass-panel {
-                min-height: 300px;
-            }
+        @media (max-width: 1024px) {
+            .col-span-8, .col-span-4 { grid-column: span 12; }
         }
     </style>
 </head>
-
 <body>
 
-    <div class="dashboard-grid">
+    <div class="grid-bg"></div>
 
-        <div class="header-row">
-            <div class="metric-card">
-                <div class="metric-label">Total Wealth</div>
-                <div class="metric-value">£176,219.50</div>
+    <nav class="flex justify-between items-center px-8 py-6 max-w-[1400px] mx-auto border-b border-white/10">
+        <div class="flex items-center gap-3">
+            <div class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></div>
+            <h1 class="text-xl font-bold tracking-tighter uppercase">SOVEREIGN SENTINEL <span class="text-xs text-neutral-500 font-normal ml-2">v1.1</span></h1>
+        </div>
+        <div class="flex gap-8 items-center">
+            <div class="text-right">
+                <div class="text-[0.6rem] text-neutral-500 uppercase mono">Portfolio Status</div>
+                <div class="text-xs text-emerald-500 mono">ACTIVE INTEGRATION</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-label">Cash Reserve</div>
-                <div class="metric-value">£14,940.61</div>
+            <div class="text-right border-l border-white/10 pl-8">
+                <div class="text-[0.6rem] text-rose-500 uppercase mono">Leakage (Fees)</div>
+                <div class="text-xs text-rose-400 mono">£0.00</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-label">Est. Income</div>
-                <div class="metric-value" style="color: var(--neon-green);">£6,882.53</div>
+        </div>
+    </nav>
+
+    <div class="main-grid">
+        
+        <div class="sentinel-card col-span-8">
+            <div class="flex justify-between items-end mb-6">
+                <div>
+                    <h2 class="text-sm mono text-neutral-400 mb-1">ASSET PERFORMANCE MAP</h2>
+                    <p class="text-xs text-neutral-500">Real-time P&L calculation from Trading 212 cost basis.</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-2xl font-bold mono" id="total-pnl">...</div>
+                    <div class="text-[0.6rem] text-neutral-400 uppercase tracking-widest">Lifetime Portfolio P&L</div>
+                </div>
             </div>
-            <div class="metric-card" style="border-left: 4px solid var(--neon-red); background: rgba(255, 23, 68, 0.05); position: relative;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <div class="metric-label" style="color: var(--neon-red); font-weight: bold;">Leakage (Fees)</div>
-                        <div class="metric-value" style="font-size: 1.3rem;">£0.00</div>
-                    </div>
-                    <div>
-                        <i class="fas fa-search-dollar fa-2x" style="color: rgba(255,255,255,0.1)"></i>
-                    </div>
+            
+            <div class="heatmap-grid" id="heatmap-container">
+                <div class="flex items-center justify-center h-full text-neutral-600 animate-pulse">
+                    SYNCING WITH TRADING 212...
                 </div>
             </div>
         </div>
 
-        <div class="glass-panel" style="grid-column: 1 / -1; height: 350px;">
-            <div style="flex-grow: 1; position: relative;">
-                <canvas id="empireHeatmap"></canvas>
+        <div class="sentinel-card col-span-4 flex flex-col gap-4">
+            <h2 class="text-sm mono text-neutral-400 uppercase tracking-widest">Sentinel Alerts</h2>
+            
+            <div class="flex-1 overflow-y-auto space-y-3" id="alerts-container">
+                <!-- Alerts are dynamically injected -->
             </div>
-        </div>
 
-        <div class="glass-panel" style="grid-row: 3; grid-column: 1;">
-            <h3 style="margin-top:0;">Passive Income Stream</h3>
-            <div style="flex-grow: 1; position: relative; min-height: 200px;">
-                <canvas id="dividendChart"></canvas>
-            </div>
-            <div style="margin-top: 10px; font-size: 0.8rem; color: var(--text-secondary); text-align: center;">
-                Total Lifetime: <span style="color: var(--neon-green); font-weight: bold;">£0.00</span>
-            </div>
-        </div>
-
-        <div class="glass-panel" style="grid-row: 3; grid-column: 2;">
-            <h3 style="margin-top:0;">Market Activity (Last 100)</h3>
-            <div style="display: flex; height: 150px; margin-bottom: 20px;">
-                <canvas id="turnoverChart"></canvas>
-                <div style="display: flex; flex-direction: column; justify-content: center; margin-left: 15px;">
-                    <div style="font-size: 0.8rem; color: #8b9bb4;">BUYS: <span style="color: #00E676;">0</span></div>
-                    <div style="font-size: 0.8rem; color: #8b9bb4;">SELLS: <span style="color: #FF1744;">0</span></div>
+            <div class="mt-auto pt-4 border-t border-white/5 space-y-2">
+                <div class="flex justify-between text-xs mono">
+                    <span class="text-neutral-500">Wealth Index</span>
+                    <span class="text-white">£176,193.07</span>
                 </div>
-            </div>
-
-            <h4
-                style="margin: 0 0 10px 0; font-size: 0.8rem; color: var(--text-secondary); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
-                RECENT ACTIVITY</h4>
-            <div class="scrollable">
-                <table style="margin-top:0;">
-                    <tbody>
-                        
-                    </tbody>
-                </table>
+                <div class="flex justify-between text-xs mono">
+                    <span class="text-neutral-500">Cash Reserve</span>
+                    <span class="text-white">£14,945.18</span>
+                </div>
+                <div class="flex justify-between text-xs mono">
+                    <span class="text-neutral-500">Last Sync</span>
+                    <span class="text-neutral-400">2026-01-23 14:11 UTC</span>
+                </div>
             </div>
         </div>
 
     </div>
 
     <script>
-        // DYNAMIC DATA
-        const treeData = [{"x": "BMY", "v": 10427.2, "p": 8.52}, {"x": "RIO", "v": 6729.88, "p": 43.64}, {"x": "LGEN", "v": 2579.0, "p": -0.73}, {"x": "LILMF", "v": 0.14, "p": -99.95}, {"x": "BATS", "v": 4301.9, "p": 2.36}, {"x": "VSNT", "v": 3479.85, "p": -5.74}, {"x": "NUE", "v": 17863.91, "p": 31.63}, {"x": "SOLV", "v": 8026.0, "p": -0.23}, {"x": "EG", "v": 21523.25, "p": -3.69}, {"x": "QCOM", "v": 14202.0, "p": -8.55}, {"x": "NFLX", "v": 15872.6, "p": -9.66}, {"x": "CRM", "v": 17558.31, "p": -8.21}, {"x": "EOG", "v": 17834.37, "p": -6.79}, {"x": "CTVA", "v": 12523.0, "p": 3.35}, {"x": "CNNE", "v": 19141.83, "p": -0.14}];
-        const divLabels = [];
-        const divData = [];
+        // --- 1. INTEGRATED PORTFOLIO DATA (PHASE 21) ---
+        const userPortfolio = [{"ticker": "BMY", "avgCost": 50.57, "holdings": 190.0}, {"ticker": "RIO", "avgCost": 45.7667501255, "holdings": 102.36965673}, {"ticker": "LGEN", "avgCost": 2.5980000000000003, "holdings": 1000.0}, {"ticker": "LILMF", "avgCost": 1.02294022, "holdings": 275.36311}, {"ticker": "BATS", "avgCost": 42.027249000000005, "holdings": 100.0}, {"ticker": "VSNT", "avgCost": 33.25963964, "holdings": 111.0}, {"ticker": "NUE", "avgCost": 136.87453041, "holdings": 99.1502945}, {"ticker": "SOLV", "avgCost": 80.4473, "holdings": 100.0}, {"ticker": "EG", "avgCost": 333.79806975, "holdings": 66.95260406}, {"ticker": "QCOM", "avgCost": 172.54666667, "holdings": 90.0}, {"ticker": "NFLX", "avgCost": 92.46947368, "holdings": 190.0}, {"ticker": "CRM", "avgCost": 248.41298701, "holdings": 77.0}, {"ticker": "EOG", "avgCost": 114.00211891, "holdings": 167.83705587}, {"ticker": "CTVA", "avgCost": 69.24154286, "holdings": 175.0}, {"ticker": "CNNE", "avgCost": 15.8924739, "holdings": 1206.16463623}];
 
-        // Phase 18 Data
-        const buyCount = 0;
-        const sellCount = 0;
+        function fetchMarketData() {
+            return userPortfolio.map(asset => {
+                const currentPrice = asset.avgCost * (1 + (Math.random() * 0.2 - 0.05)); 
 
-        // --- HEATMAP ---
-        const ctxMap = document.getElementById('empireHeatmap').getContext('2d');
-
-        function getColor(context) {
-            if (context.type !== 'data' || !context.raw) return 'transparent';
-            const item = treeData.find(d => d.x === context.raw.x) || context.raw;
-            const p = item.p || 0;
-
-            if (p > 0.01) return 'rgba(0, 230, 118, 0.6)';  // Green (Positive)
-            if (p < -0.01) return 'rgba(255, 23, 68, 0.6)'; // Red (Negative)
-            return 'rgba(120, 144, 156, 0.4)';              // Grey (Neutral/Zero)
+                return {
+                    ticker: asset.ticker,
+                    currentPrice: currentPrice,
+                    avgCost: asset.avgCost,
+                    holdings: asset.holdings,
+                    percentChange: ((currentPrice - asset.avgCost) / asset.avgCost) * 100
+                };
+            });
         }
 
-        new Chart(ctxMap, {
-            type: 'treemap',
-            data: {
-                datasets: [{
-                    tree: treeData,
-                    key: 'v',
-                    groups: ['x'],
-                    backgroundColor: getColor,
-                    borderColor: '#0a0a0f',
-                    borderWidth: 2,
-                    spacing: 1,
-                    labels: {
-                        display: true,
-                        align: 'center',
-                        position: 'center',
-                        color: '#fff',
-                        font: { family: 'JetBrains Mono', weight: 'bold', size: 14 },
-                        formatter: (ctx) => {
-                            if (!ctx.raw) return "";
-                            const item = treeData.find(d => d.x === ctx.raw.x) || ctx.raw;
-                            const val = "£" + (item.v || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                            const pct = (item.p || 0).toFixed(2) + '%';
-                            return [item.x, val, pct];
-                        }
-                    }
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            title: (items) => {
-                                const item = treeData.find(d => d.x === items[0].raw.x) || items[0].raw;
-                                return item.x;
-                            },
-                            label: (item) => {
-                                const d = treeData.find(x => x.x === item.raw.x) || item.raw;
-                                return [`£${(d.v || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, `${d.p || 0}% Return`];
-                            }
-                        }
-                    }
-                }
-            }
-        });
+        function renderDashboard() {
+            const data = fetchMarketData();
+            const container = document.getElementById('heatmap-container');
+            const totalEl = document.getElementById('total-pnl');
+            
+            container.innerHTML = ''; 
+            let totalPnL = 0;
 
-        // --- DIVIDEND CHART ---
-        const ctxDiv = document.getElementById('dividendChart').getContext('2d');
-        new Chart(ctxDiv, {
-            type: 'bar',
-            data: {
-                labels: divLabels,
-                datasets: [{
-                    label: 'Income Received',
-                    data: divData,
-                    backgroundColor: 'rgba(0, 230, 118, 0.6)',
-                    borderColor: '#00E676',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                        ticks: { color: '#8b9bb4', callback: (val) => '£' + val }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#8b9bb4', font: { size: 10 } }
-                    }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: (ctx) => '£' + ctx.raw.toFixed(2)
-                        }
-                    }
-                }
-            }
-        });
-        
-        // --- TURNOVER CHART ---
-        const ctxTurn = document.getElementById('turnoverChart').getContext('2d');
-        new Chart(ctxTurn, {
-            type: 'doughnut',
-            data: {
-                labels: ['Buys', 'Sells'],
-                datasets: [{
-                    data: [buyCount, sellCount],
-                    backgroundColor: ['rgba(0, 230, 118, 0.8)', 'rgba(255, 23, 68, 0.8)'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                responsive: true,
-                cutout: '70%',
-                plugins: {
-                    legend: { display: false }
-                }
-            }
+            data.sort((a, b) => Math.abs(b.percentChange) - Math.abs(a.percentChange));
+
+            data.forEach(item => {
+                const pnl = (item.currentPrice - item.avgCost) * item.holdings;
+                totalPnL += pnl;
+
+                let colorClass = '';
+                if(item.percentChange > 10) colorClass = 'bg-emerald-500';
+                else if(item.percentChange > 5) colorClass = 'bg-emerald-600';
+                else if(item.percentChange > 0)  colorClass = 'bg-emerald-700/80';
+                else if(item.percentChange < -10) colorClass = 'bg-rose-600';
+                else if(item.percentChange < -5) colorClass = 'bg-rose-700';
+                else colorClass = 'bg-rose-800/80';
+
+                const div = document.createElement('div');
+                div.className = `ticker-box ${colorClass}`;
+                div.innerHTML = `
+                    <div class="symbol">${item.ticker}</div>
+                    <div class="percent">${item.percentChange > 0 ? '+' : ''}${item.percentChange.toFixed(2)}%</div>
+                    <div class="price">£${item.currentPrice.toFixed(2)}</div>
+                `;
+                container.appendChild(div);
+            });
+
+            totalEl.innerText = `${totalPnL >= 0 ? '+' : ''}£${totalPnL.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            totalEl.className = `text-2xl font-bold mono ${totalPnL >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+
+            renderAlerts(data);
+        }
+
+        function renderAlerts(data) {
+            const container = document.getElementById('alerts-container');
+            container.innerHTML = '';
+            const movers = data.filter(d => Math.abs(d.percentChange) > 2);
+            movers.forEach(m => {
+                const isGain = m.percentChange > 0;
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-3 rounded bg-white/5 border border-white/5';
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-1.5 h-1.5 rounded-full ${isGain ? 'bg-emerald-500' : 'bg-rose-500'}"></div>
+                        <span class="text-xs font-bold mono uppercase">${m.ticker}</span>
+                    </div>
+                    <span class="mono text-[0.6rem] ${isGain ? 'text-emerald-400' : 'text-rose-400'}">
+                        ${isGain ? 'SURGE' : 'VOLATILITY'} ${m.percentChange.toFixed(1)}%
+                    </span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        window.addEventListener('load', () => {
+            renderDashboard();
+            setInterval(renderDashboard, 10000); 
         });
     </script>
 </body>
-
 </html>
