@@ -129,7 +129,17 @@ def main():
             
             # --- CURRENCY NORMALIZER (FORENSIC AUDIT FIX) ---
             # UK stocks often trade in Pence (GBX) but we want Pounds (GBP)
-            is_uk = ticker.endswith('.L') or currency in ['GBX', 'GBp'] or (raw_cur_price > 500 and currency == 'GBP')
+            # 1. Check Ticker Suffix
+            # 2. Check Currency Code (GBX, GBp)
+            # 3. Check Deep Search (User Suggestion: 'GBX' in str(pos))
+            # 4. Check Price Heuristic (If Price > 2000 and Currency is GBP, it's virtually impossible to be £2000/share for standard UK large caps, must be Pence)
+            
+            is_uk_ticker = ticker.endswith('.L')
+            is_uk_currency = currency in ['GBX', 'GBp']
+            is_uk_deep = 'GBX' in str(pos).upper()
+            is_huge_price = (raw_cur_price > 1500 and currency == 'GBP') # Lowered threshold, most UK stocks < £15.00
+            
+            is_uk = is_uk_ticker or is_uk_currency or is_uk_deep or is_huge_price
             
             if is_uk:
                 cur_price = raw_cur_price / 100.0
