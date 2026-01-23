@@ -199,11 +199,12 @@ def main():
         architect_audit.sort(key=lambda x: x['verdict'] == 'PASS') 
         
     except Exception as e:
+        import traceback
         print("!!! CRASH REPORT (T212 Connection) !!!")
-        # import traceback
-        # traceback.print_exc()
+        traceback.print_exc()
         print(f"Error: {e}")
-        t212_error = str(e) # Capture for dashboard display
+        # Capture FULL traceback
+        t212_error = f"{str(e)} | {traceback.format_exc().splitlines()[-1]}"
     
     # --- INTELLIGENCE ENGINE (PHASE 2 - ALWAYS RUN) ---
     try:
