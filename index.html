@@ -171,19 +171,19 @@
         <div class="header-row">
             <div class="metric-card">
                 <div class="metric-label">Total Wealth</div>
-                <div class="metric-value">£176,361.71</div>
+                <div class="metric-value">£176,177.22</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">Cash Reserve</div>
-                <div class="metric-value">£14,895.18</div>
+                <div class="metric-value">£14,949.59</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">Est. Income</div>
-                <div class="metric-value" style="color: var(--neon-green);">£17,100.21</div>
+                <div class="metric-value" style="color: var(--neon-green);">£6,882.81</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-label">Last Updated</div>
-                <div class="metric-value" style="font-size: 1rem;">2026-01-23 00:24 UTC</div>
+            <div class="metric-card" style="border: 1px solid rgba(255, 152, 0, 0.3); background: rgba(255, 152, 0, 0.05);">
+                <div class="metric-label" style="color: #FFB74D;">Leakage Alert</div>
+                <div class="metric-value" style="color: #FFB74D; font-size: 1.2rem;">£0.00 <span style="font-size: 0.8rem; color: #8b9bb4;">(0.00%)</span></div>
             </div>
         </div>
 
@@ -194,120 +194,32 @@
         </div>
 
         <div class="glass-panel" style="grid-row: 3; grid-column: 1;">
-            <h3 style="margin-top:0;">Internal Reality</h3>
-            <div class="scrollable">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ASSET</th>
-                            <th>PRICE</th>
-                            <th>VERDICT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-        <tr>
-            <td><span class="ticker-badge">BMY_US</span></td>
-            <td>£54.88</td>
-            <td><span class="status-pill status-green">Fair Value</span></td>
-        </tr>
-        
-        <tr>
-            <td><span class="ticker-badge">RIO</span></td>
-            <td>£64.86</td>
-            <td><span class="status-pill status-green">Fair Value</span></td>
-        </tr>
-        
-        <tr>
-            <td><span class="ticker-badge">LGEN</span></td>
-            <td>£258.10</td>
-            <td><span class="status-pill status-red">Yield Erosion</span></td>
-        </tr>
-        
-        <tr>
-            <td><span class="ticker-badge">QELL_US</span></td>
-            <td>£0.00</td>
-            <td><span class="status-pill status-red">Yield Erosion</span></td>
-        </tr>
-        
-        <tr>
-            <td><span class="ticker-badge">BATS</span></td>
-            <td>£43.13</td>
-            <td><span class="status-pill status-green">Fair Value</span></td>
-        </tr>
-        
-        <tr>
-            <td><span class="ticker-badge">VSNTV_US</span></td>
-            <td>£31.35</td>
-            <td><span class="status-pill status-red">Yield Erosion</span></td>
-        </tr>
-        
-        <tr>
-            <td><span class="ticker-badge">NUE_US</span></td>
-            <td>£180.17</td>
-            <td><span class="status-pill status-green">Fair Value</span></td>
-        </tr>
-        
-        <tr>
-            <td><span class="ticker-badge">SOLV_US</span></td>
-            <td>£80.26</td>
-            <td><span class="status-pill status-red">Yield Erosion</span></td>
-        </tr>
-        
-        <tr>
-            <td><span class="ticker-badge">RE_US</span></td>
-            <td>£321.47</td>
-            <td><span class="status-pill status-red">Yield Erosion</span></td>
-        </tr>
-        
-        <tr>
-            <td><span class="ticker-badge">QCOM_US</span></td>
-            <td>£157.80</td>
-            <td><span class="status-pill status-red">Yield Erosion</span></td>
-        </tr>
-        
-        <tr>
-            <td><span class="ticker-badge">NFLX_US</span></td>
-            <td>£83.54</td>
-            <td><span class="status-pill status-red">Yield Erosion</span></td>
-        </tr>
-        
-        <tr>
-            <td><span class="ticker-badge">CRM_US</span></td>
-            <td>£228.03</td>
-            <td><span class="status-pill status-red">Yield Erosion</span></td>
-        </tr>
-        
-        <tr>
-            <td><span class="ticker-badge">EOG_US</span></td>
-            <td>£106.26</td>
-            <td><span class="status-pill status-red">Yield Erosion</span></td>
-        </tr>
-        
-        <tr>
-            <td><span class="ticker-badge">CTVA_US</span></td>
-            <td>£71.56</td>
-            <td><span class="status-pill status-green">Fair Value</span></td>
-        </tr>
-        
-        <tr>
-            <td><span class="ticker-badge">CNNE_US</span></td>
-            <td>£15.87</td>
-            <td><span class="status-pill status-red">Yield Erosion</span></td>
-        </tr>
-        
-                    </tbody>
-                </table>
+            <h3 style="margin-top:0;">Passive Income Stream</h3>
+            <div style="flex-grow: 1; position: relative; min-height: 200px;">
+                <canvas id="dividendChart"></canvas>
+            </div>
+            <div style="margin-top: 10px; font-size: 0.8rem; color: var(--text-secondary); text-align: center;">
+                Total Lifetime: <span style="color: var(--neon-green); font-weight: bold;">£0.00</span>
             </div>
         </div>
 
         <div class="glass-panel" style="grid-row: 3; grid-column: 2;">
-            <h3 style="margin-top:0;">Intelligence Log</h3>
-            <div class="scrollable">
-                <div style="margin-bottom: 10px; border-left: 2px solid var(--neon-green); padding-left: 10px;">
-                    <span style="color: var(--neon-green);">SYSTEM ACTIVE</span><br>
-                    <span style="font-size: 0.8rem; color: #888;">Monitoring logic engaged.</span>
+            <h3 style="margin-top:0;">Market Activity (Last 100)</h3>
+            <div style="display: flex; height: 150px; margin-bottom: 20px;">
+                <canvas id="turnoverChart"></canvas>
+                <div style="display: flex; flex-direction: column; justify-content: center; margin-left: 15px;">
+                     <div style="font-size: 0.8rem; color: #8b9bb4;">BUYS: <span style="color: #00E676;">0</span></div>
+                     <div style="font-size: 0.8rem; color: #8b9bb4;">SELLS: <span style="color: #FF1744;">0</span></div>
                 </div>
+            </div>
+            
+            <h4 style="margin: 0 0 10px 0; font-size: 0.8rem; color: var(--text-secondary); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">RECENT ACTIVITY</h4>
+            <div class="scrollable">
+                <table style="margin-top:0;">
+                    <tbody>
+                        
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -315,15 +227,20 @@
 
     <script>
         // DYNAMIC DATA
-        const treeData = [{"x": "BMY_US", "v": 10427.2, "p": 5.7498542126213845}, {"x": "RIO", "v": 6639.6959355078, "p": 41.71892492961653}, {"x": "LGEN", "v": 258100.00000000003, "p": -0.006586160539600258}, {"x": "QELL_US", "v": 0.137681555, "p": -99.93652234822756}, {"x": "BATS", "v": 4313.0, "p": 2.624014923668481}, {"x": "VSNTV_US", "v": 3479.8500000000004, "p": -4.947582341340296}, {"x": "NUE_US", "v": 17863.908560065, "p": 21.603358343522487}, {"x": "SOLV_US", "v": 8026.000000000001, "p": -0.4030536776166225}, {"x": "RE_US", "v": 21523.2536271682, "p": -4.653845746826795}, {"x": "QCOM_US", "v": 14202.000000000002, "p": -6.667718149915223}, {"x": "NFLX_US", "v": 15872.6, "p": -7.917613977522119}, {"x": "CRM_US", "v": 17558.31, "p": -6.481667897009149}, {"x": "EOG_US", "v": 17834.3655567462, "p": -5.590850900349938}, {"x": "CTVA_US", "v": 12523.0, "p": 1.963632455423988}, {"x": "CNNE_US", "v": 19141.8327769701, "p": -0.690122002690129}];
+        const treeData = [{"x": "BMY", "v": 10427.2, "p": 8.52}, {"x": "RIO", "v": 6729.58, "p": 43.64}, {"x": "LGEN", "v": 2579.0, "p": -0.73}, {"x": "LILMF", "v": 0.14, "p": -99.95}, {"x": "BATS", "v": 4309.3, "p": 2.54}, {"x": "VSNT", "v": 3479.85, "p": -5.74}, {"x": "NUE", "v": 17863.91, "p": 31.63}, {"x": "SOLV", "v": 8026.0, "p": -0.23}, {"x": "EG", "v": 21523.25, "p": -3.69}, {"x": "QCOM", "v": 14202.0, "p": -8.55}, {"x": "NFLX", "v": 15872.6, "p": -9.66}, {"x": "CRM", "v": 17558.31, "p": -8.21}, {"x": "EOG", "v": 17834.37, "p": -6.79}, {"x": "CTVA", "v": 12523.0, "p": 3.35}, {"x": "CNNE", "v": 19141.83, "p": -0.14}];
+        const divLabels = [];
+        const divData = [];
+        
+        // Phase 18 Data
+        const buyCount = 0;
+        const sellCount = 0;
 
-        const ctx = document.getElementById('empireHeatmap').getContext('2d');
+        // --- HEATMAP ---
+        const ctxMap = document.getElementById('empireHeatmap').getContext('2d');
 
         function getColor(context) {
             if (context.type !== 'data' || !context.raw) return 'transparent';
-            // Robust Lookup: Find original item to preserve 'p' and 'v' accuracy
-            // Try to find by ticker (x). If x is an index, this might fail, but group: ['x'] should set x = Ticker.
-            const item = treeData.find(d => d.x === context.raw.x) || context.raw; 
+            const item = treeData.find(d => d.x === context.raw.x) || context.raw;
             const p = item.p || 0;
 
             if (p > 0.01) return 'rgba(0, 230, 118, 0.6)';  // Green (Positive)
@@ -331,13 +248,13 @@
             return 'rgba(120, 144, 156, 0.4)';              // Grey (Neutral/Zero)
         }
 
-        new Chart(ctx, {
+        new Chart(ctxMap, {
             type: 'treemap',
             data: {
                 datasets: [{
                     tree: treeData,
-                    key: 'v',      // Size = Value
-                    groups: ['x'], // Label = Ticker
+                    key: 'v',     
+                    groups: ['x'],
                     backgroundColor: getColor,
                     borderColor: '#0a0a0f',
                     borderWidth: 2,
@@ -347,18 +264,13 @@
                         align: 'center',
                         position: 'center',
                         color: '#fff',
-                        font: { family: 'JetBrains Mono', weight: 'bold', size: 14 },
+                        font: { family: 'Inter', weight: 'bold', size: 14 },
                         formatter: (ctx) => {
                             if (!ctx.raw) return "";
-                            // Look up original data to ensure we get correct props
                             const item = treeData.find(d => d.x === ctx.raw.x) || ctx.raw;
-                            
-                            // Line 1: Ticker
-                            // Line 2: Value
-                            // Line 3: Percent
                             const val = "£" + (item.v || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                            const pct = (item.p || 0).toFixed(2) + '%'; 
-                            return [ item.x, val, pct ];
+                            const pct = (item.p || 0).toFixed(2) + '%';
+                            return [item.x, val, pct];
                         }
                     }
                 }]
@@ -375,13 +287,75 @@
                             },
                             label: (item) => {
                                 const d = treeData.find(x => x.x === item.raw.x) || item.raw;
-                                return [`£${(d.v||0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, `${d.p||0}% Return`];
+                                return [`£${(d.v || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, `${d.p || 0}% Return`];
                             }
                         }
                     }
                 }
             }
         });
+
+        // --- DIVIDEND CHART ---
+        const ctxDiv = document.getElementById('dividendChart').getContext('2d');
+        new Chart(ctxDiv, {
+            type: 'bar',
+            data: {
+                labels: divLabels,
+                datasets: [{
+                    label: 'Income Received',
+                    data: divData,
+                    backgroundColor: 'rgba(0, 230, 118, 0.6)',
+                    borderColor: '#00E676',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#8b9bb4', callback: (val) => '£' + val }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#8b9bb4', font: { size: 10 } }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                         callbacks: {
+                             label: (ctx) => '£' + ctx.raw.toFixed(2)
+                         }
+                    }
+                }
+            }
+        });
+        
+        // --- TURNOVER CHART ---
+        const ctxTurn = document.getElementById('turnoverChart').getContext('2d');
+        new Chart(ctxTurn, {
+            type: 'doughnut',
+            data: {
+                labels: ['Buys', 'Sells'],
+                datasets: [{
+                    data: [buyCount, sellCount],
+                    backgroundColor: ['rgba(0, 230, 118, 0.8)', 'rgba(255, 23, 68, 0.8)'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                cutout: '70%',
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
     </script>
 </body>
+
 </html>
