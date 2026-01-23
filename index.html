@@ -12,6 +12,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.0/dist/chartjs-chart-treemap.min.js"></script>
@@ -171,19 +172,26 @@
         <div class="header-row">
             <div class="metric-card">
                 <div class="metric-label">Total Wealth</div>
-                <div class="metric-value">£176,177.22</div>
+                <div class="metric-value">£176,219.50</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">Cash Reserve</div>
-                <div class="metric-value">£14,949.59</div>
+                <div class="metric-value">£14,940.61</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">Est. Income</div>
-                <div class="metric-value" style="color: var(--neon-green);">£6,882.81</div>
+                <div class="metric-value" style="color: var(--neon-green);">£6,882.53</div>
             </div>
-            <div class="metric-card" style="border: 1px solid rgba(255, 152, 0, 0.3); background: rgba(255, 152, 0, 0.05);">
-                <div class="metric-label" style="color: #FFB74D;">Leakage Alert</div>
-                <div class="metric-value" style="color: #FFB74D; font-size: 1.2rem;">£0.00 <span style="font-size: 0.8rem; color: #8b9bb4;">(0.00%)</span></div>
+            <div class="metric-card" style="border-left: 4px solid var(--neon-red); background: rgba(255, 23, 68, 0.05); position: relative;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div class="metric-label" style="color: var(--neon-red); font-weight: bold;">Leakage (Fees)</div>
+                        <div class="metric-value" style="font-size: 1.3rem;">£0.00</div>
+                    </div>
+                    <div>
+                        <i class="fas fa-search-dollar fa-2x" style="color: rgba(255,255,255,0.1)"></i>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -208,12 +216,14 @@
             <div style="display: flex; height: 150px; margin-bottom: 20px;">
                 <canvas id="turnoverChart"></canvas>
                 <div style="display: flex; flex-direction: column; justify-content: center; margin-left: 15px;">
-                     <div style="font-size: 0.8rem; color: #8b9bb4;">BUYS: <span style="color: #00E676;">0</span></div>
-                     <div style="font-size: 0.8rem; color: #8b9bb4;">SELLS: <span style="color: #FF1744;">0</span></div>
+                    <div style="font-size: 0.8rem; color: #8b9bb4;">BUYS: <span style="color: #00E676;">0</span></div>
+                    <div style="font-size: 0.8rem; color: #8b9bb4;">SELLS: <span style="color: #FF1744;">0</span></div>
                 </div>
             </div>
-            
-            <h4 style="margin: 0 0 10px 0; font-size: 0.8rem; color: var(--text-secondary); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">RECENT ACTIVITY</h4>
+
+            <h4
+                style="margin: 0 0 10px 0; font-size: 0.8rem; color: var(--text-secondary); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                RECENT ACTIVITY</h4>
             <div class="scrollable">
                 <table style="margin-top:0;">
                     <tbody>
@@ -227,10 +237,10 @@
 
     <script>
         // DYNAMIC DATA
-        const treeData = [{"x": "BMY", "v": 10427.2, "p": 8.52}, {"x": "RIO", "v": 6729.58, "p": 43.64}, {"x": "LGEN", "v": 2579.0, "p": -0.73}, {"x": "LILMF", "v": 0.14, "p": -99.95}, {"x": "BATS", "v": 4309.3, "p": 2.54}, {"x": "VSNT", "v": 3479.85, "p": -5.74}, {"x": "NUE", "v": 17863.91, "p": 31.63}, {"x": "SOLV", "v": 8026.0, "p": -0.23}, {"x": "EG", "v": 21523.25, "p": -3.69}, {"x": "QCOM", "v": 14202.0, "p": -8.55}, {"x": "NFLX", "v": 15872.6, "p": -9.66}, {"x": "CRM", "v": 17558.31, "p": -8.21}, {"x": "EOG", "v": 17834.37, "p": -6.79}, {"x": "CTVA", "v": 12523.0, "p": 3.35}, {"x": "CNNE", "v": 19141.83, "p": -0.14}];
+        const treeData = [{"x": "BMY", "v": 10427.2, "p": 8.52}, {"x": "RIO", "v": 6729.88, "p": 43.64}, {"x": "LGEN", "v": 2579.0, "p": -0.73}, {"x": "LILMF", "v": 0.14, "p": -99.95}, {"x": "BATS", "v": 4301.9, "p": 2.36}, {"x": "VSNT", "v": 3479.85, "p": -5.74}, {"x": "NUE", "v": 17863.91, "p": 31.63}, {"x": "SOLV", "v": 8026.0, "p": -0.23}, {"x": "EG", "v": 21523.25, "p": -3.69}, {"x": "QCOM", "v": 14202.0, "p": -8.55}, {"x": "NFLX", "v": 15872.6, "p": -9.66}, {"x": "CRM", "v": 17558.31, "p": -8.21}, {"x": "EOG", "v": 17834.37, "p": -6.79}, {"x": "CTVA", "v": 12523.0, "p": 3.35}, {"x": "CNNE", "v": 19141.83, "p": -0.14}];
         const divLabels = [];
         const divData = [];
-        
+
         // Phase 18 Data
         const buyCount = 0;
         const sellCount = 0;
@@ -253,7 +263,7 @@
             data: {
                 datasets: [{
                     tree: treeData,
-                    key: 'v',     
+                    key: 'v',
                     groups: ['x'],
                     backgroundColor: getColor,
                     borderColor: '#0a0a0f',
@@ -264,7 +274,7 @@
                         align: 'center',
                         position: 'center',
                         color: '#fff',
-                        font: { family: 'Inter', weight: 'bold', size: 14 },
+                        font: { family: 'JetBrains Mono', weight: 'bold', size: 14 },
                         formatter: (ctx) => {
                             if (!ctx.raw) return "";
                             const item = treeData.find(d => d.x === ctx.raw.x) || ctx.raw;
@@ -326,9 +336,9 @@
                 plugins: {
                     legend: { display: false },
                     tooltip: {
-                         callbacks: {
-                             label: (ctx) => '£' + ctx.raw.toFixed(2)
-                         }
+                        callbacks: {
+                            label: (ctx) => '£' + ctx.raw.toFixed(2)
+                        }
                     }
                 }
             }
