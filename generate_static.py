@@ -171,6 +171,15 @@ def main():
                 'logic': logic_note
             })
 
+            # --- HEATMAP POPULATION (RESTORED) ---
+            heatmap_data.append({
+                'x': ticker,
+                'y': market_val,
+                'fillColor': '#28a745' if pnl_pct >= 0 else '#dc3545',
+                'custom_main': f"£{market_val:,.2f}",
+                'custom_sub': f"{pnl_pct*100:+.1f}%"
+            })
+
         architect_audit.sort(key=lambda x: x['verdict'] == 'PASS') 
         
     except Exception as e:
@@ -184,6 +193,25 @@ def main():
     try:
         import fetch_intelligence
         server_intelligence = fetch_intelligence.run_intel()
+        
+        # --- GHOST PROTOCOL (PHASE 4) ---
+        # Merge Offline Assets (Gold, Cash, etc.)
+        ghosts = server_intelligence.get('ghost_holdings', [])
+        if ghosts:
+             print(f"Ghost Protocol: Merging {len(ghosts)} offline assets...")
+             for g in ghosts:
+                 g_name = g.get('name', 'Unknown Asset')
+                 g_val = float(g.get('value', 0.0))
+                 total_value += g_val
+                 
+                 heatmap_data.append({
+                    'x': g_name,
+                    'y': g_val,
+                    'fillColor': '#6c757d', # Grey for Ghost/Neutral
+                    'custom_main': f"£{g_val:,.2f}",
+                    'custom_sub': "OFFLINE"
+                 })
+                 
     except Exception as e:
         print(f"INTEL FAILURE: {e}")
         server_intelligence = {"watchlist": [], "sitrep": {
