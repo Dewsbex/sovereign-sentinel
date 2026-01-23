@@ -49,6 +49,15 @@ def fetch_live_prices(strategy_data):
             live_price = target # Safety fallback to avoid breaking UI
         
         # 2. Logic (Distance Calculation)
+        
+        # --- TYPE SAFETY (CRASH PREVENTION) ---
+        try:
+            live_price = float(live_price)
+        except (ValueError, TypeError):
+            # If yfinance returns garbage, fallback to target to prevent crash
+            print(f"   [WARN] Invalid price for {ticker}: {live_price}. Fallback to target.")
+            live_price = float(target)
+
         # --- CURRENCY NORMALIZER (FORENSIC AUDIT FIX) ---
         is_uk = ticker.endswith('.L')
         
