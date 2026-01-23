@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOVEREIGN SENTINEL | Command Center</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.0/dist/chartjs-chart-treemap.min.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sentinel">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <style>
+        :root {
+            --glass-bg: rgba(18, 18, 24, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --neon-green: #00E676;
+            --neon-red: #FF1744;
+            --text-primary: #ffffff;
+            --text-secondary: #8b9bb4;
+        }
+
+        body {
+            background-color: #0a0a0f;
+            background-image: radial-gradient(circle at 50% 0%, #1a1f35 0%, #0a0a0f 70%);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow: hidden;
+            /* Prevent scrolling for dashboard feel */
+        }
+
+        /* --- THE BENTO GRID --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            /* 60% Left, 40% Right */
+            grid-template-rows: auto 1fr auto;
+            /* Header, Main, Footer */
+            gap: 20px;
+            height: 100%;
+        }
+
+        /* Glass Panel Base Class */
+        .glass-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- HEADER CARDS (Account Vitals) --- */
+        .header-row {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 5px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* --- TABLES --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            text-align: left;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        td {
+            padding: 12px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .ticker-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        /* --- STATUS PILLS --- */
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-green {
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--neon-green);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+        }
+
+        .status-red {
+            background: rgba(255, 23, 68, 0.15);
+            color: var(--neon-red);
+            border: 1px solid rgba(255, 23, 68, 0.3);
+        }
+
+        .status-wait {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- SCROLL ZONES --- */
+        .scrollable {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 5px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                overflow: auto;
+                height: auto;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .header-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* --- MOBILE OPTIMIZATION (The Pocket Sentinel) --- */
+        @media (max-width: 768px) {
+
+            /* 1. Unstack the Main Grid */
+            .dashboard-grid {
+                display: flex;
+                flex-direction: column;
+                height: auto;
+                /* Allow scrolling on mobile */
+                overflow-y: auto;
+            }
+
+            /* 2. Break the Header Cards (2x2 Grid instead of 1x4) */
+            .header-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            /* 3. Adjust Panel Heights */
+            .glass-panel {
+                height: auto;
+                min-height: 300px;
+                /* Give charts room to breathe */
+            }
+
+            /* 4. Fix Chart Container */
+            #allocationChart {
+                height: 250px !important;
+            }
+
+            /* 5. Typography Tweaks */
+            body {
+                padding: 10px;
+                /* Less padding on mobile edges */
+                overflow: auto;
+                /* Re-enable body scroll for mobile */
+            }
+
+            .metric-value {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-grid">
+        <!-- ROW 1: HEADS-UP DISPLAY -->
+        <div class="header-row">
+            <div class="metric-card">
+                <div class="metric-label">Total Wealth</div>
+                <div class="metric-value">
+                    {% if account.total_value > 0 %}
+                    ${{ "%.2f"|format(account.total_value) }}
+                    {% elif account.projected_income > 0 %}
+                    <span style="color: var(--neon-red); font-size: 1.2rem;">⚠ SYNC ERROR</span>
+                    {% else %}
+                    <span style="color: var(--text-secondary);">SYNCING...</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Cash Dry Powder</div>
+                <div class="metric-value">
+                    ${{ "%.2f"|format(account.cash) }}
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Proj. Income</div>
+                <div class="metric-value" style="color: var(--neon-green);">
+                    {% if account.projected_income > 0 %}${{ "%.2f"|format(account.projected_income) }}{% else %}---{%
+                    endif %}
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Total P/L</div>
+                <div class="metric-value"
+                    style="color: {{ 'var(--neon-green)' if account.total_return >= 0 else 'var(--neon-red)' }}">
+                    {% if account.total_value > 0 %}${{ "%.2f"|format(account.total_return) }}{% else %}---{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ROW 1.5: VISUAL CORTEX (Chart) -->
+        <div class="glass-panel" style="grid-column: 1 / -1; height: 320px;">
+            <h3 style="margin-top:0; margin-bottom: 10px; color: var(--text-primary);">Empire Allocation</h3>
+            <div style="position: relative; height: 100%; width: 100%; display: flex; justify-content: center;">
+                <canvas id="allocationChart"></canvas>
+            </div>
+        </div>
+
+        <!-- ROW 2 COL 1: INTERNAL REALITY (Main Portfolio) -->
+        <div class="glass-panel" style="grid-row: 2 / 4;">
+            <h3
+                style="margin-top:0; color: var(--text-primary); border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 10px;">
+                INTERNAL REALITY</h3>
+            <div class="scrollable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ASSET</th>
+                            <th>PRICE</th>
+                            <th>NET YIELD</th>
+                            <th>VERDICT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in portfolio %}
+                        <tr>
+                            <td><span class="ticker-badge">{{ item.ticker }}</span></td>
+                            <td style="font-family: 'JetBrains Mono';">${{ "%.2f"|format(item.price) }}</td>
+                            <td
+                                style="font-family: 'JetBrains Mono'; color: {{ 'var(--neon-red)' if item.net_yield < 0.038 else 'var(--text-secondary)' }}">
+                                {{ "%.1f"|format(item.net_yield * 100) }}%
+                            </td>
+                            <td>
+                                <span
+                                    class="status-pill {{ 'status-red' if item.net_yield < 0.038 else 'status-green' }}">
+                                    {{ item.verdict }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% if not portfolio %}
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: var(--text-secondary); padding: 40px;">
+                                System Offline. awaiting data feed...</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ROW 2 COL 2: WATCHLIST -->
+        <div class="glass-panel">
+            <h3
+                style="margin-top:0; color: var(--text-primary); border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 10px;">
+                EXTERNAL TRUTH</h3>
+            <div class="scrollable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>TARGET</th>
+                            <th>CURRENT</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in watchlist %}
+                        <tr>
+                            <td><span class="ticker-badge">{{ item.ticker }}</span></td>
+                            <td style="font-family: 'JetBrains Mono';">${{ "%.2f"|format(item.price) }}</td>
+                            <td>
+                                {% if item.price <= item.target %} <span class="status-pill status-green">BUY NOW</span>
+                                    {% else %}
+                                    <span class="status-pill status-wait">WAIT</span>
+                                    {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ROW 3 COL 2: INTELLIGENCE LOG -->
+        <div class="glass-panel">
+            <h3
+                style="margin-top:0; color: var(--text-primary); border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 10px;">
+                SENTINEL LOG</h3>
+            <div class="scrollable"
+                style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-secondary);">
+                {% if alerts %}
+                {% for alert in alerts|reverse %}
+                <div
+                    style="margin-bottom: 8px; border-left: 2px solid {{ 'var(--neon-red)' if 'VIOLATION' in alert.type else 'var(--neon-green)' }}; padding-left: 10px;">
+                    <span style="color: {{ 'var(--neon-red)' if 'VIOLATION' in alert.type else 'var(--neon-green)' }};">
+                        {% if 'VIOLATION' in alert.type %}⚠{% else %}TARGET{% endif %}
+                    </span> {{ alert.message }}
+                </div>
+                {% endfor %}
+                {% else %}
+                <div style="padding: 10px; text-align: center;">All Clear. No threats detected.</div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Auto-Refresh Script -->
+    <script>
+        async function refreshData() {
+            try {
+                const response = await fetch('/api/state');
+                const data = await response.json();
+                if (data.last_update) {
+                    // Flash effect could go here
+                }
+            } catch (e) { }
+        }
+        setInterval(refreshData, 30000);
+
+        // --- CHART CORTEX (TREEMAP EDITION) ---
+        const treeData = {{ treemap_dataset | safe }};
+
+        if (treeData.length > 0) {
+            const ctx = document.getElementById('allocationChart').getContext('2d');
+
+            // Color Logic: Gain = Green, Loss = Red
+            function getColor(context) {
+                if (context.type !== 'data') return 'transparent';
+                const value = context.raw.p; // Performance %
+                return value >= 0 ? 'rgba(0, 230, 118, 0.6)' : 'rgba(255, 23, 68, 0.6)';
+            }
+
+            new Chart(ctx, {
+                type: 'treemap',
+                data: {
+                    datasets: [{
+                        tree: treeData,
+                        key: 'v',      // Size = Value
+                        groups: ['x'], // Group by Ticker
+                        backgroundColor: getColor,
+                        borderColor: 'rgba(0,0,0,0.3)',
+                        borderWidth: 1,
+                        spacing: 2,
+                        labels: {
+                            display: true,
+                            align: 'center',
+                            position: 'center',
+                            color: '#fff',
+                            font: { family: 'JetBrains Mono', weight: 'bold', size: 14 },
+                            formatter: (ctx) => {
+                                return [ctx.raw.x, ctx.raw.p + '%'];
+                            }
+                        }
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                title: (items) => items[0].raw.x,
+                                label: (item) => {
+                                    const d = item.raw;
+                                    return [
+                                        `Value: $${d.v.toLocaleString()}`,
+                                        `Return: ${d.p}%`
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

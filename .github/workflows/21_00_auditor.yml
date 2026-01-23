@@ -1,0 +1,39 @@
+name: "21:00 Global Auditor (Close)"
+
+on:
+  schedule:
+    - cron: '0 21 * * *' # 21:00 UTC Daily
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  global-auditor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Sentinel Intelligence
+        env:
+          T212_API_KEY: ${{ secrets.T212_API_KEY }}
+          T212_API_SECRET: ${{ secrets.T212_API_SECRET }}
+        run: |
+          python generate_static.py
+
+      - name: Deploy Dashboard
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: .
+          branch: gh-pages
