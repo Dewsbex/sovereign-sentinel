@@ -122,8 +122,8 @@
             <div class="sentinel-card flex flex-col justify-between h-24 border-l-4 border-l-neutral-500/50">
                 <span class="text-xs mono text-neutral-500 uppercase tracking-widest">System Status</span>
                 <div>
-                    <span class="text-xl font-bold text-emerald-500 mono">ONLINE</span>
-                    <div class="text-[0.6rem] text-neutral-600 mt-1">Synced: {{ last_updated }}</div>
+                    <span class="text-xl font-bold {{ status_color }} mono">{{ system_status }}</span>
+                    <div class="text-[0.6rem] text-neutral-600 mt-1">{{ status_sub }}</div>
                 </div>
             </div>
         </div>
