@@ -4,6 +4,7 @@
             "ticker": "RR.L",
             "name": "Rolls-Royce",
             "target_price": 420.0,
+            "current_price": 460.0,
             "type": "Satellite",
             "status": "WATCHING"
         },
@@ -11,24 +12,16 @@
             "ticker": "MSFT",
             "name": "Microsoft",
             "target_price": 350.0,
+            "current_price": 410.0,
             "type": "Fortress",
-            "status": "QUEUE BUY"
+            "status": "WAIT"
         }
     ],
     "ghost_holdings": [
         {
             "name": "Cash ISA",
-            "value": 20000,
-            "currency": "GBP"
-        },
-        {
-            "name": "Physical Gold",
-            "value": 5000,
+            "value": 15000.00,
             "currency": "GBP"
         }
-    ],
-    "macro_constraints": {
-        "yield_floor": 6.0,
-        "volatility_limit": 20.0
-    }
+    ]
 }
