@@ -184,6 +184,7 @@
 
         /* --- MOBILE OPTIMIZATION (The Pocket Sentinel) --- */
         @media (max-width: 768px) {
+
             /* 1. Unstack the Main Grid */
             .dashboard-grid {
                 display: flex;
@@ -232,13 +233,13 @@
             <div class="metric-card">
                 <div class="metric-label">Total Wealth</div>
                 <div class="metric-value">
-                     {% if account.total_value > 0 %}
-                        ${{ "%.2f"|format(account.total_value) }}
-                     {% elif account.projected_income > 0 %}
-                        <span style="color: var(--neon-red); font-size: 1.2rem;">⚠ SYNC ERROR</span>
-                     {% else %}
-                        <span style="color: var(--text-secondary);">SYNCING...</span>
-                     {% endif %}
+                    {% if account.total_value > 0 %}
+                    ${{ "%.2f"|format(account.total_value) }}
+                    {% elif account.projected_income > 0 %}
+                    <span style="color: var(--neon-red); font-size: 1.2rem;">⚠ SYNC ERROR</span>
+                    {% else %}
+                    <span style="color: var(--text-secondary);">SYNCING...</span>
+                    {% endif %}
                 </div>
             </div>
             <div class="metric-card">
@@ -296,7 +297,8 @@
                                 {{ "%.1f"|format(item.net_yield * 100) }}%
                             </td>
                             <td>
-                                <span class="status-pill {{ 'status-red' if item.net_yield < 0.038 else 'status-green' }}">
+                                <span
+                                    class="status-pill {{ 'status-red' if item.net_yield < 0.038 else 'status-green' }}">
                                     {{ item.verdict }}
                                 </span>
                             </td>

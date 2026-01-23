@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | ASSET WATCH v1.3</title>
+    <title>SOVEREIGN SENTINEL | INTELLIGENCE v2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -25,8 +26,10 @@
 
         /* VIBE BACKGROUND */
         .grid-bg {
-            position: fixed; inset: 0; z-index: -1;
-            background-image: 
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image:
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 40px 40px;
@@ -45,9 +48,15 @@
         }
 
         /* HEADER */
-        h1 { font-family: 'JetBrains Mono', monospace; letter-spacing: -1px; }
-        .mono { font-family: 'JetBrains Mono', monospace; }
-        
+        h1 {
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: -1px;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
         /* LAYOUT */
         .main-grid {
             display: grid;
@@ -57,14 +66,20 @@
             margin: 40px auto;
             padding: 0 24px;
         }
-        .col-span-12 { grid-column: span 12; }
-        
+
+        .col-span-12 {
+            grid-column: span 12;
+        }
+
         /* Responsive Tweaks */
         @media (max-width: 1024px) {
-            .col-span-12 { grid-column: span 12; }
+            .col-span-12 {
+                grid-column: span 12;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <div class="grid-bg"></div>
@@ -72,7 +87,8 @@
     <nav class="flex justify-between items-center px-8 py-6 max-w-[1400px] mx-auto border-b border-white/10 mb-8">
         <div class="flex items-center gap-3">
             <div class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></div>
-            <h1 class="text-xl font-bold tracking-tighter uppercase">SOVEREIGN SENTINEL <span class="text-xs text-neutral-500 font-normal ml-2">v1.3</span></h1>
+            <h1 class="text-xl font-bold tracking-tighter uppercase">SOVEREIGN SENTINEL <span
+                    class="text-xs text-neutral-500 font-normal ml-2">v2.0</span></h1>
         </div>
         <div class="flex gap-8 items-center">
             <div class="text-right border-l border-white/10 pl-8">
@@ -83,22 +99,44 @@
     </nav>
 
     <div class="main-grid">
-        
+
         <!-- ROW 1: HEADS-UP DISPLAY (METRICS) -->
         <div class="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
             <div class="sentinel-card flex flex-col justify-between h-24 border-l-4 border-l-emerald-500/50">
                 <span class="text-xs mono text-neutral-500 uppercase tracking-widest">Total Wealth</span>
-                <span class="text-2xl font-bold text-white mono">£175,450.89</span>
+                <span class="text-2xl font-bold text-white mono">£0.00</span>
             </div>
             <div class="sentinel-card flex flex-col justify-between h-24 border-l-4 border-l-blue-500/50">
                 <span class="text-xs mono text-neutral-500 uppercase tracking-widest">Cash Reserve</span>
-                <span class="text-2xl font-bold text-white mono">£15,096.13</span>
+                <span class="text-2xl font-bold text-white mono">£15,129.03</span>
             </div>
             <div class="sentinel-card flex flex-col justify-between h-24 border-l-4 border-l-neutral-500/50">
                 <span class="text-xs mono text-neutral-500 uppercase tracking-widest">System Status</span>
                 <div>
-                   <span class="text-xl font-bold text-emerald-500 mono">ONLINE</span>
-                   <div class="text-[0.6rem] text-neutral-600 mt-1">Synced: 2026-01-23 20:07 UTC</div>
+                    <span class="text-xl font-bold text-emerald-500 mono">ONLINE</span>
+                    <div class="text-[0.6rem] text-neutral-600 mt-1">Synced: 2026-01-23 21:28 UTC</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROW 1.5: SITREP TERMINAL (COMMAND STREAM) -->
+        <div class="sentinel-card col-span-12"
+            style="background: rgba(20, 20, 20, 0.8); border-left: 4px solid #10b981;">
+            <div class="flex justify-between items-start">
+                <div class="flex flex-col">
+                    <span class="text-[0.6rem] text-neutral-500 uppercase tracking-widest mb-1">
+                        CONFIDENTIAL // SYSTEM FAILURE // Offline Mode
+                    </span>
+                    <h2 class="text-xl font-bold font-mono text-rose-500 mb-2">
+                        INTELLIGENCE ENGINE OFFLINE
+                    </h2>
+                    <p class="text-sm text-neutral-400 font-mono">
+                        >> Unable to connect to market data feeds. Check API logs.
+                    </p>
+                </div>
+                <div class="text-right">
+                    <span class="text-[0.6rem] text-neutral-600 block">TIMESTAMP</span>
+                    <span class="text-sm font-bold font-mono text-white">21:28 UTC</span>
                 </div>
             </div>
         </div>
@@ -111,19 +149,51 @@
                     <p class="text-xs text-neutral-500">Size = Position Value | Color = Lifetime P&L</p>
                 </div>
             </div>
-            
+
             <div id="heatmap-chart" style="min-height: 600px;"></div>
         </div>
-        
-        <!-- ROW 3: SOVEREIGN ARCHITECT REPORT (MOAT AUDIT) -->
+
+        <!-- ROW 3: STRATEGY ROOM (TARGET RECON) -->
+        <div class="sentinel-card col-span-12">
+            <div class="flex justify-between items-end mb-6">
+                <div>
+                    <h2 class="text-sm mono text-neutral-400 mb-1">📡 STRATEGY ROOM (TARGET RECON)</h2>
+                    <p class="text-xs text-neutral-500">Live Surveillance: Watchlist & Target Acquisition</p>
+                </div>
+                <div class="text-[0.6rem] text-emerald-500 mono bg-emerald-500/10 px-2 py-1 rounded animate-pulse">
+                    SCANNING ACTIVE
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="text-neutral-500 text-xs mono uppercase tracking-widest border-b border-white/10">
+                        <tr>
+                            <th class="p-3">Ticker</th>
+                            <th class="p-3">Type</th>
+                            <th class="p-3">Live Price</th>
+                            <th class="p-3">Target</th>
+                            <th class="p-3">Distance</th>
+                            <th class="p-3">Status</th>
+                            <th class="p-3 text-right">Intel Verdict</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm mono">
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ROW 4: SOVEREIGN ARCHITECT REPORT (MOAT AUDIT) -->
         <div class="sentinel-card col-span-12 mb-6">
-             <div class="flex justify-between items-end mb-6">
+            <div class="flex justify-between items-end mb-6">
                 <div>
                     <h2 class="text-sm mono text-neutral-400 mb-1">🏰 MOAT AUDIT (THE ARCHITECT)</h2>
                     <p class="text-xs text-neutral-500">Cash Hurdle: 3.80% | Tax Reality: UK (0%) vs US (15% WHT)</p>
                 </div>
             </div>
-            
+
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead class="text-neutral-500 text-xs mono uppercase tracking-widest border-b border-white/10">
@@ -142,19 +212,21 @@
                             <td class="p-3 font-bold">LGEN</td>
                             <td class="p-3">
                                 
-                                    <span class="text-emerald-500 text-xs">UK (SOVEREIGN)</span>
+                                <span class="text-emerald-500 text-xs">UK (SOVEREIGN)</span>
                                 
                             </td>
-                            <td class="p-3">1.63%</td>
+                            <td class="p-3">2.35%</td>
                             <td class="p-3 text-rose-400">-0.6%</td>
                             <td class="p-3">
                                 
-                                    <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
+                                <span
+                                    class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
                                 
                             </td>
                             <td class="p-3 text-right">
                                 <span class="text-xs text-neutral-400">Fails Cash Hurdle (3.8%)</span>
-                                <span class="ml-2 font-bold text-rose-500">TRIM</span>
+                                <span
+                                    class="ml-2 font-bold text-rose-500">TRIM</span>
                             </td>
                         </tr>
                         
@@ -162,19 +234,21 @@
                             <td class="p-3 font-bold">LILMF</td>
                             <td class="p-3">
                                 
-                                    <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
+                                <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
                                 
                             </td>
-                            <td class="p-3">2.12%</td>
+                            <td class="p-3">1.19%</td>
                             <td class="p-3 text-rose-400">-99.9%</td>
                             <td class="p-3">
                                 
-                                    <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
+                                <span
+                                    class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
                                 
                             </td>
                             <td class="p-3 text-right">
                                 <span class="text-xs text-neutral-400">Fails Cash Hurdle (3.8%)</span>
-                                <span class="ml-2 font-bold text-rose-500">TRIM</span>
+                                <span
+                                    class="ml-2 font-bold text-rose-500">TRIM</span>
                             </td>
                         </tr>
                         
@@ -182,19 +256,21 @@
                             <td class="p-3 font-bold">VSNT</td>
                             <td class="p-3">
                                 
-                                    <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
+                                <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
                                 
                             </td>
-                            <td class="p-3">1.78%</td>
-                            <td class="p-3 text-rose-400">-6.3%</td>
+                            <td class="p-3">2.17%</td>
+                            <td class="p-3 text-rose-400">-5.0%</td>
                             <td class="p-3">
                                 
-                                    <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
+                                <span
+                                    class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
                                 
                             </td>
                             <td class="p-3 text-right">
                                 <span class="text-xs text-neutral-400">Fails Cash Hurdle (3.8%)</span>
-                                <span class="ml-2 font-bold text-rose-500">TRIM</span>
+                                <span
+                                    class="ml-2 font-bold text-rose-500">TRIM</span>
                             </td>
                         </tr>
                         
@@ -202,39 +278,21 @@
                             <td class="p-3 font-bold">SOLV</td>
                             <td class="p-3">
                                 
-                                    <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
+                                <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
                                 
                             </td>
-                            <td class="p-3">1.14%</td>
-                            <td class="p-3 text-rose-400">-1.8%</td>
+                            <td class="p-3">1.90%</td>
+                            <td class="p-3 text-rose-400">-1.9%</td>
                             <td class="p-3">
                                 
-                                    <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
+                                <span
+                                    class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
                                 
                             </td>
                             <td class="p-3 text-right">
                                 <span class="text-xs text-neutral-400">Fails Cash Hurdle (3.8%)</span>
-                                <span class="ml-2 font-bold text-rose-500">TRIM</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                            <td class="p-3 font-bold">EG</td>
-                            <td class="p-3">
-                                
-                                    <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
-                                
-                            </td>
-                            <td class="p-3">1.42%</td>
-                            <td class="p-3 text-rose-400">-3.3%</td>
-                            <td class="p-3">
-                                
-                                    <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
-                                
-                            </td>
-                            <td class="p-3 text-right">
-                                <span class="text-xs text-neutral-400">Fails Cash Hurdle (3.8%)</span>
-                                <span class="ml-2 font-bold text-rose-500">TRIM</span>
+                                <span
+                                    class="ml-2 font-bold text-rose-500">TRIM</span>
                             </td>
                         </tr>
                         
@@ -242,19 +300,21 @@
                             <td class="p-3 font-bold">QCOM</td>
                             <td class="p-3">
                                 
-                                    <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
+                                <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
                                 
                             </td>
-                            <td class="p-3">2.28%</td>
-                            <td class="p-3 text-rose-400">-10.0%</td>
+                            <td class="p-3">2.52%</td>
+                            <td class="p-3 text-rose-400">-9.7%</td>
                             <td class="p-3">
                                 
-                                    <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
+                                <span
+                                    class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
                                 
                             </td>
                             <td class="p-3 text-right">
                                 <span class="text-xs text-neutral-400">Fails Cash Hurdle (3.8%)</span>
-                                <span class="ml-2 font-bold text-rose-500">TRIM</span>
+                                <span
+                                    class="ml-2 font-bold text-rose-500">TRIM</span>
                             </td>
                         </tr>
                         
@@ -262,139 +322,21 @@
                             <td class="p-3 font-bold">NFLX</td>
                             <td class="p-3">
                                 
-                                    <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
+                                <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
                                 
                             </td>
-                            <td class="p-3">1.73%</td>
-                            <td class="p-3 text-rose-400">-7.5%</td>
+                            <td class="p-3">3.77%</td>
+                            <td class="p-3 text-rose-400">-6.9%</td>
                             <td class="p-3">
                                 
-                                    <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
+                                <span
+                                    class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
                                 
                             </td>
                             <td class="p-3 text-right">
                                 <span class="text-xs text-neutral-400">Fails Cash Hurdle (3.8%)</span>
-                                <span class="ml-2 font-bold text-rose-500">TRIM</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                            <td class="p-3 font-bold">EOG</td>
-                            <td class="p-3">
-                                
-                                    <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
-                                
-                            </td>
-                            <td class="p-3">3.66%</td>
-                            <td class="p-3 text-rose-400">-5.5%</td>
-                            <td class="p-3">
-                                
-                                    <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
-                                
-                            </td>
-                            <td class="p-3 text-right">
-                                <span class="text-xs text-neutral-400">Fails Cash Hurdle (3.8%)</span>
-                                <span class="ml-2 font-bold text-rose-500">TRIM</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                            <td class="p-3 font-bold">CNNE</td>
-                            <td class="p-3">
-                                
-                                    <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
-                                
-                            </td>
-                            <td class="p-3">1.93%</td>
-                            <td class="p-3 text-rose-400">-1.6%</td>
-                            <td class="p-3">
-                                
-                                    <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
-                                
-                            </td>
-                            <td class="p-3 text-right">
-                                <span class="text-xs text-neutral-400">Fails Cash Hurdle (3.8%)</span>
-                                <span class="ml-2 font-bold text-rose-500">TRIM</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                            <td class="p-3 font-bold">BMY</td>
-                            <td class="p-3">
-                                
-                                    <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
-                                
-                            </td>
-                            <td class="p-3">2.91%</td>
-                            <td class="p-3 text-emerald-400">+7.9%</td>
-                            <td class="p-3">
-                                
-                                    <span class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-bold">PASS</span>
-                                
-                            </td>
-                            <td class="p-3 text-right">
-                                <span class="text-xs text-neutral-400">Growth compensated</span>
-                                <span class="ml-2 font-bold text-emerald-500">HOLD</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                            <td class="p-3 font-bold">RIO</td>
-                            <td class="p-3">
-                                
-                                    <span class="text-emerald-500 text-xs">UK (SOVEREIGN)</span>
-                                
-                            </td>
-                            <td class="p-3">3.90%</td>
-                            <td class="p-3 text-emerald-400">+43.7%</td>
-                            <td class="p-3">
-                                
-                                    <span class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-bold">PASS</span>
-                                
-                            </td>
-                            <td class="p-3 text-right">
-                                <span class="text-xs text-neutral-400">Yields > Cash</span>
-                                <span class="ml-2 font-bold text-emerald-500">HOLD</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                            <td class="p-3 font-bold">BATS</td>
-                            <td class="p-3">
-                                
-                                    <span class="text-emerald-500 text-xs">UK (SOVEREIGN)</span>
-                                
-                            </td>
-                            <td class="p-3">4.81%</td>
-                            <td class="p-3 text-emerald-400">+3.0%</td>
-                            <td class="p-3">
-                                
-                                    <span class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-bold">PASS</span>
-                                
-                            </td>
-                            <td class="p-3 text-right">
-                                <span class="text-xs text-neutral-400">Yields > Cash</span>
-                                <span class="ml-2 font-bold text-emerald-500">HOLD</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                            <td class="p-3 font-bold">NUE</td>
-                            <td class="p-3">
-                                
-                                    <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
-                                
-                            </td>
-                            <td class="p-3">3.54%</td>
-                            <td class="p-3 text-emerald-400">+32.6%</td>
-                            <td class="p-3">
-                                
-                                    <span class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-bold">PASS</span>
-                                
-                            </td>
-                            <td class="p-3 text-right">
-                                <span class="text-xs text-neutral-400">Growth compensated</span>
-                                <span class="ml-2 font-bold text-emerald-500">HOLD</span>
+                                <span
+                                    class="ml-2 font-bold text-rose-500">TRIM</span>
                             </td>
                         </tr>
                         
@@ -402,19 +344,175 @@
                             <td class="p-3 font-bold">CRM</td>
                             <td class="p-3">
                                 
-                                    <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
+                                <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
                                 
                             </td>
-                            <td class="p-3">4.24%</td>
-                            <td class="p-3 text-rose-400">-8.4%</td>
+                            <td class="p-3">1.22%</td>
+                            <td class="p-3 text-rose-400">-8.2%</td>
                             <td class="p-3">
                                 
-                                    <span class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-bold">PASS</span>
+                                <span
+                                    class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
+                                
+                            </td>
+                            <td class="p-3 text-right">
+                                <span class="text-xs text-neutral-400">Fails Cash Hurdle (3.8%)</span>
+                                <span
+                                    class="ml-2 font-bold text-rose-500">TRIM</span>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-3 font-bold">EOG</td>
+                            <td class="p-3">
+                                
+                                <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
+                                
+                            </td>
+                            <td class="p-3">3.65%</td>
+                            <td class="p-3 text-rose-400">-5.0%</td>
+                            <td class="p-3">
+                                
+                                <span
+                                    class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
+                                
+                            </td>
+                            <td class="p-3 text-right">
+                                <span class="text-xs text-neutral-400">Fails Cash Hurdle (3.8%)</span>
+                                <span
+                                    class="ml-2 font-bold text-rose-500">TRIM</span>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-3 font-bold">CNNE</td>
+                            <td class="p-3">
+                                
+                                <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
+                                
+                            </td>
+                            <td class="p-3">1.15%</td>
+                            <td class="p-3 text-rose-400">-1.3%</td>
+                            <td class="p-3">
+                                
+                                <span
+                                    class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded text-xs font-bold">FAIL</span>
+                                
+                            </td>
+                            <td class="p-3 text-right">
+                                <span class="text-xs text-neutral-400">Fails Cash Hurdle (3.8%)</span>
+                                <span
+                                    class="ml-2 font-bold text-rose-500">TRIM</span>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-3 font-bold">BMY</td>
+                            <td class="p-3">
+                                
+                                <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
+                                
+                            </td>
+                            <td class="p-3">3.69%</td>
+                            <td class="p-3 text-emerald-400">+8.0%</td>
+                            <td class="p-3">
+                                
+                                <span
+                                    class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-bold">PASS</span>
+                                
+                            </td>
+                            <td class="p-3 text-right">
+                                <span class="text-xs text-neutral-400">Growth compensated</span>
+                                <span
+                                    class="ml-2 font-bold text-emerald-500">HOLD</span>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-3 font-bold">RIO</td>
+                            <td class="p-3">
+                                
+                                <span class="text-emerald-500 text-xs">UK (SOVEREIGN)</span>
+                                
+                            </td>
+                            <td class="p-3">1.49%</td>
+                            <td class="p-3 text-emerald-400">+43.7%</td>
+                            <td class="p-3">
+                                
+                                <span
+                                    class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-bold">PASS</span>
+                                
+                            </td>
+                            <td class="p-3 text-right">
+                                <span class="text-xs text-neutral-400">Growth compensated</span>
+                                <span
+                                    class="ml-2 font-bold text-emerald-500">HOLD</span>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-3 font-bold">BATS</td>
+                            <td class="p-3">
+                                
+                                <span class="text-emerald-500 text-xs">UK (SOVEREIGN)</span>
+                                
+                            </td>
+                            <td class="p-3">3.06%</td>
+                            <td class="p-3 text-emerald-400">+3.0%</td>
+                            <td class="p-3">
+                                
+                                <span
+                                    class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-bold">PASS</span>
+                                
+                            </td>
+                            <td class="p-3 text-right">
+                                <span class="text-xs text-neutral-400">Growth compensated</span>
+                                <span
+                                    class="ml-2 font-bold text-emerald-500">HOLD</span>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-3 font-bold">NUE</td>
+                            <td class="p-3">
+                                
+                                <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
+                                
+                            </td>
+                            <td class="p-3">2.48%</td>
+                            <td class="p-3 text-emerald-400">+32.7%</td>
+                            <td class="p-3">
+                                
+                                <span
+                                    class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-bold">PASS</span>
+                                
+                            </td>
+                            <td class="p-3 text-right">
+                                <span class="text-xs text-neutral-400">Growth compensated</span>
+                                <span
+                                    class="ml-2 font-bold text-emerald-500">HOLD</span>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-3 font-bold">EG</td>
+                            <td class="p-3">
+                                
+                                <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
+                                
+                            </td>
+                            <td class="p-3">3.96%</td>
+                            <td class="p-3 text-rose-400">-3.0%</td>
+                            <td class="p-3">
+                                
+                                <span
+                                    class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-bold">PASS</span>
                                 
                             </td>
                             <td class="p-3 text-right">
                                 <span class="text-xs text-neutral-400">Yields > Cash</span>
-                                <span class="ml-2 font-bold text-emerald-500">HOLD</span>
+                                <span
+                                    class="ml-2 font-bold text-emerald-500">HOLD</span>
                             </td>
                         </tr>
                         
@@ -422,19 +520,21 @@
                             <td class="p-3 font-bold">CTVA</td>
                             <td class="p-3">
                                 
-                                    <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
+                                <span class="text-amber-500 text-xs">US (TAX TRAP)</span>
                                 
                             </td>
-                            <td class="p-3">3.89%</td>
+                            <td class="p-3">1.50%</td>
                             <td class="p-3 text-emerald-400">+3.5%</td>
                             <td class="p-3">
                                 
-                                    <span class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-bold">PASS</span>
+                                <span
+                                    class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-bold">PASS</span>
                                 
                             </td>
                             <td class="p-3 text-right">
-                                <span class="text-xs text-neutral-400">Yields > Cash</span>
-                                <span class="ml-2 font-bold text-emerald-500">HOLD</span>
+                                <span class="text-xs text-neutral-400">Growth compensated</span>
+                                <span
+                                    class="ml-2 font-bold text-emerald-500">HOLD</span>
                             </td>
                         </tr>
                         
@@ -443,7 +543,7 @@
             </div>
         </div>
 
-        <!-- ROW 4: ALERTS -->
+        <!-- ROW 5: ALERTS -->
         <div class="sentinel-card col-span-12">
             <h2 class="text-sm mono text-neutral-400 uppercase tracking-widest mb-4">Sentinel Alerts</h2>
             <!-- Grid for alerts to save vertical space -->
@@ -455,7 +555,7 @@
 
     <script>
         // --- 1. DATA INJECTION ---
-        const mapData = [{"x": "EG", "y": 21618.995850974, "fillColor": "#dc3545", "custom_main": "\u00a321,619.00", "custom_sub": "-\u00a3729.65 (-3.26%)"}, {"x": "CNNE", "y": 18864.414910637202, "fillColor": "#dc3545", "custom_main": "\u00a318,864.41", "custom_sub": "-\u00a3304.53 (-1.59%)"}, {"x": "EOG", "y": 18074.3725466403, "fillColor": "#dc3545", "custom_main": "\u00a318,074.37", "custom_sub": "-\u00a31,059.41 (-5.54%)"}, {"x": "NUE", "y": 17997.76145764, "fillColor": "#28a745", "custom_main": "\u00a317,997.76", "custom_sub": "+\u00a34,426.61 (+32.62%)"}, {"x": "CRM", "y": 17529.82, "fillColor": "#dc3545", "custom_main": "\u00a317,529.82", "custom_sub": "-\u00a31,597.98 (-8.35%)"}, {"x": "NFLX", "y": 16252.6, "fillColor": "#dc3545", "custom_main": "\u00a316,252.60", "custom_sub": "-\u00a31,316.60 (-7.49%)"}, {"x": "QCOM", "y": 13969.8, "fillColor": "#dc3545", "custom_main": "\u00a313,969.80", "custom_sub": "-\u00a31,559.40 (-10.04%)"}, {"x": "CTVA", "y": 12537.0, "fillColor": "#28a745", "custom_main": "\u00a312,537.00", "custom_sub": "+\u00a3419.73 (+3.46%)"}, {"x": "BMY", "y": 10364.5, "fillColor": "#28a745", "custom_main": "\u00a310,364.50", "custom_sub": "+\u00a3756.20 (+7.87%)"}, {"x": "SOLV", "y": 7902.0, "fillColor": "#dc3545", "custom_main": "\u00a37,902.00", "custom_sub": "-\u00a3142.73 (-1.77%)"}, {"x": "RIO", "y": 6731.8286265648, "fillColor": "#28a745", "custom_main": "\u00a36,731.83", "custom_sub": "+\u00a32,046.70 (+43.69%)"}, {"x": "BATS", "y": 4328.0, "fillColor": "#28a745", "custom_main": "\u00a34,328.00", "custom_sub": "+\u00a3125.28 (+2.98%)"}, {"x": "VSNT", "y": 3457.6499999999996, "fillColor": "#dc3545", "custom_main": "\u00a33,457.65", "custom_sub": "-\u00a3234.17 (-6.34%)"}, {"x": "LGEN", "y": 2582.0, "fillColor": "#dc3545", "custom_main": "\u00a32,582.00", "custom_sub": "-\u00a316.00 (-0.62%)"}, {"x": "LILMF", "y": 0.3386966253, "fillColor": "#dc3545", "custom_main": "\u00a30.34", "custom_sub": "-\u00a3281.34 (-99.88%)"}];
+        const mapData = [];
 
         // --- 2. APEXCHARTS RENDER ENGINE (v1.3 Layout) ---
         var options = {
@@ -479,14 +579,14 @@
                     distributed: true,
                     enableShades: false,
                     dataLabels: {
-                        format: 'scale' 
+                        format: 'scale'
                     }
                 }
             },
             dataLabels: {
                 enabled: true,
                 style: { fontSize: '16px', fontWeight: 'bold' }, // Bigger Text
-                formatter: function(text, op) {
+                formatter: function (text, op) {
                     let point = op.w.config.series[0].data[op.dataPointIndex];
                     return [text, point.custom_main, point.custom_sub];
                 },
@@ -495,7 +595,7 @@
             tooltip: {
                 theme: 'dark',
                 y: {
-                    formatter: function(value, op) {
+                    formatter: function (value, op) {
                         let point = op.w.config.series[0].data[op.dataPointIndex];
                         return point.custom_sub;
                     }
@@ -509,17 +609,17 @@
 
         // --- 3. ALERTS RENDERER ---
         function renderAlerts() {
-             const container = document.getElementById('alerts-container');
-             container.innerHTML = '';
-             
-             // Top 6 by Size
-             const topAssets = mapData.slice(0, 6);
-             
-             topAssets.forEach(m => {
-                 const isGain = m.fillColor === '#28a745';
-                 const div = document.createElement('div');
-                 div.className = 'flex items-center justify-between p-4 rounded bg-white/5 border border-white/5 hover:bg-white/10 transition-colors';
-                 div.innerHTML = `
+            const container = document.getElementById('alerts-container');
+            container.innerHTML = '';
+
+            // Top 6 by Size
+            const topAssets = mapData.slice(0, 6);
+
+            topAssets.forEach(m => {
+                const isGain = m.fillColor === '#28a745';
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-4 rounded bg-white/5 border border-white/5 hover:bg-white/10 transition-colors';
+                div.innerHTML = `
                      <div class="flex items-center gap-3">
                          <div class="w-2 h-2 rounded-full ${isGain ? 'bg-emerald-500' : 'bg-rose-500'}"></div>
                          <div>
@@ -531,12 +631,13 @@
                          ${m.custom_sub.split(' ')[0]} 
                      </span>
                  `;
-                 container.appendChild(div);
-             });
+                container.appendChild(div);
+            });
         }
-        
+
         renderAlerts();
 
     </script>
 </body>
+
 </html>

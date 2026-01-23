@@ -1,0 +1,233 @@
+import os
+import requests
+import json
+from datetime import datetime
+
+# ==============================================================================
+# 0. CONFIGURATION & HELPERS
+# ==============================================================================
+
+def clean_ticker(ticker_raw):
+    """Normalize tickers by removing exchange suffixes."""
+    # UK stocks often come as 'VODl_EQ' or 'RR.L'
+    # We want just 'VOD' or 'RR'.
+    t = ticker_raw.replace('l_EQ', '').replace('_EQ', '').replace('.L', '')
+    return t
+
+def safe_float(value, default=0.0):
+    """Safely converts API strings to floats."""
+    if value is None: return default
+    try:
+        # ONLY remove commas and currency symbols. Keep the dot!
+        clean = str(value).replace(',', '').replace('$', '').replace('£', '')
+        return float(clean)
+    except ValueError:
+        return default
+
+# ==============================================================================
+# 1. MAIN EXECUTION
+# ==============================================================================
+
+def main():
+    print(f"Starting Sovereign Sentinel... (Re-deploy {datetime.now().strftime('%H:%M:%S')})")
+    
+    # DEFAULT DATA (Fail-Safe)
+    total_value = 0.0
+    cash_reserves = 0.0
+    projected_income = 0.0
+    total_fees_str = "£0.00"
+    heatmap_data = []
+    architect_audit = []
+    
+    try:
+        # 1. FETCH DATA FROM TRADING 212 (LIVE SERVER ONLY)
+        # Load keys from Environment Variables
+        api_id = os.environ.get('T212_API_KEY')      # The short ID
+        api_secret = os.environ.get('T212_API_SECRET') # The long Secret
+
+        if not api_id or not api_secret:
+            print("CRITICAL WARNING: Missing API credentials. Rendering Fallback Mode.")
+            # We DONT exit, we just let the try block finish or skip to render
+            raise ValueError("Missing API Keys")
+
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SovereignSentinel/1.0",
+            "Content-Type": "application/json"
+        }
+        
+        BASE_URL = "https://live.trading212.com/api/v0/"
+        print(f"Connecting to LIVE Server: {BASE_URL}")
+
+        # --- METADATA FETCH (PHASE 16) ---
+        print("Fetching Instrument Metadata...")
+        r_meta = requests.get(f"{BASE_URL}equity/metadata/instruments", headers=headers, auth=(api_id, api_secret))
+        
+        instrument_map = {}
+        if r_meta.status_code == 200:
+            meta_data = r_meta.json()
+            for item in meta_data:
+                t_id = item.get('ticker')
+                if t_id:
+                    instrument_map[t_id] = {
+                        'currency': item.get('currencyCode'),
+                        'symbol': item.get('shortName') or item.get('name') or t_id,
+                        'type': item.get('type')
+                    }
+            print(f"Metadata Loaded: {len(instrument_map)} instruments mapped.")
+        else:
+            print(f"METADATA FAILED: {r_meta.status_code} - Continuing with fallback heuristics.")
+
+        # --- ORDER HISTORY (PHASE 18) ---
+        print("Fetching Order History...")
+        r_orders = requests.get(f"{BASE_URL}equity/history/orders?limit=100", headers=headers, auth=(api_id, api_secret))
+        
+        # --- FEE AUDITOR LOGIC (MANUAL FIX) ---
+        total_fees = 0.0
+        if r_orders.status_code == 200:
+            history_data = r_orders.json() 
+            for order in history_data:
+                total_fees += float(order.get('currencyConversionFee', 0) or 0)
+                if 'taxes' in order:
+                    for tax in order['taxes']:
+                        total_fees += float(tax.get('quantity', 0) or 0)
+
+        total_fees_str = f"£{total_fees:,.2f}"
+        print(f"Fee Auditor Complete: {total_fees_str}")
+
+        # Account Cash/Stats
+        r_account = requests.get(f"{BASE_URL}equity/account/cash", headers=headers, auth=(api_id, api_secret))
+        cash_data = r_account.json() if r_account.status_code == 200 else {}
+        
+        r_portfolio = requests.get(f"{BASE_URL}equity/portfolio", headers=headers, auth=(api_id, api_secret))
+        portfolio_raw = r_portfolio.json() if r_portfolio.status_code == 200 else []
+
+        total_wealth_raw = safe_float(cash_data.get('total', 0))
+        cash_reserves = safe_float(cash_data.get('free', 0))
+
+    # --- SOVEREIGN ARCHITECT LOGIC (PHASE 24) ---
+        # "The Math Anchors"
+        RISK_FREE_RATE = 0.038 # 3.80%
+        US_WHT = 0.15 # 15% Tax Trap
+        MIN_HURDLE = 0.043 # 4.3% (3.8 + 0.5 Risk Premium)
+
+        architect_audit = []
+
+        for pos in portfolio_raw:
+            raw_ticker = pos.get('ticker', '')
+            if not raw_ticker: continue
+            
+            # 1. Identity
+            meta = instrument_map.get(raw_ticker, {})
+            ticker = meta.get('symbol') or clean_ticker(raw_ticker)
+            currency = meta.get('currency') or pos.get('currency', '')
+            
+            # 2. Financials (Live)
+            qty = safe_float(pos.get('quantity', 0))
+            avg_price = safe_float(pos.get('averagePrice', 0))
+            cur_price = safe_float(pos.get('currentPrice', 0))
+            
+            # Pence Fix
+            is_pence = False
+            if currency in ['GBX', 'GBp'] or (cur_price > 1000 and currency == 'GBP'):
+                is_pence = True
+                cur_price /= 100.0
+                avg_price /= 100.0
+            
+            invested = qty * avg_price
+            market_val = qty * cur_price
+            
+            # 3. The Yield Calculation (Simulated)
+            raw_yield_mock = (hash(ticker) % 400) / 10000.0 + 0.01 
+            
+            # 4. The Tax Reality
+            is_us = currency == 'USD' or '_US_' in raw_ticker
+            tax_drag = US_WHT if is_us else 0.0
+            net_yield = raw_yield_mock * (1 - tax_drag)
+            
+            # 5. The Verdict
+            pnl_pct = ((market_val - invested) / invested) if invested > 0 else 0
+            
+            pass_hurdle = False
+            logic_note = ""
+            
+            if net_yield > RISK_FREE_RATE:
+                pass_hurdle = True
+                logic_note = "Yields > Cash"
+            elif (net_yield + pnl_pct) > MIN_HURDLE:
+                 pass_hurdle = True
+                 logic_note = "Growth compensated"
+            else:
+                 pass_hurdle = False
+                 logic_note = f"Fails Cash Hurdle ({RISK_FREE_RATE*100:.1f}%)"
+
+            architect_audit.append({
+                'ticker': ticker,
+                'weight': "N/A", 
+                'pnl_pct': f"{pnl_pct*100:+.1f}%",
+                'net_yield': f"{net_yield*100:.2f}%",
+                'is_us': is_us,
+                'verdict': "PASS" if pass_hurdle else "FAIL",
+                'action': "HOLD" if pass_hurdle else "TRIM",
+                'logic': logic_note
+            })
+
+        architect_audit.sort(key=lambda x: x['verdict'] == 'PASS') 
+        
+    except Exception as e:
+        print("!!! CRASH REPORT (T212 Connection) !!!")
+        # import traceback
+        # traceback.print_exc()
+        print(f"Error: {e}")
+        # Even if T212 fails, we run the Intelligence Engine (Mock Mode)
+    
+    # --- INTELLIGENCE ENGINE (PHASE 2 - ALWAYS RUN) ---
+    try:
+        import fetch_intelligence
+        server_intelligence = fetch_intelligence.run_intel()
+    except Exception as e:
+        print(f"INTEL FAILURE: {e}")
+        server_intelligence = {"watchlist": [], "sitrep": {
+            "type": "SYSTEM FAILURE",
+            "context": "Offline Mode",
+            "timestamp": datetime.utcnow().strftime("%H:%M UTC"),
+            "headline": "INTELLIGENCE ENGINE OFFLINE",
+            "body": "Unable to connect to market data feeds. Check API logs.",
+            "status_color": "text-rose-500"
+        }}
+
+    # 3. GENERATE HTML (Fail Safe)
+    with open('templates/base.html', 'r', encoding='utf-8') as f:
+        template_str = f.read()
+
+    from jinja2 import Template
+    template = Template(template_str)
+    
+    html_output = template.render(
+        total_value=f"£{total_value:,.2f}", 
+        cash_reserves=f"£{cash_reserves:,.2f}",
+        projected_income=f"£{projected_income:,.2f}", 
+        last_updated=datetime.now().strftime("%Y-%m-%d %H:%M UTC"),
+        total_fees_str=total_fees_str,
+        heatmap_dataset=json.dumps(heatmap_data),
+        # Architect Data
+        moat_audit=architect_audit,
+        # Intelligence Data
+        recon_data=server_intelligence.get('watchlist', []),
+        sitrep=server_intelligence.get('sitrep', {
+            "type": "SYSTEM WAITING",
+            "context": "Initializing...",
+            "timestamp": datetime.now().strftime("%H:%M UTC"),
+            "headline": "AWAITING INTELLIGENCE",
+            "body": "System is coming online. Please wait.",
+            "status_color": "text-neutral-500"
+        }),
+        portfolio_json='[]' 
+    )
+    
+    with open('index.html', 'w', encoding='utf-8') as f: 
+        f.write(html_output)
+        
+    print("Build Complete (Intelligence Mode). v2.0 Ready.")
+
+if __name__ == "__main__":
+    main()
