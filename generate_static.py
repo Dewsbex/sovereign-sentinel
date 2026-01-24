@@ -177,27 +177,30 @@ def main():
             # 2. Financials (Live)
             qty = parse_float(pos.get('quantity', 0))
             
-            # SELECTIVE PENCE TO POUNDS
-            # UK stocks (.L) are in Pence. US stocks are already in Pounds.
+            # SELECTIVE PENCE TO POUNDS (FINAL AUDIT)
+            # UK stocks (.L) or those with currency GBX/GBp are in Pence.
             raw_cur_price = parse_float(pos.get('currentPrice', 0))
             raw_avg_price = parse_float(pos.get('averagePrice', 0))
             
-            # IMPROVED UK DETECTION: .L or specifically _GB_
-            # US stocks often have _US_EQ, so we must be specific.
-            is_uk = (raw_ticker.endswith('.L') or '_GB_' in raw_ticker) and '_US_' not in raw_ticker
+            # STRICTOR DETECTION
+            is_gbx = (currency in ['GBX', 'GBp'])
+            is_uk_ticker = raw_ticker.endswith('.L') or '_GB_' in raw_ticker
+            is_not_global = '_US_' not in raw_ticker and '_NL_' not in raw_ticker and '_DE_' not in raw_ticker
+            
+            is_uk = (is_gbx or is_uk_ticker) and is_not_global
             
             if is_uk:
+                # Divide by 100 to convert Pence -> Pounds
                 cur_price = raw_cur_price / 100.0
                 avg_price = raw_avg_price / 100.0
             else:
-                # Target US/Global stocks are already in base currency (Pounds)
+                # US/Global shares are already in the account's base currency (Pounds) via API
                 cur_price = raw_cur_price
                 avg_price = raw_avg_price
             
             invested = qty * avg_price
             market_val = qty * cur_price
-            # total_value is derived from account 'total', we don't increment here 
-            # to avoid double counting, unless account total is missing.
+            # (total_value is already derived from account 'total', we don't increment here)
             
             # 3. The Yield Calculation (Simulated)
             raw_yield_mock = (hash(ticker) % 400) / 10000.0 + 0.01 
