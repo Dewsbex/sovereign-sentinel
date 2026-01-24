@@ -4,318 +4,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | INTELLIGENCE v2.0</title>
+    <title>SOVEREIGN SENTINEL | PLATINUM MASTER v29.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        window.onerror = function (msg, url, line, col, error) {
-            const div = document.createElement('div');
-            div.style.cssText = 'position:fixed;top:0;left:0;right:0;background:red;color:white;padding:20px;z-index:9999;font-family:monospace;';
-            div.innerHTML = 'CRITICAL DASHBOARD ERROR:<br>' + msg + '<br>Line: ' + line;
-            document.body.appendChild(div);
-            return false;
-        };
-    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap');
 
         :root {
-            --bg-dark: #0a0a0a;
-            --panel-bg: rgba(20, 20, 20, 0.6);
-            --border-color: rgba(255, 255, 255, 0.1);
+            --bg-dark: #050505;
+            --panel-bg: rgba(15, 15, 15, 0.8);
+            --border-color: rgba(255, 255, 255, 0.05);
+            --accent-platinum: #E5E4E2;
         }
 
         body {
             background-color: var(--bg-dark);
-            color: #e5e5e5;
+            color: #d1d1d1;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
         }
 
-        /* VIBE BACKGROUND */
-        .grid-bg {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
-        }
-
-        /* GLASS PANELS */
         .sentinel-card {
             background: var(--panel-bg);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 4px;
+            padding: 24px;
             position: relative;
-            overflow: hidden;
-        }
-
-        /* HEADER */
-        h1 {
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: -1px;
         }
 
         .mono {
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* LAYOUT */
         .main-grid {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
             gap: 24px;
-            max-width: 1400px;
-            margin: 40px auto;
-            padding: 0 24px;
+            max-width: 1600px;
+            margin: 20px auto;
+            padding: 0 40px;
         }
 
-        .col-span-12 {
-            grid-column: span 12;
+        .control-room-pill {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Responsive Tweaks */
-        @media (max-width: 1024px) {
-            .col-span-12 {
-                grid-column: span 12;
-            }
+        .flight-deck-btn {
+            background: linear-gradient(135deg, #444, #222);
+            border: 1px solid #555;
+            padding: 12px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'JetBrains Mono';
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .flight-deck-btn:active {
+            transform: scale(0.98);
+            background: #111;
+        }
+
+        .break-glass {
+            border-color: #ef4444 !important;
+            color: #ef4444 !important;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="grid-bg"></div>
-
-    <nav class="flex justify-between items-center px-8 py-6 max-w-[1400px] mx-auto border-b border-white/10 mb-8">
-        <div class="flex items-center gap-3">
-            <div class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></div>
-            <h1 class="text-xl font-bold tracking-tighter uppercase">SOVEREIGN SENTINEL <span
-                    class="text-xs text-neutral-500 font-normal ml-2">v2.0</span></h1>
+    <nav class="flex justify-between items-center px-10 py-8 max-w-[1600px] mx-auto border-b border-white/5 mb-8">
+        <div class="flex items-center gap-4">
+            <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_15px_#10b981]"></div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tighter uppercase text-white">SOVEREIGN SENTINEL</h1>
+                <div class="flex gap-2 mt-1">
+                    <span class="control-room-pill border-emerald-500/30 text-emerald-400">Environment: ISA</span>
+                    <span class="control-room-pill border-blue-500/30 text-blue-400">Rate: 3.8%</span>
+                    <span class="control-room-pill border-amber-500/30 text-amber-400">DRIP: Active</span>
+                </div>
+            </div>
         </div>
-        <div class="flex gap-8 items-center">
-            <div class="text-right border-l border-white/10 pl-8">
-                <div class="text-[0.6rem] text-rose-500 uppercase mono">Leakage (Fees)</div>
-                <div class="text-xs text-rose-400 mono">£0.00</div>
+        <div class="flex gap-4">
+            <div class="text-right px-4 border-r border-white/5">
+                <span class="text-[0.6rem] text-neutral-500 block mono">SYSTEM STATUS</span>
+                <span class="text-sm font-bold text-rose-500 mono">ERROR</span>
+            </div>
+            <div class="text-right">
+                <span class="text-[0.6rem] text-neutral-500 block mono">LATENCY</span>
+                <span class="text-sm font-bold text-white mono">124ms</span>
             </div>
         </div>
     </nav>
 
     <div class="main-grid">
 
-        <!-- ROW 1: HEADS-UP DISPLAY (METRICS) -->
-        <div class="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
-            <div class="sentinel-card flex flex-col justify-between h-24 border-l-4 border-l-emerald-500/50">
-                <span class="text-xs mono text-neutral-500 uppercase tracking-widest">Total Wealth</span>
-                <span class="text-2xl font-bold text-white mono">£0.00</span>
-            </div>
-            <div class="sentinel-card flex flex-col justify-between h-24 border-l-4 border-l-blue-500/50">
-                <span class="text-xs mono text-neutral-500 uppercase tracking-widest">Cash Reserve</span>
-                <span class="text-2xl font-bold text-white mono">£0.00</span>
-            </div>
-            <div class="sentinel-card flex flex-col justify-between h-24 border-l-4 border-l-neutral-500/50">
-                <span class="text-xs mono text-neutral-500 uppercase tracking-widest">System Status</span>
-                <div>
-                    <span class="text-xl font-bold text-rose-500 mono">ERROR</span>
-                    <div class="text-[0.6rem] text-neutral-600 mt-1">Missing API Keys (Check GitHub Secrets) | ValueError: Missing API Keys (Check GitHub Secrets)</div>
+        <!-- ✈️ THE FLIGHT DECK (PRE-EXECUTION UI) -->
+        <div class="col-span-12 md:col-span-4 sentinel-card" style="border-top: 2px solid #E5E4E2;">
+            <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4">✈️ PRE-FLIGHT CHECK</h2>
+            <div class="space-y-3 mb-6">
+                <div class="flex justify-between text-xs mono p-2 bg-white/5 rounded">
+                    <span class="text-neutral-500">Account Mode:</span>
+                    <span class="text-white">ISA (✅)</span>
                 </div>
+                <div class="flex justify-between text-xs mono p-2 bg-white/5 rounded">
+                    <span class="text-neutral-500">Connectivity:</span>
+                    <span class="text-emerald-500">HEARTBEAT_HEALTHY (✅)</span>
+                </div>
+                <div class="flex justify-between text-xs mono p-2 bg-white/5 rounded">
+                    <span class="text-neutral-500">Settlement Status:</span>
+                    <span class="text-white">Funds Settled (✅)</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 gap-2">
+                <div class="flight-deck-btn text-emerald-400">EXECUTE STRATEGY</div>
+                <div class="flight-deck-btn break-glass bg-rose-950/20 text-[0.6rem]">⚠️ BREAK GLASS OVERRIDE</div>
             </div>
         </div>
 
-        <!-- ROW 1.5: SITREP TERMINAL (COMMAND STREAM) -->
-        <div class="sentinel-card col-span-12"
-            style="background: rgba(20, 20, 20, 0.8); border-left: 4px solid #10b981;">
+        <!-- TAX LOGIC FORK & SOLAR STATUS -->
+        <div class="col-span-12 md:col-span-8 sentinel-card">
             <div class="flex justify-between items-start">
-                <div class="flex flex-col">
-                    <span class="text-[0.6rem] text-neutral-500 uppercase tracking-widest mb-1">
-                        CONFIDENTIAL // SYSTEM FAILURE // Offline Mode
-                    </span>
-                    <h2 class="text-xl font-bold font-mono text-rose-500 mb-2">
-                        INTELLIGENCE ENGINE OFFLINE
+                <div>
+                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1">SOLAR CYCLE // PHASE IV-B
                     </h2>
-                    <p class="text-sm text-neutral-400 font-mono">
-                        >> Unable to connect to market data feeds. Check API logs.
-                    </p>
+                    <h3 class="text-lg font-bold text-white mb-4">TAX LOGIC ENGINE: ISA</h3>
                 </div>
-                <div class="text-right">
-                    <span class="text-[0.6rem] text-neutral-600 block">TIMESTAMP</span>
-                    <span class="text-sm font-bold font-mono text-white">14:56 UTC</span>
+                <div
+                    class="mono text-[0.6rem] text-blue-400 px-2 py-1 bg-blue-400/10 border border-blue-400/20 rounded">
+                    PHASE: IDLE
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                
+                <div class="p-3 bg-white/5 border border-white/5 rounded">
+                    <span class="text-[0.6rem] text-neutral-500 uppercase mono block">limit_sentinel</span>
+                    <span class="text-sm font-bold text-white mono">Active</span>
+                </div>
+                
+                <div class="p-3 bg-white/5 border border-white/5 rounded">
+                    <span class="text-[0.6rem] text-neutral-500 uppercase mono block">days_to_april_5</span>
+                    <span class="text-sm font-bold text-white mono">70</span>
+                </div>
+                
+                <div class="p-3 bg-white/5 border border-white/5 rounded">
+                    <span class="text-[0.6rem] text-neutral-500 uppercase mono block">loss_harvesting</span>
+                    <span class="text-sm font-bold text-white mono">N/A (Tax Free)</span>
+                </div>
+                
+                <div class="p-3 bg-white/5 border border-white/5 rounded">
+                    <span class="text-[0.6rem] text-neutral-500 uppercase mono block">bed_n_breakfast</span>
+                    <span class="text-sm font-bold text-white mono">Clear (No Restriction)</span>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- MAIN METRICS -->
+        <div class="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="sentinel-card border-l-2 border-emerald-500">
+                <span class="text-[0.6rem] text-neutral-500 uppercase mono">Total Wealth</span>
+                <div class="text-3xl font-bold text-white mono mt-2">£0.00</div>
+            </div>
+            <div class="sentinel-card border-l-2 border-blue-500">
+                <span class="text-[0.6rem] text-neutral-500 uppercase mono">Cash Reserve</span>
+                <div class="text-3xl font-bold text-white mono mt-2">£0.00</div>
+            </div>
+            <div class="sentinel-card border-l-2 border-neutral-500">
+                <span class="text-[0.6rem] text-neutral-500 uppercase mono">Compounding Vision</span>
+                <div class="text-xs text-neutral-400 mt-2 italic">10yr Projection: ££0.00 → £--.m</div>
+            </div>
+        </div>
+
+        <!-- SECTOR GUARDIAN & INCOME CALENDAR -->
+        <div class="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Sector Guardian -->
+            <div class="sentinel-card">
+                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4">🛡️ SECTOR GUARDIAN</h2>
+                <div class="space-y-2">
+                    
+                    <div class="text-xs mono text-emerald-500/60 bg-emerald-500/5 p-3 rounded">
+                        >> ALL SECTORS WITHIN LIMITS (35%)
+                    </div>
+                    
+                </div>
+            </div>
+            <!-- Income Calendar -->
+            <div class="sentinel-card">
+                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4">📅 30-DAY INCOME FORECAST</h2>
+                <div class="space-y-2">
+                    
+                    <div class="flex justify-between p-2 bg-white/5 rounded text-xs mono">
+                        <span class="text-neutral-400">VOD.L // 2026-02-15</span>
+                        <span class="text-emerald-400 font-bold">£125.40</span>
+                    </div>
+                    
+                    <div class="flex justify-between p-2 bg-white/5 rounded text-xs mono">
+                        <span class="text-neutral-400">AAPL // 2026-02-28</span>
+                        <span class="text-emerald-400 font-bold">£42.10</span>
+                    </div>
+                    
                 </div>
             </div>
         </div>
 
-        <!-- ROW 2: FULL WIDTH HEATMAP -->
-        <div class="sentinel-card col-span-12">
-            <div class="flex justify-between items-end mb-4">
-                <div>
-                    <h2 class="text-sm mono text-neutral-400 mb-1">TRUE VALUE HEATMAP</h2>
-                    <p class="text-xs text-neutral-500">Size = Position Value | Color = Lifetime P&L</p>
-                </div>
-            </div>
-
-            <div id="heatmap-chart" style="min-height: 600px;"></div>
+        <!-- HEATMAP -->
+        <div class="col-span-12 sentinel-card">
+            <div id="heatmap-chart" style="min-height: 500px;"></div>
         </div>
 
-        <!-- ROW 3: STRATEGY ROOM (TARGET RECON) -->
-        <div class="sentinel-card col-span-12">
-            <div class="flex justify-between items-end mb-6">
-                <div>
-                    <h2 class="text-sm mono text-neutral-400 mb-1">📡 STRATEGY ROOM (TARGET RECON)</h2>
-                    <p class="text-xs text-neutral-500">Live Surveillance: Watchlist & Target Acquisition</p>
-                </div>
-                <div class="text-[0.6rem] text-emerald-500 mono bg-emerald-500/10 px-2 py-1 rounded animate-pulse">
-                    SCANNING ACTIVE
-                </div>
-            </div>
-
+        <!-- MOAT AUDIT -->
+        <div class="col-span-12 sentinel-card">
+            <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-6">🏰 MOAT AUDIT (THE ARCHITECT)</h2>
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead class="text-neutral-500 text-xs mono uppercase tracking-widest border-b border-white/10">
+                <table class="w-full text-left text-xs mono">
+                    <thead class="text-neutral-600 border-b border-white/5 uppercase tracking-widest">
                         <tr>
-                            <th class="p-3">Ticker</th>
-                            <th class="p-3">Type</th>
-                            <th class="p-3">Live Price</th>
-                            <th class="p-3">Target</th>
-                            <th class="p-3">Distance</th>
-                            <th class="p-3">Status</th>
-                            <th class="p-3 text-right">Intel Verdict</th>
+                            <th class="p-4">Ticker</th>
+                            <th class="p-4">Logic</th>
+                            <th class="p-4">Yield</th>
+                            <th class="p-4">P&L</th>
+                            <th class="p-4">Verdict</th>
+                            <th class="p-4 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="text-sm mono">
+                    <tbody>
                         
                     </tbody>
                 </table>
-            </div>
-        </div>
-
-        <!-- ROW 4: SOVEREIGN ARCHITECT REPORT (MOAT AUDIT) -->
-        <div class="sentinel-card col-span-12 mb-6">
-            <div class="flex justify-between items-end mb-6">
-                <div>
-                    <h2 class="text-sm mono text-neutral-400 mb-1">🏰 MOAT AUDIT (THE ARCHITECT)</h2>
-                    <p class="text-xs text-neutral-500">Cash Hurdle: 3.80% | Tax Reality: UK (0%) vs US (15% WHT)</p>
-                </div>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead class="text-neutral-500 text-xs mono uppercase tracking-widest border-b border-white/10">
-                        <tr>
-                            <th class="p-3">Ticker</th>
-                            <th class="p-3">Origin</th>
-                            <th class="p-3">Net Yield (Live)</th>
-                            <th class="p-3">Growth (P&L)</th>
-                            <th class="p-3">Verdict</th>
-                            <th class="p-3 text-right">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm mono">
-                        
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- ROW 5: ALERTS -->
-        <div class="sentinel-card col-span-12">
-            <h2 class="text-sm mono text-neutral-400 uppercase tracking-widest mb-4">Sentinel Alerts</h2>
-            <!-- Grid for alerts to save vertical space -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="alerts-container">
             </div>
         </div>
 
     </div>
 
     <script>
-        // --- 1. DATA INJECTION ---
         const mapData = [];
-
-        // --- 2. APEXCHARTS RENDER ENGINE (v1.3 Layout) ---
         var options = {
-            series: [
-                {
-                    data: mapData
-                }
-            ],
-            legend: { show: false },
-            chart: {
-                height: 600, // Expanded Height
-                type: 'treemap',
-                toolbar: { show: false },
-                fontFamily: 'JetBrains Mono'
-            },
-            colors: [
-                '#28a745', '#dc3545'
-            ],
-            plotOptions: {
-                treemap: {
-                    distributed: true,
-                    enableShades: false,
-                    dataLabels: {
-                        format: 'scale'
-                    }
-                }
-            },
+            series: [{ data: mapData }],
+            chart: { height: 500, type: 'treemap', toolbar: { show: false }, fontFamily: 'JetBrains Mono' },
+            colors: ['#28a745', '#dc3545'],
+            plotOptions: { treemap: { distributed: true, enableShades: false } },
             dataLabels: {
                 enabled: true,
-                style: { fontSize: '16px', fontWeight: 'bold' }, // Bigger Text
+                style: { fontSize: '14px' },
                 formatter: function (text, op) {
-                    let point = op.w.config.series[0].data[op.dataPointIndex];
-                    return [text, point.custom_main, point.custom_sub];
-                },
-                dropShadow: { enabled: true }
-            },
-            tooltip: {
-                theme: 'dark',
-                y: {
-                    formatter: function (value, op) {
-                        let point = op.w.config.series[0].data[op.dataPointIndex];
-                        return point.custom_sub;
-                    }
+                    let p = op.w.config.series[0].data[op.dataPointIndex];
+                    return [text, p.custom_main, p.custom_sub];
                 }
             },
-            stroke: { show: true, width: 2, colors: ['#141414'] }
+            theme: { mode: 'dark' },
+            stroke: { show: true, width: 1, colors: ['#050505'] }
         };
-
-        var chart = new ApexCharts(document.querySelector("#heatmap-chart"), options);
-        chart.render();
-
-        // --- 3. ALERTS RENDERER ---
-        function renderAlerts() {
-            const container = document.getElementById('alerts-container');
-            container.innerHTML = '';
-
-            // Top 6 by Size
-            const topAssets = mapData.slice(0, 6);
-
-            topAssets.forEach(m => {
-                const isGain = m.fillColor === '#28a745';
-                const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-4 rounded bg-white/5 border border-white/5 hover:bg-white/10 transition-colors';
-                div.innerHTML = `
-                     <div class="flex items-center gap-3">
-                         <div class="w-2 h-2 rounded-full ${isGain ? 'bg-emerald-500' : 'bg-rose-500'}"></div>
-                         <div>
-                             <span class="text-sm font-bold mono uppercase block">${m.x}</span>
-                             <span class="text-[0.65rem] text-neutral-500">HOLDING: ${m.custom_main}</span>
-                         </div>
-                     </div>
-                     <span class="mono text-sm font-bold ${isGain ? 'text-emerald-400' : 'text-rose-400'}">
-                         ${m.custom_sub.split(' ')[0]} 
-                     </span>
-                 `;
-                container.appendChild(div);
-            });
-        }
-
-        renderAlerts();
-
+        new ApexCharts(document.querySelector("#heatmap-chart"), options).render();
     </script>
 </body>
 
