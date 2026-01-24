@@ -149,8 +149,11 @@ def main():
             if not t212_error: t212_error = error_msg
             else: t212_error += f" | {error_msg}"
 
-        total_wealth_raw = parse_float(cash_data.get('total', 0))
-        cash_reserves = parse_float(cash_data.get('free', 0))
+        total_wealth_raw = parse_float(cash_data.get('total', 0)) / 100.0
+        cash_reserves = parse_float(cash_data.get('free', 0)) / 100.0
+        
+        # Initialize total_value with the account total (normalized)
+        total_value = total_wealth_raw
 
     # --- SOVEREIGN ARCHITECT LOGIC (PHASE 24) ---
         # "The Math Anchors"
@@ -171,26 +174,16 @@ def main():
             
             # 2. Financials (Live)
             qty = parse_float(pos.get('quantity', 0))
-            raw_avg_price = parse_float(pos.get('averagePrice', 0))
-            raw_cur_price = parse_float(pos.get('currentPrice', 0))
             
-            # --- CURRENCY NORMALIZER (FORENSIC AUDIT FIX) ---
-            # UK stocks are ALWAYS in Pence (GBX) via this API, even if currency says GBP.
-            # We must convert to Pounds.
-            
-            is_uk_ticker = raw_ticker.endswith('.L') or '_EQ' in raw_ticker
-            
-            if is_uk_ticker:
-                # Dividing by 100 to convert Pence -> Pounds
-                cur_price = raw_cur_price / 100.0
-                avg_price = raw_avg_price / 100.0
-            else:
-                cur_price = raw_cur_price
-                avg_price = raw_avg_price
+            # UNIVERSAL PENCE TO POUNDS (User Directive)
+            # The API sends everything in Pence, regardless of ticker/currency.
+            cur_price = parse_float(pos.get('currentPrice', 0)) / 100.0
+            avg_price = parse_float(pos.get('averagePrice', 0)) / 100.0
             
             invested = qty * avg_price
             market_val = qty * cur_price
-            total_value += market_val # Add to Total Wealth
+            # total_value is already derived from account 'total', no need to add again
+            # but we use market_val for heatmap and audit
             
             # 3. The Yield Calculation (Simulated)
             raw_yield_mock = (hash(ticker) % 400) / 10000.0 + 0.01 
