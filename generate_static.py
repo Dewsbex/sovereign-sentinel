@@ -175,20 +175,12 @@ def main():
             raw_cur_price = parse_float(pos.get('currentPrice', 0))
             
             # --- CURRENCY NORMALIZER (FORENSIC AUDIT FIX) ---
-            # UK stocks often trade in Pence (GBX) but we want Pounds (GBP)
-            # 1. Check Ticker Suffix (Must use RAW ticker as 'ticker' is already cleaned)
-            # 2. Check Currency Code (GBX, GBp)
-            # 3. Check Deep Search (User Suggestion: 'GBX' in str(pos))
-            # 4. Check Price Heuristic (If Price > 2000 and Currency is GBP, it's virtually impossible to be £2000/share for standard UK large caps, must be Pence)
+            # UK stocks are ALWAYS in Pence (GBX) via this API, even if currency says GBP.
+            # We must convert to Pounds.
             
-            is_uk_ticker = raw_ticker.endswith('.L') or '_EQ' in raw_ticker # Expanded check
-            is_uk_currency = currency in ['GBX', 'GBp']
-            is_uk_deep = 'GBX' in str(pos).upper()
-            is_huge_price = (raw_cur_price > 1500 and currency == 'GBP') # Lowered threshold, most UK stocks < £15.00
+            is_uk_ticker = raw_ticker.endswith('.L') or '_EQ' in raw_ticker
             
-            is_uk = is_uk_ticker or is_uk_currency or is_uk_deep or is_huge_price
-            
-            if is_uk:
+            if is_uk_ticker:
                 # Dividing by 100 to convert Pence -> Pounds
                 cur_price = raw_cur_price / 100.0
                 avg_price = raw_avg_price / 100.0
@@ -269,13 +261,15 @@ def main():
                  g_val = float(g.get('value', 0.0))
                  total_value += g_val
                  
-                 heatmap_data.append({
-                    'x': g_name,
-                    'y': g_val,
-                    'fillColor': '#6c757d', # Grey for Ghost/Neutral
-                    'custom_main': f"£{g_val:,.2f}",
-                    'custom_sub': "OFFLINE"
-                 })
+                 # Exclude Cash from Heatmap
+                 if "CASH" not in g_name.upper():
+                     heatmap_data.append({
+                        'x': g_name,
+                        'y': g_val,
+                        'fillColor': '#6c757d', # Grey for Ghost/Neutral
+                        'custom_main': f"£{g_val:,.2f}",
+                        'custom_sub': "OFFLINE"
+                     })
                  
     except Exception as e:
         print(f"INTEL FAILURE: {e}")
