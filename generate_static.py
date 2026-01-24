@@ -104,8 +104,14 @@ def main():
             raw_cur_price = parse_float(pos.get('currentPrice', 0))
             raw_avg_price = parse_float(pos.get('averagePrice', 0))
             
-            # Currency Normalization (GBX -> GBP)
-            is_uk = (currency in ['GBX', 'GBp']) or raw_ticker.endswith('.L')
+            # STRICTOR UK DETECTION (v29.1 FIX)
+            is_gbx = (currency in ['GBX', 'GBp'])
+            is_uk_suffix = raw_ticker.endswith('l_EQ') or raw_ticker.endswith('.L')
+            is_uk_ticker = '_GB_' in raw_ticker or is_uk_suffix
+            is_not_global = '_US_' not in raw_ticker and '_NL_' not in raw_ticker and '_DE_' not in raw_ticker
+            
+            is_uk = (is_gbx or is_uk_ticker) and is_not_global
+            
             cur_price = raw_cur_price / 100.0 if is_uk else raw_cur_price
             avg_price = raw_avg_price / 100.0 if is_uk else raw_avg_price
             
