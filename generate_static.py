@@ -17,7 +17,7 @@ def clean_ticker(ticker_raw):
     t = ticker_raw.replace('l_EQ', '').replace('_EQ', '').replace('.L', '')
     return t
 
-def safe_float(value, default=0.0):
+def parse_float(value, default=0.0):
     """Safely converts API strings to floats."""
     if value is None: return default
     try:
@@ -149,8 +149,8 @@ def main():
             if not t212_error: t212_error = error_msg
             else: t212_error += f" | {error_msg}"
 
-        total_wealth_raw = safe_float(cash_data.get('total', 0))
-        cash_reserves = safe_float(cash_data.get('free', 0))
+        total_wealth_raw = parse_float(cash_data.get('total', 0))
+        cash_reserves = parse_float(cash_data.get('free', 0))
 
     # --- SOVEREIGN ARCHITECT LOGIC (PHASE 24) ---
         # "The Math Anchors"
@@ -170,9 +170,9 @@ def main():
             currency = meta.get('currency') or pos.get('currency', '')
             
             # 2. Financials (Live)
-            qty = safe_float(pos.get('quantity', 0))
-            raw_avg_price = safe_float(pos.get('averagePrice', 0))
-            raw_cur_price = safe_float(pos.get('currentPrice', 0))
+            qty = parse_float(pos.get('quantity', 0))
+            raw_avg_price = parse_float(pos.get('averagePrice', 0))
+            raw_cur_price = parse_float(pos.get('currentPrice', 0))
             
             # --- CURRENCY NORMALIZER (FORENSIC AUDIT FIX) ---
             # UK stocks often trade in Pence (GBX) but we want Pounds (GBP)
