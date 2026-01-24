@@ -149,10 +149,13 @@ def main():
             if not t212_error: t212_error = error_msg
             else: t212_error += f" | {error_msg}"
 
-        total_wealth_raw = parse_float(cash_data.get('total', 0)) / 100.0
-        cash_reserves = parse_float(cash_data.get('free', 0)) / 100.0
+        # T212 API: Account totals are usually in the account's base currency (Pounds).
+        # We only divide by 100 if the user confirms the ENTIRE account total is in pence.
+        # For now, following the US stock symptom, we assume these are in Pounds.
+        total_wealth_raw = parse_float(cash_data.get('total', 0))
+        cash_reserves = parse_float(cash_data.get('free', 0))
         
-        # Initialize total_value with the account total (normalized)
+        # Initialize total_value with the account total
         total_value = total_wealth_raw
 
     # --- SOVEREIGN ARCHITECT LOGIC (PHASE 24) ---
@@ -175,15 +178,24 @@ def main():
             # 2. Financials (Live)
             qty = parse_float(pos.get('quantity', 0))
             
-            # UNIVERSAL PENCE TO POUNDS (User Directive)
-            # The API sends everything in Pence, regardless of ticker/currency.
-            cur_price = parse_float(pos.get('currentPrice', 0)) / 100.0
-            avg_price = parse_float(pos.get('averagePrice', 0)) / 100.0
+            # SELECTIVE PENCE TO POUNDS
+            # UK stocks (.L) are in Pence. US stocks are in Pounds.
+            raw_cur_price = parse_float(pos.get('currentPrice', 0))
+            raw_avg_price = parse_float(pos.get('averagePrice', 0))
+            
+            is_uk = raw_ticker.endswith('.L') or '_EQ' in raw_ticker
+            
+            if is_uk:
+                cur_price = raw_cur_price / 100.0
+                avg_price = raw_avg_price / 100.0
+            else:
+                cur_price = raw_cur_price
+                avg_price = raw_avg_price
             
             invested = qty * avg_price
             market_val = qty * cur_price
-            # total_value is already derived from account 'total', no need to add again
-            # but we use market_val for heatmap and audit
+            # total_value is derived from account 'total', we don't increment here 
+            # to avoid double counting, unless account total is missing.
             
             # 3. The Yield Calculation (Simulated)
             raw_yield_mock = (hash(ticker) % 400) / 10000.0 + 0.01 
