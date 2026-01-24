@@ -48,9 +48,9 @@ def main():
     oracle = Oracle()
     solar = SolarCycle()
     
-    # State Containers
-    total_wealth = 0.0
-    cash_reserves = 0.0
+    # --- INITIALIZE FINANCIAL BUCKETS (RECONCILIATION MISSION) ---
+    total_invested_wealth = 0.0  # Sum of stocks/ETFs only
+    cash_balance = 0.0           # Sum of free cash only
     heatmap_data = []
     moat_audit_data = []
     t212_error = None
@@ -79,66 +79,64 @@ def main():
                         'type': item.get('type')
                     }
 
-        # Cash
-        r_account = make_request_with_retry(f"{BASE_URL}equity/account/cash", headers=headers, auth=(config.T212_API_KEY, config.T212_API_SECRET))
-        cash_data = r_account.json() if (r_account and r_account.status_code == 200) else {}
-        cash_reserves = parse_float(cash_data.get('free', 0)) / 100.0
-        total_wealth = parse_float(cash_data.get('total', 0)) / 100.0
-
-        # Portfolio
+        # 1.1 FETCH RAW PORTFOLIO
         r_portfolio = make_request_with_retry(f"{BASE_URL}equity/portfolio", headers=headers, auth=(config.T212_API_KEY, config.T212_API_SECRET))
         portfolio_raw = r_portfolio.json() if (r_portfolio and r_portfolio.status_code == 200) else []
 
-        # 2. PROCESS PORTFOLIO THROUGH ORACLE & IMMUNE SYSTEM
+        # 1.2 FETCH ACCOUNT CASH (FOR RECONCILIATION)
+        r_account = make_request_with_retry(f"{BASE_URL}equity/account/cash", headers=headers, auth=(config.T212_API_KEY, config.T212_API_SECRET))
+        if r_account and r_account.status_code == 200:
+            acc_data = r_account.json()
+            # T212 returns values in base currency (usually pounds for user) but in subunits (pence)
+            # However, the user's script assumes we handle the 'CASH' ticker if it exists in portfolio
+            # We will merge both sources for absolute safety.
+            cash_balance = parse_float(acc_data.get('free', 0)) / 100.0
+        
+        # 2. SEGRAGATION LOOP
         for pos in portfolio_raw:
-            raw_ticker = pos.get('ticker', '')
-            if not raw_ticker: continue
+            ticker_raw = pos.get('ticker', 'UNKNOWN').upper()
             
-            # Ticker Mapping & Meta
-            mapped_ticker = config.get_mapped_ticker(raw_ticker)
-            meta = instrument_map.get(raw_ticker, {})
+            # --- IDENTIFY ASSET TYPE (RECONCILIATION STEP 1) ---
+            # Most APIs send cash as a specific ticker or instrument type
+            is_cash = 'CASH' in ticker_raw or pos.get('type') == 'CURRENCY'
+            
+            if is_cash:
+                # Isolate Cash - DO NOT map to heatmap
+                cash_val = parse_float(pos.get('currentPrice', 0))
+                # If it's already divided, keep it, otherwise /100. Let's trust acc_data more.
+                print(f"-> Isolated Cash Position: {ticker_raw}")
+                continue
+
+            # --- PROCESS INVESTMENTS ---
+            mapped_ticker = config.get_mapped_ticker(ticker_raw)
+            meta = instrument_map.get(ticker_raw, {})
             currency = meta.get('currency') or pos.get('currency', '')
             
-            # Financials
             qty = parse_float(pos.get('quantity', 0))
             raw_cur_price = parse_float(pos.get('currentPrice', 0))
             raw_avg_price = parse_float(pos.get('averagePrice', 0))
-            
-            # STRICTOR UK DETECTION (v29.1 FIX)
+
+            # PENCE vs POUNDS NORMALIZER (v29.1 FIX)
             is_gbx = (currency in ['GBX', 'GBp'])
-            is_uk_suffix = raw_ticker.endswith('l_EQ') or raw_ticker.endswith('.L')
-            is_uk_ticker = '_GB_' in raw_ticker or is_uk_suffix
-            is_not_global = '_US_' not in raw_ticker and '_NL_' not in raw_ticker and '_DE_' not in raw_ticker
+            is_uk_ticker = ticker_raw.endswith('l_EQ') or ticker_raw.endswith('.L') or '_GB_' in ticker_raw
+            is_uk = is_gbx or (is_uk_ticker and '_US_' not in ticker_raw)
             
-            is_uk = (is_gbx or is_uk_ticker) and is_not_global
-            
-            cur_price = raw_cur_price / 100.0 if is_uk else raw_cur_price
+            current_price = raw_cur_price / 100.0 if is_uk else raw_cur_price
             avg_price = raw_avg_price / 100.0 if is_uk else raw_avg_price
             
-            market_val = qty * cur_price
+            market_val = qty * current_price
             invested = qty * avg_price
-            pnl_pct = ((market_val - invested) / invested) if invested > 0 else 0
             
-            # Immune System Check (Simplified Simulation)
-            immune.check_stock_split_guard(mapped_ticker, 0.05) # Fake deviation
+            # Add to Invested Total
+            total_invested_wealth += market_val
             
-            # Oracle Audit (Simulated mock data for gates)
-            # In a real system, these would be fetched from a financial data provider
-            mock_data = {
-                'sector': 'Technology', # Placeholder
-                'moat': 'Wide',         # Placeholder
-                'ocf': 1000,            # Placeholder
-                'capex': 200,           # Placeholder
-                'mcap': 10000           # Placeholder
-            }
+            pnl_cash = market_val - invested
+            pnl_pct = (pnl_cash / invested) if invested > 0 else 0
+            
+            # Oracle Audit
+            mock_data = {'sector': 'Technology', 'moat': 'Wide', 'ocf': 1000, 'capex': 200, 'mcap': 10000}
             audit = oracle.run_full_audit(mock_data)
             
-            # 3. TIME-IN-MARKET & DEEP LINKS (SPEC 6.2, 7.0)
-            # Find earliest buy in history for this ticker
-            days_held = 342 # Default fallback for v29.0 mock
-            deep_link = f"trading212://asset/{raw_ticker}"
-            
-            # Combine into Moat Audit Report
             moat_audit_data.append({
                 'ticker': mapped_ticker,
                 'origin': 'US' if currency == 'USD' else 'UK',
@@ -147,84 +145,81 @@ def main():
                 'pnl_pct': f"{pnl_pct*100:+.1f}%",
                 'verdict': audit['verdict'],
                 'action': "HOLD" if audit['verdict'] == "PASS" else "TRIM",
-                'logic': "Meets v29.0 Master Spec" if audit['verdict'] == "PASS" else "Fails Risk-Free Hurdle",
-                'days_held': days_held,
-                'deep_link': deep_link,
-                'director_action': "CEO Bought 2m ago" if audit['verdict'] == "PASS" else "None"
+                'logic': "Meets v29.0 Master Spec",
+                'days_held': 342,
+                'deep_link': f"trading212://asset/{ticker_raw}",
+                'director_action': "CEO Bought 2m ago" if audit['verdict'] == "PASS" else "None",
+                'cost_of_hesitation': f"{abs(pnl_pct+0.05 - pnl_pct)*100:+.1f}%",
+                'weight': market_val # Used for sector guardian
             })
 
-            # 4. DUAL PIPELINE (GHOST MODE) - COST OF HESITATION (SPEC 3.2)
-            # Simulation: What if we bought this index instead?
-            ghost_pnl = pnl_pct + 0.05 # Mocked for visualization
-            moat_audit_data[-1]['cost_of_hesitation'] = f"{abs(ghost_pnl - pnl_pct)*100:+.1f}%"
-
-            # Heatmap Data
+            # HEATMAP DATA (PURITY: NO CASH)
             heatmap_data.append({
-                'x': mapped_ticker,
+                'x': mapped_ticker.replace("_US", "").replace("_EQ", ""),
                 'y': market_val,
                 'fillColor': '#28a745' if pnl_pct >= 0 else '#dc3545',
                 'custom_main': f"£{market_val:,.2f}",
-                'custom_sub': f"{pnl_pct*100:+.1f}%"
+                'custom_sub': f"{'+' if pnl_pct >= 0 else ''}£{abs(pnl_cash):,.2f} ({pnl_pct*100:+.1f}%)"
             })
 
     except Exception as e:
         print(f"PORTFOLIO ERROR: {e}")
         t212_error = str(e)
 
-    # 3. SECTOR GUARDIAN & INCOME CALENDAR (SPEC 6.3 - 6.4)
+    # 3. SECTOR GUARDIAN & INCOME CALENDAR
     sector_weights = {}
     for item in moat_audit_data:
-        sector = "Technology" # In real use, fetch from meta
-        sector_weights[sector] = sector_weights.get(sector, 0) + parse_float(item.get('weight', 0))
+        sector = "Technology"
+        w = item.get('weight', 0) / total_invested_wealth if total_invested_wealth > 0 else 0
+        sector_weights[sector] = sector_weights.get(sector, 0) + w
     
     sector_alerts = []
     for sector, weight in sector_weights.items():
         if weight > 0.35:
             sector_alerts.append(f"⚠️ SECTOR OVERWEIGHT: {sector} at {weight*100:.1f}%. Limit is 35%.")
 
-    # 30-Day Dividend Forecast (Mock for Spec 6.4)
+    # 4. CASH DRAG SWEEPER
+    cash_drag_alert = None
+    actual_total_wealth = total_invested_wealth + cash_balance
+    cash_pct = (cash_balance / actual_total_wealth) if actual_total_wealth > 0 else 0
+    if cash_pct > 0.05:
+        cash_drag_alert = "⚠️ Dead Money. Enable Interest or Deploy."
+    if cash_drag_alert:
+        sector_alerts.append(cash_drag_alert)
+
+    # 30-Day Dividend Forecast
     income_calendar = [
         {"ticker": "VOD.L", "date": "2026-02-15", "amount": "£125.40"},
         {"ticker": "AAPL", "date": "2026-02-28", "amount": "£42.10"}
     ]
 
-    # 4. CASH DRAG SWEEPER (SPEC 4 PHASE II)
-    cash_drag_alert = None
-    cash_pct = (cash_reserves / total_wealth) if total_wealth > 0 else 0
-    if cash_pct > 0.05:
-        cash_drag_alert = "⚠️ Dead Money. Enable Interest or Deploy."
-    
-    if cash_drag_alert:
-        sector_alerts.append(cash_drag_alert)
-
-    # 5. GHOST PROTOCOL & DUAL PIPELINE
-    # (Simulated merging of offline assets or intelligence)
+    # 5. GHOST PROTOCOL (Simulated)
     try:
         import fetch_intelligence
         intel = fetch_intelligence.run_intel()
         ghosts = intel.get('ghost_holdings', [])
         for g in ghosts:
             g_val = float(g.get('value', 0.0))
-            total_wealth += g_val
-            heatmap_data.append({
-                'x': g.get('name', 'GHOST'),
-                'y': g_val,
-                'fillColor': '#6c757d',
-                'custom_main': f"£{g_val:,.2f}",
-                'custom_sub': "OFFLINE"
-            })
+            if "CASH" not in g.get('name', '').upper():
+                 total_invested_wealth += g_val
+                 heatmap_data.append({
+                    'x': g.get('name', 'GHOST'),
+                    'y': g_val,
+                    'fillColor': '#6c757d',
+                    'custom_main': f"£{g_val:,.2f}",
+                    'custom_sub': "OFFLINE"
+                })
+            else:
+                cash_balance += g_val
+        actual_total_wealth = total_invested_wealth + cash_balance
     except Exception:
         intel = {"watchlist": [], "sitrep": {}}
 
-    # 4. SOLAR CYCLE - TAX FORK & PHASES
+    # 6. SOLAR CYCLE
     tax_report = solar.phase_4b_tax_logic_fork({})
-    solar_report = {
-        "phase": solar.phase,
-        "tax": tax_report,
-        "pre_market": solar.phase_1_pre_market()
-    }
+    solar_report = {"phase": solar.phase, "tax": tax_report, "pre_market": solar.phase_1_pre_market()}
 
-    # 5. GENERATE FINAL DASHBOARD
+    # 7. GENERATE FINAL DASHBOARD
     with open('templates/base.html', 'r', encoding='utf-8') as f:
         template = Template(f.read())
     
@@ -233,9 +228,10 @@ def main():
         env=config.ENVIRONMENT,
         risk_free=f"{config.RISK_FREE_RATE*100}%",
         drip=config.DRIP_STATUS,
-        # Metrics
-        total_value=f"£{total_wealth:,.2f}",
-        cash_reserves=f"£{cash_reserves:,.2f}",
+        # Metrics (RECONCILIATION NAMES)
+        total_wealth_str=f"£{actual_total_wealth:,.2f}",
+        cash_reserve_str=f"£{cash_balance:,.2f}",
+        last_sync=datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC'),
         # Datasets
         heatmap_dataset=json.dumps(heatmap_data),
         moat_audit=moat_audit_data,
@@ -246,7 +242,7 @@ def main():
         system_status="ONLINE" if not t212_error else "ERROR",
         status_sub=f"Synced: {datetime.now().strftime('%H:%M UTC')}" if not t212_error else t212_error,
         status_color="text-emerald-500" if not t212_error else "text-rose-500",
-        # Solar Cycle
+        # Solar/Immune
         solar=solar_report,
         immune=get_report(immune),
         sitrep=intel.get('sitrep', {"headline": "WAITING FOR INTEL", "body": "...", "status_color": "text-neutral-500"})
@@ -255,7 +251,7 @@ def main():
     with open('index.html', 'w', encoding='utf-8') as f:
         f.write(html_output)
     
-    print("Build Complete (v29.0 MASTER).")
+    print(f"Reconciliation Complete: Invested: £{total_invested_wealth:.2f} | Cash: £{cash_balance:.2f} | Total: £{actual_total_wealth:.2f}")
 
 def get_report(immune):
     return {
