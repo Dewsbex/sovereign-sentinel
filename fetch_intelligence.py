@@ -95,6 +95,7 @@ def fetch_live_prices(strategy_data):
             
         enriched_watchlist.append({
             **item,
+            'target_price': f"{target:.2f}", # Store normalized target for UI
             'live_price': f"{live_price:.2f}",
             'distance_pct': f"{distance_pct:+.2f}%",
             'verdict': verdict,
@@ -136,7 +137,7 @@ def fetch_news(strategy_data):
                 news_headline = f"{pub}: {title}"
                 news_sentiment = "Realtime" # Placeholder for sentiment analysis
             else:
-                 raise ValueError("No news found")
+                raise ValueError("No news found")
         except:
              # Fallback to Synth if data fetch fails
             if "BUY ZONE" in item.get('status', ''):
