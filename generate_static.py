@@ -100,7 +100,18 @@ def main():
         cash_data = r_account.json() if r_account.status_code == 200 else {}
         
         r_portfolio = requests.get(f"{BASE_URL}equity/portfolio", headers=headers, auth=(api_id, api_secret))
-        portfolio_raw = r_portfolio.json() if r_portfolio.status_code == 200 else []
+        if r_portfolio.status_code == 200:
+            portfolio_raw = r_portfolio.json()
+        else:
+            portfolio_raw = []
+            error_msg = f"PORTFOLIO FETCH FAILED: {r_portfolio.status_code} - {r_portfolio.text[:50]}"
+            print(error_msg)
+            # Append to t212_error if not already set, or create a list?
+            # Simplest for now: raise or set t212_error
+            # But we want to continue if possible? No, portfolio is critical.
+            # Let's set t212_error.
+            if not t212_error: t212_error = error_msg
+            else: t212_error += f" | {error_msg}"
 
         total_wealth_raw = safe_float(cash_data.get('total', 0))
         cash_reserves = safe_float(cash_data.get('free', 0))
