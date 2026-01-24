@@ -65,13 +65,8 @@ def fetch_live_prices(strategy_data):
         # We apply this to both LIVE and TARGET to maintain ratio, 
         # and to ensure the UI shows "£4.20" not "£420.00"
         if is_uk:
-             # Heuristic: If price > 20, it's likely Pence. 
-             # (Penny stocks < 20p exist, but usually > £0.20)
-             if live_price > 20: 
-                 live_price /= 100.0
-             
-             if target > 20:
-                 target /= 100.0
+             live_price /= 100.0
+             target /= 100.0
         
         # (Live - Target) / Target
         distance_pct = ((live_price - target) / target) * 100
