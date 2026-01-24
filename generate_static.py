@@ -1,32 +1,10 @@
 import os
 import requests
 import json
+import time # Added for rate limiting
 from datetime import datetime
 
-# ==============================================================================
-# 0. CONFIGURATION & HELPERS
-# ==============================================================================
-
-def clean_ticker(ticker_raw):
-    """Normalize tickers by removing exchange suffixes."""
-    # UK stocks often come as 'VODl_EQ' or 'RR.L'
-    # We want just 'VOD' or 'RR'.
-    t = ticker_raw.replace('l_EQ', '').replace('_EQ', '').replace('.L', '')
-    return t
-
-def safe_float(value, default=0.0):
-    """Safely converts API strings to floats."""
-    if value is None: return default
-    try:
-        # ONLY remove commas and currency symbols. Keep the dot!
-        clean = str(value).replace(',', '').replace('$', '').replace('£', '')
-        return float(clean)
-    except ValueError:
-        return default
-
-# ==============================================================================
-# 1. MAIN EXECUTION
-# ==============================================================================
+# ... (rest of imports/config)
 
 def main():
     print(f"Starting Sovereign Sentinel... (Re-deploy {datetime.now().strftime('%H:%M:%S')})")
@@ -78,6 +56,8 @@ def main():
         else:
             print(f"METADATA FAILED: {r_meta.status_code} - Continuing with fallback heuristics.")
 
+        time.sleep(2) # Rate limit pacing
+
         # --- ORDER HISTORY (PHASE 18) ---
         print("Fetching Order History...")
         r_orders = requests.get(f"{BASE_URL}equity/history/orders?limit=100", headers=headers, auth=(api_id, api_secret))
@@ -94,11 +74,15 @@ def main():
 
         total_fees_str = f"£{total_fees:,.2f}"
         print(f"Fee Auditor Complete: {total_fees_str}")
+        
+        time.sleep(2) # Rate limit pacing
 
         # Account Cash/Stats
         r_account = requests.get(f"{BASE_URL}equity/account/cash", headers=headers, auth=(api_id, api_secret))
         cash_data = r_account.json() if r_account.status_code == 200 else {}
         
+        time.sleep(2) # Rate limit pacing
+
         r_portfolio = requests.get(f"{BASE_URL}equity/portfolio", headers=headers, auth=(api_id, api_secret))
         if r_portfolio.status_code == 200:
             portfolio_raw = r_portfolio.json()
