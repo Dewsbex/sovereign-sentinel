@@ -6,6 +6,57 @@ from datetime import datetime
 
 # ... (rest of imports/config)
 
+# ==============================================================================
+# 0. CONFIGURATION & HELPERS
+# ==============================================================================
+
+def clean_ticker(ticker_raw):
+    """Normalize tickers by removing exchange suffixes."""
+    # UK stocks often come as 'VODl_EQ' or 'RR.L'
+    # We want just 'VOD' or 'RR'.
+    t = ticker_raw.replace('l_EQ', '').replace('_EQ', '').replace('.L', '')
+    return t
+
+def safe_float(value, default=0.0):
+    """Safely converts API strings to floats."""
+    if value is None: return default
+    try:
+        # ONLY remove commas and currency symbols. Keep the dot!
+        clean = str(value).replace(',', '').replace('$', '').replace('£', '')
+        return float(clean)
+    except ValueError:
+        return default
+
+def make_request_with_retry(url, headers, auth, max_retries=3):
+    """
+    Wrapper for requests.get that handles 429 Rate Limits with backoff.
+    """
+    for attempt in range(max_retries):
+        try:
+            r = requests.get(url, headers=headers, auth=auth)
+            
+            if r.status_code == 429:
+                wait_time = (attempt + 1) * 5 # 5s, 10s, 15s
+                print(f"   [RATE LIMIT 429] Pacing enforcement... Cooling down for {wait_time}s")
+                time.sleep(wait_time)
+                continue # Retry
+                
+            return r # Return response (success or other error)
+            
+        except requests.exceptions.RequestException as e:
+            print(f"   [NETWORK ERROR] Attempt {attempt+1}/{max_retries}: {e}")
+            time.sleep(2)
+            
+    # If we exhaust retries, return the last response (or a dummy if completely failed)
+    # To be safe, if we have a response object from the last attempt, return it.
+    # If we crashed before getting a response (e.g. connection error), return None or mock?
+    # Simplified: return None if completely failed
+    return None
+
+# ==============================================================================
+# 1. MAIN EXECUTION
+# ==============================================================================
+
 def main():
     print(f"Starting Sovereign Sentinel... (Re-deploy {datetime.now().strftime('%H:%M:%S')})")
     
@@ -39,10 +90,10 @@ def main():
 
         # --- METADATA FETCH (PHASE 16) ---
         print("Fetching Instrument Metadata...")
-        r_meta = requests.get(f"{BASE_URL}equity/metadata/instruments", headers=headers, auth=(api_id, api_secret))
+        r_meta = make_request_with_retry(f"{BASE_URL}equity/metadata/instruments", headers=headers, auth=(api_id, api_secret))
         
         instrument_map = {}
-        if r_meta.status_code == 200:
+        if r_meta and r_meta.status_code == 200:
             meta_data = r_meta.json()
             for item in meta_data:
                 t_id = item.get('ticker')
@@ -54,17 +105,18 @@ def main():
                     }
             print(f"Metadata Loaded: {len(instrument_map)} instruments mapped.")
         else:
-            print(f"METADATA FAILED: {r_meta.status_code} - Continuing with fallback heuristics.")
+            code = r_meta.status_code if r_meta else "NET_FAIL"
+            print(f"METADATA FAILED: {code} - Continuing with fallback heuristics.")
 
-        time.sleep(2) # Rate limit pacing
+        time.sleep(1) # Minimal pacing
 
         # --- ORDER HISTORY (PHASE 18) ---
         print("Fetching Order History...")
-        r_orders = requests.get(f"{BASE_URL}equity/history/orders?limit=100", headers=headers, auth=(api_id, api_secret))
+        r_orders = make_request_with_retry(f"{BASE_URL}equity/history/orders?limit=100", headers=headers, auth=(api_id, api_secret))
         
         # --- FEE AUDITOR LOGIC (MANUAL FIX) ---
         total_fees = 0.0
-        if r_orders.status_code == 200:
+        if r_orders and r_orders.status_code == 200:
             history_data = r_orders.json() 
             for order in history_data:
                 total_fees += float(order.get('currencyConversionFee', 0) or 0)
@@ -75,25 +127,25 @@ def main():
         total_fees_str = f"£{total_fees:,.2f}"
         print(f"Fee Auditor Complete: {total_fees_str}")
         
-        time.sleep(2) # Rate limit pacing
+        time.sleep(1) # Minimal pacing
 
         # Account Cash/Stats
-        r_account = requests.get(f"{BASE_URL}equity/account/cash", headers=headers, auth=(api_id, api_secret))
-        cash_data = r_account.json() if r_account.status_code == 200 else {}
+        r_account = make_request_with_retry(f"{BASE_URL}equity/account/cash", headers=headers, auth=(api_id, api_secret))
+        cash_data = r_account.json() if (r_account and r_account.status_code == 200) else {}
         
-        time.sleep(2) # Rate limit pacing
+        time.sleep(1) # Minimal pacing
 
-        r_portfolio = requests.get(f"{BASE_URL}equity/portfolio", headers=headers, auth=(api_id, api_secret))
-        if r_portfolio.status_code == 200:
+        r_portfolio = make_request_with_retry(f"{BASE_URL}equity/portfolio", headers=headers, auth=(api_id, api_secret))
+        if r_portfolio and r_portfolio.status_code == 200:
             portfolio_raw = r_portfolio.json()
         else:
             portfolio_raw = []
-            error_msg = f"PORTFOLIO FETCH FAILED: {r_portfolio.status_code} - {r_portfolio.text[:50]}"
+            code = r_portfolio.status_code if r_portfolio else "NET_ERR"
+            msg = r_portfolio.text[:50] if r_portfolio else "Connection Failed"
+            
+            error_msg = f"PORTFOLIO FETCH FAILED: {code} - {msg}"
             print(error_msg)
-            # Append to t212_error if not already set, or create a list?
-            # Simplest for now: raise or set t212_error
-            # But we want to continue if possible? No, portfolio is critical.
-            # Let's set t212_error.
+            
             if not t212_error: t212_error = error_msg
             else: t212_error += f" | {error_msg}"
 
