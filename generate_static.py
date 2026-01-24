@@ -116,14 +116,21 @@ def main():
             raw_cur_price = parse_float(pos.get('currentPrice', 0))
             raw_avg_price = parse_float(pos.get('averagePrice', 0))
 
-            # PENCE vs POUNDS NORMALIZER (v29.1 FIX)
+            # PENCE vs POUNDS NORMALIZER (v29.2 PERMANENT FORTIFICATION)
             is_gbx = (currency in ['GBX', 'GBp'])
-            is_uk_ticker = ticker_raw.endswith('l_EQ') or ticker_raw.endswith('.L') or '_GB_' in ticker_raw
-            is_uk = is_gbx or (is_uk_ticker and '_US_' not in ticker_raw)
+            is_uk_suffix = ticker_raw.endswith('l_EQ') or ticker_raw.endswith('.L') or '_GB_' in ticker_raw
+            
+            # THE SAFETY NET: If price > 1000 and it's not a known high-price US asset, it's almost certainly GBX.
+            # Most UK stocks are priced in pence (e.g. 5000) whereas US stocks in the account base (GBP) are rarely > 1000.
+            is_high_price_pence = (raw_cur_price > 1000.0) and ('_US_' not in ticker_raw)
+            
+            is_uk = is_gbx or is_uk_suffix or is_high_price_pence
+            
+            # Final Override: Ensure we don't accidentally divide US giants (though rare in GBP accounts)
+            if '_US_' in ticker_raw: is_uk = False
             
             current_price = raw_cur_price / 100.0 if is_uk else raw_cur_price
             avg_price = raw_avg_price / 100.0 if is_uk else raw_avg_price
-            
             market_val = qty * current_price
             invested = qty * avg_price
             
