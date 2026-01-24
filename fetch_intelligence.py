@@ -58,15 +58,10 @@ def fetch_live_prices(strategy_data):
             print(f"   [WARN] Invalid price for {ticker}: {live_price}. Fallback to target.")
             live_price = float(target)
 
-        # --- CURRENCY NORMALIZER (FORENSIC AUDIT FIX) ---
-        is_uk = ticker.endswith('.L')
-        
-        # If UK, we assume data is in Pence (GBX) and we want Pounds (GBP)
-        # We apply this to both LIVE and TARGET to maintain ratio, 
-        # and to ensure the UI shows "£4.20" not "£420.00"
-        if is_uk:
-             live_price /= 100.0
-             target /= 100.0
+        # --- UNIVERSAL CURRENCY NORMALIZER ---
+        # User confirmed: everything is in Pence.
+        live_price /= 100.0
+        target /= 100.0
         
         # (Live - Target) / Target
         distance_pct = ((live_price - target) / target) * 100
