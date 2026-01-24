@@ -58,9 +58,12 @@ def fetch_live_prices(strategy_data):
             print(f"   [WARN] Invalid price for {ticker}: {live_price}. Fallback to target.")
             live_price = float(target)
 
-        # --- SELECTIVE CURRENCY NORMALIZER ---
-        # UK stocks (.L) are in Pence. US stocks are in Pounds.
-        if ticker.endswith('.L'):
+        # --- SELECTIVE CURRENCY NORMALIZER (FINAL AUDIT) ---
+        # UK stocks (.L) are in Pence. US stocks are already in Pounds.
+        # Explicitly ignore common global suffixes.
+        is_uk = ticker.endswith('.L') and '_US_' not in ticker and '_NL_' not in ticker
+        
+        if is_uk:
             live_price /= 100.0
             target /= 100.0
         
