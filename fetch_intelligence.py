@@ -49,6 +49,30 @@ def fetch_live_prices(strategy_data):
             live_price = target # Safety fallback to avoid breaking UI
         
         # 2. Logic (Distance Calculation)
+        
+        # --- TYPE SAFETY (CRASH PREVENTION) ---
+        try:
+            live_price = float(live_price)
+        except (ValueError, TypeError):
+            # If yfinance returns garbage, fallback to target to prevent crash
+            print(f"   [WARN] Invalid price for {ticker}: {live_price}. Fallback to target.")
+            live_price = float(target)
+
+        # --- CURRENCY NORMALIZER (FORENSIC AUDIT FIX) ---
+        is_uk = ticker.endswith('.L')
+        
+        # If UK, we assume data is in Pence (GBX) and we want Pounds (GBP)
+        # We apply this to both LIVE and TARGET to maintain ratio, 
+        # and to ensure the UI shows "£4.20" not "£420.00"
+        if is_uk:
+             # Heuristic: If price > 20, it's likely Pence. 
+             # (Penny stocks < 20p exist, but usually > £0.20)
+             if live_price > 20: 
+                 live_price /= 100.0
+             
+             if target > 20:
+                 target /= 100.0
+        
         # (Live - Target) / Target
         distance_pct = ((live_price - target) / target) * 100
         

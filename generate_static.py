@@ -38,6 +38,7 @@ def main():
     total_fees_str = "£0.00"
     heatmap_data = []
     architect_audit = []
+    t212_error = None  # Track T212 failures explicitly
     
     try:
         # 1. FETCH DATA FROM TRADING 212 (LIVE SERVER ONLY)
@@ -48,7 +49,7 @@ def main():
         if not api_id or not api_secret:
             print("CRITICAL WARNING: Missing API credentials. Rendering Fallback Mode.")
             # We DONT exit, we just let the try block finish or skip to render
-            raise ValueError("Missing API Keys")
+            raise ValueError("Missing API Keys (Check GitHub Secrets)")
 
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SovereignSentinel/1.0",
@@ -123,18 +124,34 @@ def main():
             
             # 2. Financials (Live)
             qty = safe_float(pos.get('quantity', 0))
-            avg_price = safe_float(pos.get('averagePrice', 0))
-            cur_price = safe_float(pos.get('currentPrice', 0))
+            raw_avg_price = safe_float(pos.get('averagePrice', 0))
+            raw_cur_price = safe_float(pos.get('currentPrice', 0))
             
-            # Pence Fix
-            is_pence = False
-            if currency in ['GBX', 'GBp'] or (cur_price > 1000 and currency == 'GBP'):
-                is_pence = True
-                cur_price /= 100.0
-                avg_price /= 100.0
+            # --- CURRENCY NORMALIZER (FORENSIC AUDIT FIX) ---
+            # UK stocks often trade in Pence (GBX) but we want Pounds (GBP)
+            # 1. Check Ticker Suffix (Must use RAW ticker as 'ticker' is already cleaned)
+            # 2. Check Currency Code (GBX, GBp)
+            # 3. Check Deep Search (User Suggestion: 'GBX' in str(pos))
+            # 4. Check Price Heuristic (If Price > 2000 and Currency is GBP, it's virtually impossible to be £2000/share for standard UK large caps, must be Pence)
+            
+            is_uk_ticker = raw_ticker.endswith('.L') or '_EQ' in raw_ticker # Expanded check
+            is_uk_currency = currency in ['GBX', 'GBp']
+            is_uk_deep = 'GBX' in str(pos).upper()
+            is_huge_price = (raw_cur_price > 1500 and currency == 'GBP') # Lowered threshold, most UK stocks < £15.00
+            
+            is_uk = is_uk_ticker or is_uk_currency or is_uk_deep or is_huge_price
+            
+            if is_uk:
+                # Dividing by 100 to convert Pence -> Pounds
+                cur_price = raw_cur_price / 100.0
+                avg_price = raw_avg_price / 100.0
+            else:
+                cur_price = raw_cur_price
+                avg_price = raw_avg_price
             
             invested = qty * avg_price
             market_val = qty * cur_price
+            total_value += market_val # Add to Total Wealth
             
             # 3. The Yield Calculation (Simulated)
             raw_yield_mock = (hash(ticker) % 400) / 10000.0 + 0.01 
@@ -183,11 +200,12 @@ def main():
         architect_audit.sort(key=lambda x: x['verdict'] == 'PASS') 
         
     except Exception as e:
+        import traceback
         print("!!! CRASH REPORT (T212 Connection) !!!")
-        # import traceback
-        # traceback.print_exc()
+        traceback.print_exc()
         print(f"Error: {e}")
-        # Even if T212 fails, we run the Intelligence Engine (Mock Mode)
+        # Capture FULL traceback
+        t212_error = f"{str(e)} | {traceback.format_exc().splitlines()[-1]}"
     
     # --- INTELLIGENCE ENGINE (PHASE 2 - ALWAYS RUN) ---
     try:
@@ -223,6 +241,16 @@ def main():
             "status_color": "text-rose-500"
         }}
 
+    # --- STATUS REPORT LOGIC ---
+    if t212_error:
+        system_status = "ERROR"
+        status_sub = t212_error
+        status_color = "text-rose-500"
+    else:
+        system_status = "ONLINE"
+        status_sub = f"Synced: {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}"
+        status_color = "text-emerald-500"
+
     # 3. GENERATE HTML (Fail Safe)
     with open('templates/base.html', 'r', encoding='utf-8') as f:
         template_str = f.read()
@@ -236,6 +264,11 @@ def main():
         projected_income=f"£{projected_income:,.2f}", 
         last_updated=datetime.now().strftime("%Y-%m-%d %H:%M UTC"),
         total_fees_str=total_fees_str,
+        # System Status Injection
+        system_status=system_status,
+        status_sub=status_sub,
+        status_color=status_color,
+        # Datasets
         heatmap_dataset=json.dumps(heatmap_data),
         # Architect Data
         moat_audit=architect_audit,
