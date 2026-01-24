@@ -193,9 +193,11 @@
                 <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4">🛡️ SECTOR GUARDIAN</h2>
                 <div class="space-y-2">
                     
-                    <div class="text-xs mono text-emerald-500/60 bg-emerald-500/5 p-3 rounded">
-                        >> ALL SECTORS WITHIN LIMITS (35%)
+                    
+                    <div class="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs mono rounded">
+                        ⚠️ Dead Money. Enable Interest or Deploy.
                     </div>
+                    
                     
                 </div>
             </div>
@@ -232,6 +234,7 @@
                         <tr>
                             <th class="p-4">Ticker</th>
                             <th class="p-4">Logic</th>
+                            <th class="p-4">Held</th>
                             <th class="p-4">Yield</th>
                             <th class="p-4">P&L</th>
                             <th class="p-4">Verdict</th>
@@ -241,243 +244,528 @@
                     <tbody>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">BMY_US</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                BMY_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/BMY_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-emerald-400">+8.0%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-emerald-400">+8.0%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">RIO</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                RIO
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/RIOl_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-emerald-400">+43.7%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-emerald-400">+43.7%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">LGEN</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                LGEN
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/LGENl_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-rose-400">-0.6%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-0.6%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">QELL_US</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                QELL_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/QELL_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-rose-400">-99.9%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-99.9%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">BATS</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                BATS
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/BATSl_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-emerald-400">+3.0%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-emerald-400">+3.0%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">VSNTV_US</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                VSNTV_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/VSNTV_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-rose-400">-5.0%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-5.0%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">NUE_US</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                NUE_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/NUE_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-emerald-400">+32.7%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-emerald-400">+32.7%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">SOLV_US</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                SOLV_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/SOLV_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-rose-400">-1.9%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-1.9%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">RE_US</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                RE_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/RE_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-rose-400">-3.0%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-3.0%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">QCOM_US</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                QCOM_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/QCOM_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-rose-400">-9.7%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-9.7%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">NFLX_US</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                NFLX_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/NFLX_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-rose-400">-6.9%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-6.9%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">CRM_US</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                CRM_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/CRM_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-rose-400">-8.2%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-8.2%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">EOG_US</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                EOG_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/EOG_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-rose-400">-5.0%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-5.0%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">CTVA_US</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                CTVA_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/CTVA_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-emerald-400">+3.5%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-emerald-400">+3.5%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">CNNE_US</td>
-                            <td class="p-4 text-neutral-500">Meets v29.0 Master Spec</td>
+                            <td class="p-4 font-bold text-white">
+                                CNNE_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/CNNE_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: CEO Bought 2m ago</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">342d</td>
                             <td class="p-4 text-blue-400">8.00%</td>
-                            <td class="p-4 text-rose-400">-1.3%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-1.3%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
                                     PASS
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold text-emerald-500">
-                                HOLD</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-emerald-500">HOLD</span>
+                                    
+                                </div>
+                            </td>
                         </tr>
                         
                     </tbody>

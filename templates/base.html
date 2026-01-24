@@ -218,6 +218,7 @@
                         <tr>
                             <th class="p-4">Ticker</th>
                             <th class="p-4">Logic</th>
+                            <th class="p-4">Held</th>
                             <th class="p-4">Yield</th>
                             <th class="p-4">P&L</th>
                             <th class="p-4">Verdict</th>
@@ -227,20 +228,45 @@
                     <tbody>
                         {% for item in moat_audit %}
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">{{ item.ticker }}</td>
-                            <td class="p-4 text-neutral-500">{{ item.logic }}</td>
+                            <td class="p-4 font-bold text-white">
+                                {{ item.ticker }}
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="{{ item.deep_link }}" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">{{ item.logic }}</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: {{ item.director_action }}</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">{{ item.days_held }}d</td>
                             <td class="p-4 text-blue-400">{{ item.net_yield }}</td>
-                            <td class="p-4 {{ 'text-emerald-400' if '+' in item.pnl_pct else 'text-rose-400' }}">{{
-                                item.pnl_pct }}</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="{{ 'text-emerald-400' if '+' in item.pnl_pct else 'text-rose-400' }}">{{
+                                        item.pnl_pct }}</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: {{ item.cost_of_hesitation
+                                        }}</span>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold {{ 'bg-emerald-500/10 text-emerald-500' if item.verdict == 'PASS' else 'bg-rose-500/10 text-rose-500' }}">
                                     {{ item.verdict }}
                                 </span>
                             </td>
-                            <td
-                                class="p-4 text-right font-bold {{ 'text-rose-500' if item.action == 'TRIM' else 'text-emerald-500' }}">
-                                {{ item.action }}</td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold {{ 'text-rose-500' if item.action == 'TRIM' else 'text-emerald-500' }}">{{
+                                        item.action }}</span>
+                                    {% if item.action == 'TRIM' %}
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    {% endif %}
+                                </div>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
