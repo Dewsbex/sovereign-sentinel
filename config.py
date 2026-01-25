@@ -1,4 +1,8 @@
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+load_dotenv()
 
 # ==============================================================================
 # 1. THE CONTROL ROOM (Configuration & Context)
@@ -11,6 +15,7 @@ ENVIRONMENT = os.getenv("SOVEREIGN_ENV", "ISA") # Options: "ISA", "GIA"
 RISK_FREE_RATE = float(os.getenv("RISK_FREE_RATE", 0.038)) # 3.8% Default
 T212_MULTI_CURRENCY = os.getenv("T212_MULTI_CURRENCY", "True").lower() == "true"
 DRIP_STATUS = os.getenv("DRIP_STATUS", "Active") # Impacts calculations
+INTEREST_ON_CASH = os.getenv("INTEREST_ON_CASH", "True").lower() == "true" # v29.0 Cash Sweeper
 
 # Tax Variables (UK Context)
 STAMP_DUTY = 0.005 # 0.5%

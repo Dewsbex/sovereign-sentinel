@@ -18,7 +18,7 @@ Run the daemon and dashboard:
 python sovereign_sentinel.py
 ```
 
-- **Dashboard**: Access via `http://localhost:8000`
+- **Dashboard**: Access via [Live Deployment](https://sovereign-sentinel.pages.dev/) (Protected by Cloudflare Access)
 - **Output**: The console will print "CRITICAL" or "PREPARING" alerts as they occur.
 
 ## Logic Core
