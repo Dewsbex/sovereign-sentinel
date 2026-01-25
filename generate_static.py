@@ -107,44 +107,26 @@ def main():
                 print(f"-> Isolated Cash Position: {ticker_raw}")
                 continue
 
-            # --- PROCESS INVESTMENTS ---
-            # REGRESSION FIX (v29.3): Aggressive Ticker Normalization
-            # T212 sends LGEN_EQ in portfolio, but may have LGEN in metadata.
-            norm_ticker = ticker_raw.split('_')[0].split('.')[0].replace('l_EQ', '')
-            
-            mapped_ticker = config.get_mapped_ticker(ticker_raw)
-            # Try matching with raw, then normalized
-            meta = instrument_map.get(ticker_raw) or instrument_map.get(norm_ticker) or {}
-            currency = meta.get('currency') or pos.get('currency', '')
-            
+            # --- PROCESS INVESTMENTS (v29.4 FORENSIC RECONCILIATION) ---
+            # T212 Authority: 'ppl' is price per lot in account currency (GBP).
+            # 'result' is the open P&L in account currency (GBP).
+            ppl = parse_float(pos.get('ppl', 0))
+            pnl_cash = parse_float(pos.get('result', 0)) # Profit/Loss in GBP
             qty = parse_float(pos.get('quantity', 0))
-            raw_cur_price = parse_float(pos.get('currentPrice', 0))
-            raw_avg_price = parse_float(pos.get('averagePrice', 0))
-
-            # PENCE vs POUNDS NORMALIZER (v29.3 FORENSIC)
-            is_gbx = (currency in ['GBX', 'GBp'])
-            is_uk_suffix = ticker_raw.endswith('l_EQ') or ticker_raw.endswith('.L') or '_GB_' in ticker_raw
             
-            # THE SAFETY NET (v29.3): Lowered from 1000.0 to 180.0 to catch LGEN/AVIVA/etc.
-            # UK stocks are priced in pence (e.g. 250p). US stocks priced in GBP are usually < £1000.
-            # If it's not a US stock and price > 180.0, it's extremely likely GBX (Pence).
-            is_high_price_pence = (raw_cur_price > 180.0) and ('_US_' not in ticker_raw)
+            # Wealth Calculation (Brokers Math)
+            market_val = qty * ppl
+            invested = market_val - pnl_cash
+            pnl_pct = (pnl_cash / invested) if invested > 0 else 0
             
-            is_uk = is_gbx or is_uk_suffix or is_high_price_pence
-            
-            # Final Override: Ensure we don't divide known global tickers
-            if any(x in ticker_raw for x in ['_US_', '_NL_', '_DE_']): is_uk = False
-            
-            current_price = raw_cur_price / 100.0 if is_uk else raw_cur_price
-            avg_price = raw_avg_price / 100.0 if is_uk else raw_avg_price
-            market_val = qty * current_price
-            invested = qty * avg_price
-            
-            # Add to Invested Total
+            # Update Invested Total
             total_invested_wealth += market_val
             
-            pnl_cash = market_val - invested
-            pnl_pct = (pnl_cash / invested) if invested > 0 else 0
+            # For the display table and yield logic, we still use normalized tickers
+            norm_ticker = ticker_raw.split('_')[0].split('.')[0].replace('l_EQ', '')
+            mapped_ticker = config.get_mapped_ticker(ticker_raw)
+            meta = instrument_map.get(ticker_raw) or instrument_map.get(norm_ticker) or {}
+            currency = meta.get('currency') or pos.get('currency', '')
             
             # Oracle Audit
             mock_data = {'sector': 'Technology', 'moat': 'Wide', 'ocf': 1000, 'capex': 200, 'mcap': 10000}
@@ -152,8 +134,8 @@ def main():
             
             moat_audit_data.append({
                 'ticker': mapped_ticker,
-                'origin': 'US' if currency == 'USD' else 'UK',
-                'is_us': currency == 'USD',
+                'origin': 'US' if (currency == 'USD' or '_US_' in ticker_raw) else 'UK',
+                'is_us': (currency == 'USD' or '_US_' in ticker_raw),
                 'net_yield': f"{audit['net_yield']*100:.2f}%",
                 'pnl_pct': f"{pnl_pct*100:+.1f}%",
                 'verdict': audit['verdict'],
