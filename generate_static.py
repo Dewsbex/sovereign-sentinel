@@ -135,7 +135,9 @@ def main():
             # Accumulate Total Invested
             total_invested_wealth += market_val
             
-            pnl_cash = pnl_gbp
+            # P&L Calculation (FORENSIC v29.7)
+            # Calculate P&L directly from normalized GBP values
+            pnl_cash = market_val - invested_gbp
             pnl_pct = (pnl_cash / invested_gbp) if invested_gbp > 0 else 0
             
             # Oracle Audit
