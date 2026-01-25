@@ -83,50 +83,55 @@ def main():
         r_portfolio = make_request_with_retry(f"{BASE_URL}equity/portfolio", headers=headers, auth=(config.T212_API_KEY, config.T212_API_SECRET))
         portfolio_raw = r_portfolio.json() if (r_portfolio and r_portfolio.status_code == 200) else []
 
-        # 1.2 FETCH ACCOUNT CASH (FOR RECONCILIATION)
+        # 1.2 FETCH ACCOUNT CASH (ABSOLUTE SOURCE OF TRUTH)
         r_account = make_request_with_retry(f"{BASE_URL}equity/account/cash", headers=headers, auth=(config.T212_API_KEY, config.T212_API_SECRET))
         if r_account and r_account.status_code == 200:
             acc_data = r_account.json()
-            # T212 returns values in base currency (usually pounds for user) but in subunits (pence)
-            # However, the user's script assumes we handle the 'CASH' ticker if it exists in portfolio
-            # We will merge both sources for absolute safety.
+            # T212 'total' is account value in base currency subunits (pence)
+            # Use this as the anchor to avoid calculation drift.
+            total_invested_wealth = parse_float(acc_data.get('total', 0)) / 100.0
             cash_balance = parse_float(acc_data.get('free', 0)) / 100.0
         
-        # 2. SEGRAGATION LOOP
+        # 2. SEGRAGATION LOOP (FOR HEATMAP & AUDIT)
         for pos in portfolio_raw:
             ticker_raw = pos.get('ticker', 'UNKNOWN').upper()
             
-            # --- IDENTIFY ASSET TYPE (RECONCILIATION STEP 1) ---
-            # Most APIs send cash as a specific ticker or instrument type
+            # --- IDENTIFY ASSET TYPE ---
             is_cash = 'CASH' in ticker_raw or pos.get('type') == 'CURRENCY'
-            
-            if is_cash:
-                # Isolate Cash - DO NOT map to heatmap
-                cash_val = parse_float(pos.get('currentPrice', 0))
-                # If it's already divided, keep it, otherwise /100. Let's trust acc_data more.
-                print(f"-> Isolated Cash Position: {ticker_raw}")
-                continue
+            if is_cash: continue
 
-            # --- PROCESS INVESTMENTS (v29.4 FORENSIC RECONCILIATION) ---
-            # T212 Authority: 'ppl' is price per lot in account currency (GBP).
-            # 'result' is the open P&L in account currency (GBP).
-            ppl = parse_float(pos.get('ppl', 0))
-            pnl_cash = parse_float(pos.get('result', 0)) # Profit/Loss in GBP
+            # --- PROCESS INVESTMENTS (v29.5 ROBUST POSITION LOGIC) ---
             qty = parse_float(pos.get('quantity', 0))
+            raw_cur_price = parse_float(pos.get('currentPrice', 0))
+            raw_avg_price = parse_float(pos.get('averagePrice', 0))
+            pnl_gbp = parse_float(pos.get('result', 0)) 
             
-            # Wealth Calculation (Brokers Math)
-            market_val = qty * ppl
-            invested = market_val - pnl_cash
-            pnl_pct = (pnl_cash / invested) if invested > 0 else 0
-            
-            # Update Invested Total
-            total_invested_wealth += market_val
-            
-            # For the display table and yield logic, we still use normalized tickers
+            # Metadata & Ticker Normalization
             norm_ticker = ticker_raw.split('_')[0].split('.')[0].replace('l_EQ', '')
             mapped_ticker = config.get_mapped_ticker(ticker_raw)
             meta = instrument_map.get(ticker_raw) or instrument_map.get(norm_ticker) or {}
             currency = meta.get('currency') or pos.get('currency', '')
+            
+            # Forensic Currency Detection
+            is_usd = (currency == 'USD' or '_US_' in ticker_raw)
+            is_uk = (currency in ['GBX', 'GBp'] or '_GB_' in ticker_raw or ticker_raw.endswith('.L'))
+            # Safety threshold for UK stocks priced in pence (e.g. LGEN at 250)
+            if not is_usd and raw_cur_price > 180.0: is_uk = True
+            
+            # Apply Normalization Factors
+            fx_factor = 1.0
+            if is_uk: fx_factor = 0.01
+            elif is_usd: fx_factor = 0.78 # Mid-market GBP/USD for heatmap visual
+            
+            current_price = raw_cur_price * fx_factor
+            avg_price = raw_avg_price * fx_factor
+            
+            market_val = qty * current_price
+            invested_gbp = qty * avg_price
+            
+            # Use Broker Result for P&L values (already in GBP)
+            pnl_cash = pnl_gbp
+            pnl_pct = (pnl_cash / invested_gbp) if invested_gbp > 0 else 0
             
             # Oracle Audit
             mock_data = {'sector': 'Technology', 'moat': 'Wide', 'ocf': 1000, 'capex': 200, 'mcap': 10000}
@@ -134,8 +139,8 @@ def main():
             
             moat_audit_data.append({
                 'ticker': mapped_ticker,
-                'origin': 'US' if (currency == 'USD' or '_US_' in ticker_raw) else 'UK',
-                'is_us': (currency == 'USD' or '_US_' in ticker_raw),
+                'origin': 'US' if is_usd else 'UK',
+                'is_us': is_usd,
                 'net_yield': f"{audit['net_yield']*100:.2f}%",
                 'pnl_pct': f"{pnl_pct*100:+.1f}%",
                 'verdict': audit['verdict'],
@@ -145,10 +150,10 @@ def main():
                 'deep_link': f"trading212://asset/{ticker_raw}",
                 'director_action': "CEO Bought 2m ago" if audit['verdict'] == "PASS" else "None",
                 'cost_of_hesitation': f"{abs(pnl_pct+0.05 - pnl_pct)*100:+.1f}%",
-                'weight': market_val # Used for sector guardian
+                'weight': market_val 
             })
 
-            # HEATMAP DATA (PURITY: NO CASH)
+            # HEATMAP DATA
             heatmap_data.append({
                 'x': mapped_ticker.replace("_US", "").replace("_EQ", ""),
                 'y': market_val,
