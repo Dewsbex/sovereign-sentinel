@@ -108,26 +108,32 @@ def main():
                 continue
 
             # --- PROCESS INVESTMENTS ---
+            # REGRESSION FIX (v29.3): Aggressive Ticker Normalization
+            # T212 sends LGEN_EQ in portfolio, but may have LGEN in metadata.
+            norm_ticker = ticker_raw.split('_')[0].split('.')[0].replace('l_EQ', '')
+            
             mapped_ticker = config.get_mapped_ticker(ticker_raw)
-            meta = instrument_map.get(ticker_raw, {})
+            # Try matching with raw, then normalized
+            meta = instrument_map.get(ticker_raw) or instrument_map.get(norm_ticker) or {}
             currency = meta.get('currency') or pos.get('currency', '')
             
             qty = parse_float(pos.get('quantity', 0))
             raw_cur_price = parse_float(pos.get('currentPrice', 0))
             raw_avg_price = parse_float(pos.get('averagePrice', 0))
 
-            # PENCE vs POUNDS NORMALIZER (v29.2 PERMANENT FORTIFICATION)
+            # PENCE vs POUNDS NORMALIZER (v29.3 FORENSIC)
             is_gbx = (currency in ['GBX', 'GBp'])
             is_uk_suffix = ticker_raw.endswith('l_EQ') or ticker_raw.endswith('.L') or '_GB_' in ticker_raw
             
-            # THE SAFETY NET: If price > 1000 and it's not a known high-price US asset, it's almost certainly GBX.
-            # Most UK stocks are priced in pence (e.g. 5000) whereas US stocks in the account base (GBP) are rarely > 1000.
-            is_high_price_pence = (raw_cur_price > 1000.0) and ('_US_' not in ticker_raw)
+            # THE SAFETY NET (v29.3): Lowered from 1000.0 to 180.0 to catch LGEN/AVIVA/etc.
+            # UK stocks are priced in pence (e.g. 250p). US stocks priced in GBP are usually < £1000.
+            # If it's not a US stock and price > 180.0, it's extremely likely GBX (Pence).
+            is_high_price_pence = (raw_cur_price > 180.0) and ('_US_' not in ticker_raw)
             
             is_uk = is_gbx or is_uk_suffix or is_high_price_pence
             
-            # Final Override: Ensure we don't accidentally divide US giants (though rare in GBP accounts)
-            if '_US_' in ticker_raw: is_uk = False
+            # Final Override: Ensure we don't divide known global tickers
+            if any(x in ticker_raw for x in ['_US_', '_NL_', '_DE_']): is_uk = False
             
             current_price = raw_cur_price / 100.0 if is_uk else raw_cur_price
             avg_price = raw_avg_price / 100.0 if is_uk else raw_avg_price
