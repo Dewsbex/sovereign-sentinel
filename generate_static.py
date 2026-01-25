@@ -28,12 +28,18 @@ def make_request_with_retry(url, headers, auth, max_retries=3):
     for attempt in range(max_retries):
         try:
             r = requests.get(url, headers=headers, auth=auth)
+            print(f"      [API] {url.split('/')[-1]} -> {r.status_code}")
             if r.status_code == 429:
                 wait_time = (attempt + 1) * 5
+                print(f"      [429] Rate Limit Hit. Sleeping {wait_time}s...")
                 time.sleep(wait_time)
                 continue
+            
+            # v29.0: Strict Rate Limit Enforcement (1.5s delay)
+            time.sleep(1.5)
             return r
-        except Exception:
+        except Exception as e:
+            print(f"      [ERR] {e}")
             time.sleep(2)
     return None
 
@@ -258,8 +264,8 @@ def main():
     tax_report = solar.phase_4b_tax_logic_fork({})
     solar_report = {"phase": solar.phase, "tax": tax_report, "pre_market": solar.phase_1_pre_market()}
 
-    # 7. GENERATE FINAL DASHBOARD
-    with open('templates/base.html', 'r', encoding='utf-8') as f:
+    # 7. GENERATE FINAL DASHBOARD (Vibe Station Update)
+    with open('templates/base_vibe.html', 'r', encoding='utf-8') as f:
         template = Template(f.read())
     
     html_output = template.render(

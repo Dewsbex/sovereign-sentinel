@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOVEREIGN SENTINEL | VIBE STATION v29.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap');
+
+        :root {
+            --bg-light: #F3F4F6;
+            /* Light Grey Vibe */
+            --panel-white: #FFFFFF;
+            --text-dark: #1F2937;
+            --border-subtle: rgba(0, 0, 0, 0.05);
+            --t212-teal: #37E6B0;
+            --t212-red: #FF4B4B;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .sentinel-card {
+            background: var(--panel-white);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 16px;
+            /* Compact Padding */
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: all 0.2s ease;
+        }
+
+        .sentinel-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 16px;
+            /* Compact Gap */
+            max-width: 1600px;
+            margin: 20px auto;
+            padding: 0 24px;
+            /* Compact Padding */
+        }
+
+        .control-room-pill {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+        }
+
+        .flight-deck-btn {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'JetBrains Mono';
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.75rem;
+        }
+
+        .flight-deck-btn:active {
+            transform: scale(0.98);
+            background: #f9fafb;
+        }
+
+        /* Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- FIXED HEADER -->
+    <nav
+        class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm px-6 py-3 flex justify-between items-center transition-all duration-300">
+        <!-- BRAND -->
+        <div class="flex items-center gap-3">
+            <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
+            <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">SENTINEL_VIBE</h1>
+        </div>
+
+        <!-- KEY DATA (FIXED HEADER TICKER) -->
+        <div class="hidden md:flex items-center gap-8">
+            <div class="flex flex-col text-right">
+                <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Total
+                    Wealth</span>
+                <span class="text-lg font-bold text-gray-800 mono leading-none">{{ total_wealth_str }}</span>
+            </div>
+            <div class="h-6 w-px bg-gray-200"></div>
+            <div class="flex flex-col text-right">
+                <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Cash
+                    (Dry)</span>
+                <span class="text-lg font-bold text-gray-800 mono leading-none">{{ cash_reserve_str }}</span>
+            </div>
+            <div class="h-6 w-px bg-gray-200"></div>
+            <div class="flex flex-col text-right">
+                <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Pending</span>
+                <!-- Approximate Pending Value -->
+                {% set pending_val = 0 %}
+                {% if pending_orders %}
+                {% set pending_val = pending_orders | sum(attribute='value') %}
+                {% endif %}
+                <span class="text-lg font-bold text-gray-400 mono leading-none">£{{ "%.2f"|format(pending_val) }}</span>
+            </div>
+        </div>
+
+        <!-- STATUS / CONTROLS -->
+        <div class="flex gap-4 items-center">
+            <span
+                class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200 mono">{{
+                env }}</span>
+            <div class="text-right hidden sm:block">
+                <span
+                    class="text-xs font-bold text-emerald-600 mono bg-emerald-50 px-2 py-1 rounded border border-emerald-100">{{
+                    system_status }}</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-grid mt-24"> <!-- Added margin-top for fixed header -->
+
+        <!-- ✈️ FLIGHT DECK -->
+        <div class="col-span-12 md:col-span-4 sentinel-card" style="border-top: 3px solid var(--t212-teal);">
+            <h2 class="text-xs mono text-gray-400 uppercase tracking-widest mb-3 font-bold">✈️ PRE-FLIGHT</h2>
+            <div class="space-y-2 mb-4">
+                <div class="flex justify-between text-xs mono p-2 bg-gray-50 rounded border border-gray-100">
+                    <span class="text-gray-500">Account Mode:</span>
+                    <span class="text-gray-800 font-bold">{{ env }} (✅)</span>
+                </div>
+                <div class="flex justify-between text-xs mono p-2 bg-gray-50 rounded border border-gray-100">
+                    <span class="text-gray-500">Connectivity:</span>
+                    <span class="text-emerald-600 font-bold">HEALTHY (✅)</span>
+                </div>
+                <div class="flex justify-between text-xs mono p-2 bg-gray-50 rounded border border-gray-100">
+                    <span class="text-gray-500">Settlement:</span>
+                    <span class="text-gray-800 font-bold">Settled (✅)</span>
+                </div>
+                <div class="flex justify-between text-xs mono p-2 bg-gray-50 rounded border border-gray-100">
+                    <span class="text-gray-500">Director Action:</span>
+                    <span class="text-gray-800 font-bold">CEO Bought 2m ago (✅)</span>
+                </div>
+                <div class="flex justify-between text-xs mono p-2 bg-gray-50 rounded border border-gray-100">
+                    <span class="text-gray-500">Analyst Consensus:</span>
+                    <span class="text-amber-500 font-bold">{{ analyst_consensus }}</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 gap-2">
+                <div class="flight-deck-btn text-emerald-600 bg-emerald-50 hover:bg-emerald-100 border-emerald-200">
+                    EXECUTE STRATEGY</div>
+                <div class="flight-deck-btn break-glass bg-rose-50 text-rose-600 border-rose-200 text-[0.6rem]">⚠️ BREAK
+                    GLASS OVERRIDE</div>
+            </div>
+        </div>
+
+        <!-- TAX LOGIC / SOLAR -->
+        <div class="col-span-12 md:col-span-8 sentinel-card">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <span
+                        class="text-[0.6rem] mono uppercase text-blue-500 bg-blue-50 px-2 py-1 rounded font-bold">SOLAR
+                        CYCLE // PHASE IV-B</span>
+                    <h3 class="text-lg font-bold text-gray-800 mt-2">TAX LOGIC ENGINE: {{ env }}</h3>
+                </div>
+                <div class="mono text-xs text-gray-400">
+                    {{ last_sync }}
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {% for key, val in solar.tax.items() %}
+                <div
+                    class="p-3 bg-gray-50 border border-gray-100 rounded hover:bg-white hover:shadow-sm transition-all">
+                    <span class="text-[0.6rem] text-gray-400 uppercase mono block mb-1">{{ key }}</span>
+                    <span class="text-sm font-bold text-gray-800 mono">{{ val }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- SECTOR GUARDIAN & INCOME CALENDAR -->
+        <div class="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Sector Guardian -->
+            <div class="sentinel-card">
+                <h2 class="text-xs mono text-gray-400 uppercase tracking-widest mb-4 font-bold">🛡️ SECTOR GUARDIAN</h2>
+                <div class="space-y-2">
+                    {% if sector_alerts %}
+                    {% for alert in sector_alerts %}
+                    <div class="p-3 bg-rose-50 border border-rose-100 text-rose-600 text-xs mono rounded font-medium">
+                        {{ alert }}
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div
+                        class="text-xs mono text-emerald-600 bg-emerald-50 border border-emerald-100 p-3 rounded font-medium flex items-center gap-2">
+                        <i class="fas fa-check-circle"></i> ALL SECTORS WITHIN LIMITS (35%)
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- PENDING ORDERS -->
+            <div class="sentinel-card">
+                <h2 class="text-xs mono text-gray-400 uppercase tracking-widest mb-4 font-bold">⏳ PENDING ORDERS /
+                    RESERVED</h2>
+                <div class="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                    {% if pending_orders %}
+                    {% for order in pending_orders %}
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold">
+                                {{ order.ticker[0] }}
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-gray-800">{{ order.ticker }}</div>
+                                <div class="text-[0.6rem] text-gray-500 mono">{{ order.qty }} @ {{ order.limit_price }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs font-bold text-gray-800">£{{ order.value }}</div>
+                            <span
+                                class="bg-gray-200 text-[0.5rem] px-2 py-1 rounded text-gray-500 font-bold">LIMIT</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="text-center p-6 text-gray-400 text-xs mono bg-gray-50 rounded border border-gray-100">NO
+                        ACTIVE ORDERS</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARTS ROW -->
+        <div class="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- HEATMAP (2/3 Width) -->
+            <div class="md:col-span-2 sentinel-card">
+                <h2 class="text-xs mono text-gray-400 uppercase tracking-widest mb-2 font-bold">🔥 MARKET HEATMAP</h2>
+                <div id="heatmap-chart" style="min-height: 400px;"></div>
+            </div>
+
+            <!-- ASSET ALLOCATION (1/3 Width) -->
+            <div class="sentinel-card">
+                <h2 class="text-xs mono text-gray-400 uppercase tracking-widest mb-2 font-bold">📊 ASSET ALLOCATION</h2>
+                <div id="allocation-chart" style="min-height: 350px;"></div>
+            </div>
+        </div>
+
+        <!-- MOAT AUDIT -->
+        <div class="col-span-12 sentinel-card">
+            <h2 class="text-xs mono text-gray-400 uppercase tracking-widest mb-6 font-bold">🏰 MOAT AUDIT (THE
+                ARCHITECT)</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs mono">
+                    <thead class="text-gray-400 border-b border-gray-100 uppercase tracking-widest">
+                        <tr>
+                            <th class="p-4 font-medium">Ticker</th>
+                            <th class="p-4 font-medium">Logic</th>
+                            <th class="p-4 font-medium">Held</th>
+                            <th class="p-4 font-medium">Yield</th>
+                            <th class="p-4 font-medium">P&L</th>
+                            <th class="p-4 font-medium">Verdict</th>
+                            <th class="p-4 text-right font-medium">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-600">
+                        {% for item in moat_audit %}
+                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                            <td class="p-4 font-bold text-gray-900">
+                                {{ item.ticker }}
+                                <div class="text-[0.6rem] text-gray-400 mt-1">
+                                    <a href="{{ item.deep_link }}" class="hover:text-blue-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-gray-500 block">{{ item.logic }}</span>
+                                <span class="text-[0.6rem] text-blue-500 font-medium">Director: {{ item.director_action
+                                    }}</span>
+                            </td>
+                            <td class="p-4 text-gray-500">{{ item.days_held }}d</td>
+                            <td class="p-4 text-blue-600 font-bold">{{ item.net_yield }}</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="font-bold {{ 'text-emerald-500' if '+' in item.pnl_pct else 'text-rose-500' }}">{{
+                                        item.pnl_pct }}</span>
+                                    <span class="text-[0.5rem] text-gray-400">vs Ghost: {{ item.cost_of_hesitation
+                                        }}</span>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span
+                                    class="px-2 py-1 rounded text-[0.6rem] font-bold {{ 'bg-emerald-100 text-emerald-600' if item.verdict == 'PASS' else 'bg-rose-100 text-rose-600' }}">
+                                    {{ item.verdict }}
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold {{ 'text-rose-500' if item.action == 'TRIM' else 'text-emerald-500' }}">{{
+                                        item.action }}</span>
+                                    {% if item.action == 'TRIM' %}
+                                    <button
+                                        class="bg-rose-50 text-rose-600 border border-rose-200 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all font-bold">PANIC
+                                        BAILOUT</button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // LIGHT MODE CONFIG
+        const mapData = {{ heatmap_dataset | default ('[]') }};
+        var options = {
+            series: [{ data: mapData }],
+            chart: { height: 400, type: 'treemap', toolbar: { show: false }, fontFamily: 'JetBrains Mono', background: 'transparent' },
+            colors: ['#37E6B0', '#FF4B4B'],
+            plotOptions: {
+                treemap: {
+                    distributed: true,
+                    enableShades: false,
+                    useFillColorAsStroke: false
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                style: { fontSize: '13px', fontWeight: 'bold', colors: ['#ffffff'] },
+                offsetY: -3
+            },
+            theme: { mode: 'light' },
+            stroke: { show: true, width: 2, colors: ['#ffffff'] },
+            grid: { padding: { top: 0, bottom: 0, left: 0, right: 0 } },
+            legend: { show: false }
+        };
+        new ApexCharts(document.querySelector("#heatmap-chart"), options).render();
+
+        // ASSET ALLOCATION CHART
+        let allocSeries = mapData.map(x => x.y);
+        let allocLabels = mapData.map(x => x.x);
+
+        var allocOptions = {
+            series: allocSeries,
+            labels: allocLabels,
+            chart: { type: 'donut', height: 350, fontFamily: 'Inter', background: 'transparent' },
+            colors: ['#37E6B0', '#FF4B4B', '#2E93fA', '#66DA26', '#546E7A', '#E91E63', '#FF9800'],
+            stroke: { show: true, width: 4, colors: ['#ffffff'] },
+            dataLabels: { enabled: false },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '72%',
+                        labels: {
+                            show: true,
+                            name: { show: true, color: '#9CA3AF' },
+                            value: { show: true, color: '#1F2937', fontSize: '24px', fontWeight: 'bold' },
+                            total: {
+                                show: true,
+                                label: 'Invested',
+                                color: '#9CA3AF',
+                                formatter: function (w) {
+                                    return "£" + w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            legend: { position: 'bottom', labels: { colors: '#374151' } }
+        };
+        new ApexCharts(document.querySelector("#allocation-chart"), allocOptions).render();
+    </script>
+</body>
+
+</html>
