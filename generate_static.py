@@ -87,11 +87,13 @@ def main():
         r_account = make_request_with_retry(f"{BASE_URL}equity/account/cash", headers=headers, auth=(config.T212_API_KEY, config.T212_API_SECRET))
         if r_account and r_account.status_code == 200:
             acc_data = r_account.json()
-            # T212 'total' is account value in base currency subunits (pence)
-            # Use this as the anchor to avoid calculation drift.
-            total_invested_wealth = parse_float(acc_data.get('total', 0)) / 100.0
-            cash_balance = parse_float(acc_data.get('free', 0)) / 100.0
+            # T212 account/cash fields (total, free, invested) are already in GBP units.
+            # DO NOT divide by 100 here.
+            cash_balance = parse_float(acc_data.get('free', 0))
+            # We will calculate total_invested_wealth by summing positions for weight accuracy
         
+        total_invested_wealth = 0.0
+
         # 2. SEGRAGATION LOOP (FOR HEATMAP & AUDIT)
         for pos in portfolio_raw:
             ticker_raw = pos.get('ticker', 'UNKNOWN').upper()
@@ -100,7 +102,7 @@ def main():
             is_cash = 'CASH' in ticker_raw or pos.get('type') == 'CURRENCY'
             if is_cash: continue
 
-            # --- PROCESS INVESTMENTS (v29.5 ROBUST POSITION LOGIC) ---
+            # --- PROCESS INVESTMENTS (v29.6 ROBUST POSITION LOGIC) ---
             qty = parse_float(pos.get('quantity', 0))
             raw_cur_price = parse_float(pos.get('currentPrice', 0))
             raw_avg_price = parse_float(pos.get('averagePrice', 0))
@@ -112,16 +114,17 @@ def main():
             meta = instrument_map.get(ticker_raw) or instrument_map.get(norm_ticker) or {}
             currency = meta.get('currency') or pos.get('currency', '')
             
-            # Forensic Currency Detection
+            # Forensic Currency Detection (Pence vs Pounds vs Dollars)
             is_usd = (currency == 'USD' or '_US_' in ticker_raw)
             is_uk = (currency in ['GBX', 'GBp'] or '_GB_' in ticker_raw or ticker_raw.endswith('.L'))
-            # Safety threshold for UK stocks priced in pence (e.g. LGEN at 250)
+            
+            # THE SAFETY OVERRIDE: If price > 180 and not USD, it's GBX (Pence).
             if not is_usd and raw_cur_price > 180.0: is_uk = True
             
-            # Apply Normalization Factors
+            # Normalization Factors
             fx_factor = 1.0
             if is_uk: fx_factor = 0.01
-            elif is_usd: fx_factor = 0.78 # Mid-market GBP/USD for heatmap visual
+            elif is_usd: fx_factor = 0.78 # Mid-market conversion for heatmap size
             
             current_price = raw_cur_price * fx_factor
             avg_price = raw_avg_price * fx_factor
@@ -129,7 +132,9 @@ def main():
             market_val = qty * current_price
             invested_gbp = qty * avg_price
             
-            # Use Broker Result for P&L values (already in GBP)
+            # Accumulate Total Invested
+            total_invested_wealth += market_val
+            
             pnl_cash = pnl_gbp
             pnl_pct = (pnl_cash / invested_gbp) if invested_gbp > 0 else 0
             
