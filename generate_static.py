@@ -25,13 +25,31 @@ def parse_float(value, default=0.0):
     except ValueError:
         return default
 
-def make_request_with_retry(session, url, headers, max_retries=3):
+def make_request_with_retry(session, url, headers, max_retries=3, diagnostics=None):
     """v29.2: Ultra-Sequential Fetcher. 3.5s Delay."""
+    endpoint = url.split('/')[-1]
+    call_time = datetime.now().strftime('%H:%M:%S')
+    
     for attempt in range(max_retries):
         try:
             # v29.2: Strictly one request at a time.
             r = session.get(url, headers=headers, timeout=15)
             print(f"      [API] {url.split('/')[-1]} -> {r.status_code}")
+            
+            # Log diagnostic
+            if diagnostics is not None:
+                diagnostics['api_calls'].append({
+                    'endpoint': endpoint,
+                    'status': r.status_code,
+                    'time': call_time,
+                    'attempt': attempt + 1
+                })
+                diagnostics['total_calls'] += 1
+                if r.status_code == 200:
+                    diagnostics['successful_calls'] += 1
+                else:
+                    diagnostics['failed_calls'] += 1
+                    diagnostics['last_error'] = f"{endpoint}: {r.status_code} at {call_time}"
             
             if r.status_code == 429:
                 wait_time = (attempt + 1) * 15
@@ -87,6 +105,17 @@ def main():
         moat_audit_data = []
         t212_error = None
         pending_orders = []
+        
+        # --- DIAGNOSTIC TRACKING ---
+        api_diagnostics = {
+            'version': 'v29.2-GOLDEN-FIX',
+            'last_run': datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC'),
+            'api_calls': [],
+            'total_calls': 0,
+            'successful_calls': 0,
+            'failed_calls': 0,
+            'last_error': None
+        }
 
         # API CONFIG
         if not config.T212_API_KEY:
@@ -105,7 +134,7 @@ def main():
         session = requests.Session()
         
         # 1.1 FETCH RAW PORTFOLIO (The Primary Source)
-        r_portfolio = make_request_with_retry(session, f"{BASE_URL}equity/portfolio", headers=headers)
+        r_portfolio = make_request_with_retry(session, f"{BASE_URL}equity/portfolio", headers=headers, diagnostics=api_diagnostics)
         portfolio_raw = r_portfolio.json() if (r_portfolio and r_portfolio.status_code == 200) else []
         
         if r_portfolio and r_portfolio.status_code == 401:
@@ -115,14 +144,14 @@ def main():
         print(f"      [DEBUG] Portfolio Count: {len(portfolio_raw)}")
 
         # 1.2 FETCH ACCOUNT CASH
-        r_account = make_request_with_retry(session, f"{BASE_URL}equity/account/cash", headers=headers)
+        r_account = make_request_with_retry(session, f"{BASE_URL}equity/account/cash", headers=headers, diagnostics=api_diagnostics)
         if r_account and r_account.status_code == 200:
             acc_data = r_account.json()
             cash_balance = parse_float(acc_data.get('total', 0.0))
             if cash_balance == 0: cash_balance = parse_float(acc_data.get('free', 0.0))
 
         # 1.3 FETCH PENDING ORDERS
-        r_orders = make_request_with_retry(session, f"{BASE_URL}equity/orders", headers=headers)
+        r_orders = make_request_with_retry(session, f"{BASE_URL}equity/orders", headers=headers, diagnostics=api_diagnostics)
         if r_orders and r_orders.status_code == 200:
             for o in r_orders.json():
                 if o.get('status') in ['LE', 'SUBMITTED', 'WORKING']:
@@ -256,7 +285,8 @@ def main():
             pending_orders=pending_orders,
             solar=solar_report,
             immune=get_report(immune),
-            sitrep=intel.get('sitrep', {"headline": "WAITING FOR INTEL", "body": "...", "status_color": "text-neutral-500"})
+            sitrep=intel.get('sitrep', {"headline": "WAITING FOR INTEL", "body": "...", "status_color": "text-neutral-500"}),
+            diagnostics=api_diagnostics
         )
         with open('index.html', 'w', encoding='utf-8') as f:
             f.write(html_output)
