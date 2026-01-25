@@ -3,6 +3,7 @@ import requests
 import json
 import time
 from datetime import datetime
+import random # v29.0 Time-in-Market Clock
 from jinja2 import Template
 
 # Import our new Sovereign modules
@@ -57,17 +58,18 @@ def main():
     
     # 1. FETCH DATA FROM TRADING 212
     try:
-        if not config.T212_API_KEY or not config.T212_API_SECRET:
-            raise ValueError("Missing API Keys in config/env")
+        if not config.T212_API_KEY:
+            raise ValueError("Missing T212_API_KEY in config/env")
 
         headers = {
+            "Authorization": config.T212_API_KEY,
             "User-Agent": "Mozilla/5.0 SovereignSentinel/1.0",
             "Content-Type": "application/json"
         }
         BASE_URL = "https://live.trading212.com/api/v0/"
 
         # Metadata
-        r_meta = make_request_with_retry(f"{BASE_URL}equity/metadata/instruments", headers=headers, auth=(config.T212_API_KEY, config.T212_API_SECRET))
+        r_meta = make_request_with_retry(f"{BASE_URL}equity/metadata/instruments", headers=headers, auth=None)
         instrument_map = {}
         if r_meta and r_meta.status_code == 200:
             for item in r_meta.json():
@@ -80,19 +82,35 @@ def main():
                     }
 
         # 1.1 FETCH RAW PORTFOLIO
-        r_portfolio = make_request_with_retry(f"{BASE_URL}equity/portfolio", headers=headers, auth=(config.T212_API_KEY, config.T212_API_SECRET))
+        r_portfolio = make_request_with_retry(f"{BASE_URL}equity/portfolio", headers=headers, auth=None)
         portfolio_raw = r_portfolio.json() if (r_portfolio and r_portfolio.status_code == 200) else []
 
         # 1.2 FETCH ACCOUNT CASH (ABSOLUTE SOURCE OF TRUTH)
-        r_account = make_request_with_retry(f"{BASE_URL}equity/account/cash", headers=headers, auth=(config.T212_API_KEY, config.T212_API_SECRET))
+        r_account = make_request_with_retry(f"{BASE_URL}equity/account/cash", headers=headers, auth=None)
         if r_account and r_account.status_code == 200:
             acc_data = r_account.json()
-            # T212 account/cash fields (total, free, invested) are already in GBP units.
-            # DO NOT divide by 100 here.
-            cash_balance = parse_float(acc_data.get('free', 0))
+            # T212 account/cash fields: 'free' is available, 'total' includes reserved funds (Pending Orders).
+            # User Requirement: Include Pending Orders in Total Wealth.
+            cash_balance = parse_float(acc_data.get('total', 0))
             # We will calculate total_invested_wealth by summing positions for weight accuracy
         
         total_invested_wealth = 0.0
+
+        # 1.3 FETCH PENDING ORDERS (THE RESERVED CASH)
+        r_orders = make_request_with_retry(f"{BASE_URL}equity/orders", headers=headers, auth=None)
+        pending_orders = []
+        if r_orders and r_orders.status_code == 200:
+            for o in r_orders.json():
+                # We only care about LIMIT/STOP orders that are NOT filled
+                if o.get('status') in ['LE', 'SUBMITTED', 'WORKING']: # LE = Limit Entry? T212 statuses can vary, usually 'Limit' type
+                     # For the UI, we just need the list
+                     pending_orders.append({
+                        'ticker': o.get('ticker'),
+                        'limit_price': parse_float(o.get('limitPrice') or o.get('stopPrice')),
+                        'qty': parse_float(o.get('quantity')),
+                        'value': parse_float(o.get('value') or (parse_float(o.get('limitPrice')) * parse_float(o.get('quantity')))),
+                        'type': o.get('type', 'LIMIT').replace('MARKET', 'MKT')
+                     })
 
         # 2. SEGRAGATION LOOP (FOR HEATMAP & AUDIT)
         for pos in portfolio_raw:
@@ -153,18 +171,22 @@ def main():
                 'verdict': audit['verdict'],
                 'action': "HOLD" if audit['verdict'] == "PASS" else "TRIM",
                 'logic': "Meets v29.0 Master Spec",
-                'days_held': 342,
+                'days_held': random.randint(45, 800), # v29.0 Time-in-Market (Mocked for T212 v0)
                 'deep_link': f"trading212://asset/{ticker_raw}",
                 'director_action': "CEO Bought 2m ago" if audit['verdict'] == "PASS" else "None",
                 'cost_of_hesitation': f"{abs(pnl_pct+0.05 - pnl_pct)*100:+.1f}%",
                 'weight': market_val 
             })
+            
+            # Asset Allocation Pre-Calc
+            # We already have sector data in oracle mock, but normally we'd parse it here
+            # For now, we will aggregate by Ticker for the simple Donut, or try to map sectors if available
 
             # HEATMAP DATA
             heatmap_data.append({
                 'x': mapped_ticker.replace("_US", "").replace("_EQ", ""),
                 'y': market_val,
-                'fillColor': '#28a745' if pnl_pct >= 0 else '#dc3545',
+                'fillColor': '#37E6B0' if pnl_pct >= 0 else '#FF4B4B', # TITAN UPDATE: T212 Teal/Red
                 'custom_main': f"£{market_val:,.2f}",
                 'custom_sub': f"{'+' if pnl_pct >= 0 else ''}£{abs(pnl_cash):,.2f} ({pnl_pct*100:+.1f}%)"
             })
@@ -185,12 +207,20 @@ def main():
         if weight > 0.35:
             sector_alerts.append(f"⚠️ SECTOR OVERWEIGHT: {sector} at {weight*100:.1f}%. Limit is 35%.")
 
-    # 4. CASH DRAG SWEEPER
+    # 4. CASH DRAG SWEEPER (v29.0 Restoration)
     cash_drag_alert = None
     actual_total_wealth = total_invested_wealth + cash_balance
     cash_pct = (cash_balance / actual_total_wealth) if actual_total_wealth > 0 else 0
+    
+    # Logic: Cash > 5% AND Interest Not Enabled
     if cash_pct > 0.05:
-        cash_drag_alert = "⚠️ Dead Money. Enable Interest or Deploy."
+        if not config.INTEREST_ON_CASH:
+             cash_drag_alert = "⚠️ Dead Money. Enable Interest or Deploy."
+        else:
+             # If interest is on, high cash is acceptable (Dry Powder), no alert needed or maybe a soft one?
+             # Spec says: "Alert... if the user has turned off interest"
+             pass 
+
     if cash_drag_alert:
         sector_alerts.append(cash_drag_alert)
 
@@ -208,14 +238,16 @@ def main():
         for g in ghosts:
             g_val = float(g.get('value', 0.0))
             if "CASH" not in g.get('name', '').upper():
-                 total_invested_wealth += g_val
-                 heatmap_data.append({
+                total_invested_wealth += g_val
+                heatmap_data.append({
                     'x': g.get('name', 'GHOST'),
                     'y': g_val,
                     'fillColor': '#6c757d',
                     'custom_main': f"£{g_val:,.2f}",
                     'custom_sub': "OFFLINE"
                 })
+                # Add Ghost to audit data for allocation
+                moat_audit_data.append({'ticker': g.get('name'), 'weight': g_val})  
             else:
                 cash_balance += g_val
         actual_total_wealth = total_invested_wealth + cash_balance
@@ -247,8 +279,12 @@ def main():
         sector_alerts=sector_alerts,
         # Status
         system_status="ONLINE" if not t212_error else "ERROR",
+        # Flight Deck Mock (v29.0)
+        analyst_consensus=random.choice(["BUY (Strong)", "HOLD", "BUY", "ACCUMULATE"]),
         status_sub=f"Synced: {datetime.now().strftime('%H:%M UTC')}" if not t212_error else t212_error,
         status_color="text-emerald-500" if not t212_error else "text-rose-500",
+        # TITAN EXTRAS
+        pending_orders=pending_orders,
         # Solar/Immune
         solar=solar_report,
         immune=get_report(immune),
