@@ -2,6 +2,7 @@ import os
 import requests
 import json
 import time
+import re
 from datetime import datetime
 import random # v29.0 Time-in-Market Clock
 from jinja2 import Template
@@ -67,15 +68,21 @@ def main():
         if not config.T212_API_KEY:
             raise ValueError("Missing T212_API_KEY in config/env")
 
+        # Clean key aggressively (UUIDs/Tokens shouldn't have hidden \r or spaces)
+        api_key = re.sub(r'[\r\n\t ]', '', str(config.T212_API_KEY))
+
         headers = {
-            "Authorization": config.T212_API_KEY,
-            "User-Agent": "Mozilla/5.0 SovereignSentinel/1.0",
+            "Authorization": api_key,
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             "Content-Type": "application/json"
         }
-        BASE_URL = "https://live.trading212.com/api/v0/"
+        BASE_URL = os.getenv("T212_API_URL", "https://live.trading212.com/api/v0/").strip()
+        if not BASE_URL.endswith('/'): BASE_URL += '/'
 
-        # Metadata
+        # Official Metadata Request
         r_meta = make_request_with_retry(f"{BASE_URL}equity/metadata/instruments", headers=headers, auth=None)
+
+
         instrument_map = {}
         if r_meta and r_meta.status_code == 200:
             for item in r_meta.json():
@@ -90,14 +97,18 @@ def main():
         # 1.1 FETCH RAW PORTFOLIO
         r_portfolio = make_request_with_retry(f"{BASE_URL}equity/portfolio", headers=headers, auth=None)
         portfolio_raw = r_portfolio.json() if (r_portfolio and r_portfolio.status_code == 200) else []
+        print(f"      [DEBUG] Portfolio Count: {len(portfolio_raw)}")
+        if portfolio_raw: print(f"      [DEBUG] First Position: {portfolio_raw[0]}")
 
         # 1.2 FETCH ACCOUNT CASH (ABSOLUTE SOURCE OF TRUTH)
         r_account = make_request_with_retry(f"{BASE_URL}equity/account/cash", headers=headers, auth=None)
         if r_account and r_account.status_code == 200:
             acc_data = r_account.json()
+            print(f"      [DEBUG] Account Cash Raw: {acc_data}")
             # T212 account/cash fields: 'free' is available, 'total' includes reserved funds (Pending Orders).
             # User Requirement: Include Pending Orders in Total Wealth.
             cash_balance = parse_float(acc_data.get('total', 0))
+            if cash_balance == 0: cash_balance = parse_float(acc_data.get('free', 0)) # Fallback if total is missing
             # We will calculate total_invested_wealth by summing positions for weight accuracy
         
         total_invested_wealth = 0.0
