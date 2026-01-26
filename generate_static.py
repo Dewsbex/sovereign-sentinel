@@ -72,7 +72,9 @@ def main():
         r_meta = make_request_with_retry(f"{BASE_URL}equity/metadata/instruments", headers=headers, auth=None)
         instrument_map = {}
         if r_meta and r_meta.status_code == 200:
-            for item in r_meta.json():
+            meta_items = r_meta.json()
+            print(f"      [DEBUG] Metadata: Loaded {len(meta_items)} instruments")
+            for item in meta_items:
                 t_id = item.get('ticker')
                 if t_id:
                     instrument_map[t_id] = {
@@ -80,19 +82,31 @@ def main():
                         'symbol': item.get('shortName') or item.get('name') or t_id,
                         'type': item.get('type')
                     }
+        else:
+            print(f"      [DEBUG] Metadata: Failed with status {r_meta.status_code if r_meta else 'None'}")
 
         # 1.1 FETCH RAW PORTFOLIO
         r_portfolio = make_request_with_retry(f"{BASE_URL}equity/portfolio", headers=headers, auth=None)
-        portfolio_raw = r_portfolio.json() if (r_portfolio and r_portfolio.status_code == 200) else []
+        portfolio_raw = []
+        if r_portfolio and r_portfolio.status_code == 200:
+            portfolio_raw = r_portfolio.json()
+            print(f"      [DEBUG] Portfolio: Received {len(portfolio_raw)} positions")
+            if len(portfolio_raw) > 0:
+                print(f"      [DEBUG] First position: {portfolio_raw[0].get('ticker', 'UNKNOWN')}")
+        else:
+            print(f"      [DEBUG] Portfolio: Failed with status {r_portfolio.status_code if r_portfolio else 'None'}")
 
         # 1.2 FETCH ACCOUNT CASH (ABSOLUTE SOURCE OF TRUTH)
         r_account = make_request_with_retry(f"{BASE_URL}equity/account/cash", headers=headers, auth=None)
         if r_account and r_account.status_code == 200:
             acc_data = r_account.json()
+            print(f"      [DEBUG] Cash: {acc_data}")
             # T212 account/cash fields: 'free' is available, 'total' includes reserved funds (Pending Orders).
             # User Requirement: Include Pending Orders in Total Wealth.
             cash_balance = parse_float(acc_data.get('total', 0))
             # We will calculate total_invested_wealth by summing positions for weight accuracy
+        else:
+            print(f"      [DEBUG] Cash: Failed with status {r_account.status_code if r_account else 'None'}")
         
         total_invested_wealth = 0.0
 
