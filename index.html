@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | VIBE STATION v29.0</title>
+    <title>SOVEREIGN SENTINEL | PLATINUM MASTER v29.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -26,6 +26,7 @@
             color: var(--text-dark);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+            /* Subtle Grain/Noise if possible, or just clean flat */
         }
 
         .sentinel-card {
@@ -51,68 +52,54 @@
         .main-grid {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
-            gap: 16px;
-            /* Compact Gap */
+            gap: 24px;
             max-width: 1600px;
             margin: 20px auto;
-            padding: 0 24px;
-            /* Compact Padding */
+            padding: 0 40px;
         }
 
         .control-room-pill {
-            background: rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.65rem;
             text-transform: uppercase;
             font-family: 'JetBrains Mono', monospace;
-            font-weight: bold;
         }
 
         .flight-deck-btn {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            padding: 10px;
-            border-radius: 6px;
+            background: linear-gradient(135deg, #444, #222);
+            border: 1px solid #555;
+            padding: 12px;
+            border-radius: 4px;
             text-align: center;
             font-weight: bold;
             font-family: 'JetBrains Mono';
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 0.75rem;
         }
 
         .flight-deck-btn:active {
             transform: scale(0.98);
-            background: #f9fafb;
+            background: #111;
         }
 
-        /* Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 2px;
+        .break-glass {
+            border-color: #ef4444 !important;
+            color: #ef4444 !important;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- FIXED HEADER -->
     <nav
         class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm px-6 py-3 flex justify-between items-center transition-all duration-300">
         <!-- BRAND -->
         <div class="flex items-center gap-3">
             <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
-            <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">SOVEREIGN SENTINEL</h1>
+            <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">SENTINEL_VIBE</h1>
         </div>
 
         <!-- KEY DATA (FIXED HEADER TICKER) -->
@@ -131,7 +118,8 @@
             <div class="h-6 w-px bg-gray-200"></div>
             <div class="flex flex-col text-right">
                 <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Pending</span>
-                <!-- Approximate Pending Value -->
+                <!-- Need to calc pending total if not passed explicitly, assume we sum pending_orders logic or similar. 
+                     For now, using Jinja to sum if list exists, else 0 -->
                 
                 
                 <span class="text-lg font-bold text-gray-400 mono leading-none">£0.00</span>
@@ -140,19 +128,17 @@
 
         <!-- STATUS / CONTROLS -->
         <div class="flex gap-4 items-center">
-            <span
-                class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200 mono">ISA</span>
+            <span class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200">ISA</span>
             <div class="text-right hidden sm:block">
-                <span
-                    class="text-xs font-bold text-emerald-600 mono bg-emerald-50 px-2 py-1 rounded border border-emerald-100">ONLINE</span>
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">ONLINE</span>
             </div>
         </div>
     </nav>
 
     <div class="main-grid mt-24"> <!-- Added margin-top for fixed header -->
 
-        <!-- ✈️ FLIGHT DECK -->
-        <div class="col-span-12 md:col-span-4 sentinel-card" style="border-top: 3px solid var(--t212-teal);">
+        <!-- ✈️ THE FLIGHT DECK (PRE-EXECUTION UI) -->
+        <div class="col-span-12 md:col-span-4 sentinel-card" style="border-top: 2px solid var(--t212-teal);">
             <h2 class="text-xs mono text-gray-400 uppercase tracking-widest mb-3 font-bold">✈️ PRE-FLIGHT</h2>
             <div class="space-y-2 mb-4">
                 <div class="flex justify-between text-xs mono p-2 bg-gray-50 rounded border border-gray-100">
@@ -173,7 +159,7 @@
                 </div>
                 <div class="flex justify-between text-xs mono p-2 bg-gray-50 rounded border border-gray-100">
                     <span class="text-gray-500">Analyst Consensus:</span>
-                    <span class="text-amber-500 font-bold">BUY (Strong)</span>
+                    <span class="text-amber-500 font-bold">HOLD</span>
                 </div>
             </div>
             <div class="grid grid-cols-1 gap-2">
@@ -184,108 +170,103 @@
             </div>
         </div>
 
-        <!-- TAX LOGIC / SOLAR -->
+        <!-- TAX LOGIC FORK & SOLAR STATUS -->
         <div class="col-span-12 md:col-span-8 sentinel-card">
-            <div class="flex justify-between items-start mb-4">
+            <div class="flex justify-between items-start">
                 <div>
-                    <span
-                        class="text-[0.6rem] mono uppercase text-blue-500 bg-blue-50 px-2 py-1 rounded font-bold">SOLAR
-                        CYCLE // PHASE IV-B</span>
-                    <h3 class="text-lg font-bold text-gray-800 mt-2">TAX LOGIC ENGINE: ISA</h3>
+                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1">SOLAR CYCLE // PHASE IV-B
+                    </h2>
+                    <h3 class="text-lg font-bold text-white mb-4">TAX LOGIC ENGINE: ISA</h3>
                 </div>
-                <div class="mono text-xs text-gray-400">
-                    2026-01-26 21:29 UTC
+                <div
+                    class="mono text-[0.6rem] text-blue-400 px-2 py-1 bg-blue-400/10 border border-blue-400/20 rounded">
+                    PHASE: IDLE
                 </div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 
-                <div
-                    class="p-3 bg-gray-50 border border-gray-100 rounded hover:bg-white hover:shadow-sm transition-all">
-                    <span class="text-[0.6rem] text-gray-400 uppercase mono block mb-1">limit_sentinel</span>
-                    <span class="text-sm font-bold text-gray-800 mono">Active</span>
+                <div class="p-3 bg-white/5 border border-white/5 rounded">
+                    <span class="text-[0.6rem] text-neutral-500 uppercase mono block">limit_sentinel</span>
+                    <span class="text-sm font-bold text-white mono">Active</span>
                 </div>
                 
-                <div
-                    class="p-3 bg-gray-50 border border-gray-100 rounded hover:bg-white hover:shadow-sm transition-all">
-                    <span class="text-[0.6rem] text-gray-400 uppercase mono block mb-1">days_to_april_5</span>
-                    <span class="text-sm font-bold text-gray-800 mono">68</span>
+                <div class="p-3 bg-white/5 border border-white/5 rounded">
+                    <span class="text-[0.6rem] text-neutral-500 uppercase mono block">days_to_april_5</span>
+                    <span class="text-sm font-bold text-white mono">68</span>
                 </div>
                 
-                <div
-                    class="p-3 bg-gray-50 border border-gray-100 rounded hover:bg-white hover:shadow-sm transition-all">
-                    <span class="text-[0.6rem] text-gray-400 uppercase mono block mb-1">loss_harvesting</span>
-                    <span class="text-sm font-bold text-gray-800 mono">N/A (Tax Free)</span>
+                <div class="p-3 bg-white/5 border border-white/5 rounded">
+                    <span class="text-[0.6rem] text-neutral-500 uppercase mono block">loss_harvesting</span>
+                    <span class="text-sm font-bold text-white mono">N/A (Tax Free)</span>
                 </div>
                 
-                <div
-                    class="p-3 bg-gray-50 border border-gray-100 rounded hover:bg-white hover:shadow-sm transition-all">
-                    <span class="text-[0.6rem] text-gray-400 uppercase mono block mb-1">bed_n_breakfast</span>
-                    <span class="text-sm font-bold text-gray-800 mono">Clear (No Restriction)</span>
+                <div class="p-3 bg-white/5 border border-white/5 rounded">
+                    <span class="text-[0.6rem] text-neutral-500 uppercase mono block">bed_n_breakfast</span>
+                    <span class="text-sm font-bold text-white mono">Clear (No Restriction)</span>
                 </div>
                 
             </div>
         </div>
+
+        <!-- REMOVED OLD WEALTH ROW (Moved to Header) -->
 
         <!-- SECTOR GUARDIAN & INCOME CALENDAR -->
         <div class="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Sector Guardian -->
             <div class="sentinel-card">
-                <h2 class="text-xs mono text-gray-400 uppercase tracking-widest mb-4 font-bold">🛡️ SECTOR GUARDIAN</h2>
+                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4">🛡️ SECTOR GUARDIAN</h2>
                 <div class="space-y-2">
                     
-                    <div
-                        class="text-xs mono text-emerald-600 bg-emerald-50 border border-emerald-100 p-3 rounded font-medium flex items-center gap-2">
-                        <i class="fas fa-check-circle"></i> ALL SECTORS WITHIN LIMITS (35%)
+                    <div class="text-xs mono text-emerald-500/60 bg-emerald-500/5 p-3 rounded">
+                        >> ALL SECTORS WITHIN LIMITS (35%)
                     </div>
                     
                 </div>
             </div>
-            <!-- PENDING ORDERS -->
+            <!-- PENDING ORDERS (TITAN NEW) -->
             <div class="sentinel-card">
-                <h2 class="text-xs mono text-gray-400 uppercase tracking-widest mb-4 font-bold">⏳ PENDING ORDERS /
-                    RESERVED</h2>
+                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4">⏳ PENDING ORDERS / RESERVED
+                    CASH</h2>
                 <div class="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                     
-                    <div class="text-center p-6 text-gray-400 text-xs mono bg-gray-50 rounded border border-gray-100">NO
-                        ACTIVE ORDERS</div>
+                    <div class="text-center p-6 text-neutral-600 text-xs mono">NO ACTIVE ORDERS</div>
                     
                 </div>
             </div>
         </div>
 
-        <!-- CHARTS ROW -->
+        <!-- NEW ROW: HEATMAP + ASSET ALLOCATION -->
         <div class="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- HEATMAP (2/3 Width) -->
             <div class="md:col-span-2 sentinel-card">
-                <h2 class="text-xs mono text-gray-400 uppercase tracking-widest mb-2 font-bold">🔥 MARKET HEATMAP</h2>
+                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-2">🔥 MARKET HEATMAP</h2>
                 <div id="heatmap-chart" style="min-height: 400px;"></div>
             </div>
 
             <!-- ASSET ALLOCATION (1/3 Width) -->
             <div class="sentinel-card">
-                <h2 class="text-xs mono text-gray-400 uppercase tracking-widest mb-2 font-bold">📊 ASSET ALLOCATION</h2>
+                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-2">📊 ASSET ALLOCATION</h2>
                 <div id="allocation-chart" style="min-height: 350px;"></div>
             </div>
         </div>
 
         <!-- MOAT AUDIT -->
         <div class="col-span-12 sentinel-card">
-            <h2 class="text-xs mono text-gray-400 uppercase tracking-widest mb-6 font-bold">🏰 MOAT AUDIT (THE
-                ARCHITECT)</h2>
+            <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-6">🏰 MOAT AUDIT (THE ARCHITECT)</h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs mono">
-                    <thead class="text-gray-400 border-b border-gray-100 uppercase tracking-widest">
+                    <thead class="text-neutral-600 border-b border-white/5 uppercase tracking-widest">
                         <tr>
-                            <th class="p-4 font-medium">Ticker</th>
-                            <th class="p-4 font-medium">Logic</th>
-                            <th class="p-4 font-medium">Held</th>
-                            <th class="p-4 font-medium">Yield</th>
-                            <th class="p-4 font-medium">P&L</th>
-                            <th class="p-4 font-medium">Verdict</th>
-                            <th class="p-4 text-right font-medium">Action</th>
+                            <th class="p-4">Ticker</th>
+                            <th class="p-4">Logic</th>
+                            <th class="p-4">Held</th>
+                            <th class="p-4">Yield</th>
+                            <th class="p-4">P&L</th>
+                            <th class="p-4">Verdict</th>
+                            <th class="p-4 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="text-gray-600">
+                    <tbody>
                         
                     </tbody>
                 </table>
@@ -294,126 +275,12 @@
 
     </div>
 
-    <!-- 🔍 DIAGNOSTIC FOOTER -->
-    <footer class="bg-gray-800 text-white py-6 mt-12">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex justify-between items-start mb-4">
-                <div>
-                    <h3 class="text-xs font-bold mono uppercase tracking-wider text-gray-400 mb-2">🔍 System Diagnostics
-                    </h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs mono">
-                        <div>
-                            <span class="text-gray-400">Version:</span>
-                            <span class="text-emerald-400 font-bold ml-2">v29.2-GOLDEN-FIX</span>
-                        </div>
-                        <div>
-                            <span class="text-gray-400">Last Run:</span>
-                            <span class="text-white font-bold ml-2">2026-01-26 21:29:41 UTC</span>
-                        </div>
-                        <div>
-                            <span class="text-gray-400">API Calls:</span>
-                            <span class="text-blue-400 font-bold ml-2">3</span>
-                        </div>
-                        <div>
-                            <span class="text-gray-400">Success Rate:</span>
-                            
-                            <span
-                                class="text-rose-400 font-bold ml-2">0%</span>
-                        </div>
-                    </div>
-                </div>
-                <button onclick="toggleDiagnostics()"
-                    class="text-xs mono bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded border border-gray-600">
-                    EXPAND LOGS
-                </button>
-            </div>
-
-            <!-- Expandable Diagnostic Panel -->
-            <div id="diagnostic-panel" class="hidden mt-4 border-t border-gray-700 pt-4">
-                <div class="mb-4">
-                    <h4 class="text-xs font-bold mono uppercase text-gray-400 mb-2">Last Error:</h4>
-                    <div
-                        class="bg-gray-900 p-3 rounded text-xs mono text-rose-400">
-                        orders: 401 at 21:29:49
-                    </div>
-                </div>
-
-                <h4 class="text-xs font-bold mono uppercase text-gray-400 mb-2">API Call Log:</h4>
-                <div class="bg-gray-900 rounded overflow-hidden">
-                    <table class="w-full text-xs mono">
-                        <thead class="bg-gray-800 text-gray-400">
-                            <tr>
-                                <th class="p-2 text-left">Endpoint</th>
-                                <th class="p-2 text-left">Status</th>
-                                <th class="p-2 text-left">Time</th>
-                                <th class="p-2 text-left">Attempt</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            
-                            <tr class="border-t border-gray-800">
-                                <td class="p-2 text-gray-300">portfolio</td>
-                                <td class="p-2">
-                                    <span
-                                        class="px-2 py-1 rounded text-[0.6rem] font-bold bg-rose-900 text-rose-400">
-                                        401
-                                    </span>
-                                </td>
-                                <td class="p-2 text-gray-400">21:29:41</td>
-                                <td class="p-2 text-gray-400">1</td>
-                            </tr>
-                            
-                            <tr class="border-t border-gray-800">
-                                <td class="p-2 text-gray-300">cash</td>
-                                <td class="p-2">
-                                    <span
-                                        class="px-2 py-1 rounded text-[0.6rem] font-bold bg-rose-900 text-rose-400">
-                                        401
-                                    </span>
-                                </td>
-                                <td class="p-2 text-gray-400">21:29:45</td>
-                                <td class="p-2 text-gray-400">1</td>
-                            </tr>
-                            
-                            <tr class="border-t border-gray-800">
-                                <td class="p-2 text-gray-300">orders</td>
-                                <td class="p-2">
-                                    <span
-                                        class="px-2 py-1 rounded text-[0.6rem] font-bold bg-rose-900 text-rose-400">
-                                        401
-                                    </span>
-                                </td>
-                                <td class="p-2 text-gray-400">21:29:49</td>
-                                <td class="p-2 text-gray-400">1</td>
-                            </tr>
-                            
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="text-center mt-4 pt-4 border-t border-gray-700">
-                <p class="text-[0.6rem] text-gray-500 mono">
-                    SOVEREIGN SENTINEL © 2026 | Powered by Trading 212 API | v29.2 Golden Fix
-                </p>
-            </div>
-        </div>
-    </footer>
-
     <script>
-        function toggleDiagnostics() {
-            const panel = document.getElementById('diagnostic-panel');
-            panel.classList.toggle('hidden');
-        }
-    </script>
-
-    <script>
-        // LIGHT MODE CONFIG
         const mapData = [];
         var options = {
             series: [{ data: mapData }],
             chart: { height: 400, type: 'treemap', toolbar: { show: false }, fontFamily: 'JetBrains Mono', background: 'transparent' },
-            colors: ['#37E6B0', '#FF4B4B'],
+            colors: ['#37E6B0', '#FF4B4B'], // T212 Colors
             plotOptions: {
                 treemap: {
                     distributed: true,
@@ -423,17 +290,22 @@
             },
             dataLabels: {
                 enabled: true,
-                style: { fontSize: '13px', fontWeight: 'bold', colors: ['#ffffff'] },
-                offsetY: -3
+                style: { fontSize: '14px' },
+                formatter: function (text, op) {
+                    let p = op.w.config.series[0].data[op.dataPointIndex];
+                    return [text, p.custom_main, p.custom_sub];
+                }
             },
-            theme: { mode: 'light' },
-            stroke: { show: true, width: 2, colors: ['#ffffff'] },
+            theme: { mode: 'dark' },
+            stroke: { show: true, width: 2, colors: ['#0A0A0A'] },
             grid: { padding: { top: 0, bottom: 0, left: 0, right: 0 } },
             legend: { show: false }
         };
         new ApexCharts(document.querySelector("#heatmap-chart"), options).render();
 
         // ASSET ALLOCATION CHART
+        // Aggregate mapData for simple donut
+        // Ideally we would pass this from backend, but JS aggregation is fine for visual
         let allocSeries = mapData.map(x => x.y);
         let allocLabels = mapData.map(x => x.x);
 
@@ -442,20 +314,20 @@
             labels: allocLabels,
             chart: { type: 'donut', height: 350, fontFamily: 'Inter', background: 'transparent' },
             colors: ['#37E6B0', '#FF4B4B', '#2E93fA', '#66DA26', '#546E7A', '#E91E63', '#FF9800'],
-            stroke: { show: true, width: 4, colors: ['#ffffff'] },
+            stroke: { show: true, width: 2, colors: ['#0A0A0A'] },
             dataLabels: { enabled: false },
             plotOptions: {
                 pie: {
                     donut: {
-                        size: '72%',
+                        size: '75%',
                         labels: {
                             show: true,
-                            name: { show: true, color: '#9CA3AF' },
-                            value: { show: true, color: '#1F2937', fontSize: '24px', fontWeight: 'bold' },
+                            name: { show: true, color: '#888' },
+                            value: { show: true, color: '#fff', fontSize: '24px', fontWeight: 'bold' },
                             total: {
                                 show: true,
                                 label: 'Invested',
-                                color: '#9CA3AF',
+                                color: '#888',
                                 formatter: function (w) {
                                     return "£" + w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
                                 }
@@ -464,7 +336,7 @@
                     }
                 }
             },
-            legend: { position: 'bottom', labels: { colors: '#374151' } }
+            legend: { position: 'bottom', labels: { colors: '#888' } }
         };
         new ApexCharts(document.querySelector("#allocation-chart"), allocOptions).render();
     </script>
