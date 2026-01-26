@@ -9,8 +9,10 @@ Autonomous Python Daemon and Portfolio Oracle.
    pip install -r requirements.txt
    ```
 3. **Configuration**:
-   - Edit `.env` to update your Trading 212 API Key if it changes.
+   - Edit `.env` to update your Trading 212 API credentials
+   - **IMPORTANT**: See [TRADING212_API_RULES.md](TRADING212_API_RULES.md) for authentication requirements
    - Edit `watchlist.json` to add your target buy prices.
+
 
 ## Running the System
 Run the daemon and dashboard:
