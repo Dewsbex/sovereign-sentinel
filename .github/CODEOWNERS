@@ -1,0 +1,12 @@
+# Critical files that should be reviewed carefully before changes
+
+# Trading 212 API integration - CRITICAL
+/generate_static.py
+/config.py
+/TRADING212_API_RULES.md
+
+# Core data fetching
+/fetch_intelligence.py
+
+# Environment configuration
+/.env

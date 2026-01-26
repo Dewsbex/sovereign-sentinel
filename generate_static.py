@@ -61,6 +61,22 @@ def main():
         if not config.T212_API_KEY:
             raise ValueError("Missing T212_API_KEY in config/env")
 
+        # ========================================================================
+        # CRITICAL: TRADING 212 API AUTHENTICATION
+        # ========================================================================
+        # DO NOT MODIFY THIS SECTION WITHOUT READING: TRADING212_API_RULES.md
+        #
+        # Trading 212 REQUIRES HTTP Basic Auth with BOTH credentials:
+        #   - T212_API_KEY (username)
+        #   - T212_API_SECRET (password)
+        #
+        # NEVER use auth=None - it will cause 401 Unauthorized errors!
+        # NEVER put API_KEY in headers only - it will fail!
+        #
+        # This auth pattern was broken on 2026-01-24, causing 2 days of downtime.
+        # Fix applied: 2026-01-26 (commit 199d92c)
+        # ========================================================================
+        
         # CRITICAL FIX: Use HTTP Basic Auth as per Trading 212 API docs
         # The previous code was using auth=None which caused 401 errors
         api_key = str(config.T212_API_KEY).strip()
