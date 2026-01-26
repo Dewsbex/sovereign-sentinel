@@ -61,15 +61,27 @@ def main():
         if not config.T212_API_KEY:
             raise ValueError("Missing T212_API_KEY in config/env")
 
+        # CRITICAL FIX: Use HTTP Basic Auth as per Trading 212 API docs
+        # The previous code was using auth=None which caused 401 errors
+        api_key = str(config.T212_API_KEY).strip()
+        api_secret = str(config.T212_API_SECRET).strip() if config.T212_API_SECRET else None
+        
+        if not api_secret:
+            print("      [ERROR] T212_API_SECRET not found - API calls will fail with 401")
+            raise ValueError("Missing T212_API_SECRET in config/env")
+        
+        print("      [AUTH] Using HTTP Basic Auth (API_KEY:API_SECRET)")
+        from requests.auth import HTTPBasicAuth
+        auth_credentials = HTTPBasicAuth(api_key, api_secret)
+
         headers = {
-            "Authorization": config.T212_API_KEY,
             "User-Agent": "Mozilla/5.0 SovereignSentinel/1.0",
             "Content-Type": "application/json"
         }
         BASE_URL = "https://live.trading212.com/api/v0/"
 
         # Metadata
-        r_meta = make_request_with_retry(f"{BASE_URL}equity/metadata/instruments", headers=headers, auth=None)
+        r_meta = make_request_with_retry(f"{BASE_URL}equity/metadata/instruments", headers=headers, auth=auth_credentials)
         instrument_map = {}
         if r_meta and r_meta.status_code == 200:
             meta_items = r_meta.json()
@@ -86,7 +98,7 @@ def main():
             print(f"      [DEBUG] Metadata: Failed with status {r_meta.status_code if r_meta else 'None'}")
 
         # 1.1 FETCH RAW PORTFOLIO
-        r_portfolio = make_request_with_retry(f"{BASE_URL}equity/portfolio", headers=headers, auth=None)
+        r_portfolio = make_request_with_retry(f"{BASE_URL}equity/portfolio", headers=headers, auth=auth_credentials)
         portfolio_raw = []
         if r_portfolio and r_portfolio.status_code == 200:
             portfolio_raw = r_portfolio.json()
@@ -97,7 +109,7 @@ def main():
             print(f"      [DEBUG] Portfolio: Failed with status {r_portfolio.status_code if r_portfolio else 'None'}")
 
         # 1.2 FETCH ACCOUNT CASH (ABSOLUTE SOURCE OF TRUTH)
-        r_account = make_request_with_retry(f"{BASE_URL}equity/account/cash", headers=headers, auth=None)
+        r_account = make_request_with_retry(f"{BASE_URL}equity/account/cash", headers=headers, auth=auth_credentials)
         if r_account and r_account.status_code == 200:
             acc_data = r_account.json()
             print(f"      [DEBUG] Cash: {acc_data}")
