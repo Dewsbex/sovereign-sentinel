@@ -81,11 +81,13 @@ def main():
         t212_error = None
         pending_orders = []
 
-        # HYBRID AUTH SETUP (v29.5)
-        # Attempt Basic Auth if Secret exists, else fall back to Legacy Header
+        # HYBRID AUTH SETUP (v29.6)
+        # T212 Spec says: Authorization: Basic <base64(key:secret)>
+        # But user says: Authorization: <key> worked previously.
         auth = None
         headers = {
-            "User-Agent": "Mozilla/5.0 (SovereignSentinel/1.0)",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "application/json",
             "Content-Type": "application/json"
         }
         
@@ -94,10 +96,11 @@ def main():
         if config.T212_API_SECRET:
             print("      [AUTH] Using HTTP Basic Auth (Recommended)")
             api_secret = str(config.T212_API_SECRET).strip()
+            # requests.auth.HTTPBasicAuth handles the 'Authorization: Basic ...' header
             auth = HTTPBasicAuth(api_key, api_secret)
         else:
             print("      [AUTH] Using Legacy API Key Header (Fallback)")
-            # Legacy format usually requires just the key in Authorization header
+            # For Legacy, we just put the key in the Authorization header
             headers["Authorization"] = api_key
 
         BASE_URL = os.getenv("T212_API_URL", "https://live.trading212.com/api/v0/").strip()
@@ -107,23 +110,25 @@ def main():
         
         # 1.1 FETCH PORTFOLIO
         r_portfolio = make_request_with_retry(session, f"{BASE_URL}equity/portfolio", auth=auth, headers=headers)
-        portfolio_raw = r_portfolio.json() if (r_portfolio and r_portfolio.status_code == 200) else []
-        
-        if r_portfolio and r_portfolio.status_code == 401:
+        portfolio_raw = []
+        if r_portfolio and r_portfolio.status_code == 200:
+             portfolio_raw = r_portfolio.json()
+        elif r_portfolio and r_portfolio.status_code == 401:
+             print(f"      [401] Auth failed. Body: {r_portfolio.text[:100]}")
              with open('401_block.lock', 'w') as f: f.write('BLOCK')
              t212_error = "401 Unauthorized - Check API credentials"
         
         print(f"      [DEBUG] Portfolio Count: {len(portfolio_raw)}")
 
         # 1.2 FETCH ACCOUNT CASH
-        r_account = make_request_with_retry(session, f"{BASE_URL}equity/account/cash", auth=auth)
+        r_account = make_request_with_retry(session, f"{BASE_URL}equity/account/cash", auth=auth, headers=headers)
         if r_account and r_account.status_code == 200:
             acc_data = r_account.json()
             cash_balance = parse_float(acc_data.get('total', 0.0))
             if cash_balance == 0: cash_balance = parse_float(acc_data.get('free', 0.0))
 
         # 1.3 FETCH PENDING ORDERS
-        r_orders = make_request_with_retry(session, f"{BASE_URL}equity/orders", auth=auth)
+        r_orders = make_request_with_retry(session, f"{BASE_URL}equity/orders", auth=auth, headers=headers)
         if r_orders and r_orders.status_code == 200:
             for o in r_orders.json():
                 if o.get('status') in ['LE', 'SUBMITTED', 'WORKING']:
