@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | PLATINUM MASTER v30.0</title>
+    <title>SOVEREIGN SENTINEL | PLATINUM MASTER v30.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -100,7 +100,7 @@
         <div class="flex items-center gap-3">
             <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
             <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">SENTINEL_VIBE <span
-                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v30.0</span>
+                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v30.1</span>
             </h1>
         </div>
 
@@ -110,6 +110,19 @@
                 <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Total
                     Wealth</span>
                 <span class="text-lg font-bold text-gray-800 mono leading-none">{{ total_wealth_str }}</span>
+            </div>
+            <div class="h-6 w-px bg-gray-200"></div>
+            <div class="flex flex-col text-right">
+                <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Total
+                    Return</span>
+                <div class="flex items-baseline justify-end gap-2">
+                    <span
+                        class="text-lg font-bold {{ 'text-emerald-500' if total_return_str.startswith('£-') == False else 'text-rose-500' }} mono leading-none">{{
+                        total_return_str }}</span>
+                    <span
+                        class="text-xs font-bold {{ 'text-emerald-500' if total_return_str.startswith('£-') == False else 'text-rose-500' }} mono">{{
+                        return_pct_str }}</span>
+                </div>
             </div>
             <div class="h-6 w-px bg-gray-200"></div>
             <div class="flex flex-col text-right">

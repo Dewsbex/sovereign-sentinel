@@ -40,7 +40,8 @@ class SovereignArchitect:
     
     def __init__(self):
         self.bionic_tiers = self._load_bionic_tiers()
-        self.qell_history = self._load_qell_history()
+        self.bionic_tiers = self._load_bionic_tiers()
+
         
     def _load_bionic_tiers(self) -> Dict:
         """Load Bionic Tier classifications from JSON"""
@@ -51,22 +52,8 @@ class SovereignArchitect:
             print("[ARCHITECT] Warning: bionic_tiers.json not found. Using defaults.")
             return {"tier_1_plus": {}, "tier_1": {}, "tier_2": {}}
     
-    def _load_qell_history(self) -> Dict:
-        """Load historical QELL scores"""
-        history_path = 'data/qell_history.json'
-        if os.path.exists(history_path):
-            try:
-                with open(history_path, 'r') as f:
-                    return json.load(f)
-            except:
-                pass
-        return {}
-    
-    def _save_qell_history(self):
-        """Save QELL scores for historical tracking"""
-        os.makedirs('data', exist_ok=True)
-        with open('data/qell_history.json', 'w') as f:
-            json.dump(self.qell_history, f, indent=2)
+            return {"tier_1_plus": {}, "tier_1": {}, "tier_2": {}}
+
     
     def classify_bionic_tier(self, ticker: str, sector: str) -> BionicTier:
         """Determine Bionic Tier for a ticker"""
@@ -93,10 +80,16 @@ class SovereignArchitect:
             'rating': 'FAIL'
         }
         
+        # KILL THE LOOP: Skip known bad tickers immediately
+        if ticker in ['RIOl', 'LGENl', 'BATSl']:
+             print(f"[QELL] Skipping known 404 ticker: {ticker}")
+             return scores
+
         try:
             # Fetch yfinance data
             stock = yf.Ticker(ticker)
             info = stock.info
+
             
             # Q - Quality: ROIC and Moat
             roic = info.get('returnOnAssets', 0)  # Proxy for ROIC
@@ -146,15 +139,7 @@ class SovereignArchitect:
                 
         except Exception as e:
             print(f"[QELL] Error calculating score for {ticker}: {e}")
-        
-        # Store in history
-        timestamp = datetime.utcnow().isoformat()
-        if ticker not in self.qell_history:
-            self.qell_history[ticker] = []
-        self.qell_history[ticker].append({
-            'timestamp': timestamp,
-            'scores': scores
-        })
+
         
         return scores
     
@@ -248,6 +233,16 @@ class SovereignArchitect:
             # Clean ticker for yfinance
             clean_ticker = ticker.split('_')[0].replace('l_EQ', '')
             is_uk = '_UK_' in ticker or ticker.endswith('.L')
+
+            # v30.1 Skip and Timeout Logic
+            try:
+                # Download only 1 day of data to force speed
+                check_data = yf.download(clean_ticker, period="1d", timeout=2, progress=False)
+                if check_data.empty:
+                    print(f"Skipping {clean_ticker}: No data found (404/Delisted)")
+                    continue
+            except Exception:
+                continue
             
             # Classify
             tier = self.classify_bionic_tier(clean_ticker, "Unknown")
@@ -295,8 +290,7 @@ class SovereignArchitect:
                 'limit_price': limit_price
             })
         
-        # Save QELL history
-        self._save_qell_history()
+
         
         # Build sniper list (from watchlist)
         sniper = self._build_sniper_list(total_portfolio, cash_balance)

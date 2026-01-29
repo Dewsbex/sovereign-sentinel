@@ -29,7 +29,8 @@ def parse_float(value, default=0.0):
 def make_request_with_retry(url, headers, auth, max_retries=3):
     for attempt in range(max_retries):
         try:
-            r = requests.get(url, headers=headers, auth=auth)
+            r = requests.get(url, headers=headers, auth=auth, timeout=2) # v30.1 Force Timeout
+
             if r.status_code == 429:
                 wait_time = (attempt + 1) * 5
                 time.sleep(wait_time)
@@ -179,18 +180,30 @@ def main():
         api_total_wealth = 0.0 # From 'total'
         api_cash_free = 0.0    # From 'free'
         api_cash_blocked = 0.0 # From 'blocked'
+        api_ppl = 0.0          # From 'ppl'
+        api_return_pct = 0.0   # Calculated
 
         if r_account and r_account.status_code == 200:
             acc_data = r_account.json()
             print(f"      [DEBUG] Cash Object: {acc_data}")
             
-            # v30.0 STRICT MAPPING
+            # v30.0 STRICT MAPPING & RETURN CALCULATION
             # Total Wealth -> 'total'
             # Cash (Dry)   -> 'free'
             # Pending      -> 'blocked'
+            # Total Return -> 'ppl'
             api_total_wealth = parse_float(acc_data.get('total', 0))
             api_cash_free = parse_float(acc_data.get('free', 0))
             api_cash_blocked = parse_float(acc_data.get('blocked', 0))
+            api_ppl = parse_float(acc_data.get('ppl', 0))
+            api_invested = parse_float(acc_data.get('invested', 0))
+
+            # Calculate Rate of Return
+            # Formula: (ppl / invested) * 100
+            if api_invested > 0:
+                api_return_pct = (api_ppl / api_invested) * 100
+            else:
+                api_return_pct = 0.0
             
             # Update internal tracking variables just in case others use them, 
             # though we will rely on api_* variables for the header.
@@ -431,6 +444,8 @@ def main():
         total_wealth_str=f"£{api_total_wealth:,.2f}",
         cash_reserve_str=f"£{api_cash_free:,.2f}",
         pending_cash_str=f"£{api_cash_blocked:,.2f}", # Pass strictly for header
+        total_return_str=f"£{api_ppl:,.2f}",
+        return_pct_str=f"{api_return_pct:+.1f}%",
         last_sync=datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC'),
         # Datasets
         heatmap_dataset=json.dumps(heatmap_data),
