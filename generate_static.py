@@ -347,10 +347,34 @@ def main():
             # For now, we will aggregate by Ticker for the simple Donut, or try to map sectors if available
 
             # HEATMAP DATA
+            # v30.2 Visual Overhaul: Dynamic Color Depth & Contrast
+            fill_color = '#1f2937' # Default Slate Gray
+            text_color = '#F3F4F6' # Default White
+            
+            if pnl_pct > 0.05:
+                fill_color = '#064E3B' # Emerald 900 (Deep Green)
+                text_color = '#F3F4F6' # White
+            elif pnl_pct > 0.02:
+                fill_color = '#10B981' # Emerald 500 (Vibrant Green)
+                text_color = '#ffffff' # White
+            elif pnl_pct > 0:
+                fill_color = '#6EE7B7' # Emerald 300 (Pale Green)
+                text_color = '#1F2937' # Dark Gray
+            elif pnl_pct < -0.05:
+                fill_color = '#881337' # Rose 900 (Deep Red)
+                text_color = '#F3F4F6' # White
+            elif pnl_pct < -0.02:
+                fill_color = '#E11D48' # Rose 600 (Vibrant Red)
+                text_color = '#ffffff' # White
+            elif pnl_pct < 0:
+                fill_color = '#FDA4AF' # Rose 300 (Pale Red)
+                text_color = '#1F2937' # Dark Gray
+                
             heatmap_data.append({
                 'x': mapped_ticker.replace("_US", "").replace("_EQ", ""),
                 'y': market_val,
-                'fillColor': '#37E6B0' if pnl_pct >= 0 else '#FF4B4B', # TITAN UPDATE: T212 Teal/Red
+                'fillColor': fill_color,
+                'textColor': text_color,
                 'custom_main': f"£{market_val:,.2f}",
                 'custom_sub': f"{'+' if pnl_pct >= 0 else ''}£{abs(pnl_cash):,.2f} ({pnl_pct*100:+.1f}%)"
             })
