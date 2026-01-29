@@ -120,13 +120,7 @@
             <div class="h-6 w-px bg-gray-200"></div>
             <div class="flex flex-col text-right">
                 <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Pending</span>
-                <!-- Need to calc pending total if not passed explicitly, assume we sum pending_orders logic or similar. 
-                     For now, using Jinja to sum if list exists, else 0 -->
-                {% set pending_val = 0 %}
-                {% if pending_orders %}
-                {% set pending_val = pending_orders | sum(attribute='value') %}
-                {% endif %}
-                <span class="text-lg font-bold text-gray-400 mono leading-none">£{{ "%.2f"|format(pending_val) }}</span>
+                <span class="text-lg font-bold text-gray-400 mono leading-none">{{ pending_cash_str }}</span>
             </div>
         </div>
 
