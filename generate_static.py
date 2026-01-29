@@ -12,6 +12,7 @@ from immune_system import ImmuneSystem
 from oracle import Oracle
 from solar_cycle import SolarCycle
 from sniper_intelligence import fetch_sniper_targets, get_sector_data
+from sovereign_architect import SovereignArchitect
 
 # ==============================================================================
 # 0. HELPERS
@@ -49,6 +50,32 @@ def main():
     immune = ImmuneSystem()
     oracle = Oracle()
     solar = SolarCycle()
+    
+    # Initialize Sovereign Architect v27.0
+    print("      [ARCHITECT] Initializing Sovereign Architect v27.0...")
+    architect = SovereignArchitect()
+    
+    # Run v27.0 Analysis (uses ISA_PORTFOLIO.csv)
+    try:
+        v27_analysis = architect.analyze_portfolio()
+        fortress_holdings = v27_analysis['fortress']
+        sniper_architect = v27_analysis['sniper']  # v27.0 calculated targets
+        risk_register = v27_analysis['risk']
+        portfolio_metrics = v27_analysis['metrics']
+        print(f"      [ARCHITECT] Analysis complete: {len(fortress_holdings)} holdings, {len(sniper_architect)} targets, {len(risk_register)} risks")
+    except Exception as e:
+        print(f"      [ARCHITECT] Analysis failed: {e}. Falling back to legacy mode.")
+        fortress_holdings = []
+        sniper_architect = []
+        risk_register = []
+        portfolio_metrics = {
+            'total_portfolio': 0,
+            'cash_balance': 0,
+            'cash_hurdle': config.RISK_FREE_RATE,
+            'num_holdings': 0,
+            'num_targets': 0,
+            'num_risks': 0
+        }
     
     # --- INITIALIZE FINANCIAL BUCKETS (RECONCILIATION MISSION) ---
     total_invested_wealth = 0.0  # Sum of stocks/ETFs only
@@ -395,6 +422,11 @@ def main():
         income_calendar=income_calendar,
         sector_alerts=sector_alerts,
         sector_weights=sector_weights,  # For sector allocation chart
+        # Sovereign Architect v27.0 Data
+        fortress_holdings=fortress_holdings,
+        sniper_architect=sniper_architect,
+        risk_register=risk_register,
+        portfolio_metrics=portfolio_metrics,
         # Status
         system_status="ONLINE" if not t212_error else "ERROR",
         # Flight Deck Mock (v29.0)

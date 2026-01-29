@@ -1,2 +1,3 @@
 __pycache__/
 data/ledger_cache.json
+.git/*
