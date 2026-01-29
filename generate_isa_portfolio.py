@@ -149,28 +149,6 @@ def generate_portfolio_csv():
         # Book Cost = Current Value (£) - Real P/L (£)
         book_cost_gbp = value_gbp - ppl
 
-        # FETCH MARKET FUNDAMENTALS (yfinance enrichment)
-        fundamentals = {'sector': 'Unknown', 'industry': 'Unknown', 'market_cap': None, 'pe': None, 'div_yield': None, 'rating': 'N/A'}
-        try:
-            # Initialize market intelligence if not already done
-            if 'market_intel_engine' not in globals():
-                from market_intelligence import MarketIntelligence
-                global market_intel_engine
-                market_intel_engine = MarketIntelligence()
-            
-            # Get comprehensive data
-            intel = market_intel_engine.get_comprehensive_data(ticker.split('_')[0])
-            fundamentals = {
-                'sector': intel.get('fundamentals', {}).get('sector', 'Unknown'),
-                'industry': intel.get('fundamentals', {}).get('industry', 'Unknown'),
-                'market_cap': intel.get('fundamentals', {}).get('market_cap'),
-                'pe': intel.get('fundamentals', {}).get('trailing_pe'),
-                'div_yield': intel.get('dividends', {}).get('yield'),
-                'rating': intel.get('analyst_ratings', {}).get('consensus', 'none')
-            }
-        except:
-            pass  # Use defaults if fetch fails
-
         row = {
             "Ticker": ticker,
             "Status": "Holding",
@@ -180,14 +158,7 @@ def generate_portfolio_csv():
             "Currency": currency,
             "Book Cost (£)": round(book_cost_gbp, 2),
             "Real P/L (£)": round(ppl, 2),
-            "FX Impact (£)": round(fx_ppl, 2),
-            # NEW: Fundamentals columns
-            "Sector": fundamentals['sector'],
-            "Industry": fundamentals['industry'],
-            "Market Cap": fundamentals['market_cap'] or 0,
-            "P/E Ratio": fundamentals['pe'] or 0,
-            "Dividend Yield": f"{fundamentals['div_yield']*100:.2f}%" if fundamentals['div_yield'] else "0.00%",
-            "Analyst Rating": fundamentals['rating'].upper()
+            "FX Impact (£)": round(fx_ppl, 2)
         }
         rows.append(row)
 
@@ -211,8 +182,7 @@ def generate_portfolio_csv():
     # Ensure Column Order matches Spec exactly
     cols = [
         "Ticker", "Status", "Shares", "Avg Price (Local)", "Live Price (Local)",
-        "Currency", "Book Cost (£)", "Real P/L (£)", "FX Impact (£)",
-        "Sector", "Industry", "Market Cap", "P/E Ratio", "Dividend Yield", "Analyst Rating"
+        "Currency", "Book Cost (£)", "Real P/L (£)", "FX Impact (£)"
     ]
     df = df[cols]
 

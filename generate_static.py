@@ -11,11 +11,6 @@ import config
 from immune_system import ImmuneSystem
 from oracle import Oracle
 from solar_cycle import SolarCycle
-from market_intelligence import MarketIntelligence, format_large_number, get_recommendation_label
-
-# VERSION TRACKING
-VERSION = "v29.1"  # Updated when significant features are added
-BUILD_TIME = datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
 
 # ==============================================================================
 # 0. HELPERS
@@ -43,96 +38,7 @@ def make_request_with_retry(url, headers, auth, max_retries=3):
     return None
 
 # ==============================================================================
-# --- SOVEREIGN ARCHITECT ENGINE (v27.0) ---
-class SovereignArchitect:
-    def __init__(self, positions, cash_total):
-        self.raw_positions = positions # Expects list of {ticker, invested_gbp, value_gbp, ppl_gbp, fx_impact, quantity}
-        self.cash = cash_total
-        # Remove QELL from total capital calculation
-        self.invested_capital = sum(p['value_gbp'] for p in positions if 'QELL' not in p['ticker'])
-        self.total_capital = self.invested_capital + self.cash
-        self.fortress = []
-        self.risk_register = []
-        self.sniper_list = [
-            {"ticker": "GOOGL", "tier": "1+ (Cyborg)", "limit": "$168.00", "alloc": "8%", "action": "Watch"},
-            {"ticker": "AMZN", "tier": "1+ (Cyborg)", "limit": "$195.00", "alloc": "8%", "action": "Watch"},
-            {"ticker": "O", "tier": "2 (Income)", "limit": "$58.50", "alloc": "5%", "action": "Buy (Target)"}
-        ]
-
-    def clean_ticker(self, ticker):
-        suffixes = ['_US_EQ', '_UK_EQ', 'l_EQ', '_EQ']
-        for s in suffixes:
-            ticker = ticker.replace(s, '')
-        return ticker
-
-    def get_target_tier(self, ticker):
-        tier_1_plus = ['GOOGL', 'AMZN', 'RIO', 'QCOM', 'NFLX', 'CRM']
-        tier_1 = ['LGEN', 'CTVA']
-        if ticker in tier_1_plus or ticker in tier_1: return 0.08
-        return 0.05
-
-    def analyze(self):
-        for p in self.raw_positions:
-            ticker = self.clean_ticker(p['ticker'])
-            if ticker == 'QELL': continue # Ghost Asset removed based on user request
-
-            book_cost = p['invested_gbp']
-            value_gbp = p['value_gbp']
-            real_pl = p['ppl_gbp'] # This is unrealized used as proxy for now
-            fx_drag = p['fx_impact']
-            shares = p['quantity']
-
-            weight_pct = book_cost / self.total_capital if self.total_capital else 0
-            target_pct = self.get_target_tier(ticker)
-            
-            # Sizing Gap
-            target_gbp = self.total_capital * target_pct
-            gap_gbp = target_gbp - book_cost
-            
-            action = "HOLD"
-            execution = "-"
-            
-            # Action Logic
-            if gap_gbp > 500: # Buy Threshold
-                action = "REPAIR"
-                if shares > 0:
-                    price_gbp = value_gbp / shares
-                    shares_to_buy = int(gap_gbp / price_gbp)
-                    execution = f"Buy {shares_to_buy}"
-                else:
-                    execution = "Buy (Calc)"
-            elif gap_gbp < -500: # Sell Threshold
-                action = "TRIM"
-                overage_gbp = abs(gap_gbp)
-                if shares > 0:
-                    price_gbp = value_gbp / shares
-                    shares_to_sell = int(overage_gbp / price_gbp)
-                    execution = f"Sell ~{shares_to_sell}"
-                
-                # Check for Risk Register (50% Overweight)
-                if weight_pct > (target_pct * 1.5): 
-                   self.risk_register.append({
-                       "ticker": ticker,
-                       "issue": f"{weight_pct*100:.1f}% Weight (Target {target_pct*100:.0f}%)",
-                       "action": "TRIM NOW"
-                   })
-
-            self.fortress.append({
-                "ticker": ticker,
-                "weight": f"{weight_pct*100:.1f}%",
-                "real_pl": f"£{real_pl:.2f}",
-                "fx_drag": f"£{fx_drag:.2f}",
-                "action": action,
-                "execution": execution,
-                "class": "action-buy" if action == "REPAIR" else "action-sell" if action == "TRIM" else "action-hold"
-            })
-            
-        return {
-            "fortress": self.fortress,
-            "risk": self.risk_register,
-            "sniper": self.sniper_list,
-            "capital": self.total_capital
-        }
+# 1. MAIN EXECUTION
 # ==============================================================================
 
 def main():
@@ -266,7 +172,6 @@ def main():
                      })
 
         # 2. SEGRAGATION LOOP (FOR HEATMAP & AUDIT)
-        architect_positions = [] # Data collector for Sovereign Architect
         for pos in portfolio_raw:
             ticker_raw = pos.get('ticker', 'UNKNOWN').upper()
             
@@ -316,30 +221,6 @@ def main():
             mock_data = {'sector': 'Technology', 'moat': 'Wide', 'ocf': 1000, 'capex': 200, 'mcap': 10000}
             audit = oracle.run_full_audit(mock_data)
             
-            # ==================================================================
-            # ENHANCED MARKET INTELLIGENCE (yfinance comprehensive data)
-            # ==================================================================
-            market_intel = {}
-            try:
-                # Initialize market intelligence (with caching)
-                if 'market_intel_engine' not in globals():
-                    global market_intel_engine
-                    market_intel_engine = MarketIntelligence()
-                
-                # Fetch comprehensive data for this ticker
-                market_intel = market_intel_engine.get_comprehensive_data(mapped_ticker)
-                time.sleep(0.3)  # Rate limiting
-            except Exception as e:
-                print(f"   [WARN] Market intel fetch failed for {mapped_ticker}: {e}")
-                market_intel = market_intel_engine._get_fallback_data(mapped_ticker) if 'market_intel_engine' in globals() else {}
-            
-            # Extract enriched data
-            dividend_data = market_intel.get('dividends', {})
-            analyst_data = market_intel.get('analyst_ratings', {})
-            fundamentals_data = market_intel.get('fundamentals', {})
-            price_data = market_intel.get('price_data', {})
-            esg_data = market_intel.get('esg_scores', {})
-            
             moat_audit_data.append({
                 'ticker': mapped_ticker,
                 'origin': 'US' if is_usd else 'UK',
@@ -349,41 +230,11 @@ def main():
                 'verdict': audit['verdict'],
                 'action': "HOLD" if audit['verdict'] == "PASS" else "TRIM",
                 'logic': "Meets v29.0 Master Spec",
-                'days_held': 0,  # Placeholder, updated below
+                'days_held': 0, # Placeholder, updated below
                 'deep_link': f"trading212://asset/{ticker_raw}",
                 'director_action': "CEO Bought 2m ago" if audit['verdict'] == "PASS" else "None",
                 'cost_of_hesitation': f"{abs(pnl_pct+0.05 - pnl_pct)*100:+.1f}%",
-                'weight': market_val,
-                # NEW: Enhanced Market Intelligence
-                'dividend_yield': f"{dividend_data.get('yield', 0)*100:.2f}%" if dividend_data.get('yield') else "N/A",
-                'dividend_frequency': dividend_data.get('frequency', 'N/A'),
-                'next_dividend_date': dividend_data.get('next_payment_date', 'N/A'),
-                'next_dividend_amount': f"${dividend_data.get('next_payment_amount', 0):.2f}" if dividend_data.get('next_payment_amount') else "N/A",
-                'analyst_rating': get_recommendation_label(analyst_data.get('consensus', 'none')),
-                'analyst_target': f"${analyst_data.get('target_mean'):.2f}" if analyst_data.get('target_mean') else "N/A",
-                'num_analysts': analyst_data.get('num_analysts', 0),
-                'sector': fundamentals_data.get('sector', 'Unknown'),
-                'industry': fundamentals_data.get('industry', 'Unknown'),
-                'market_cap': format_large_number(fundamentals_data.get('market_cap')),
-                'pe_ratio': f"{fundamentals_data.get('trailing_pe'):.2f}" if fundamentals_data.get('trailing_pe') else "N/A",
-                'beta': f"{fundamentals_data.get('beta'):.2f}" if fundamentals_data.get('beta') else "N/A",
-                'week_52_high': f"${price_data.get('week_52_high'):.2f}" if price_data.get('week_52_high') else "N/A",
-                'week_52_low': f"${price_data.get('week_52_low'):.2f}" if price_data.get('week_52_low') else "N/A",
-                'range_position': f"{price_data.get('range_position', 0):.1f}%",
-                'esg_total': f"{esg_data.get('total_esg', 0):.1f}" if esg_data.get('total_esg') else "N/A",
-                'esg_environment': f"{esg_data.get('environment', 0):.1f}" if esg_data.get('environment') else "N/A",
-                'esg_social': f"{esg_data.get('social', 0):.1f}" if esg_data.get('social') else "N/A",
-                'esg_governance': f"{esg_data.get('governance', 0):.1f}" if esg_data.get('governance') else "N/A"
-            })
-            
-            # Collect for Architect
-            architect_positions.append({
-                'ticker': ticker_raw,
-                'invested_gbp': invested_gbp,
-                'value_gbp': market_val,
-                'ppl_gbp': pnl_cash,
-                'fx_impact': 0.0, # T212 API doesn't give direct FX impact easily without transaction history, assumes 0 for now or calculate if possible
-                'quantity': qty
+                'weight': market_val 
             })
             
             # --- LEDGER ENRICHMENT (Time-in-Market) ---
@@ -437,13 +288,6 @@ def main():
         print(f"PORTFOLIO ERROR: {e}")
         t212_error = str(e)
 
-    # --- ARCHITECT ANALYSIS (v27.0) ---
-    architect = SovereignArchitect(architect_positions, cash_balance)
-    architect_data = architect.analyze()
-    
-    # Override Total Wealth with Architect's "Clean" Capital
-    actual_total_wealth = architect_data['capital']
-    
     # 3. SECTOR GUARDIAN & INCOME CALENDAR
     sector_weights = {}
     for item in moat_audit_data:
@@ -516,9 +360,6 @@ def main():
         env=config.ENVIRONMENT,
         risk_free=f"{config.RISK_FREE_RATE*100}%",
         drip=config.DRIP_STATUS,
-        # Version Tracking
-        version=VERSION,
-        build_time=BUILD_TIME,
         # Metrics (RECONCILIATION NAMES)
         total_wealth_str=f"£{actual_total_wealth:,.2f}",
         cash_reserve_str=f"£{cash_balance:,.2f}",
@@ -537,10 +378,6 @@ def main():
         status_color="text-emerald-500" if not t212_error else "text-rose-500",
         # TITAN EXTRAS
         pending_orders=pending_orders,
-        # SOVEREIGN ARCHITECT (v27.0)
-        fortress=architect_data['fortress'],
-        risk_register=architect_data['risk'],
-        sniper_list=architect_data['sniper'],
         # Solar/Immune
         solar=solar_report,
         immune=get_report(immune),

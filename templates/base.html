@@ -100,9 +100,6 @@
         <div class="flex items-center gap-3">
             <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
             <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">SENTINEL_VIBE</h1>
-            <span
-                class="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-[0.6rem] font-bold mono border border-blue-200">{{
-                version }}</span>
         </div>
 
         <!-- KEY DATA (FIXED HEADER TICKER) -->
@@ -135,9 +132,8 @@
         <div class="flex gap-4 items-center">
             <span class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200">{{
                 env }}</span>
-            <div class="text-right hidden sm:block" title="Built: {{ build_time }}">
-                <span
-                    class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded cursor-help">ONLINE</span>
+            <div class="text-right hidden sm:block">
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">ONLINE</span>
             </div>
         </div>
     </nav>
@@ -204,56 +200,50 @@
 
         <!-- SECTOR GUARDIAN & INCOME CALENDAR -->
         <div class="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Risk Register (The Red Flags) -->
+            <!-- Sector Guardian -->
             <div class="sentinel-card">
-                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4">⚠️ THE RISK REGISTER</h2>
+                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4">🛡️ SECTOR GUARDIAN</h2>
                 <div class="space-y-2">
-                    {% if risk_register %}
-                    {% for item in risk_register %}
-                    <div
-                        class="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs mono rounded flex justify-between items-center">
-                        <div>
-                            <span class="font-bold">{{ item.ticker }}</span>: {{ item.issue }}
-                        </div>
-                        <span class="font-bold bg-rose-500 text-white px-2 py-0.5 rounded text-[0.6rem]">{{ item.action
-                            }}</span>
+                    {% if sector_alerts %}
+                    {% for alert in sector_alerts %}
+                    <div class="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs mono rounded">
+                        {{ alert }}
                     </div>
                     {% endfor %}
                     {% else %}
                     <div class="text-xs mono text-emerald-500/60 bg-emerald-500/5 p-3 rounded">
-                        >> NO CRITICAL RISKS DETECTED
+                        >> ALL SECTORS WITHIN LIMITS (35%)
                     </div>
                     {% endif %}
                 </div>
             </div>
-            <!-- THE SNIPER LIST (Capital Deployment) -->
+            <!-- PENDING ORDERS (TITAN NEW) -->
             <div class="sentinel-card">
-                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4">🎯 THE SNIPER LIST</h2>
+                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4">⏳ PENDING ORDERS / RESERVED
+                    CASH</h2>
                 <div class="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                    {% if sniper_list %}
-                    <table class="w-full text-left text-xs mono">
-                        <thead class="text-neutral-600 border-b border-white/5 uppercase">
-                            <tr>
-                                <th class="pb-2">Ticker</th>
-                                <th class="pb-2">Limit</th>
-                                <th class="pb-2 text-right">Target</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-white/5">
-                            {% for item in sniper_list %}
-                            <tr class="hover:bg-white/[0.02]">
-                                <td class="py-2">
-                                    <span class="font-bold text-white">{{ item.ticker }}</span>
-                                    <div class="text-[0.6rem] text-neutral-500">{{ item.tier }}</div>
-                                </td>
-                                <td class="py-2 text-blue-400">{{ item.limit }}</td>
-                                <td class="py-2 text-right text-emerald-500 font-bold">{{ item.action }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    {% if pending_orders %}
+                    {% for order in pending_orders %}
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-white/5">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold">
+                                {{ order.ticker[0] }}
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-white">{{ order.ticker }}</div>
+                                <div class="text-[0.6rem] text-neutral-500 mono">{{ order.qty }} @ {{ order.limit_price
+                                    }}</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs font-bold text-white">£{{ order.value }}</div>
+                            <span class="bg-neutral-800 text-[0.5rem] px-2 py-1 rounded text-neutral-400">LIMIT</span>
+                        </div>
+                    </div>
+                    {% endfor %}
                     {% else %}
-                    <div class="text-center p-6 text-neutral-600 text-xs mono">NO TARGETS</div>
+                    <div class="text-center p-6 text-neutral-600 text-xs mono">NO ACTIVE ORDERS</div>
                     {% endif %}
                 </div>
             </div>
@@ -274,61 +264,66 @@
             </div>
         </div>
 
-        <!-- THE FORTRESS (Holdings Management) -->
+        <!-- MOAT AUDIT -->
         <div class="col-span-12 sentinel-card">
-            <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-6">🛡️ THE FORTRESS (HOLDINGS
-                MANAGEMENT)</h2>
+            <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-6">🏰 MOAT AUDIT (THE ARCHITECT)</h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs mono">
                     <thead class="text-neutral-600 border-b border-white/5 uppercase tracking-widest">
                         <tr>
                             <th class="p-4">Ticker</th>
-                            <th class="p-4">Weight</th>
-                            <th class="p-4">Real P/L</th>
-                            <th class="p-4">FX Drag</th>
-                            <th class="p-4">Action</th>
-                            <th class="p-4 text-right">Execution</th>
+                            <th class="p-4">Logic</th>
+                            <th class="p-4">Held</th>
+                            <th class="p-4">Yield</th>
+                            <th class="p-4">P&L</th>
+                            <th class="p-4">Verdict</th>
+                            <th class="p-4 text-right">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% if fortress %}
-                        {% for item in fortress %}
+                        {% for item in moat_audit %}
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
                             <td class="p-4 font-bold text-white">
                                 {{ item.ticker }}
                                 <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/{{ item.ticker }}_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
+                                    <a href="{{ item.deep_link }}" class="hover:text-amber-500">OPEN T212 ↗</a>
                                 </div>
                             </td>
-                            <td class="p-4 font-bold text-white">
-                                {{ item.weight }}
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">{{ item.logic }}</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: {{ item.director_action }}</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">{{ item.days_held }}d</td>
+                            <td class="p-4 text-blue-400">{{ item.net_yield }}</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="{{ 'text-emerald-400' if '+' in item.pnl_pct else 'text-rose-400' }}">{{
+                                        item.pnl_pct }}</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: {{ item.cost_of_hesitation
+                                        }}</span>
+                                </div>
                             </td>
                             <td class="p-4">
                                 <span
-                                    class="{{ 'text-emerald-400' if '£-' not in item.real_pl and '-£' not in item.real_pl else 'text-rose-400' }}">
-                                    {{ item.real_pl }}
-                                </span>
-                            </td>
-                            <td class="p-4 text-neutral-500">
-                                {{ item.fx_drag }}
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold {{ 'bg-emerald-500/10 text-emerald-500' if item.action == 'REPAIR' else 'bg-rose-500/10 text-rose-500' if item.action == 'TRIM' else 'bg-neutral-500/10 text-neutral-500' }}">
-                                    {{ item.action }}
+                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold {{ 'bg-emerald-500/10 text-emerald-500' if item.verdict == 'PASS' else 'bg-rose-500/10 text-rose-500' }}">
+                                    {{ item.verdict }}
                                 </span>
                             </td>
                             <td class="p-4 text-right">
-                                <span class="font-bold text-white">{{ item.execution }}</span>
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold {{ 'text-rose-500' if item.action == 'TRIM' else 'text-emerald-500' }}">{{
+                                        item.action }}</span>
+                                    {% if item.action == 'TRIM' %}
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    {% endif %}
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
-                        {% else %}
-                        <tr>
-                            <td colspan="6" class="p-4 text-center text-neutral-500">NO HOLDINGS DETECTED</td>
-                        </tr>
-                        {% endif %}
                     </tbody>
                 </table>
             </div>
