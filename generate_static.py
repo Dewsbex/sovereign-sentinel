@@ -12,6 +12,7 @@ from immune_system import ImmuneSystem
 from oracle import Oracle
 from solar_cycle import SolarCycle
 from sniper_intelligence import fetch_sniper_targets, get_sector_data
+from sovereign_architect import SovereignArchitect
 
 # ==============================================================================
 # 0. HELPERS
@@ -50,6 +51,32 @@ def main():
     oracle = Oracle()
     solar = SolarCycle()
     
+    # Initialize Sovereign Architect v27.0
+    print("      [ARCHITECT] Initializing Sovereign Architect v27.0...")
+    architect = SovereignArchitect()
+    
+    # Run v27.0 Analysis (uses ISA_PORTFOLIO.csv)
+    try:
+        v27_analysis = architect.analyze_portfolio()
+        fortress_holdings = v27_analysis['fortress']
+        sniper_architect = v27_analysis['sniper']  # v27.0 calculated targets
+        risk_register = v27_analysis['risk']
+        portfolio_metrics = v27_analysis['metrics']
+        print(f"      [ARCHITECT] Analysis complete: {len(fortress_holdings)} holdings, {len(sniper_architect)} targets, {len(risk_register)} risks")
+    except Exception as e:
+        print(f"      [ARCHITECT] Analysis failed: {e}. Falling back to legacy mode.")
+        fortress_holdings = []
+        sniper_architect = []
+        risk_register = []
+        portfolio_metrics = {
+            'total_portfolio': 0,
+            'cash_balance': 0,
+            'cash_hurdle': config.RISK_FREE_RATE,
+            'num_holdings': 0,
+            'num_targets': 0,
+            'num_risks': 0
+        }
+    
     # --- INITIALIZE FINANCIAL BUCKETS (RECONCILIATION MISSION) ---
     total_invested_wealth = 0.0  # Sum of stocks/ETFs only
     cash_balance = 0.0           # Sum of free cash only
@@ -57,22 +84,25 @@ def main():
     moat_audit_data = []
     t212_error = None
     
-    # 0. LOAD LEDGER CACHE (DEEP HISTORY)
+    # 0. LOAD LEDGER CACHE (DEEP HISTORY) - SILENT FAIL PROTECTION
     ledger_db = {}
     ledger_path = "data/ledger_cache.json"
     last_ledger_sync = "Never"
     
-    if os.path.exists(ledger_path):
-        try:
-            with open(ledger_path, 'r') as f:
-                l_data = json.load(f)
-                ledger_db = l_data.get('assets', {})
-                last_ledger_sync = l_data.get('last_sync', 'Unknown')
-            print(f"      [LEDGER] Loaded history for {len(ledger_db)} assets. Last Sync: {last_ledger_sync}")
-        except Exception as e:
-            print(f"      [LEDGER] Cache load failed: {e}")
-    else:
-        print("      [LEDGER] No history cache found. Run ledger_sync.py to enable Time-in-Market.")
+    try:
+        with open(ledger_path, 'r') as f:
+            l_data = json.load(f)
+            ledger_db = l_data.get('assets', {})
+            last_ledger_sync = l_data.get('last_sync', 'Unknown')
+        print(f"      [LEDGER] Loaded history for {len(ledger_db)} assets. Last Sync: {last_ledger_sync}")
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        # Don't crash, just start with nothing
+        ledger_db = {}
+        print(f"      [LEDGER] No cache found or invalid JSON. Starting fresh. ({e.__class__.__name__})")
+    except Exception as e:
+        # Catch any other unexpected errors
+        ledger_db = {}
+        print(f"      [LEDGER] Unexpected error loading cache: {e}. Starting fresh.")
 
     # 1. FETCH DATA FROM TRADING 212
     try:
@@ -395,6 +425,11 @@ def main():
         income_calendar=income_calendar,
         sector_alerts=sector_alerts,
         sector_weights=sector_weights,  # For sector allocation chart
+        # Sovereign Architect v27.0 Data
+        fortress_holdings=fortress_holdings,
+        sniper_architect=sniper_architect,
+        risk_register=risk_register,
+        portfolio_metrics=portfolio_metrics,
         # Status
         system_status="ONLINE" if not t212_error else "ERROR",
         # Flight Deck Mock (v29.0)

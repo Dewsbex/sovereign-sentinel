@@ -2,7 +2,17 @@ import time
 import subprocess
 import sys
 import os
+import json
 from datetime import datetime, timezone
+
+def ensure_ledger_exists():
+    """Ensures the ledger directory and file exist with valid structure."""
+    path = "data/ledger_cache.json"
+    os.makedirs("data", exist_ok=True)
+    if not os.path.isfile(path):
+        with open(path, "w") as f:
+            json.dump({}, f)
+        print(f"Initialized new ledger: {path}")
 
 # --- CONFIGURATION ---
 START_HOUR = 9   # 09:00 GMT
@@ -54,6 +64,9 @@ def broadcast_update():
         return False
 
 def main():
+    # Ensure ledger exists before starting the sentinel loop
+    ensure_ledger_exists()
+    
     os.system('cls' if os.name == 'nt' else 'clear')
     print("="*60)
     print("      SOVEREIGN SENTINEL AUTONOMOUS NODE")

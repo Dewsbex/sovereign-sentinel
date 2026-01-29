@@ -1,0 +1,45 @@
+{
+    "tier_1_plus": {
+        "META": "Proven AI efficiency - OpEx cuts via AI infrastructure",
+        "GOOGL": "AI infrastructure leader - Search, Cloud, DeepMind",
+        "MSFT": "AI platform leader - Azure AI, GitHub Copilot, Office AI",
+        "NVDA": "AI hardware enabler - GPU dominance",
+        "TSMC": "AI chip manufacturer - Cutting-edge fabrication",
+        "RIO.L": "AI-driven mining optimization - Autonomous operations"
+    },
+    "tier_1": {
+        "LGEN.L": "Structural AI fit - Insurance underwriting automation",
+        "AVIVA.L": "Structural AI fit - Claims processing automation",
+        "UPS": "Logistics automation potential - Route optimization",
+        "FDX": "Logistics automation potential - Warehouse robotics",
+        "EQIX": "Data center infrastructure - AI compute housing",
+        "DLR": "Data center REITs - AI infrastructure beneficiary",
+        "V": "Payment processing - Fraud detection AI",
+        "MA": "Payment processing - Transaction analysis AI",
+        "ADBE": "Creative AI tools - Firefly, Sensei",
+        "CRM": "Enterprise AI - Einstein platform",
+        "NOW": "Workflow automation - AI-driven IT operations"
+    },
+    "tier_2": {
+        "BTI": "Classic value - Tobacco, stable cash flow",
+        "IMB": "Classic value - Tobacco, emerging markets",
+        "BP.L": "Classic value - Oil & Gas, energy transition",
+        "SHEL.L": "Classic value - Integrated energy",
+        "XOM": "Classic value - US energy major",
+        "VOD.L": "Classic value - Telecom infrastructure",
+        "T": "Classic value - US telecom",
+        "GSK.L": "Classic value - Pharmaceuticals",
+        "PFE": "Classic value - Big pharma",
+        "JNJ": "Classic value - Healthcare conglomerate",
+        "KO": "Classic value - Beverages",
+        "PEP": "Classic value - Food & beverages",
+        "PG": "Classic value - Consumer staples",
+        "UL": "Classic value - Consumer goods",
+        "WMT": "Classic value - Retail",
+        "TGT": "Classic value - Retail",
+        "MCD": "Classic value - Fast food",
+        "SBUX": "Classic value - Coffee retail",
+        "DIS": "Classic value - Entertainment",
+        "CMCSA": "Classic value - Media & cable"
+    }
+}
