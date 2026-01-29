@@ -373,7 +373,8 @@ def main():
             heatmap_data.append({
                 'x': mapped_ticker.replace("_US", "").replace("_EQ", ""),
                 'y': market_val,
-                'fillColor': fill_color,
+                'val_pct': pnl_pct, # v30.3 Raw Pct for JS Color
+                'fillColor': fill_color, # Fallback
                 'textColor': text_color,
                 'custom_main': f"£{market_val:,.2f}",
                 'custom_sub': f"{'+' if pnl_pct >= 0 else ''}£{abs(pnl_cash):,.2f} ({pnl_pct*100:+.1f}%)"
