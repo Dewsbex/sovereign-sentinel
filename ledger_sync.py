@@ -55,12 +55,13 @@ class LedgerSync:
         else:
             print(f"   [CONFIG] CSV Export Target: {self.drive_path}")
 
-    def run_sync(self):
-        """Orchestrates the full sync process: Request -> Download -> Parse -> Cache"""
+    def run_sync(self, full_sync=False):
+        """Orchestrates the sync process. Defaults to Delta (Current Year) unless full_sync=True."""
         if not self.auth:
             return False
 
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] STARTING LEDGER SYNC (Multi-Year Chunking)...")
+        mode = "FULL (Multi-Year)" if full_sync else "DELTA (Current Year)"
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] STARTING LEDGER SYNC [{mode}]...")
         
         # Test Write Permissions
         try:
@@ -74,56 +75,67 @@ class LedgerSync:
             return False
             
         current_year = datetime.utcnow().year
-        start_year = 2021 # Reasonable start for T212 history. Adjust if needed.
-        combined_data = {}
         
-        # Iterating BACKWARDS (Newest first)
-        for year in range(current_year, start_year - 1, -1):
+        # Determine Years to Sync
+        if full_sync:
+            # Full History back to 2021
+            start_year = 2021 
+            years_to_sync = range(current_year, start_year - 1, -1)
+            combined_data = {} # Reset data
+        else:
+            # Delta: Only Current Year
+            years_to_sync = [current_year]
+            # Load existing cache to merge into
+            combined_data = self._load_existing_cache()
+            print(f"   [LOAD] Loaded {len(combined_data)} existing assets from cache.")
+
+        # Iterating
+        for year in years_to_sync:
             print(f"-- Processing Year: {year} --")
             
             # Define Time Window
             t_start = f"{year}-01-01T00:00:00Z"
-            t_end = f"{year+1}-01-01T00:00:00Z"
-            
-            # Cap end time for current year
             if year == current_year:
                 t_end = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+            else:
+                t_end = f"{year}-12-31T23:59:59Z"
             
-            # 1. Request Export for Year
-            download_link = self._request_export(t_start, t_end)
-            if not download_link:
-                continue # Skip year on error, try next
-
+            # 1. Request Export
+            download_url = self._request_export(t_start, t_end)
+            if not download_url:
+                continue
+                
             # 2. Download CSV
-            csv_content = self._download_csv(download_link)
+            csv_content = self._download_csv(download_url)
             if not csv_content:
                 continue
-
-            # 2.5 Save Raw CSV to Drive
+            
+            # 3. Save Raw CSV (Backup)
+            filename = f"T212_History_{year}.csv"
+            save_path = os.path.join(self.drive_path, filename)
             try:
-                filename = f"T212_History_{year}.csv"
-                full_path = os.path.join(self.drive_path, filename)
-                with open(full_path, 'w', encoding='utf-8') as f:
-                    f.write(csv_content)
-                print(f"   [SAVE] Saved to {full_path}")
+                with open(save_path, "wb") as f:
+                    f.write(csv_content.encode('utf-8')) # Encode to bytes for 'wb' mode
+                print(f"   [SAVE] Saved to {save_path}")
             except Exception as e:
-                print(f"   [WARN] Could not save raw CSV: {e}")
+                print(f"   [WARN] Failed to save CSV to drive: {e}")
 
-            # 3. Parse & Merge
-            chunk_data = self._analyze_csv(csv_content)
+            # 4. Parse & Merge into Cache
+            chunk_data = self._analyze_csv(csv_content) # Keep original method name
             self._merge_data(combined_data, chunk_data)
             
-            # Sleep to avoid rate limits between chunks
-            print("   [SLEEP] Cooling down for 20s...")
-            time.sleep(20)
+            if full_sync:
+                # Sleep to avoid rate limits between chunks only in full sync
+                print("   [SLEEP] Cooling down for 20s...")
+                time.sleep(20)
         
-        # 4. Save Final Cache
+        # 5. Save Final Cache
         if combined_data:
             self._save_cache(combined_data)
-            print(f"DTO LEDGER SYNC COMPLETE. Cached {len(combined_data)} assets.")
+            print("DTO LEDGER SYNC COMPLETE. Cached", len(combined_data), "assets.")
             return True
         else:
-            print("Sync Failed: No data collected.")
+            print("DTO LEDGER SYNC FAILED or NO DATA.")
             return False
 
     def _merge_data(self, main_db, chunk_db):
@@ -279,6 +291,22 @@ class LedgerSync:
         with open(self.cache_file, 'w') as f:
             json.dump(meta, f, indent=2)
 
+    def _load_existing_cache(self):
+        """Loads data from the existing ledger_cache.json if available."""
+        if os.path.exists(self.cache_file):
+            try:
+                with open(self.cache_file, 'r') as f:
+                    cache = json.load(f)
+                    return cache.get('assets', {})
+            except:
+                pass
+        return {}
+            
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--full", action="store_true", help="Force full multi-year sync")
+    args = parser.parse_args()
+
     syncer = LedgerSync()
-    syncer.run_sync()
+    syncer.run_sync(full_sync=args.full)

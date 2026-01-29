@@ -96,8 +96,8 @@ def main():
             # Run once when hour hits LEDGER_SYNC_HOUR (21:00)
             elif hour == LEDGER_SYNC_HOUR:
                 if not ledger_run_today:
-                    log("[LEDGER] MARKET CLOSED. Initiating Daily Ledger Sync...")
-                    log("   (This backs up full history to Google Drive)")
+                    log("[LEDGER] MARKET CLOSED. Initiating Daily Delta Sync...")
+                    log("   (Backing up today's data to Google Drive)")
                     success = run_script("ledger_sync.py")
                     if success:
                         log("   [OK] Ledger Sync Complete.")

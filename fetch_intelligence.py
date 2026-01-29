@@ -3,6 +3,7 @@ import feedparser
 import random
 import yfinance as yf
 from datetime import datetime
+from market_intelligence import MarketIntelligence, format_large_number, get_recommendation_label
 
 # ==============================================================================
 # INTELLIGENCE ENGINE (PHASE 3: REAL DATA & SITREPS)
@@ -19,9 +20,13 @@ def load_strategy():
 
 def fetch_live_prices(strategy_data):
     """
-    Fetches LIVE prices for Watchlist using yfinance.
+    Fetches LIVE prices and comprehensive market data for Watchlist using market_intelligence.
+    Now includes: prices, dividends, analyst ratings, fundamentals, 52-week ranges
     """
-    print("   [INTEL] Connecting to Global Markets (yfinance)...")
+    print("   [INTEL] Connecting to Global Markets (Enhanced Intelligence)...")
+    
+    # Initialize market intelligence engine
+    intel_engine = MarketIntelligence()
     
     enriched_watchlist = []
     
@@ -29,24 +34,26 @@ def fetch_live_prices(strategy_data):
         ticker = item['ticker']
         target = item.get('target_price', 0.0)
         
-        # 1. Fetch Real Data
+        # 1. Fetch Comprehensive Data
         try:
-            stock = yf.Ticker(ticker)
-            # fast_info is faster than .info, but .info has more "human" data
-            # Let's try .history for price to be reliable
-            hist = stock.history(period="1d")
+            # Get all market data in one call
+            market_data = intel_engine.get_comprehensive_data(ticker)
             
-            if not hist.empty:
-                live_price = hist['Close'].iloc[-1]
-            else:
-                # Fallback if market closed/no data
-                # Try regular info for 'currentPrice' or 'previousClose'
-                info = stock.info
-                live_price = info.get('currentPrice') or info.get('previousClose', target)
-                
+            price_info = market_data['price_data']
+            dividend_info = market_data['dividends']
+            analyst_info = market_data['analyst_ratings']
+            fundamentals = market_data['fundamentals']
+            
+            live_price = price_info.get('current') or target
+            
         except Exception as e:
             print(f"   [WARN] Failed to fetch {ticker}: {e}")
-            live_price = target # Safety fallback to avoid breaking UI
+            live_price = target  # Safety fallback
+            market_data = intel_engine._get_fallback_data(ticker)
+            price_info = market_data['price_data']
+            dividend_info = market_data['dividends']
+            analyst_info = market_data['analyst_ratings']
+            fundamentals = market_data['fundamentals']
         
         # 2. Logic (Distance Calculation)
         
@@ -79,22 +86,33 @@ def fetch_live_prices(strategy_data):
             status = "BUY ZONE"
             verdict = "EXECUTE"
             color = "text-emerald-500"
-        elif distance_pct < 2.0: # Within 2%
+        elif distance_pct < 2.0:  # Within 2%
             status = "NEAR TARGET"
             verdict = "PREPARE"
             color = "text-amber-500"
         elif distance_pct > 50.0:
             verdict = "IGNORE"
             color = "text-neutral-600"
-            
+        
+        # 4. Enhanced Enrichment
         enriched_watchlist.append({
             **item,
-            'target_price': f"{target:.2f}", # Store normalized target for UI
+            'target_price': f"{target:.2f}",  # Store normalized target for UI
             'live_price': f"{live_price:.2f}",
             'distance_pct': f"{distance_pct:+.2f}%",
             'verdict': verdict,
             'color': color,
-            'status': status
+            'status': status,
+            # NEW: Enhanced data
+            'dividend_yield': f"{dividend_info.get('yield', 0)*100:.2f}%" if dividend_info.get('yield') else "N/A",
+            'analyst_rating': get_recommendation_label(analyst_info.get('consensus', 'none')),
+            'analyst_target': f"${analyst_info.get('target_mean'):.2f}" if analyst_info.get('target_mean') else "N/A",
+            'sector': fundamentals.get('sector', 'Unknown'),
+            'pe_ratio': f"{fundamentals.get('trailing_pe'):.2f}" if fundamentals.get('trailing_pe') else "N/A",
+            'market_cap': format_large_number(fundamentals.get('market_cap')),
+            'week_52_high': f"${price_info.get('week_52_high'):.2f}" if price_info.get('week_52_high') else "N/A",
+            'week_52_low': f"${price_info.get('week_52_low'):.2f}" if price_info.get('week_52_low') else "N/A",
+            'range_position': f"{price_info.get('range_position', 0):.1f}%"
         })
         
     strategy_data['watchlist'] = enriched_watchlist
