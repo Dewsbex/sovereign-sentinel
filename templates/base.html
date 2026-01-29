@@ -329,6 +329,82 @@
             </div>
         </div>
 
+        <!-- 🎯 SNIPER LIST (DYNAMIC WATCHLIST) -->
+        <div class="col-span-12 sentinel-card" style="border-top: 2px solid #FFD700;">
+            <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-6">🎯 SNIPER LIST (LIVE TARGETS)</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs mono">
+                    <thead class="text-neutral-600 border-b border-white/5 uppercase tracking-widest">
+                        <tr>
+                            <th class="p-4">Ticker</th>
+                            <th class="p-4">Current</th>
+                            <th class="p-4">Target</th>
+                            <th class="p-4">Distance</th>
+                            <th class="p-4">Expected</th>
+                            <th class="p-4">Sector</th>
+                            <th class="p-4">Priority</th>
+                            <th class="p-4 text-right">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if sniper_list %}
+                        {% for target in sniper_list %}
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors {{ 'bg-emerald-500/5' if target.is_buy_signal else '' }}">
+                            <td class="p-4 font-bold text-white">
+                                {{ target.ticker }}
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">{{ target.name }}</div>
+                            </td>
+                            <td class="p-4 text-neutral-400">£{{ target.current_price }}</td>
+                            <td class="p-4 text-blue-400">£{{ target.target_price }}</td>
+                            <td class="p-4">
+                                <span class="{{ 'text-emerald-400' if target.distance_pct < 0 else 'text-rose-400' }}">
+                                    {{ target.distance_pct }}%
+                                </span>
+                            </td>
+                            <td class="p-4 text-amber-400">+{{ target.expected_growth_pct }}%</td>
+                            <td class="p-4 text-neutral-500">
+                                {{ target.sector }}
+                                <div class="text-[0.6rem] text-neutral-600">{{ target.industry }}</div>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-white font-bold">{{ target.priority_score }}</span>
+                                    <div class="w-16 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-gradient-to-r from-emerald-500 to-amber-500" 
+                                             style="width: {{ (target.priority_score / 20) * 100 if target.priority_score < 20 else 100 }}%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="p-4 text-right">
+                                {% if target.status == 'BUY NOW' %}
+                                <span class="px-3 py-1 rounded text-[0.6rem] font-bold bg-emerald-500/20 text-emerald-500 border border-emerald-500/30">
+                                    🎯 BUY NOW
+                                </span>
+                                {% elif target.status == 'WATCH' %}
+                                <span class="px-3 py-1 rounded text-[0.6rem] font-bold bg-amber-500/20 text-amber-500 border border-amber-500/30">
+                                    👁️ WATCH
+                                </span>
+                                {% else %}
+                                <span class="px-3 py-1 rounded text-[0.6rem] font-bold bg-rose-500/20 text-rose-500 border border-rose-500/30">
+                                    ⚠️ ERROR
+                                </span>
+                                {% endif %}
+                                <div class="text-[0.5rem] text-neutral-600 mt-1">{{ target.last_updated }}</div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center p-6 text-neutral-600 text-xs mono">
+                                NO TARGETS IN WATCHLIST - Add tickers to watchlist.json
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
     <script>
