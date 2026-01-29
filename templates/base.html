@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | PLATINUM MASTER v30.1</title>
+    <title>SOVEREIGN SENTINEL | PLATINUM MASTER v30.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -100,7 +100,7 @@
         <div class="flex items-center gap-3">
             <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
             <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">SENTINEL_VIBE <span
-                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v30.1</span>
+                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v30.2</span>
             </h1>
         </div>
 
@@ -118,10 +118,7 @@
                 <div class="flex items-baseline justify-end gap-2">
                     <span
                         class="text-lg font-bold {{ 'text-emerald-500' if total_return_str.startswith('£-') == False else 'text-rose-500' }} mono leading-none">{{
-                        total_return_str }}</span>
-                    <span
-                        class="text-xs font-bold {{ 'text-emerald-500' if total_return_str.startswith('£-') == False else 'text-rose-500' }} mono">{{
-                        return_pct_str }}</span>
+                        total_return_str }} <span class="text-xs">({{ return_pct_str }})</span></span>
                 </div>
             </div>
             <div class="h-6 w-px bg-gray-200"></div>
@@ -557,7 +554,7 @@
         var options = {
             series: [{ data: mapData }],
             chart: { height: 400, type: 'treemap', toolbar: { show: false }, fontFamily: 'JetBrains Mono', background: 'transparent' },
-            colors: ['#37E6B0', '#FF4B4B'], // T212 Colors
+            colors: ['#37E6B0', '#FF4B4B'],
             plotOptions: {
                 treemap: {
                     distributed: true,
@@ -567,7 +564,10 @@
             },
             dataLabels: {
                 enabled: true,
-                style: { fontSize: '14px' },
+                style: {
+                    fontSize: '14px',
+                    colors: mapData.map(d => d.textColor)
+                },
                 formatter: function (text, op) {
                     let p = op.w.config.series[0].data[op.dataPointIndex];
                     return [text, p.custom_main, p.custom_sub];
