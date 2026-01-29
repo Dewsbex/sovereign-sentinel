@@ -4,11 +4,9 @@
         "GOOGL": "AI infrastructure leader - Search, Cloud, DeepMind",
         "MSFT": "AI platform leader - Azure AI, GitHub Copilot, Office AI",
         "NVDA": "AI hardware enabler - GPU dominance",
-        "TSMC": "AI chip manufacturer - Cutting-edge fabrication",
-        "RIO.L": "AI-driven mining optimization - Autonomous operations"
+        "TSMC": "AI chip manufacturer - Cutting-edge fabrication"
     },
     "tier_1": {
-        "LGEN.L": "Structural AI fit - Insurance underwriting automation",
         "AVIVA.L": "Structural AI fit - Claims processing automation",
         "UPS": "Logistics automation potential - Route optimization",
         "FDX": "Logistics automation potential - Warehouse robotics",

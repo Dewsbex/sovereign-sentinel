@@ -13,10 +13,5 @@
         "ticker": "GOOGL",
         "target_price": 130.0,
         "expected_growth": 0.07
-    },
-    {
-        "ticker": "BATS.L",
-        "target_price": 20.0,
-        "expected_growth": 0.02
     }
 ]
