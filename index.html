@@ -100,8 +100,6 @@
         <div class="flex items-center gap-3">
             <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
             <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">SENTINEL_VIBE</h1>
-            <span
-                class="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-[0.6rem] font-bold mono border border-blue-200">v29.1</span>
         </div>
 
         <!-- KEY DATA (FIXED HEADER TICKER) -->
@@ -109,13 +107,13 @@
             <div class="flex flex-col text-right">
                 <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Total
                     Wealth</span>
-                <span class="text-lg font-bold text-gray-800 mono leading-none">£329,351.69</span>
+                <span class="text-lg font-bold text-gray-800 mono leading-none">£333,451.04</span>
             </div>
             <div class="h-6 w-px bg-gray-200"></div>
             <div class="flex flex-col text-right">
                 <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Cash
                     (Dry)</span>
-                <span class="text-lg font-bold text-gray-800 mono leading-none">£188,006.27</span>
+                <span class="text-lg font-bold text-gray-800 mono leading-none">£187,794.71</span>
             </div>
             <div class="h-6 w-px bg-gray-200"></div>
             <div class="flex flex-col text-right">
@@ -131,9 +129,8 @@
         <!-- STATUS / CONTROLS -->
         <div class="flex gap-4 items-center">
             <span class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200">ISA</span>
-            <div class="text-right hidden sm:block" title="Built: 2026-01-29 13:38 UTC">
-                <span
-                    class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded cursor-help">ONLINE</span>
+            <div class="text-right hidden sm:block">
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">ONLINE</span>
             </div>
         </div>
     </nav>
@@ -162,7 +159,7 @@
                 </div>
                 <div class="flex justify-between text-xs mono p-2 bg-gray-50 rounded border border-gray-100">
                     <span class="text-gray-500">Analyst Consensus:</span>
-                    <span class="text-amber-500 font-bold">BUY (Strong)</span>
+                    <span class="text-amber-500 font-bold">HOLD</span>
                 </div>
             </div>
             <div class="grid grid-cols-1 gap-2">
@@ -215,61 +212,24 @@
 
         <!-- SECTOR GUARDIAN & INCOME CALENDAR -->
         <div class="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Risk Register (The Red Flags) -->
+            <!-- Sector Guardian -->
             <div class="sentinel-card">
-                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4">⚠️ THE RISK REGISTER</h2>
+                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4">🛡️ SECTOR GUARDIAN</h2>
                 <div class="space-y-2">
                     
                     <div class="text-xs mono text-emerald-500/60 bg-emerald-500/5 p-3 rounded">
-                        >> NO CRITICAL RISKS DETECTED
+                        >> ALL SECTORS WITHIN LIMITS (35%)
                     </div>
                     
                 </div>
             </div>
-            <!-- THE SNIPER LIST (Capital Deployment) -->
+            <!-- PENDING ORDERS (TITAN NEW) -->
             <div class="sentinel-card">
-                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4">🎯 THE SNIPER LIST</h2>
+                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4">⏳ PENDING ORDERS / RESERVED
+                    CASH</h2>
                 <div class="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                     
-                    <table class="w-full text-left text-xs mono">
-                        <thead class="text-neutral-600 border-b border-white/5 uppercase">
-                            <tr>
-                                <th class="pb-2">Ticker</th>
-                                <th class="pb-2">Limit</th>
-                                <th class="pb-2 text-right">Target</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-white/5">
-                            
-                            <tr class="hover:bg-white/[0.02]">
-                                <td class="py-2">
-                                    <span class="font-bold text-white">GOOGL</span>
-                                    <div class="text-[0.6rem] text-neutral-500">1+ (Cyborg)</div>
-                                </td>
-                                <td class="py-2 text-blue-400">$168.00</td>
-                                <td class="py-2 text-right text-emerald-500 font-bold">Watch</td>
-                            </tr>
-                            
-                            <tr class="hover:bg-white/[0.02]">
-                                <td class="py-2">
-                                    <span class="font-bold text-white">AMZN</span>
-                                    <div class="text-[0.6rem] text-neutral-500">1+ (Cyborg)</div>
-                                </td>
-                                <td class="py-2 text-blue-400">$195.00</td>
-                                <td class="py-2 text-right text-emerald-500 font-bold">Watch</td>
-                            </tr>
-                            
-                            <tr class="hover:bg-white/[0.02]">
-                                <td class="py-2">
-                                    <span class="font-bold text-white">O</span>
-                                    <div class="text-[0.6rem] text-neutral-500">2 (Income)</div>
-                                </td>
-                                <td class="py-2 text-blue-400">$58.50</td>
-                                <td class="py-2 text-right text-emerald-500 font-bold">Buy (Target)</td>
-                            </tr>
-                            
-                        </tbody>
-                    </table>
+                    <div class="text-center p-6 text-neutral-600 text-xs mono">NO ACTIVE ORDERS</div>
                     
                 </div>
             </div>
@@ -290,53 +250,60 @@
             </div>
         </div>
 
-        <!-- THE FORTRESS (Holdings Management) -->
+        <!-- MOAT AUDIT -->
         <div class="col-span-12 sentinel-card">
-            <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-6">🛡️ THE FORTRESS (HOLDINGS
-                MANAGEMENT)</h2>
+            <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-6">🏰 MOAT AUDIT (THE ARCHITECT)</h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs mono">
                     <thead class="text-neutral-600 border-b border-white/5 uppercase tracking-widest">
                         <tr>
                             <th class="p-4">Ticker</th>
-                            <th class="p-4">Weight</th>
-                            <th class="p-4">Real P/L</th>
-                            <th class="p-4">FX Drag</th>
-                            <th class="p-4">Action</th>
-                            <th class="p-4 text-right">Execution</th>
+                            <th class="p-4">Logic</th>
+                            <th class="p-4">Held</th>
+                            <th class="p-4">Yield</th>
+                            <th class="p-4">P&L</th>
+                            <th class="p-4">Verdict</th>
+                            <th class="p-4 text-right">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         
-                        
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
                             <td class="p-4 font-bold text-white">
-                                BMY
+                                BMY_US
                                 <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/BMY_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
+                                    <a href="trading212://asset/BMY_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
                                 </div>
                             </td>
-                            <td class="p-4 font-bold text-white">
-                                2.4%
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">660d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-emerald-400">+9.0%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
                             </td>
                             <td class="p-4">
                                 <span
-                                    class="text-emerald-400">
-                                    £604.66
-                                </span>
-                            </td>
-                            <td class="p-4 text-neutral-500">
-                                £0.00
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
-                                    REPAIR
+                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
+                                    FAIL
                                 </span>
                             </td>
                             <td class="p-4 text-right">
-                                <span class="font-bold text-white">Buy 192</span>
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
                             </td>
                         </tr>
                         
@@ -344,30 +311,38 @@
                             <td class="p-4 font-bold text-white">
                                 RIOL
                                 <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/RIOL_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
+                                    <a href="trading212://asset/RIOL_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
                                 </div>
                             </td>
-                            <td class="p-4 font-bold text-white">
-                                1.5%
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">1d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-emerald-400">+49.7%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
                             </td>
                             <td class="p-4">
                                 <span
-                                    class="text-emerald-400">
-                                    £2473.28
-                                </span>
-                            </td>
-                            <td class="p-4 text-neutral-500">
-                                £0.00
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
-                                    REPAIR
+                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
+                                    FAIL
                                 </span>
                             </td>
                             <td class="p-4 text-right">
-                                <span class="font-bold text-white">Buy 157</span>
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
                             </td>
                         </tr>
                         
@@ -375,30 +350,77 @@
                             <td class="p-4 font-bold text-white">
                                 LGENL
                                 <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/LGENL_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
+                                    <a href="trading212://asset/LGENL_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
                                 </div>
                             </td>
-                            <td class="p-4 font-bold text-white">
-                                0.8%
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">1d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-emerald-400">+2.3%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
                             </td>
                             <td class="p-4">
                                 <span
-                                    class="text-emerald-400">
-                                    £59.00
-                                </span>
-                            </td>
-                            <td class="p-4 text-neutral-500">
-                                £0.00
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
-                                    REPAIR
+                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
+                                    FAIL
                                 </span>
                             </td>
                             <td class="p-4 text-right">
-                                <span class="font-bold text-white">Buy 4937</span>
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-4 font-bold text-white">
+                                QELL_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/QELL_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">1d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-99.9%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span
+                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
+                                    FAIL
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
                             </td>
                         </tr>
                         
@@ -406,343 +428,430 @@
                             <td class="p-4 font-bold text-white">
                                 BATSL
                                 <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/BATSL_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
+                                    <a href="trading212://asset/BATSL_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
                                 </div>
                             </td>
-                            <td class="p-4 font-bold text-white">
-                                1.3%
-                            </td>
                             <td class="p-4">
-                                <span
-                                    class="text-emerald-400">
-                                    £143.48
-                                </span>
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
                             </td>
-                            <td class="p-4 text-neutral-500">
-                                £0.00
-                            </td>
+                            <td class="p-4 text-neutral-400">1d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
                             <td class="p-4">
-                                <span
-                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
-                                    REPAIR
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <span class="font-bold text-white">Buy 264</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">
-                                VSNTV
-                                <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/VSNTV_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-emerald-400">+3.0%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
                                 </div>
-                            </td>
-                            <td class="p-4 font-bold text-white">
-                                0.9%
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="text-emerald-400">
-                                    £32.07
-                                </span>
-                            </td>
-                            <td class="p-4 text-neutral-500">
-                                £0.00
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
-                                    REPAIR
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <span class="font-bold text-white">Buy 489</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">
-                                NUE
-                                <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/NUE_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
-                                </div>
-                            </td>
-                            <td class="p-4 font-bold text-white">
-                                4.2%
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="text-emerald-400">
-                                    £2825.87
-                                </span>
-                            </td>
-                            <td class="p-4 text-neutral-500">
-                                £0.00
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
-                                    REPAIR
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <span class="font-bold text-white">Buy 18</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">
-                                SOLV
-                                <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/SOLV_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
-                                </div>
-                            </td>
-                            <td class="p-4 font-bold text-white">
-                                2.0%
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="text-rose-400">
-                                    £-300.87
-                                </span>
-                            </td>
-                            <td class="p-4 text-neutral-500">
-                                £0.00
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
-                                    REPAIR
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <span class="font-bold text-white">Buy 158</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">
-                                RE
-                                <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/RE_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
-                                </div>
-                            </td>
-                            <td class="p-4 font-bold text-white">
-                                5.5%
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="text-rose-400">
-                                    £-464.68
-                                </span>
-                            </td>
-                            <td class="p-4 text-neutral-500">
-                                £0.00
                             </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
-                                    TRIM
+                                    FAIL
                                 </span>
                             </td>
                             <td class="p-4 text-right">
-                                <span class="font-bold text-white">Sell ~6</span>
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
                             </td>
                         </tr>
                         
                         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
                             <td class="p-4 font-bold text-white">
-                                QCOM
+                                VSNTV_US
                                 <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/QCOM_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
+                                    <a href="trading212://asset/VSNTV_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
                                 </div>
                             </td>
-                            <td class="p-4 font-bold text-white">
-                                3.9%
-                            </td>
                             <td class="p-4">
-                                <span
-                                    class="text-rose-400">
-                                    £-1391.83
-                                </span>
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
                             </td>
-                            <td class="p-4 text-neutral-500">
-                                £0.00
-                            </td>
+                            <td class="p-4 text-neutral-400">1d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
                             <td class="p-4">
-                                <span
-                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
-                                    REPAIR
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <span class="font-bold text-white">Buy 109</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">
-                                NFLX
-                                <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/NFLX_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-3.3%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
                                 </div>
-                            </td>
-                            <td class="p-4 font-bold text-white">
-                                4.4%
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="text-rose-400">
-                                    £-1163.29
-                                </span>
-                            </td>
-                            <td class="p-4 text-neutral-500">
-                                £0.00
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
-                                    REPAIR
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <span class="font-bold text-white">Buy 173</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">
-                                CRM
-                                <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/CRM_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
-                                </div>
-                            </td>
-                            <td class="p-4 font-bold text-white">
-                                4.7%
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="text-rose-400">
-                                    £-1224.20
-                                </span>
-                            </td>
-                            <td class="p-4 text-neutral-500">
-                                £0.00
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
-                                    REPAIR
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <span class="font-bold text-white">Buy 57</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">
-                                EOG
-                                <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/EOG_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
-                                </div>
-                            </td>
-                            <td class="p-4 font-bold text-white">
-                                4.7%
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="text-rose-400">
-                                    £-389.09
-                                </span>
-                            </td>
-                            <td class="p-4 text-neutral-500">
-                                £0.00
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
-                                    REPAIR
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <span class="font-bold text-white">Buy 9</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">
-                                CTVA
-                                <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/CTVA_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
-                                </div>
-                            </td>
-                            <td class="p-4 font-bold text-white">
-                                3.0%
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="text-emerald-400">
-                                    £521.22
-                                </span>
-                            </td>
-                            <td class="p-4 text-neutral-500">
-                                £0.00
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-emerald-500/10 text-emerald-500">
-                                    REPAIR
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <span class="font-bold text-white">Buy 275</span>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            <td class="p-4 font-bold text-white">
-                                CNNE
-                                <div class="text-[0.6rem] text-neutral-600 mt-1">
-                                    <a href="trading212://asset/CNNE_US_EQ"
-                                        class="hover:text-amber-500">OPEN T212 ↗</a>
-                                </div>
-                            </td>
-                            <td class="p-4 font-bold text-white">
-                                5.5%
-                            </td>
-                            <td class="p-4">
-                                <span
-                                    class="text-rose-400">
-                                    £-1625.91
-                                </span>
-                            </td>
-                            <td class="p-4 text-neutral-500">
-                                £0.00
                             </td>
                             <td class="p-4">
                                 <span
                                     class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
-                                    TRIM
+                                    FAIL
                                 </span>
                             </td>
                             <td class="p-4 text-right">
-                                <span class="font-bold text-white">Sell ~141</span>
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
                             </td>
                         </tr>
                         
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-4 font-bold text-white">
+                                NUE_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/NUE_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">660d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-emerald-400">+25.0%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span
+                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
+                                    FAIL
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-4 font-bold text-white">
+                                SOLV_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/SOLV_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">9d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-5.3%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span
+                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
+                                    FAIL
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-4 font-bold text-white">
+                                RE_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/RE_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">1d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-1.9%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span
+                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
+                                    FAIL
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-4 font-bold text-white">
+                                NFLX_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/NFLX_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">43d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-10.4%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span
+                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
+                                    FAIL
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-4 font-bold text-white">
+                                CRM_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/CRM_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">563d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-12.9%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span
+                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
+                                    FAIL
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-4 font-bold text-white">
+                                QCOM_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/QCOM_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">664d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-10.4%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span
+                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
+                                    FAIL
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-4 font-bold text-white">
+                                EOG_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/EOG_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">146d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-0.4%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span
+                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
+                                    FAIL
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-4 font-bold text-white">
+                                CTVA_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/CTVA_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">13d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-emerald-400">+6.3%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span
+                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
+                                    FAIL
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-4 font-bold text-white">
+                                CNNE_US
+                                <div class="text-[0.6rem] text-neutral-600 mt-1">
+                                    <a href="trading212://asset/CNNE_US_EQ" class="hover:text-amber-500">OPEN T212 ↗</a>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-neutral-500 block">Meets v29.0 Master Spec</span>
+                                <span class="text-[0.6rem] text-blue-400">Director: None</span>
+                            </td>
+                            <td class="p-4 text-neutral-400">13d</td>
+                            <td class="p-4 text-blue-400">0.00%</td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-rose-400">-7.7%</span>
+                                    <span class="text-[0.5rem] text-neutral-600">vs Ghost: +5.0%</span>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span
+                                    class="px-2 py-0.5 rounded text-[0.6rem] font-bold bg-rose-500/10 text-rose-500">
+                                    FAIL
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span
+                                        class="font-bold text-rose-500">TRIM</span>
+                                    
+                                    <button
+                                        class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-1 rounded text-[0.5rem] uppercase hover:bg-rose-500 hover:text-white transition-all">PANIC
+                                        BAILOUT</button>
+                                    
+                                </div>
+                            </td>
+                        </tr>
                         
                     </tbody>
                 </table>
@@ -752,7 +861,7 @@
     </div>
 
     <script>
-        const mapData = [{"x": "BMY", "y": 8099.13, "fillColor": "#37E6B0", "custom_main": "\u00a38,099.13", "custom_sub": "+\u00a3604.66 (+8.1%)"}, {"x": "RIOL", "y": 7158.4029861587105, "fillColor": "#37E6B0", "custom_main": "\u00a37,158.40", "custom_sub": "+\u00a32,473.28 (+52.8%)"}, {"x": "LGENL", "y": 2657.0, "fillColor": "#37E6B0", "custom_main": "\u00a32,657.00", "custom_sub": "+\u00a359.00 (+2.3%)"}, {"x": "QELL", "y": 0.25773987096, "fillColor": "#FF4B4B", "custom_main": "\u00a30.26", "custom_sub": "\u00a3219.45 (-99.9%)"}, {"x": "BATSL", "y": 4346.2, "fillColor": "#37E6B0", "custom_main": "\u00a34,346.20", "custom_sub": "+\u00a3143.48 (+3.4%)"}, {"x": "VSNTV", "y": 2911.6854000000003, "fillColor": "#37E6B0", "custom_main": "\u00a32,911.69", "custom_sub": "+\u00a332.07 (+1.1%)"}, {"x": "NUE", "y": 16093.010696583598, "fillColor": "#37E6B0", "custom_main": "\u00a316,093.01", "custom_sub": "+\u00a32,825.87 (+21.3%)"}, {"x": "SOLV", "y": 5974.02, "fillColor": "#FF4B4B", "custom_main": "\u00a35,974.02", "custom_sub": "\u00a3300.87 (-4.8%)"}, {"x": "RE", "y": 16967.26282609332, "fillColor": "#FF4B4B", "custom_main": "\u00a316,967.26", "custom_sub": "\u00a3464.68 (-2.7%)"}, {"x": "QCOM", "y": 10720.944, "fillColor": "#FF4B4B", "custom_main": "\u00a310,720.94", "custom_sub": "\u00a31,391.83 (-11.5%)"}, {"x": "NFLX", "y": 12540.684000000001, "fillColor": "#FF4B4B", "custom_main": "\u00a312,540.68", "custom_sub": "\u00a31,163.29 (-8.5%)"}, {"x": "CRM", "y": 13695.481800000001, "fillColor": "#FF4B4B", "custom_main": "\u00a313,695.48", "custom_sub": "\u00a31,224.20 (-8.2%)"}, {"x": "EOG", "y": 14535.259684331959, "fillColor": "#FF4B4B", "custom_main": "\u00a314,535.26", "custom_sub": "\u00a3389.09 (-2.6%)"}, {"x": "CTVA", "y": 9972.69, "fillColor": "#37E6B0", "custom_main": "\u00a39,972.69", "custom_sub": "+\u00a3521.22 (+5.5%)"}, {"x": "CNNE", "y": 15673.392268346826, "fillColor": "#FF4B4B", "custom_main": "\u00a315,673.39", "custom_sub": "\u00a31,625.91 (-9.4%)"}];
+        const mapData = [{"x": "BMY", "y": 8165.820000000001, "fillColor": "#37E6B0", "custom_main": "\u00a38,165.82", "custom_sub": "+\u00a3671.35 (+9.0%)"}, {"x": "RIOL", "y": 7011.2977894377, "fillColor": "#37E6B0", "custom_main": "\u00a37,011.30", "custom_sub": "+\u00a32,326.17 (+49.7%)"}, {"x": "LGENL", "y": 2657.0, "fillColor": "#37E6B0", "custom_main": "\u00a32,657.00", "custom_sub": "+\u00a359.00 (+2.3%)"}, {"x": "QELL", "y": 0.27921819354, "fillColor": "#FF4B4B", "custom_main": "\u00a30.28", "custom_sub": "\u00a3219.43 (-99.9%)"}, {"x": "BATSL", "y": 4327.0, "fillColor": "#37E6B0", "custom_main": "\u00a34,327.00", "custom_sub": "+\u00a3124.28 (+3.0%)"}, {"x": "VSNTV", "y": 2783.5469999999996, "fillColor": "#FF4B4B", "custom_main": "\u00a32,783.55", "custom_sub": "\u00a396.07 (-3.3%)"}, {"x": "NUE", "y": 16578.1430356698, "fillColor": "#37E6B0", "custom_main": "\u00a316,578.14", "custom_sub": "+\u00a33,311.01 (+25.0%)"}, {"x": "SOLV", "y": 5942.040000000001, "fillColor": "#FF4B4B", "custom_main": "\u00a35,942.04", "custom_sub": "\u00a3332.85 (-5.3%)"}, {"x": "RE", "y": 17094.164791828644, "fillColor": "#FF4B4B", "custom_main": "\u00a317,094.16", "custom_sub": "\u00a3337.78 (-1.9%)"}, {"x": "NFLX", "y": 12275.405999999999, "fillColor": "#FF4B4B", "custom_main": "\u00a312,275.41", "custom_sub": "\u00a31,428.57 (-10.4%)"}, {"x": "CRM", "y": 15191.592, "fillColor": "#FF4B4B", "custom_main": "\u00a315,191.59", "custom_sub": "\u00a32,243.71 (-12.9%)"}, {"x": "QCOM", "y": 12739.6152, "fillColor": "#FF4B4B", "custom_main": "\u00a312,739.62", "custom_sub": "\u00a31,484.64 (-10.4%)"}, {"x": "EOG", "y": 14870.396717493175, "fillColor": "#FF4B4B", "custom_main": "\u00a314,870.40", "custom_sub": "\u00a353.95 (-0.4%)"}, {"x": "CTVA", "y": 10050.494999999999, "fillColor": "#37E6B0", "custom_main": "\u00a310,050.49", "custom_sub": "+\u00a3599.02 (+6.3%)"}, {"x": "CNNE", "y": 15969.530540736867, "fillColor": "#FF4B4B", "custom_main": "\u00a315,969.53", "custom_sub": "\u00a31,329.77 (-7.7%)"}];
         var options = {
             series: [{ data: mapData }],
             chart: { height: 400, type: 'treemap', toolbar: { show: false }, fontFamily: 'JetBrains Mono', background: 'transparent' },

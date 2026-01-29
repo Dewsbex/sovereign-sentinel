@@ -11,6 +11,7 @@ import config
 from immune_system import ImmuneSystem
 from oracle import Oracle
 from solar_cycle import SolarCycle
+from sniper_intelligence import fetch_sniper_targets, get_sector_data
 
 # ==============================================================================
 # 0. HELPERS
@@ -217,14 +218,27 @@ def main():
             pnl_cash = market_val - invested_gbp
             pnl_pct = (pnl_cash / invested_gbp) if invested_gbp > 0 else 0
             
-            # Oracle Audit
-            mock_data = {'sector': 'Technology', 'moat': 'Wide', 'ocf': 1000, 'capex': 200, 'mcap': 10000}
-            audit = oracle.run_full_audit(mock_data)
+            # Fetch Real Sector Data from yfinance
+            sector_data = get_sector_data(ticker_raw)
+            
+            # Oracle Audit (using real sector data)
+            audit_input = {
+                'sector': sector_data['sector'],
+                'moat': 'Wide',  # TODO: Calculate based on fundamentals
+                'ocf': 1000,  # TODO: Get from yfinance
+                'capex': 200,  # TODO: Get from yfinance
+                'mcap': sector_data['market_cap']
+            }
+            audit = oracle.run_full_audit(audit_input)
             
             moat_audit_data.append({
                 'ticker': mapped_ticker,
                 'origin': 'US' if is_usd else 'UK',
                 'is_us': is_usd,
+                'sector': sector_data['sector'],
+                'industry': sector_data['industry'],
+                'market_cap': sector_data['market_cap'],
+                'pe_ratio': sector_data['pe_ratio'],
                 'net_yield': f"{audit['net_yield']*100:.2f}%",
                 'pnl_pct': f"{pnl_pct*100:+.1f}%",
                 'verdict': audit['verdict'],
@@ -291,7 +305,7 @@ def main():
     # 3. SECTOR GUARDIAN & INCOME CALENDAR
     sector_weights = {}
     for item in moat_audit_data:
-        sector = "Technology"
+        sector = item.get('sector', 'Unknown')  # Use real sector data from yfinance
         w = item.get('weight', 0) / total_invested_wealth if total_invested_wealth > 0 else 0
         sector_weights[sector] = sector_weights.get(sector, 0) + w
     
@@ -347,11 +361,20 @@ def main():
     except Exception:
         intel = {"watchlist": [], "sitrep": {}}
 
-    # 6. SOLAR CYCLE
+    # 6. SNIPER LIST INTELLIGENCE (Dynamic Watchlist)
+    print("      [SNIPER] Fetching live watchlist targets...")
+    sniper_list = []
+    try:
+        sniper_list = fetch_sniper_targets()
+        print(f"      [SNIPER] Loaded {len(sniper_list)} targets")
+    except Exception as e:
+        print(f"      [SNIPER] Failed to fetch targets: {e}")
+
+    # 7. SOLAR CYCLE
     tax_report = solar.phase_4b_tax_logic_fork({})
     solar_report = {"phase": solar.phase, "tax": tax_report, "pre_market": solar.phase_1_pre_market()}
 
-    # 7. GENERATE FINAL DASHBOARD
+    # 8. GENERATE FINAL DASHBOARD
     with open('templates/base.html', 'r', encoding='utf-8') as f:
         template = Template(f.read())
     
@@ -368,8 +391,10 @@ def main():
         heatmap_dataset=json.dumps(heatmap_data),
         moat_audit=moat_audit_data,
         recon_data=intel.get('watchlist', []),
+        sniper_list=sniper_list,  # Dynamic watchlist with live prices
         income_calendar=income_calendar,
         sector_alerts=sector_alerts,
+        sector_weights=sector_weights,  # For sector allocation chart
         # Status
         system_status="ONLINE" if not t212_error else "ERROR",
         # Flight Deck Mock (v29.0)
