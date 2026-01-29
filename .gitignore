@@ -1,3 +1,13 @@
+# Python bytecode
 __pycache__/
+*.pyc
+
+# Local data (the stuff that causes crashes)
 data/ledger_cache.json
-.git/*
+ledger_cache.json
+
+# IDE and Git Metadata (THE NOISE KILLERS)
+.git/
+.vscode/
+*.log
+COMMIT_EDITMSG

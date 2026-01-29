@@ -84,22 +84,25 @@ def main():
     moat_audit_data = []
     t212_error = None
     
-    # 0. LOAD LEDGER CACHE (DEEP HISTORY)
+    # 0. LOAD LEDGER CACHE (DEEP HISTORY) - SILENT FAIL PROTECTION
     ledger_db = {}
     ledger_path = "data/ledger_cache.json"
     last_ledger_sync = "Never"
     
-    if os.path.exists(ledger_path):
-        try:
-            with open(ledger_path, 'r') as f:
-                l_data = json.load(f)
-                ledger_db = l_data.get('assets', {})
-                last_ledger_sync = l_data.get('last_sync', 'Unknown')
-            print(f"      [LEDGER] Loaded history for {len(ledger_db)} assets. Last Sync: {last_ledger_sync}")
-        except Exception as e:
-            print(f"      [LEDGER] Cache load failed: {e}")
-    else:
-        print("      [LEDGER] No history cache found. Run ledger_sync.py to enable Time-in-Market.")
+    try:
+        with open(ledger_path, 'r') as f:
+            l_data = json.load(f)
+            ledger_db = l_data.get('assets', {})
+            last_ledger_sync = l_data.get('last_sync', 'Unknown')
+        print(f"      [LEDGER] Loaded history for {len(ledger_db)} assets. Last Sync: {last_ledger_sync}")
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        # Don't crash, just start with nothing
+        ledger_db = {}
+        print(f"      [LEDGER] No cache found or invalid JSON. Starting fresh. ({e.__class__.__name__})")
+    except Exception as e:
+        # Catch any other unexpected errors
+        ledger_db = {}
+        print(f"      [LEDGER] Unexpected error loading cache: {e}. Starting fresh.")
 
     # 1. FETCH DATA FROM TRADING 212
     try:
