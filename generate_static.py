@@ -172,15 +172,29 @@ def main():
         else:
             print(f"      [DEBUG] Portfolio: Failed with status {r_portfolio.status_code if r_portfolio else 'None'}")
 
-        # 1.2 FETCH ACCOUNT CASH (ABSOLUTE SOURCE OF TRUTH)
+        # 1.2 FETCH ACCOUNT CASH (ABSOLUTE SOURCE OF TRUTH v30.0)
         r_account = make_request_with_retry(f"{BASE_URL}equity/account/cash", headers=headers, auth=auth_credentials)
+        
+        # Initialize strict variables (default to 0.0)
+        api_total_wealth = 0.0 # From 'total'
+        api_cash_free = 0.0    # From 'free'
+        api_cash_blocked = 0.0 # From 'blocked'
+
         if r_account and r_account.status_code == 200:
             acc_data = r_account.json()
-            print(f"      [DEBUG] Cash: {acc_data}")
-            # T212 account/cash fields: 'free' is available, 'total' includes reserved funds (Pending Orders).
-            # User Requirement: Include Pending Orders in Total Wealth.
-            cash_balance = parse_float(acc_data.get('total', 0))
-            # We will calculate total_invested_wealth by summing positions for weight accuracy
+            print(f"      [DEBUG] Cash Object: {acc_data}")
+            
+            # v30.0 STRICT MAPPING
+            # Total Wealth -> 'total'
+            # Cash (Dry)   -> 'free'
+            # Pending      -> 'blocked'
+            api_total_wealth = parse_float(acc_data.get('total', 0))
+            api_cash_free = parse_float(acc_data.get('free', 0))
+            api_cash_blocked = parse_float(acc_data.get('blocked', 0))
+            
+            # Update internal tracking variables just in case others use them, 
+            # though we will rely on api_* variables for the header.
+            cash_balance = api_cash_free 
         else:
             print(f"      [DEBUG] Cash: Failed with status {r_account.status_code if r_account else 'None'}")
         
@@ -413,9 +427,10 @@ def main():
         env=config.ENVIRONMENT,
         risk_free=f"{config.RISK_FREE_RATE*100}%",
         drip=config.DRIP_STATUS,
-        # Metrics (RECONCILIATION NAMES)
-        total_wealth_str=f"£{actual_total_wealth:,.2f}",
-        cash_reserve_str=f"£{cash_balance:,.2f}",
+        # Metrics (RECONCILIATION NAMES v30.0)
+        total_wealth_str=f"£{api_total_wealth:,.2f}",
+        cash_reserve_str=f"£{api_cash_free:,.2f}",
+        pending_cash_str=f"£{api_cash_blocked:,.2f}", # Pass strictly for header
         last_sync=datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC'),
         # Datasets
         heatmap_dataset=json.dumps(heatmap_data),
