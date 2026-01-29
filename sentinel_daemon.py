@@ -82,7 +82,17 @@ def main():
                 time_since = time.time() - last_dashboard_update
                 
                 if time_since >= UPDATE_INTERVAL:
-                    log(f"[UPDATE] MARKET OPEN. Updating Dashboard (Delta Sync)...")
+                    log(f"[UPDATE] MARKET OPEN. Updating Dashboard + Portfolio CSV...")
+                    
+                    # 1. Generate ISA Portfolio CSV (Source of Truth)
+                    log("   [CSV] Generating ISA_PORTFOLIO.csv...")
+                    csv_success = run_script("generate_isa_portfolio.py")
+                    if csv_success:
+                        log("   [CSV] Portfolio CSV Updated.")
+                    else:
+                        log("   [WARN] CSV generation failed, continuing with dashboard...")
+                    
+                    # 2. Update Dashboard
                     success = run_script("generate_static.py")
                     if success:
                         log("   [OK] Update Complete. Broadcasting to Live Site...")

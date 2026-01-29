@@ -1,25 +1,25 @@
 {
-  "last_sync": "2026-01-29 11:11:40",
+  "last_sync": "2026-01-29 17:17:28",
   "assets": {
     "CRM": {
-      "first_buy": "2026-01-02 14:33:49",
+      "first_buy": "2024-07-15 13:30:07",
       "dividends": 0.0,
-      "buy_count": 3
+      "buy_count": 8
     },
     "KMB": {
-      "first_buy": null,
-      "dividends": 119.59,
-      "buy_count": 0
+      "first_buy": "2024-04-09 13:30:31",
+      "dividends": 119.75,
+      "buy_count": 26
     },
     "PEP": {
-      "first_buy": null,
-      "dividends": 28.54,
-      "buy_count": 0
+      "first_buy": "2024-04-09 13:30:02",
+      "dividends": 29.310000000000002,
+      "buy_count": 4
     },
     "LMT": {
-      "first_buy": null,
-      "dividends": 0.0,
-      "buy_count": 0
+      "first_buy": "2025-02-04 16:52:52",
+      "dividends": 112.31,
+      "buy_count": 7
     },
     "BITF": {
       "first_buy": "2026-01-09 09:00:00",
@@ -27,24 +27,24 @@
       "buy_count": 1
     },
     "PFE": {
-      "first_buy": null,
+      "first_buy": "2025-12-16 15:26:00",
       "dividends": 0.0,
-      "buy_count": 0
+      "buy_count": 1
     },
     "QCOM": {
-      "first_buy": "2026-01-12 14:31:39",
-      "dividends": 0.0,
-      "buy_count": 2
+      "first_buy": "2024-04-05 13:34:06",
+      "dividends": 8.14,
+      "buy_count": 8
     },
     "RIO": {
-      "first_buy": null,
-      "dividends": 0.0,
-      "buy_count": 0
+      "first_buy": "2024-04-05 13:34:29",
+      "dividends": 1.55,
+      "buy_count": 6
     },
     "EG": {
-      "first_buy": "2026-01-15 16:10:43",
-      "dividends": 0.0,
-      "buy_count": 5
+      "first_buy": "2025-01-29 20:59:56",
+      "dividends": 135.61,
+      "buy_count": 27
     },
     "WULF": {
       "first_buy": "2026-01-16 09:33:00",
@@ -52,9 +52,9 @@
       "buy_count": 1
     },
     "PMLP": {
-      "first_buy": null,
-      "dividends": 0.0,
-      "buy_count": 0
+      "first_buy": "2025-09-19 12:31:10",
+      "dividends": 176.66,
+      "buy_count": 4
     },
     "VSNT": {
       "first_buy": "2026-01-16 15:26:36",
@@ -72,9 +72,9 @@
       "buy_count": 14
     },
     "CVS": {
-      "first_buy": null,
+      "first_buy": "2025-12-16 17:34:51",
       "dividends": 0.0,
-      "buy_count": 0
+      "buy_count": 5
     },
     "SOLV": {
       "first_buy": "2026-01-20 16:35:44",
@@ -87,19 +87,1489 @@
       "buy_count": 3
     },
     "NFLX": {
-      "first_buy": "2026-01-21 10:31:17",
+      "first_buy": "2025-12-17 18:15:50",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "LGEN": {
+      "first_buy": "2024-04-05 13:34:30",
+      "dividends": 17.84,
+      "buy_count": 4
+    },
+    "NUE": {
+      "first_buy": "2024-04-09 13:30:08",
+      "dividends": 35.51,
+      "buy_count": 22
+    },
+    "PSKY": {
+      "first_buy": "2024-07-15 13:30:02",
+      "dividends": 0.8300000000000001,
+      "buy_count": 3
+    },
+    "BRK.B": {
+      "first_buy": "2025-01-02 18:54:52",
       "dividends": 0.0,
       "buy_count": 2
     },
-    "LGEN": {
-      "first_buy": "2026-01-22 11:40:43",
+    "CNQ": {
+      "first_buy": "2024-04-09 13:30:07",
+      "dividends": 1.1,
+      "buy_count": 2
+    },
+    "SMIF": {
+      "first_buy": "2024-04-05 15:15:04",
+      "dividends": 1.97,
+      "buy_count": 1
+    },
+    "GOOGL": {
+      "first_buy": "2024-05-24 13:30:02",
+      "dividends": 11.469999999999999,
+      "buy_count": 18
+    },
+    "CAVA": {
+      "first_buy": "2025-01-07 14:39:23",
       "dividends": 0.0,
       "buy_count": 1
     },
-    "NUE": {
-      "first_buy": "2026-01-26 23:29:31",
+    "NXPI": {
+      "first_buy": "2024-04-05 13:34:06",
+      "dividends": 2.46,
+      "buy_count": 3
+    },
+    "CLSK": {
+      "first_buy": "2024-12-12 19:04:33",
+      "dividends": 0.0,
+      "buy_count": 7
+    },
+    "IFX": {
+      "first_buy": "2024-04-05 13:34:06",
+      "dividends": 0.0,
+      "buy_count": 6
+    },
+    "SLB": {
+      "first_buy": "2024-04-09 13:30:12",
+      "dividends": 40.790000000000006,
+      "buy_count": 20
+    },
+    "AMD": {
+      "first_buy": "2024-04-05 13:34:06",
+      "dividends": 0.0,
+      "buy_count": 9
+    },
+    "FBRT": {
+      "first_buy": "2024-04-09 13:30:08",
+      "dividends": 9.370000000000001,
+      "buy_count": 2
+    },
+    "BEN": {
+      "first_buy": "2024-04-09 13:30:08",
+      "dividends": 1.1099999999999999,
+      "buy_count": 3
+    },
+    "REFI": {
+      "first_buy": "2024-04-09 13:30:05",
+      "dividends": 10.77,
+      "buy_count": 2
+    },
+    "MRNA": {
+      "first_buy": "2024-12-30 12:51:41",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "ANF": {
+      "first_buy": "2025-01-13 18:03:30",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "STWD": {
+      "first_buy": "2024-04-05 13:34:34",
+      "dividends": 4.21,
+      "buy_count": 1
+    },
+    "MU": {
+      "first_buy": "2024-04-05 13:34:06",
+      "dividends": 4.22,
+      "buy_count": 8
+    },
+    "BKR": {
+      "first_buy": "2024-04-09 13:30:04",
+      "dividends": 13.94,
+      "buy_count": 7
+    },
+    "ROP": {
+      "first_buy": "2024-04-09 13:30:13",
+      "dividends": 0.07,
+      "buy_count": 1
+    },
+    "PSEC": {
+      "first_buy": "2024-04-09 13:30:06",
+      "dividends": 2.54,
+      "buy_count": 1
+    },
+    "PMT": {
+      "first_buy": "2024-04-09 13:30:05",
+      "dividends": 91.58000000000001,
+      "buy_count": 6
+    },
+    "UKW": {
+      "first_buy": "2024-11-29 12:41:37",
+      "dividends": 123.08,
+      "buy_count": 7
+    },
+    "GE": {
+      "first_buy": "2024-12-06 14:29:58",
+      "dividends": 5.83,
+      "buy_count": 3
+    },
+    "VRT": {
+      "first_buy": "2024-09-06 10:16:38",
+      "dividends": 1.9799999999999998,
+      "buy_count": 3
+    },
+    "BNS": {
+      "first_buy": "2024-04-09 13:30:07",
+      "dividends": 0.75,
+      "buy_count": 1
+    },
+    "DXCM": {
+      "first_buy": "2025-01-29 15:07:42",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "YETI": {
+      "first_buy": "2025-01-30 20:43:57",
+      "dividends": 0.0,
+      "buy_count": 12
+    },
+    "DIV": {
+      "first_buy": "2024-04-05 13:34:56",
+      "dividends": 4.63,
+      "buy_count": 1
+    },
+    "TD": {
+      "first_buy": "2024-04-09 13:30:09",
+      "dividends": 1.05,
+      "buy_count": 1
+    },
+    "APH": {
+      "first_buy": "2025-01-31 19:46:43",
+      "dividends": 14.84,
+      "buy_count": 5
+    },
+    "NVDA": {
+      "first_buy": "2024-04-05 13:34:06",
+      "dividends": 0.06,
+      "buy_count": 9
+    },
+    "NOW": {
+      "first_buy": "2025-02-03 01:00:03",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "MSFT": {
+      "first_buy": "2024-04-09 13:30:03",
+      "dividends": 35.12,
+      "buy_count": 13
+    },
+    "PATH": {
+      "first_buy": "2025-02-03 01:00:29",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "TER": {
+      "first_buy": "2025-02-03 05:35:45",
+      "dividends": 4.359999999999999,
+      "buy_count": 1
+    },
+    "DHR": {
+      "first_buy": "2024-07-15 13:30:19",
+      "dividends": 8.940000000000001,
+      "buy_count": 8
+    },
+    "KMI": {
+      "first_buy": "2025-02-03 09:04:08",
+      "dividends": 37.05,
+      "buy_count": 3
+    },
+    "OXY": {
+      "first_buy": "2025-02-03 14:30:45",
+      "dividends": 23.0,
+      "buy_count": 3
+    },
+    "COHU": {
+      "first_buy": "2024-09-04 19:06:46",
+      "dividends": 0.0,
+      "buy_count": 13
+    },
+    "NVO": {
+      "first_buy": "2025-02-04 14:35:53",
+      "dividends": 38.78,
+      "buy_count": 2
+    },
+    "BRBY": {
+      "first_buy": "2024-07-15 13:37:06",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "OMF": {
+      "first_buy": "2024-04-05 13:34:46",
+      "dividends": 1.62,
+      "buy_count": 1
+    },
+    "APAM": {
+      "first_buy": "2024-04-05 13:34:35",
+      "dividends": 1.7599999999999998,
+      "buy_count": 1
+    },
+    "SMCI": {
+      "first_buy": "2024-06-21 12:45:42",
+      "dividends": 0.0,
+      "buy_count": 5
+    },
+    "CTRA": {
+      "first_buy": "2024-04-09 13:31:06",
+      "dividends": 0.4,
+      "buy_count": 2
+    },
+    "EXE": {
+      "first_buy": "2024-04-09 13:30:11",
+      "dividends": 0.54,
+      "buy_count": 2
+    },
+    "NKTX": {
+      "first_buy": "2024-10-03 15:21:17",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "GD": {
+      "first_buy": "2024-04-09 13:30:07",
+      "dividends": 0.48,
+      "buy_count": 1
+    },
+    "WYNN": {
+      "first_buy": "2025-02-11 08:02:08",
+      "dividends": 14.450000000000001,
+      "buy_count": 2
+    },
+    "AMPH": {
+      "first_buy": "2025-02-11 15:07:20",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "ENPH": {
+      "first_buy": "2024-12-31 20:54:53",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "ALAB": {
+      "first_buy": "2025-02-12 13:38:18",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "C": {
+      "first_buy": "2024-12-30 15:15:16",
+      "dividends": 47.900000000000006,
+      "buy_count": 5
+    },
+    "PCG": {
+      "first_buy": "2025-02-18 11:30:04",
+      "dividends": 1.91,
+      "buy_count": 2
+    },
+    "CAP": {
+      "first_buy": "2025-02-19 11:26:35",
+      "dividends": 18.3,
+      "buy_count": 2
+    },
+    "BMBL": {
+      "first_buy": "2025-02-19 17:28:49",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "CCJ": {
+      "first_buy": "2025-02-24 14:58:47",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "UBER": {
+      "first_buy": "2024-07-08 16:04:41",
+      "dividends": 0.0,
+      "buy_count": 11
+    },
+    "THLLY": {
+      "first_buy": "2024-11-25 13:05:13",
+      "dividends": 4.26,
+      "buy_count": 3
+    },
+    "DAGB": {
+      "first_buy": "2025-02-26 12:14:23",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "SMGB": {
+      "first_buy": "2024-11-21 08:06:32",
+      "dividends": 0.0,
+      "buy_count": 5
+    },
+    "CYSE": {
+      "first_buy": "2025-02-26 12:14:29",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "BOTZ": {
+      "first_buy": "2025-02-26 12:14:39",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "AXON": {
+      "first_buy": "2025-02-26 13:32:03",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "OKLO": {
+      "first_buy": "2024-09-09 15:21:56",
       "dividends": 0.0,
       "buy_count": 4
+    },
+    "COIN": {
+      "first_buy": "2025-02-26 18:56:37",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "CIFR": {
+      "first_buy": "2024-09-16 11:29:04",
+      "dividends": 0.0,
+      "buy_count": 6
+    },
+    "F": {
+      "first_buy": "2024-07-05 10:14:33",
+      "dividends": 38.31,
+      "buy_count": 2
+    },
+    "COP": {
+      "first_buy": "2024-04-09 13:30:14",
+      "dividends": 116.13999999999999,
+      "buy_count": 18
+    },
+    "MCHP": {
+      "first_buy": "2024-04-05 13:34:06",
+      "dividends": 8.530000000000001,
+      "buy_count": 5
+    },
+    "CVX": {
+      "first_buy": "2024-04-09 13:32:08",
+      "dividends": 22.459999999999997,
+      "buy_count": 3
+    },
+    "ADM": {
+      "first_buy": "2024-04-09 13:30:10",
+      "dividends": 0.79,
+      "buy_count": 1
+    },
+    "PPG": {
+      "first_buy": "2024-04-09 13:30:08",
+      "dividends": 0.5,
+      "buy_count": 2
+    },
+    "AMAT": {
+      "first_buy": "2024-04-05 13:34:06",
+      "dividends": 1.19,
+      "buy_count": 3
+    },
+    "MTDR": {
+      "first_buy": "2024-04-09 13:30:07",
+      "dividends": 0.22,
+      "buy_count": 2
+    },
+    "STR": {
+      "first_buy": "2024-04-05 13:34:29",
+      "dividends": 18.03,
+      "buy_count": 3
+    },
+    "GBDC": {
+      "first_buy": "2024-04-05 13:34:35",
+      "dividends": 34.43000000000001,
+      "buy_count": 2
+    },
+    "STM": {
+      "first_buy": "2024-04-05 13:34:07",
+      "dividends": 9.74,
+      "buy_count": 5
+    },
+    "SMH": {
+      "first_buy": "2025-04-04 09:28:39",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "LVMUY": {
+      "first_buy": "2025-04-08 17:07:11",
+      "dividends": 4.83,
+      "buy_count": 1
+    },
+    "AGCO": {
+      "first_buy": "2025-04-08 17:31:10",
+      "dividends": 1.82,
+      "buy_count": 2
+    },
+    "BULL": {
+      "first_buy": "2025-04-14 16:15:59",
+      "dividends": 0.0,
+      "buy_count": 12
+    },
+    "JNJ": {
+      "first_buy": "2024-04-09 13:30:08",
+      "dividends": 16.450000000000003,
+      "buy_count": 2
+    },
+    "BYDDY": {
+      "first_buy": "2025-04-15 13:30:08",
+      "dividends": 14.3,
+      "buy_count": 1
+    },
+    "SBLK": {
+      "first_buy": "2025-04-15 13:30:12",
+      "dividends": 18.509999999999998,
+      "buy_count": 3
+    },
+    "PG": {
+      "first_buy": "2024-04-09 13:31:55",
+      "dividends": 13.600000000000001,
+      "buy_count": 3
+    },
+    "J": {
+      "first_buy": "2025-04-16 07:42:30",
+      "dividends": 4.84,
+      "buy_count": 1
+    },
+    "BAC": {
+      "first_buy": "2025-04-16 19:18:00",
+      "dividends": 12.88,
+      "buy_count": 1
+    },
+    "CMCSA": {
+      "first_buy": "2025-04-17 10:53:11",
+      "dividends": 8.3,
+      "buy_count": 2
+    },
+    "SMSN": {
+      "first_buy": "2024-07-15 08:35:30",
+      "dividends": 15.44,
+      "buy_count": 7
+    },
+    "LRN": {
+      "first_buy": "2025-04-25 14:21:59",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "SENS": {
+      "first_buy": "2025-04-28 15:08:44",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "ITRM": {
+      "first_buy": "2025-04-29 12:01:35",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "HL": {
+      "first_buy": "2025-04-29 19:29:25",
+      "dividends": 0.59,
+      "buy_count": 2
+    },
+    "SES": {
+      "first_buy": "2025-04-29 22:23:51",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "BESI": {
+      "first_buy": "2024-04-05 13:34:07",
+      "dividends": 1.8599999999999999,
+      "buy_count": 3
+    },
+    "NU": {
+      "first_buy": "2024-12-18 20:38:33",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "BORR": {
+      "first_buy": "2025-05-05 14:18:53",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "OCGN": {
+      "first_buy": "2025-05-07 19:42:31",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "UNH": {
+      "first_buy": "2025-05-13 13:27:07",
+      "dividends": 11.09,
+      "buy_count": 1
+    },
+    "DUK": {
+      "first_buy": "2025-05-14 13:30:15",
+      "dividends": 6.59,
+      "buy_count": 1
+    },
+    "SERV": {
+      "first_buy": "2025-05-14 16:49:03",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "ETOR": {
+      "first_buy": "2025-05-14 18:22:40",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "CRWV": {
+      "first_buy": "2025-05-14 21:27:39",
+      "dividends": 0.0,
+      "buy_count": 4
+    },
+    "AMG": {
+      "first_buy": "2024-04-09 11:15:10",
+      "dividends": 1.2000000000000002,
+      "buy_count": 3
+    },
+    "FANG": {
+      "first_buy": "2025-05-19 04:03:30",
+      "dividends": 0.63,
+      "buy_count": 1
+    },
+    "AMTM": {
+      "first_buy": null,
+      "dividends": 0.0,
+      "buy_count": 0
+    },
+    "PDYN": {
+      "first_buy": "2025-05-21 10:24:22",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "RR": {
+      "first_buy": "2025-05-21 11:05:57",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "AISP": {
+      "first_buy": "2025-05-21 11:54:27",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "AMPX": {
+      "first_buy": "2025-05-21 16:19:20",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "OLO": {
+      "first_buy": "2025-05-21 17:27:45",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "INOD": {
+      "first_buy": "2025-05-21 19:55:10",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "SYM": {
+      "first_buy": "2025-05-22 12:17:13",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "MBGYY": {
+      "first_buy": "2024-07-15 12:00:01",
+      "dividends": 28.57,
+      "buy_count": 4
+    },
+    "TEM": {
+      "first_buy": "2025-05-28 14:06:50",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "LTH": {
+      "first_buy": "2025-05-28 14:14:37",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "LYB": {
+      "first_buy": "2025-06-02 08:00:01",
+      "dividends": 3.06,
+      "buy_count": 1
+    },
+    "AUR": {
+      "first_buy": "2024-07-15 13:30:02",
+      "dividends": 0.0,
+      "buy_count": 8
+    },
+    "TOELY": {
+      "first_buy": "2024-04-05 13:34:24",
+      "dividends": 15.899999999999999,
+      "buy_count": 6
+    },
+    "NTDOY": {
+      "first_buy": "2025-06-11 12:00:02",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "BNZL": {
+      "first_buy": "2024-12-17 10:22:44",
+      "dividends": 53.8,
+      "buy_count": 7
+    },
+    "MRVL": {
+      "first_buy": "2024-04-05 13:34:06",
+      "dividends": 0.67,
+      "buy_count": 3
+    },
+    "AMRZ": {
+      "first_buy": "2025-07-07 08:12:07",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "LSEG": {
+      "first_buy": "2025-07-30 11:33:48",
+      "dividends": 0.46,
+      "buy_count": 3
+    },
+    "UPS": {
+      "first_buy": "2025-07-31 13:33:11",
+      "dividends": 0.03,
+      "buy_count": 2
+    },
+    "MNDY": {
+      "first_buy": "2025-08-12 17:43:07",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "BLSH": {
+      "first_buy": "2025-08-13 20:38:18",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "BWXT": {
+      "first_buy": "2025-08-14 17:36:02",
+      "dividends": 1.26,
+      "buy_count": 3
+    },
+    "CRCL": {
+      "first_buy": "2025-08-14 18:43:46",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "VNOM": {
+      "first_buy": "2024-04-05 13:34:34",
+      "dividends": 1.49,
+      "buy_count": 3
+    },
+    "IBM": {
+      "first_buy": "2024-04-09 13:30:10",
+      "dividends": 0.15,
+      "buy_count": 3
+    },
+    "APTV": {
+      "first_buy": "2025-08-28 13:41:52",
+      "dividends": 0.0,
+      "buy_count": 10
+    },
+    "UNM": {
+      "first_buy": "2025-08-28 17:30:04",
+      "dividends": 17.86,
+      "buy_count": 7
+    },
+    "UNIT": {
+      "first_buy": "2025-09-02 17:54:32",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "EOG": {
+      "first_buy": "2025-09-05 15:06:13",
+      "dividends": 90.59,
+      "buy_count": 30
+    },
+    "ADS": {
+      "first_buy": "2025-09-10 15:18:18",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "APD": {
+      "first_buy": "2025-09-10 15:23:51",
+      "dividends": 0.0,
+      "buy_count": 4
+    },
+    "DSNKY": {
+      "first_buy": "2025-09-12 15:53:25",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "OCDO": {
+      "first_buy": "2025-09-15 15:15:59",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "ICSU": {
+      "first_buy": "2025-09-16 14:12:00",
+      "dividends": 0.0,
+      "buy_count": 6
+    },
+    "EBS": {
+      "first_buy": "2025-09-16 14:25:18",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "BMR": {
+      "first_buy": "2024-04-05 19:45:09",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "RXRX": {
+      "first_buy": "2024-04-05 19:45:09",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "SNPS": {
+      "first_buy": "2024-06-10 13:30:04",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "ON": {
+      "first_buy": "2024-11-25 10:35:16",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "CMBT": {
+      "first_buy": "2024-04-05 13:34:41",
+      "dividends": 11.18,
+      "buy_count": 1
+    },
+    "FRIN": {
+      "first_buy": "2024-07-15 08:33:35",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "CYTK": {
+      "first_buy": "2024-04-09 13:30:05",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "IPSC": {
+      "first_buy": "2024-10-10 13:32:32",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "EYE": {
+      "first_buy": "2024-07-15 13:30:07",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "BATRK": {
+      "first_buy": "2024-07-15 13:30:08",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "KNOS": {
+      "first_buy": "2024-04-09 11:14:33",
+      "dividends": 18.41,
+      "buy_count": 3
+    },
+    "YMAB": {
+      "first_buy": "2024-04-09 13:30:46",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "RU2K": {
+      "first_buy": "2025-09-19 12:29:53",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "SXLV": {
+      "first_buy": "2025-09-19 12:30:43",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "DVN": {
+      "first_buy": "2024-07-12 15:14:57",
+      "dividends": 0.0,
+      "buy_count": 17
+    },
+    "GIS": {
+      "first_buy": "2025-09-25 14:12:01",
+      "dividends": 81.01,
+      "buy_count": 18
+    },
+    "BMY": {
+      "first_buy": "2024-04-09 13:30:09",
+      "dividends": 0.67,
+      "buy_count": 4
+    },
+    "HEIA": {
+      "first_buy": "2024-04-05 13:09:03",
+      "dividends": 0.13,
+      "buy_count": 1
+    },
+    "INTC": {
+      "first_buy": "2024-04-05 13:34:06",
+      "dividends": 0.11,
+      "buy_count": 6
+    },
+    "MPWR": {
+      "first_buy": "2024-04-05 13:34:06",
+      "dividends": 0.13,
+      "buy_count": 2
+    },
+    "SEC0": {
+      "first_buy": "2024-04-05 13:34:06",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "ASM": {
+      "first_buy": "2024-04-05 13:34:07",
+      "dividends": 0.35,
+      "buy_count": 4
+    },
+    "KLAC": {
+      "first_buy": "2024-04-05 13:34:07",
+      "dividends": 0.21,
+      "buy_count": 2
+    },
+    "AMKR": {
+      "first_buy": "2024-04-05 13:34:07",
+      "dividends": 0.19,
+      "buy_count": 3
+    },
+    "ASML": {
+      "first_buy": "2024-04-05 13:34:07",
+      "dividends": 1.3399999999999999,
+      "buy_count": 8
+    },
+    "AVGO": {
+      "first_buy": "2024-04-05 13:34:07",
+      "dividends": 0.47,
+      "buy_count": 6
+    },
+    "TXN": {
+      "first_buy": "2024-04-05 13:34:07",
+      "dividends": 0.56,
+      "buy_count": 4
+    },
+    "ADI": {
+      "first_buy": "2024-04-05 13:34:07",
+      "dividends": 0.35,
+      "buy_count": 5
+    },
+    "NINOY": {
+      "first_buy": "2024-04-05 13:34:08",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "SWKS": {
+      "first_buy": "2024-04-05 13:34:08",
+      "dividends": 0.53,
+      "buy_count": 2
+    },
+    "LRCX": {
+      "first_buy": "2024-04-05 13:34:09",
+      "dividends": 3.23,
+      "buy_count": 5
+    },
+    "SFTBY": {
+      "first_buy": "2024-04-05 13:34:20",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "ABR": {
+      "first_buy": "2024-04-05 13:34:30",
+      "dividends": 6.18,
+      "buy_count": 3
+    },
+    "EPR": {
+      "first_buy": "2024-04-05 13:34:30",
+      "dividends": 1.2799999999999998,
+      "buy_count": 2
+    },
+    "NG": {
+      "first_buy": "2024-04-05 13:34:30",
+      "dividends": 1.86,
+      "buy_count": 2
+    },
+    "LEG": {
+      "first_buy": "2024-04-05 13:34:30",
+      "dividends": 0.2,
+      "buy_count": 2
+    },
+    "AGNC": {
+      "first_buy": "2024-04-05 13:34:31",
+      "dividends": 2.29,
+      "buy_count": 3
+    },
+    "O": {
+      "first_buy": "2024-04-05 13:34:31",
+      "dividends": 1.22,
+      "buy_count": 3
+    },
+    "BTI": {
+      "first_buy": "2024-04-05 13:34:32",
+      "dividends": 0.48,
+      "buy_count": 1
+    },
+    "AM": {
+      "first_buy": "2024-04-05 13:34:38",
+      "dividends": 0.67,
+      "buy_count": 1
+    },
+    "MAIN": {
+      "first_buy": "2024-04-05 13:34:39",
+      "dividends": 1.6700000000000002,
+      "buy_count": 3
+    },
+    "HTGC": {
+      "first_buy": "2024-04-05 13:34:58",
+      "dividends": 1.1,
+      "buy_count": 1
+    },
+    "NVEC": {
+      "first_buy": "2024-04-05 13:36:19",
+      "dividends": 0.64,
+      "buy_count": 4
+    },
+    "MGAM": {
+      "first_buy": "2024-04-05 13:37:38",
+      "dividends": 0.47,
+      "buy_count": 5
+    },
+    "PLTR": {
+      "first_buy": "2024-04-05 19:45:08",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "SOUN": {
+      "first_buy": "2024-04-05 19:45:10",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "NNOX": {
+      "first_buy": "2024-04-05 19:45:10",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "CXAI": {
+      "first_buy": "2024-04-05 19:45:11",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "DFTX": {
+      "first_buy": "2024-04-05 19:45:11",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "HOLO": {
+      "first_buy": "2024-04-05 19:45:51",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "LLOY": {
+      "first_buy": "2024-04-09 11:12:59",
+      "dividends": 2.36,
+      "buy_count": 2
+    },
+    "EOAN": {
+      "first_buy": "2024-04-09 11:14:19",
+      "dividends": 1.55,
+      "buy_count": 2
+    },
+    "GRG": {
+      "first_buy": "2024-04-09 11:15:10",
+      "dividends": 2.13,
+      "buy_count": 2
+    },
+    "CVSG": {
+      "first_buy": "2024-04-09 11:16:13",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "IBKR": {
+      "first_buy": "2024-04-09 13:30:00",
+      "dividends": 0.02,
+      "buy_count": 1
+    },
+    "ACGL": {
+      "first_buy": "2024-04-09 13:30:00",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "CSCO": {
+      "first_buy": "2024-04-09 13:30:00",
+      "dividends": 0.14,
+      "buy_count": 4
+    },
+    "APLD": {
+      "first_buy": "2024-04-09 13:30:01",
+      "dividends": 0.0,
+      "buy_count": 10
+    },
+    "ADP": {
+      "first_buy": "2024-04-09 13:30:04",
+      "dividends": 0.09,
+      "buy_count": 1
+    },
+    "TW": {
+      "first_buy": "2024-04-09 13:30:04",
+      "dividends": 0.01,
+      "buy_count": 1
+    },
+    "SBUX": {
+      "first_buy": "2024-04-09 13:30:04",
+      "dividends": 0.22,
+      "buy_count": 1
+    },
+    "ICE": {
+      "first_buy": "2024-04-09 13:30:04",
+      "dividends": 0.12,
+      "buy_count": 2
+    },
+    "RC": {
+      "first_buy": "2024-04-09 13:30:05",
+      "dividends": 2.41,
+      "buy_count": 2
+    },
+    "AAPL": {
+      "first_buy": "2024-04-09 13:30:05",
+      "dividends": 0.05,
+      "buy_count": 1
+    },
+    "CAH": {
+      "first_buy": "2024-04-09 13:30:05",
+      "dividends": 0.08,
+      "buy_count": 2
+    },
+    "PAAS": {
+      "first_buy": "2024-04-09 13:30:05",
+      "dividends": 0.18,
+      "buy_count": 1
+    },
+    "GM": {
+      "first_buy": "2024-04-09 13:30:06",
+      "dividends": 0.09,
+      "buy_count": 1
+    },
+    "SYY": {
+      "first_buy": "2024-04-09 13:30:06",
+      "dividends": 0.22,
+      "buy_count": 1
+    },
+    "INSW": {
+      "first_buy": "2024-04-09 13:30:06",
+      "dividends": 2.2399999999999998,
+      "buy_count": 1
+    },
+    "KKR": {
+      "first_buy": "2024-04-09 13:30:06",
+      "dividends": 0.04,
+      "buy_count": 2
+    },
+    "TROW": {
+      "first_buy": "2024-04-09 13:30:06",
+      "dividends": 0.33,
+      "buy_count": 1
+    },
+    "TECK": {
+      "first_buy": "2024-04-09 13:30:06",
+      "dividends": 0.1,
+      "buy_count": 1
+    },
+    "ITW": {
+      "first_buy": "2024-04-09 13:30:07",
+      "dividends": 0.19,
+      "buy_count": 3
+    },
+    "RIOT": {
+      "first_buy": "2024-04-09 13:30:07",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "ADC": {
+      "first_buy": "2024-04-09 13:30:07",
+      "dividends": 0.28,
+      "buy_count": 1
+    },
+    "BLK": {
+      "first_buy": "2024-04-09 13:30:07",
+      "dividends": 0.16,
+      "buy_count": 2
+    },
+    "MO": {
+      "first_buy": "2024-04-09 13:30:07",
+      "dividends": 1.4,
+      "buy_count": 2
+    },
+    "EMR": {
+      "first_buy": "2024-04-09 13:30:08",
+      "dividends": 0.16,
+      "buy_count": 2
+    },
+    "KO": {
+      "first_buy": "2024-04-09 13:30:08",
+      "dividends": 0.64,
+      "buy_count": 4
+    },
+    "RY": {
+      "first_buy": "2024-04-09 13:30:08",
+      "dividends": 0.33,
+      "buy_count": 1
+    },
+    "MCK": {
+      "first_buy": "2024-04-09 13:30:08",
+      "dividends": 0.02,
+      "buy_count": 2
+    },
+    "WMT": {
+      "first_buy": "2024-04-09 13:30:09",
+      "dividends": 0.11,
+      "buy_count": 1
+    },
+    "ECL": {
+      "first_buy": "2024-04-09 13:30:09",
+      "dividends": 0.04,
+      "buy_count": 1
+    },
+    "GLOB": {
+      "first_buy": "2024-04-09 13:30:09",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "BKE": {
+      "first_buy": "2024-04-09 13:30:09",
+      "dividends": 1.46,
+      "buy_count": 2
+    },
+    "BMO": {
+      "first_buy": "2024-04-09 13:30:09",
+      "dividends": 0.4,
+      "buy_count": 4
+    },
+    "AZEK": {
+      "first_buy": "2024-04-09 13:30:10",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "SHW": {
+      "first_buy": "2024-04-09 13:30:12",
+      "dividends": 0.04,
+      "buy_count": 3
+    },
+    "STAG": {
+      "first_buy": "2024-04-09 13:30:12",
+      "dividends": 0.16,
+      "buy_count": 2
+    },
+    "GOOD": {
+      "first_buy": "2024-04-09 13:30:12",
+      "dividends": 0.47,
+      "buy_count": 1
+    },
+    "GWW": {
+      "first_buy": "2024-04-09 13:30:13",
+      "dividends": 0.07,
+      "buy_count": 2
+    },
+    "PNR": {
+      "first_buy": "2024-04-09 13:30:13",
+      "dividends": 0.11,
+      "buy_count": 2
+    },
+    "AOMR": {
+      "first_buy": "2024-04-09 13:30:13",
+      "dividends": 2.13,
+      "buy_count": 2
+    },
+    "MAG": {
+      "first_buy": "2024-04-09 13:30:13",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "CB": {
+      "first_buy": "2024-04-09 13:30:14",
+      "dividends": 0.06,
+      "buy_count": 1
+    },
+    "MA": {
+      "first_buy": "2024-04-09 13:30:15",
+      "dividends": 0.04,
+      "buy_count": 1
+    },
+    "AFL": {
+      "first_buy": "2024-04-09 13:30:15",
+      "dividends": 0.1,
+      "buy_count": 1
+    },
+    "JPM": {
+      "first_buy": "2024-04-09 13:30:17",
+      "dividends": 0.09,
+      "buy_count": 1
+    },
+    "MCD": {
+      "first_buy": "2024-04-09 13:30:33",
+      "dividends": 0.11,
+      "buy_count": 1
+    },
+    "LOW": {
+      "first_buy": "2024-04-09 13:30:40",
+      "dividends": 0.16999999999999998,
+      "buy_count": 2
+    },
+    "LTC": {
+      "first_buy": "2024-04-09 13:31:25",
+      "dividends": 0.29000000000000004,
+      "buy_count": 1
+    },
+    "BLD": {
+      "first_buy": "2024-04-09 13:32:01",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "AMZN": {
+      "first_buy": "2024-05-24 13:30:02",
+      "dividends": 0.0,
+      "buy_count": 6
+    },
+    "LLY": {
+      "first_buy": "2024-05-24 13:30:33",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "CDNS": {
+      "first_buy": "2024-06-10 13:30:00",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "GLW": {
+      "first_buy": "2024-06-24 11:24:33",
+      "dividends": 0.55,
+      "buy_count": 1
+    },
+    "RIVN": {
+      "first_buy": "2024-06-25 16:08:00",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "AI": {
+      "first_buy": "2024-06-25 20:09:22",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "NKE": {
+      "first_buy": "2024-06-28 15:06:13",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "LUNR": {
+      "first_buy": "2024-06-28 15:42:18",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "SMFKY": {
+      "first_buy": "2024-06-28 15:55:52",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "ACCD": {
+      "first_buy": "2024-06-28 15:58:51",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "NEE": {
+      "first_buy": "2024-07-02 08:39:13",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "AES": {
+      "first_buy": "2024-07-02 11:18:38",
+      "dividends": 4.57,
+      "buy_count": 2
+    },
+    "ALB": {
+      "first_buy": "2024-07-02 18:22:58",
+      "dividends": 2.06,
+      "buy_count": 1
+    },
+    "CCL": {
+      "first_buy": "2024-07-02 18:25:40",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "PWR": {
+      "first_buy": "2024-07-03 04:56:33",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "SN": {
+      "first_buy": "2024-07-03 07:02:30",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "SAFE": {
+      "first_buy": "2024-07-03 10:57:23",
+      "dividends": 4.51,
+      "buy_count": 1
+    },
+    "AF": {
+      "first_buy": "2024-07-12 15:16:22",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "NESN": {
+      "first_buy": "2024-07-15 08:33:29",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "TTE": {
+      "first_buy": "2024-07-15 08:33:30",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "SAP": {
+      "first_buy": "2024-07-15 08:33:30",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "SHELL": {
+      "first_buy": "2024-07-15 08:33:30",
+      "dividends": 0.49,
+      "buy_count": 2
+    },
+    "MAT": {
+      "first_buy": "2024-07-15 13:30:02",
+      "dividends": 0.0,
+      "buy_count": 4
+    },
+    "BYD": {
+      "first_buy": "2024-07-15 13:30:03",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "CPB": {
+      "first_buy": "2024-07-15 13:30:05",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "RUSHA": {
+      "first_buy": "2024-07-15 13:30:05",
+      "dividends": 0.0,
+      "buy_count": 4
+    },
+    "RNR": {
+      "first_buy": "2024-07-15 13:30:05",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "WST": {
+      "first_buy": "2024-07-15 13:30:05",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "SONY": {
+      "first_buy": "2024-07-15 13:30:07",
+      "dividends": 2.03,
+      "buy_count": 6
+    },
+    "PBR": {
+      "first_buy": "2024-07-15 13:30:07",
+      "dividends": 0.0,
+      "buy_count": 7
+    },
+    "RVTY": {
+      "first_buy": "2024-07-15 13:30:07",
+      "dividends": 0.04,
+      "buy_count": 2
+    },
+    "NFG": {
+      "first_buy": "2024-07-15 13:30:07",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "MSGE": {
+      "first_buy": "2024-07-15 13:30:07",
+      "dividends": 0.0,
+      "buy_count": 4
+    },
+    "CPNG": {
+      "first_buy": "2024-07-15 13:30:07",
+      "dividends": 0.0,
+      "buy_count": 8
+    },
+    "LILMF": {
+      "first_buy": "2024-07-18 10:59:37",
+      "dividends": 0.0,
+      "buy_count": 3
+    },
+    "TCEHY": {
+      "first_buy": "2024-07-25 12:56:00",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "ADBE": {
+      "first_buy": "2024-08-07 10:40:06",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "COUR": {
+      "first_buy": "2024-08-20 12:57:30",
+      "dividends": 0.0,
+      "buy_count": 5
+    },
+    "CRWD": {
+      "first_buy": "2024-08-23 14:51:38",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "HPE": {
+      "first_buy": "2024-09-11 14:07:44",
+      "dividends": 4.24,
+      "buy_count": 1
+    },
+    "3GOO": {
+      "first_buy": "2024-09-17 15:00:07",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "MOL3": {
+      "first_buy": "2024-09-20 13:54:38",
+      "dividends": 0.0,
+      "buy_count": 6
+    },
+    "ZS": {
+      "first_buy": "2024-10-01 19:35:15",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "3ARM": {
+      "first_buy": "2024-10-02 07:05:37",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "SNOW": {
+      "first_buy": "2024-10-15 13:29:57",
+      "dividends": 0.0,
+      "buy_count": 4
+    },
+    "NVTS": {
+      "first_buy": "2024-10-18 15:02:12",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "JOBY": {
+      "first_buy": "2024-10-22 09:21:33",
+      "dividends": 0.0,
+      "buy_count": 2
+    },
+    "DJT": {
+      "first_buy": "2024-11-29 09:47:30",
+      "dividends": 0.0,
+      "buy_count": 1
+    },
+    "APP": {
+      "first_buy": "2024-12-10 17:51:20",
+      "dividends": 0.0,
+      "buy_count": 1
     }
   }
 }
