@@ -139,7 +139,7 @@ def main():
         total_invested_wealth = 0.0
 
         # 1.3 FETCH PENDING ORDERS (THE RESERVED CASH)
-        r_orders = make_request_with_retry(f"{BASE_URL}equity/orders", headers=headers, auth=None)
+        r_orders = make_request_with_retry(f"{BASE_URL}equity/orders", headers=headers, auth=auth_credentials)
         pending_orders = []
         if r_orders and r_orders.status_code == 200:
             for o in r_orders.json():
