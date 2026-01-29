@@ -3,3 +3,4 @@ jinja2
 feedparser
 yfinance
 python-dotenv
+pandas
