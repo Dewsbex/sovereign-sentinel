@@ -205,7 +205,7 @@ class SovereignArchitect:
                 'reason': f'Overweight by £{abs(delta_gbp):.0f}'
             }
     
-    def analyze_portfolio(self, csv_path: str = 'ISA_PORTFOLIO.csv') -> Dict:
+    def analyze_portfolio(self, csv_path: str = 'G:/My Drive/ISA_PORTFOLIO.csv') -> Dict:
         """
         Main analysis function.
         Reads CSV and returns segmented portfolio analysis.

@@ -1,0 +1,290 @@
+{
+  "BMY": [
+    {
+      "timestamp": "2026-01-29T21:01:04.883397",
+      "scores": {
+        "quality": 1,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 0,
+        "total": 3,
+        "rating": "FAIL"
+      }
+    },
+    {
+      "timestamp": "2026-01-29T22:33:04.222087",
+      "scores": {
+        "quality": 1,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 0,
+        "total": 3,
+        "rating": "FAIL"
+      }
+    }
+  ],
+  "QELL": [
+    {
+      "timestamp": "2026-01-29T21:01:06.380800",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 0,
+        "leverage": 0,
+        "total": 0,
+        "rating": "FAIL"
+      }
+    },
+    {
+      "timestamp": "2026-01-29T22:33:05.739722",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 0,
+        "leverage": 0,
+        "total": 0,
+        "rating": "FAIL"
+      }
+    }
+  ],
+  "VSNTV": [
+    {
+      "timestamp": "2026-01-29T21:01:07.518603",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 1,
+        "leverage": 0,
+        "total": 1,
+        "rating": "FAIL"
+      }
+    },
+    {
+      "timestamp": "2026-01-29T22:33:06.667474",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 1,
+        "leverage": 0,
+        "total": 1,
+        "rating": "FAIL"
+      }
+    }
+  ],
+  "NUE": [
+    {
+      "timestamp": "2026-01-29T21:01:07.847016",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 2,
+        "total": 4,
+        "rating": "PASS"
+      }
+    },
+    {
+      "timestamp": "2026-01-29T22:33:06.960026",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 2,
+        "total": 4,
+        "rating": "PASS"
+      }
+    }
+  ],
+  "SOLV": [
+    {
+      "timestamp": "2026-01-29T21:01:08.232044",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 0,
+        "total": 2,
+        "rating": "FAIL"
+      }
+    },
+    {
+      "timestamp": "2026-01-29T22:33:07.262717",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 0,
+        "total": 2,
+        "rating": "FAIL"
+      }
+    }
+  ],
+  "RE": [
+    {
+      "timestamp": "2026-01-29T21:01:08.546664",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 0,
+        "leverage": 0,
+        "total": 0,
+        "rating": "FAIL"
+      }
+    },
+    {
+      "timestamp": "2026-01-29T22:33:07.577878",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 0,
+        "leverage": 0,
+        "total": 0,
+        "rating": "FAIL"
+      }
+    }
+  ],
+  "NFLX": [
+    {
+      "timestamp": "2026-01-29T21:01:08.862269",
+      "scores": {
+        "quality": 2,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 1,
+        "total": 5,
+        "rating": "PASS"
+      }
+    },
+    {
+      "timestamp": "2026-01-29T22:33:07.891073",
+      "scores": {
+        "quality": 2,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 1,
+        "total": 5,
+        "rating": "PASS"
+      }
+    }
+  ],
+  "CRM": [
+    {
+      "timestamp": "2026-01-29T21:01:09.184311",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 2,
+        "total": 4,
+        "rating": "PASS"
+      }
+    },
+    {
+      "timestamp": "2026-01-29T22:33:08.192212",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 2,
+        "total": 4,
+        "rating": "PASS"
+      }
+    }
+  ],
+  "QCOM": [
+    {
+      "timestamp": "2026-01-29T21:01:09.529140",
+      "scores": {
+        "quality": 1,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 1,
+        "total": 4,
+        "rating": "PASS"
+      }
+    },
+    {
+      "timestamp": "2026-01-29T22:33:08.485042",
+      "scores": {
+        "quality": 1,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 1,
+        "total": 4,
+        "rating": "PASS"
+      }
+    }
+  ],
+  "EOG": [
+    {
+      "timestamp": "2026-01-29T21:01:09.839309",
+      "scores": {
+        "quality": 1,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 2,
+        "total": 5,
+        "rating": "PASS"
+      }
+    },
+    {
+      "timestamp": "2026-01-29T22:33:08.786636",
+      "scores": {
+        "quality": 1,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 2,
+        "total": 5,
+        "rating": "PASS"
+      }
+    }
+  ],
+  "CTVA": [
+    {
+      "timestamp": "2026-01-29T21:01:10.151137",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 2,
+        "total": 4,
+        "rating": "PASS"
+      }
+    },
+    {
+      "timestamp": "2026-01-29T22:33:09.102080",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 2,
+        "leverage": 2,
+        "total": 4,
+        "rating": "PASS"
+      }
+    }
+  ],
+  "CNNE": [
+    {
+      "timestamp": "2026-01-29T21:01:10.538066",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 0,
+        "leverage": 2,
+        "total": 2,
+        "rating": "FAIL"
+      }
+    },
+    {
+      "timestamp": "2026-01-29T22:33:09.397997",
+      "scores": {
+        "quality": 0,
+        "earnings": 0,
+        "liquidity": 0,
+        "leverage": 2,
+        "total": 2,
+        "rating": "FAIL"
+      }
+    }
+  ]
+}

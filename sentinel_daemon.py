@@ -132,6 +132,9 @@ def main():
             # But simple sleep is fine for now.
             time.sleep(30)
             
+            # Run every 5 minutes
+            time.sleep(300)
+            
         except KeyboardInterrupt:
             print("\n[STOP] Sentinel Daemon Stopped by User.")
             sys.exit(0)
