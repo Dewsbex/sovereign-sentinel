@@ -46,69 +46,57 @@ def format_gbp(val):
     """Legacy function - use format_gbp_truncate for new code."""
     return format_gbp_truncate(val)
 
-# v32.12: SVG Donut Chart Engine
+# v32.4: Perfect Ring Engine
 def generate_donut_chart(holdings):
     if not holdings: return ""
     
-    # 1. Calculate Angles
-    total_val = sum(h['Value'] for h in holdings)
-    if total_val == 0: return ""
-    
-    # Sort for aesthetics (largest first)
+    # Sort: Largest first for geometry
     sorted_holdings = sorted(holdings, key=lambda x: x['Value'], reverse=True)
     
-    # SVG Config
-    cx, cy, r = 100, 100, 80
-    stroke_width = 25
-    
-    start_angle = 0
-    svg_paths = []
-    
-    # Color Palette (Vibrant & Distinct)
-    colors = [
-        "#37E6B0", "#FF4B4B", "#3B82F6", "#F59E0B", "#10B981", 
-        "#6366F1", "#EC4899", "#8B5CF6", "#14B8A6", "#F97316"
-    ]
-    
+    radius, circum = 70, 2 * math.pi * 70
+    cumulative_offset = 0 # THE FIX
+    svg_slices = []
+    # Vibrant Palette
+    colors = ["#4f46e5", "#10b981", "#ef4444", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4"]
+
     for i, h in enumerate(sorted_holdings):
-        val = h['Value']
-        pct = val / total_val
+        val = h.get('Value', 0)
+        weight = h.get('Weight', 0)
         
-        # Minimum slice for visibility (0.5%)
-        if pct < 0.005: continue
-        
-        angle = pct * 360
-        end_angle = start_angle + angle
-        
-        # Calculate large arc flag
-        large_arc_flag = 1 if angle > 180 else 0
-        
-        # Coords
-        x1 = cx + r * math.cos(math.radians(start_angle - 90))
-        y1 = cy + r * math.sin(math.radians(start_angle - 90))
-        x2 = cx + r * math.cos(math.radians(end_angle - 90))
-        y2 = cy + r * math.sin(math.radians(end_angle - 90))
+        # Filter dust
+        if weight < 0.1: continue
         
         color = colors[i % len(colors)]
+        dash_len = (weight / 100) * circum
         
-        # Tooltip Content
-        tooltip = f"{h.get('Company', h.get('Ticker'))}: {truncate_decimal(pct*100, 1)}%"
+        # Tooltip content
+        name = h.get('Name', h.get('Ticker', 'Asset'))
+        val_fmt = format_gbp_truncate(val)
+        pct_fmt = f"{weight:.1f}%"
         
-        path_d = f"M {x1} {y1} A {r} {r} 0 {large_arc_flag} 1 {x2} {y2}"
+        # Safe string escaping for JS
+        safe_name = name.replace("'", "\\'")
         
-        # Add Path
-        svg_paths.append(f'<path d="{path_d}" stroke="{color}" stroke-width="{stroke_width}" fill="none" class="donut-segment"><title>{tooltip}</title></path>')
-        
-        start_angle = end_angle
+        svg_slices.append(f"""
+            <circle r="{radius}" cx="100" cy="100" fill="transparent"
+                stroke="{color}" stroke-width="20"
+                stroke-dasharray="{dash_len} {circum}"
+                stroke-dashoffset="-{cumulative_offset}" 
+                transform="rotate(-90 100 100)"
+                class="donut-segment"
+                onmouseover="showTT('{safe_name}', '{val_fmt}', '{pct_fmt}')"
+                onmouseout="hideTT()"
+                style="cursor: pointer; transition: stroke-width 0.2s;"></circle>
+        """)
+        cumulative_offset += dash_len # Push next slice forward
 
-    svg_content = f"""
-    <svg viewBox="0 0 200 200" class="w-full h-full transform -rotate-90">
-        <circle cx="100" cy="100" r="80" stroke="#f3f4f6" stroke-width="25" fill="none" />
-        {''.join(svg_paths)}
-        <text x="100" y="100" text-anchor="middle" dy="0.3em" class="text-[0.4rem]" fill="#111" transform="rotate(90 100 100)">Invested</text>
+    return f"""
+    <svg viewBox="0 0 200 200" class="w-full h-full">
+        <circle cx="100" cy="100" r="{radius}" stroke="#f3f4f6" stroke-width="20" fill="none" />
+        {''.join(svg_slices)}
+        <text x="100" y="100" text-anchor="middle" dy="0.3em" class="text-[0.6rem] font-bold fill-gray-400">INVESTED</text>
     </svg>
     """
-    return svg_content
 
 def render():
     print(f"Starting The Artist (Job B) [v31.6 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
@@ -165,7 +153,7 @@ def render():
             'x': h.get('Ticker', 'N/A'),
             'y': truncate_decimal(val, 2),
             'val_pct': truncate_decimal(pct, 4),
-            'company_name': h.get('Company', h.get('Ticker', 'N/A')),  # v31.3: Use actual company name
+            'company_name': h.get('Name', h.get('Ticker', 'N/A')),  # v32.4 Key Fix
             'shares_held': f"{truncate_decimal(safe_val(h.get('Shares')), 4):,.4f}",
             'formatted_value': format_gbp_truncate(val),
             'formatted_pl_gbp': f"{'+' if pnl >= 0 else ''}{format_gbp_truncate(pnl)}",
@@ -189,7 +177,7 @@ def render():
         
         fortress_display.append({
             'ticker': h.get('Ticker', 'N/A'),
-            'company': h.get('Company', h.get('Ticker', 'N/A')), # v32.5: Real name
+            'company': h.get('Name', h.get('Ticker', 'N/A')), # v32.4 Key Fix
             'book_cost': truncate_decimal(val - pnl, 2),
             'tier': tier,
             'weight_current': truncate_decimal(safe_val(h.get('Weight')) / 100.0, 4) if 'Weight' in h else truncate_decimal(weight, 4), # v32.5
@@ -256,7 +244,7 @@ def render():
             print(f"      [WARN] History log load failed: {e}")
 
     context = {
-        'version': "v32.12 Platinum",
+        'version': "v32.4 Platinum",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
