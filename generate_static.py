@@ -50,8 +50,9 @@ def format_gbp(val):
 def generate_oracle_ring(holdings):
     if not holdings: return ""
     
+    
     # Sort: Largest first for geometry
-    sorted_holdings = sorted(holdings, key=lambda x: x.get('Value', 0), reverse=True)
+    sorted_holdings = sorted(holdings, key=lambda x: x.get('Value_GBP', x.get('Value', 0)), reverse=True)
     
     radius = 70
     circum = 2 * math.pi * radius
@@ -61,8 +62,8 @@ def generate_oracle_ring(holdings):
     colors = ["#4f46e5", "#10b981", "#ef4444", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4"]
 
     for i, h in enumerate(sorted_holdings):
-        val = h.get('Value', 0)
-        weight = h.get('Weight', 0)
+        val = h.get('Value_GBP', h.get('Value', 0))
+        weight = h.get('Weight_Pct', h.get('Weight', 0))
         
         # Filter dust (< 0.1%)
         if weight < 0.1: continue
@@ -72,13 +73,13 @@ def generate_oracle_ring(holdings):
         
         # Tooltip content
         name = h.get('Name', h.get('Ticker', 'Asset'))
-        val_fmt = format_gbp_truncate(val)
+        val_fmt = f"£{val:,.2f}" # Pre-formatted string
         pct_fmt = f"{weight:.1f}%"
         
         # Safe string escaping for JS
         safe_name = name.replace("'", "\\'")
         
-        # v32.5: Unified Data Contract Tooltip (4 args: Name, Value, Weight, Color)
+        # v32.7: Sovereign Guard Tooltip (No Math in JS)
         svg_slices.append(f"""
             <circle r="{radius}" cx="100" cy="100" fill="transparent"
                 stroke="{color}" stroke-width="22"
@@ -96,7 +97,8 @@ def generate_oracle_ring(holdings):
     <svg viewBox="0 0 200 200" class="w-full h-full">
         <circle cx="100" cy="100" r="{radius}" stroke="#f3f4f6" stroke-width="20" fill="none" />
         {''.join(svg_slices)}
-        <text x="100" y="100" text-anchor="middle" dy="0.3em" class="text-[0.6rem] font-bold fill-gray-400">INVESTED</text>
+        <text x="100" y="95" text-anchor="middle" class="text-[0.5rem] font-bold fill-gray-400">TOTAL</text>
+        <text x="100" y="110" text-anchor="middle" class="text-[0.6rem] font-bold fill-gray-900">ASSETS</text>
     </svg>
     """
 
