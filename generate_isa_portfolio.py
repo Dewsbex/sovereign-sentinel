@@ -14,7 +14,8 @@ def normalize_to_pounds(value, ticker):
     STRICT NORMALIZATION: Trading 212 often quotes UK stocks in GBX.
     We force divide by 100 for all _UK_EQ tickers to ensure £1.00 is not £100.00.
     """
-    if "_UK_EQ" in ticker:
+    # Broaden check for various UK suffixes
+    if "_UK_EQ" in ticker or "l_EQ" in ticker or "L_EQ" in ticker:
         return float(value) / 100.0
     return float(value)
 
