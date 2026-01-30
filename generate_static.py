@@ -265,6 +265,7 @@ def render():
         'available_dry_str': format_gbp_truncate(cash_dry),
         'pending_cash_str': format_gbp_truncate(blocked),
         'env': meta.get('env', 'LIVE'),
+        'allocation_donut': donut_chart_svg,
         'holdings': holdings,
         'fortress_holdings': fortress_display,
         'sniper_architect': sniper_display,
