@@ -148,25 +148,27 @@ def render():
     # 3. Heatmap Data
     heatmap_series = []
     for h in holdings:
-        val = safe_val(h.get('Value'))
-        pnl = safe_val(h.get('PL'))
+        val = safe_val(h.get('Value_GBP', h.get('Value', 0)))
+        pnl = safe_val(h.get('PL_GBP', h.get('PL', 0)))
+        
         invested_val = val - pnl
         pct = (pnl / invested_val) if invested_val > 0 else 0.0
         
+        # v32.7: Sovereign Guard Keys
         heatmap_series.append({
             'x': h.get('Ticker', 'N/A'),
             'y': truncate_decimal(val, 2),
             'val_pct': truncate_decimal(pct, 4),
-            'company_name': h.get('Name', h.get('Ticker', 'N/A')),  # v32.4 Key Fix
+            'company_name': h.get('Name', h.get('Ticker', 'N/A')),
             'shares_held': f"{truncate_decimal(safe_val(h.get('Shares')), 4):,.4f}",
-            'formatted_value': format_gbp_truncate(val),
-            'formatted_pl_gbp': f"{'+' if pnl >= 0 else ''}{format_gbp_truncate(pnl)}",
-            'formatted_pl_pct': f"({truncate_decimal(pct*100, 2):+.2f}%)",
+            'formatted_value': f"£{val:,.2f}", # Pre-formatted
+            'formatted_pl_gbp': f"{'+' if pnl >= 0 else ''}£{abs(pnl):,.2f}",
+            'formatted_pl_pct': f"({pct*100:+.2f}%)",
             'price_avg': truncate_decimal(safe_val(h.get('Avg_Price')), 2),
-            'price_cur': truncate_decimal(safe_val(h.get('Price')), 2),
-            'currency': h.get('Currency', 'USD' if "_US_" in h.get('Ticker', '') else 'GBP'),
-            'pl_per_share_gbp': truncate_decimal(safe_val(h.get('PL_Per_Share_GBP')), 2),  # v31.3
-            'pl_per_share_pct': truncate_decimal(safe_val(h.get('PL_Per_Share_Pct')), 2)   # v31.3
+            'price_cur': f"£{safe_val(h.get('Price_GBP', h.get('Price', 0))):,.2f}",
+            'currency': 'GBP', # Normalized
+            'pl_per_share_gbp': 0, # Legacy placeholder or calc if needed
+            'pl_per_share_pct': 0
         })
 
     # 4. Fortress Table
