@@ -12,7 +12,7 @@ BASE_URL = "https://live.trading212.com/api/v0/equity"
 
 
 def run_audit():
-    print("[>] Sentinel v32.12: Emergency Revert...")
+    print("[>] Sentinel v32.13: Tooltip Refinement...")
     if not API_KEY or not API_SECRET:
         print("[ERROR] Credentials (Key or Secret) Missing!")
         return
@@ -119,7 +119,7 @@ def run_audit():
         # Check if anything to commit
         status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True).stdout
         if status:
-            subprocess.run(["git", "commit", "-m", "v32.12 Platinum - Emergency Revert (Restored v32.11)"], check=True)
+            subprocess.run(["git", "commit", "-m", "v32.13 Platinum - Heatmap Tooltip Refinement"], check=True)
             subprocess.run(["git", "push"], check=True)
             print("[SUCCESS] Deployment Handled by Antigravity.")
         else:
