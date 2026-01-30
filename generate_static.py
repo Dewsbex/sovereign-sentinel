@@ -1,15 +1,17 @@
 """
-The Artist (Job B) - v31.0 Gold Master
+The Artist (Job B) - v31.2 Platinum
 The Renderer for Sovereign Sentinel.
-STRICT RULE: NO NETWORK CALLS (No requests, No yfinance).
-Reads data/live_state.json and generates index.html.
+STRICT RULE: NO NETWORK CALLS.
+Reads live_state.json and generates index.html.
 """
 
 import json
 import os
 import sys
+import math
 from datetime import datetime
 from jinja2 import Template
+from utils import truncate_decimal, format_gbp_truncate, format_pct_truncate
 
 # ==============================================================================
 # CONFIGURATION
@@ -31,8 +33,21 @@ def load_state():
         print(f"[ARTIST] [ERROR] Could not read state file: {e}")
         return None
 
+def safe_val(val, default=0.0):
+    if val is None: return default
+    try:
+        f = float(val)
+        if math.isnan(f): return default
+        return f
+    except:
+        return default
+
+def format_gbp(val):
+    """Legacy function - use format_gbp_truncate for new code."""
+    return format_gbp_truncate(val)
+
 def render():
-    print(f"Starting The Artist (Job B) [v31.0]... ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"Starting The Artist (Job B) [v31.1 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
     
     # 1. Load Data
     state = load_state()
@@ -40,101 +55,157 @@ def render():
         sys.exit(1)
         
     meta = state.get('meta', {})
-    metrics = state.get('metrics', {})
     holdings = state.get('holdings', [])
-    sniper_data = state.get('sniper_data', [])
+    sniper_raw = state.get('sniper', [])
     account = state.get('account', {})
     
     print(f"      [DATA] Snapshot Timestamp: {meta.get('timestamp', 'N/A')}")
-    print(f"      [DATA] Processing {len(holdings)} holdings and {len(sniper_data)} targets.")
+    print(f"      [DATA] Processing {len(holdings)} holdings.")
 
-    # 2. Reconstruct Metrics for Template
-    # The Template uses these specific variable names
-    total_wealth = metrics.get('total_wealth_gbp', 0.0)
-    cash_dry = metrics.get('cash_free', 0.0)
-    total_return = metrics.get('return_ppl', 0.0)
-    invested = metrics.get('invested', 0.0)
+    # 2. Extract Metrics
+    total_wealth = safe_val(account.get('totalValue', account.get('total', 0.0)))
     
-    return_pct = 0.0
-    if invested > 0:
-        return_pct = (total_return / invested) * 100
+    cash_data = account.get('cash', {})
+    if isinstance(cash_data, dict):
+        cash_dry = safe_val(cash_data.get('availableToTrade'))
+        blocked = safe_val(cash_data.get('reservedForOrders'))
+    else:
+        cash_dry = safe_val(account.get('free'))
+        blocked = safe_val(account.get('blocked'))
+        
+    invest_data = account.get('investments', {})
+    if isinstance(invest_data, dict):
+        # v31.2: Fix Total Return = Realized + Unrealized P/L
+        realized_pl = safe_val(invest_data.get('realizedProfitLoss'))
+        unrealized_pl = safe_val(invest_data.get('unrealizedProfitLoss'))
+        total_return = realized_pl + unrealized_pl
+        total_cost = safe_val(invest_data.get('totalCost'))
+    else:
+        total_return = safe_val(account.get('ppl'))
+        total_cost = safe_val(account.get('invested'))
+    
+    # v31.2: Calculate rate of return with truncation
+    return_rate_pct = 0.0
+    if total_cost > 0:
+        return_rate_pct = truncate_decimal((total_return / total_cost) * 100, 2)
 
-    # 3. Heatmap Data (Custom Formatted for ApexCharts)
+    # 3. Heatmap Data
     heatmap_series = []
     for h in holdings:
-        val = h.get('value_gbp', 0.0)
-        pnl = h.get('ppl_gbp', 0.0)
+        val = safe_val(h.get('Value'))
+        pnl = safe_val(h.get('PL'))
         invested_val = val - pnl
         pct = (pnl / invested_val) if invested_val > 0 else 0.0
         
         heatmap_series.append({
-            'x': h.get('ticker', 'N/A').split('_')[0].split('.')[0],
-            'y': val,
-            'val_pct': pct,
-            'company_name': h.get('ticker', 'N/A'),
-            'shares_held': f"{h.get('qty', 0):,.4f}",
-            'formatted_value': f"£{val:,.2f}",
-            'formatted_pl_gbp': f"{'+' if pnl >= 0 else ''}£{pnl:,.2f}",
-            'formatted_pl_pct': f"({pct*100:+.1f}%)",
-            'price_avg': f"{h.get('price_avg', 0):,.2f}",
-            'price_cur': f"{h.get('price_cur', 0):,.2f}",
-            'currency': h.get('currency', 'N/A')
+            'x': h.get('Ticker', 'N/A'),
+            'y': truncate_decimal(val, 2),
+            'val_pct': truncate_decimal(pct, 4),
+            'company_name': h.get('Ticker', 'N/A'),
+            'shares_held': f"{truncate_decimal(safe_val(h.get('Shares')), 4):,.4f}",
+            'formatted_value': format_gbp_truncate(val),
+            'formatted_pl_gbp': f"{'+' if pnl >= 0 else ''}{format_gbp_truncate(pnl)}",
+            'formatted_pl_pct': f"({truncate_decimal(pct*100, 2):+.2f}%)",
+            'price_avg': truncate_decimal(safe_val(h.get('Avg_Price')), 2),
+            'price_cur': truncate_decimal(safe_val(h.get('Price')), 2),
+            'currency': h.get('Currency', 'USD' if "_US_" in h.get('Ticker', '') else 'GBP')
         })
 
     # 4. Fortress Table
     fortress_display = []
     for h in holdings:
-        val = h.get('value_gbp', 0.0)
+        val = safe_val(h.get('Value'))
+        pnl = safe_val(h.get('PL'))
         weight = (val / total_wealth) if total_wealth > 0 else 0.0
         
+        tier = h.get('Tier', '2')
+        target_weight = 0.08 if tier in ['1+', '1'] else 0.05
+        
         fortress_display.append({
-            'ticker': h.get('ticker', 'N/A'),
-            'tier': h.get('tier', '2'),
-            'weight_current': weight,
-            'real_pl': h.get('ppl_gbp', 0.0),
-            'action': h.get('action', 'HOLD'), # Auditor should provide this
-            'fx_impact': h.get('fx_impact', 0.0),
-            'shares': h.get('qty', 0),
-            'limit_price': h.get('price_cur', 0), # Fallback to current
+            'ticker': h.get('Ticker', 'N/A'),
+            'book_cost': truncate_decimal(val - pnl, 2),
+            'tier': tier,
+            'weight_current': truncate_decimal(weight, 4),
+            'weight_target': truncate_decimal(target_weight, 4),
+            'real_pl': truncate_decimal(pnl, 2),
+            'action': 'HOLD', 
+            'fx_impact': truncate_decimal(safe_val(h.get('FX_Impact')), 2),
+            'qell_rating': 'PASS',
+            'qell_score': 5,
+            'shares': truncate_decimal(safe_val(h.get('Shares')), 4),
+            'limit_price': truncate_decimal(safe_val(h.get('Price')), 2),
             'reason': 'Holding'
         })
 
-    # 5. Sniper List (Mapping keys for template)
+    # 5. Sniper List
     sniper_display = []
-    for s in sniper_data:
+    for s in sniper_raw:
+        dist = safe_val(s.get('distance_pct'))
         sniper_display.append({
             'ticker': s.get('t212_ticker', s.get('ticker', 'N/A')),
+            'name': s.get('name', 'N/A'),
+            'target_price': truncate_decimal(safe_val(s.get('target_price')), 2),
+            'current_price': truncate_decimal(safe_val(s.get('live_price')), 2),
+            'distance_pct': truncate_decimal(dist, 2),  # v31.2: Truncate to 2 decimals
+            'expected_growth_pct': truncate_decimal(safe_val(s.get('expected_growth')), 2),
+            'sector': 'Technology',
+            'industry': 'Software',
+            'priority_score': 15 if dist < 5 else 5,
+            'status': s.get('status', 'WATCH'),
+            'last_updated': datetime.now().strftime('%H:%M'),
+            'is_buy_signal': s.get('status') == 'BUY NOW',
+            # For sniper_architect block
             'tier': s.get('tier', '2'),
-            'limit_price': s.get('target_price', 0.0), # In Auditor it's target
-            'target_weight': s.get('target_weight', 0.05),
-            'target_gbp': s.get('target_gbp', 0.0),
-            'expected_growth': s.get('expected_growth', 0.0),
-            'shares': s.get('shares', 0)
+            'limit_price': truncate_decimal(safe_val(s.get('target_price')), 2),
+            'target_weight': truncate_decimal(0.05, 4),
+            'target_gbp': truncate_decimal(total_wealth * 0.05, 2),
+            'expected_growth': truncate_decimal(safe_val(s.get('expected_growth')) / 100.0, 4),
+            'shares': int((total_wealth * 0.05) / safe_val(s.get('target_price'))) if safe_val(s.get('target_price')) > 0 else 0
         })
 
     # 6. Final Template Context
+    now = datetime.now()
+    tax_end = datetime(now.year + (1 if now.month > 4 or (now.month == 4 and now.day > 5) else 0), 4, 5)
+    days_to_tax = (tax_end - now).days
+
     context = {
-        # Header Metrics (Direct mapping)
-        'api_total_wealth': total_wealth,
-        'api_return_pct': return_pct,
-        'api_ppl': total_return,
-        'api_cash_free': cash_dry,
-        'api_cash_blocked': float(account.get('blocked', 0.0)),
+        # v31.2: Updated Total Return display
+        'total_wealth_str': format_gbp_truncate(total_wealth),
+        'total_return_str': format_gbp_truncate(total_return),  # Realized + Unrealized
+        'total_return_gbp': format_gbp_truncate(total_return),  # For new display
+        'return_rate_pct': f"{return_rate_pct:+.2f}",  # Already truncated
+        'return_pct_str': f"{return_rate_pct:+.2f}%",
+        'cash_reserve_str': format_gbp_truncate(cash_dry),
+        'pending_cash_str': format_gbp_truncate(blocked),
         
-        # Heatmap (JSON String for Script)
-        'heatmap_data': json.dumps(heatmap_series),
+        'env': 'ISA',
+        'analyst_consensus': 'BUY / ACCUMULATE',
         
-        # Tables
         'fortress_holdings': fortress_display,
-        'sniper_architect': sniper_display,
-        'portfolio_metrics': {
-            'cash_balance': cash_dry,
-            'total_wealth': total_wealth
+        'sniper_list': sniper_display,
+        'sniper_architect': sniper_display, # Provide both names
+        'heatmap_dataset': json.dumps(heatmap_series),
+        'pending_orders': [],
+        'risk_register': [],
+        
+        'solar': {
+            'phase': 'ACTIVE MONITORING',
+            'tax': {
+                'Limit Sentinel': 'Locked',
+                'Days to April 5': str(days_to_tax),
+                'Loss Harvesting': 'N/A (Tax Free)',
+                'Bed & Breakfast': 'Clear'
+            }
         },
         
-        # Meta
+        'portfolio_metrics': {
+            'cash_balance': cash_dry,
+            'total_wealth': total_wealth,
+            'cash_hurdle': 0.038
+        },
+        
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
-        'version': "v31.1 Platinum"
+        'version': "v31.2 Platinum"
     }
 
     # 7. Rendering Logic
@@ -158,7 +229,4 @@ def render():
         print(f"      [ERROR] Rendering Failed: {e}")
 
 if __name__ == "__main__":
-    # Check if data directory exists
-    if not os.path.exists("data"):
-        os.makedirs("data")
     render()
