@@ -1422,14 +1422,11 @@
                 formatter: function (text, op) {
                     let p = op.w.config.series[0].data[op.dataPointIndex];
                     // v31.3: Show ticker, company name, and P/L per share
-                    let plSign = p.pl_per_share_gbp >= 0 ? '+' : '';
-                    let currency = p.currency || 'GBP';
-                    let plGbp = `${plSign}${currency} ${Math.abs(p.pl_per_share_gbp).toFixed(2)}`;
-                    let plPct = `(${plSign}${p.pl_per_share_pct.toFixed(2)}%)`;
+                    // v32.10: Use Python Pre-Formatted Strings (No JS Math)
                     return [
                         text,                    // Line 1: Ticker
                         p.company_name,          // Line 2: Company name
-                        `${plGbp} ${plPct}`      // Line 3: P/L per share
+                        `${p.formatted_pl_gbp} ${p.formatted_pl_pct}` // Line 3: Total P/L
                     ];
                 }
             },
