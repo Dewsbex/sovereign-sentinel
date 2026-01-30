@@ -47,7 +47,7 @@ def format_gbp(val):
     return format_gbp_truncate(val)
 
 def render():
-    print(f"Starting The Artist (Job B) [v31.5 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"Starting The Artist (Job B) [v31.6 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
     
     # 1. Load Data
     state = load_state()
@@ -171,43 +171,40 @@ def render():
     days_to_tax = (tax_end - now).days
 
     context = {
-        # v31.2: Updated Total Return display
+        'version': "v31.6 Platinum",
+        'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
-        'total_return_str': format_gbp_truncate(total_return),  # Realized + Unrealized
-        'total_return_gbp': format_gbp_truncate(total_return),  # For new display
-        'return_rate_pct': f"{return_rate_pct:+.2f}",  # Already truncated
+        'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
         'return_pct_str': f"{return_rate_pct:+.2f}%",
-        'cash_reserve_str': format_gbp_truncate(cash_dry),
+        'cash_dry_str': format_gbp_truncate(cash_dry),
+        'available_dry_str': format_gbp_truncate(cash_dry), # Added for clarity
         'pending_cash_str': format_gbp_truncate(blocked),
-        
-        'env': 'ISA',
-        'analyst_consensus': 'BUY / ACCUMULATE',
-        
+        'env': meta.get('env', 'LIVE'), # Use meta.get for env
+        'holdings': holdings, # Added for direct access if needed
         'fortress_holdings': fortress_display,
-        'sniper_list': sniper_display,
-        'sniper_architect': sniper_display, # Provide both names
+        'sniper_list': sniper_display, # Keep for backward compatibility
+        'sniper_architect': sniper_display,
         'heatmap_dataset': json.dumps(heatmap_series),
-        'pending_orders': [],
-        'risk_register': [],
-        
+        'account_history': json.dumps(history_log),  # v31.6
+        'pending_orders': [], # Keep existing empty lists
+        'risk_register': [], # Keep existing empty lists
         'solar': {
-            'phase': 'ACTIVE MONITORING',
+            'phase': 'STABLE', # Changed from 'ACTIVE MONITORING'
             'tax': {
                 'Limit Sentinel': 'Locked',
-                'Days to April 5': str(days_to_tax),
+                'Days to April 5': str(days_to_tax), # Keep days to tax
                 'Loss Harvesting': 'N/A (Tax Free)',
                 'Bed & Breakfast': 'Clear'
             }
         },
-        
         'portfolio_metrics': {
             'cash_balance': cash_dry,
             'total_wealth': total_wealth,
             'cash_hurdle': 0.038
         },
-        
-        'last_update': datetime.now().strftime('%H:%M %d/%m'),
-        'version': "v31.5 Platinum"
+        # Removed 'total_return_gbp' and 'return_rate_pct' as they are covered by new keys
+        # Removed 'cash_reserve_str' as it's covered by 'cash_dry_str'
+        # Removed 'analyst_consensus' as it's not in the new context structure
     }
 
     # 7. Rendering Logic
