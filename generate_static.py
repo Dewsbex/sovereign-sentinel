@@ -174,7 +174,7 @@ def main():
             print(f"      [DEBUG] Portfolio: Failed with status {r_portfolio.status_code if r_portfolio else 'None'}")
 
         # 1.2 FETCH ACCOUNT CASH (ABSOLUTE SOURCE OF TRUTH v30.0)
-        r_account = make_request_with_retry(f"{BASE_URL}equity/account/cash", headers=headers, auth=auth_credentials)
+        r_account = make_request_with_retry(f"{BASE_URL}equity/account/summary", headers=headers, auth=auth_credentials)
         
         # Initialize strict variables (default to 0.0)
         api_total_wealth = 0.0 # From 'total'
@@ -257,11 +257,25 @@ def add_target_to_watchlist(ticker, target_price):
         is_cash = 'CASH' in ticker_raw or pos.get('type') == 'CURRENCY'
         if is_cash: continue
 
-        # --- PROCESS INVESTMENTS (v29.6 ROBUST POSITION LOGIC) ---
+        # --- PROCESS INVESTMENTS (v30.7 DIRECT API DATA) ---
         qty = parse_float(pos.get('quantity', 0))
+        
+        # v30.7: Use API as Source of Truth
+        market_val = parse_float(pos.get('value', 0)) # Direct from API
+        pnl_gbp = parse_float(pos.get('ppl', 0))      # Direct from API
+        
+        # Back-calculate Price & Invested if needed, or use API
         raw_cur_price = parse_float(pos.get('currentPrice', 0))
         raw_avg_price = parse_float(pos.get('averagePrice', 0))
-        pnl_gbp = parse_float(pos.get('result', 0)) 
+        
+        # Invested = Value - PnL (Logical deduction if not explicit)
+        invested_gbp = market_val - pnl_gbp
+        
+        # Calculate PnL % based on pure financial result
+        if invested_gbp > 0:
+            pnl_pct = pnl_gbp / invested_gbp
+        else:
+            pnl_pct = 0.0 
         
         # Metadata & Ticker Normalization
         norm_ticker = ticker_raw.split('_')[0].split('.')[0].replace('l_EQ', '')
@@ -423,13 +437,16 @@ def add_target_to_watchlist(ticker, target_price):
             'fillColor': fill_color, # Fallback
             'textColor': text_color,
             'custom_main': f"£{market_val:,.2f}",
-            'custom_sub': f"{'+' if pnl_pct >= 0 else ''}£{abs(pnl_cash):,.2f} ({pnl_pct*100:+.1f}%)",
-            # v30.4 Tooltip Injection
+            'custom_sub': f"{'+' if pnl_pct >= 0 else ''}£{abs(pnl_gbp):,.2f} ({pnl_pct*100:+.1f}%)",
+            # v30.7 Expanded Tooltip Data
             'company_name': meta.get('name') or meta.get('symbol') or mapped_ticker,
             'shares_held': f"{qty:,.4f}",
             'formatted_value': f"£{market_val:,.2f}",
-            'formatted_pl_gbp': f"{'+' if pnl_cash >= 0 else ''}£{pnl_cash:,.2f}",
-            'formatted_pl_pct': f"({pnl_pct*100:+.1f}%)"
+            'formatted_pl_gbp': f"{'+' if pnl_gbp >= 0 else ''}£{pnl_gbp:,.2f}",
+            'formatted_pl_pct': f"({pnl_pct*100:+.1f}%)",
+            'price_avg': f"{raw_avg_price:,.2f}",
+            'price_cur': f"{raw_cur_price:,.2f}",
+            'currency': currency
         })
 
     # Post-Calculation: Update Fortress Weights
