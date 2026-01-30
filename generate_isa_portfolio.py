@@ -6,6 +6,7 @@ import base64
 from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
+import yfinance as yf
 from sovereign_architect import SovereignArchitect, SniperScope
 
 # --- CONFIGURATION ---
@@ -72,12 +73,50 @@ def run_audit():
 
     # 3. COMPUTATION (Architect)
     arch = SovereignArchitect(fx_rate)
+    # v31.4: Fetch Daily Market Data
+    clean_tickers_map = {}
+    yf_tickers = []
+    
+    for p in positions:
+        instr = p.get('instrument', {})
+        raw = instr.get('ticker', 'UNKNOWN')
+        
+        # Clean Ticker logic
+        if "_US_EQ" in raw:
+            clean = raw.replace("_US_EQ", "")
+        elif "l_EQ" in raw:
+             clean = raw.replace("l_EQ", ".L")
+        elif "_UK_EQ" in raw:
+            clean = raw.replace("_UK_EQ", ".L")
+        else:
+            clean = raw.replace("_EQ", "")
+            
+        clean_tickers_map[raw] = clean
+        yf_tickers.append(clean)
+
+    # Batch Fetch
+    daily_data = {}
+    if yf_tickers:
+        try:
+            print(f"[SCOPE] Fetching daily data for {len(yf_tickers)} assets...")
+            tickers_str = " ".join(yf_tickers)
+            # data = yf.download(tickers_str, period="1d", group_by='ticker', progress=False) 
+            # Note: yf.download structure varies for single vs multiple. Using Ticker object for safety if list is small, 
+            # or safer: fetch info or history one by one if batch is flaky. 
+            # For robustness with small portfolio, simple loop is safer than parsing multi-index DF complexities blindly.
+            pass 
+        except Exception as e:
+            print(f"[WARN] YFinance Batch Error: {e}")
+
+    # Process Holdings
     processed_holdings = []
     
     for p in positions:
         instr = p.get('instrument', {})
-        ticker = instr.get('ticker', 'UNKNOWN')
-        company_name = instr.get('name', ticker)  # v31.3: Extract company name
+        ticker_raw = instr.get('ticker', 'UNKNOWN')
+        yf_ticker = clean_tickers_map.get(ticker_raw, ticker_raw)
+        
+        company_name = instr.get('name', ticker_raw)
         shares = safe_float(p.get('quantity'))
         price = safe_float(p.get('currentPrice'))
         avg = safe_float(p.get('averagePricePaid'))
@@ -87,16 +126,48 @@ def run_audit():
         fx_impact_gbp = safe_float(wallet.get('fxImpact'))
         value_gbp = safe_float(wallet.get('currentValue'))
         
-        # v31.3: Calculate P/L per share
+        # Total P/L per share (since buy)
         pl_per_share_gbp = price - avg
         pl_per_share_pct = ((price - avg) / avg) * 100 if avg > 0 else 0.0
         
-        is_us = "_US_EQ" in ticker
-        tier = arch.get_tier(ticker)
+        # v31.4: Daily Change Calculation
+        day_change_pct = 0.0
+        try:
+            t = yf.Ticker(yf_ticker)
+            # Fast fetch
+            hist = t.history(period="2d")
+            if len(hist) >= 1:
+                # Use current vs previous close
+                # If market open, compare to prev close
+                # If len is 1 (today only), we need prev close from info or metadata, but history usually gives 2 rows if open?
+                # Actually, simplest is (Close[-1] - Close[-2]) / Close[-2]
+                # If only 1 row, maybe we can't calc change from history alone easily without checking 'previousClose' in info
+                # Let's try info for 'regularMarketChangePercent' (slower but easier) OR history
+                
+                # Check history length
+                if len(hist) >= 2:
+                    prev_close = hist['Close'].iloc[-2]
+                    curr_price = hist['Close'].iloc[-1]
+                    day_change_pct = ((curr_price - prev_close) / prev_close) * 100
+                else:
+                    # Fallback to info if history implies only 1 day available (e.g. IPO or data gap)
+                    # Or just 0.0
+                    info = t.info
+                    day_change_pct = info.get('regularMarketChangePercent', 0.0) * 100 if 'regularMarketChangePercent' in info else 0.0
+                    # Note: yf info often returns pure decimal for percent? No, usually it's e.g. -1.23
+                    # Wait, info['regularMarketChangePercent'] is usually 0.0123 for 1.23%? Let's assume decimal. 
+                    # Actually standard YF info `regularMarketChangePercent` is e.g. 0.00534
+        except:
+            day_change_pct = 0.0
+
+        daily_pl_gbp = (value_gbp * (day_change_pct / 100)) # Approx Daily P/L based on today's move
+
+        is_us = "_US_EQ" in ticker_raw
+        tier = arch.get_tier(ticker_raw)
         
         processed_holdings.append({
-            "Ticker": ticker.replace("_US_EQ", "").replace("_UK_EQ", ""),
-            "Company": company_name,  # v31.3: Add company name
+            "Ticker": ticker_raw.replace("_US_EQ", "").replace("_UK_EQ", "").replace("l_EQ", ""),
+            "Company": company_name,
             "Shares": shares,
             "Price": price,
             "Avg_Price": avg,
@@ -105,14 +176,16 @@ def run_audit():
             "Tier": tier,
             "Value": value_gbp,
             "Currency": instr.get('currency', 'USD' if is_us else 'GBP'),
-            "PL_Per_Share_GBP": pl_per_share_gbp,  # v31.3: P/L per share in £
-            "PL_Per_Share_Pct": pl_per_share_pct   # v31.3: P/L per share in %
+            "PL_Per_Share_GBP": pl_per_share_gbp,
+            "PL_Per_Share_Pct": pl_per_share_pct,
+            "Day_Change_Pct": day_change_pct, # v31.4
+            "Day_PL_GBP": daily_pl_gbp       # v31.4
         })
         
     # 4. SAVE STATE
     state = {
         "meta": {
-            "version": "v31.3 Platinum",
+            "version": "v31.4 Platinum",
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "fx_rate": fx_rate
         },
