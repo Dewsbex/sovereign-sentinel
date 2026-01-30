@@ -189,7 +189,7 @@ def render():
             print(f"      [WARN] History log load failed: {e}")
 
     context = {
-        'version': "v32.5 Platinum",
+        'version': "v32.6 Platinum",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
@@ -235,6 +235,16 @@ def render():
         with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
             f.write(output_html)
             
+        # v32.6: Synchronized G: Drive Deployment
+        g_drive_path = r"G:\My Drive\index.html"
+        try:
+            with open(g_drive_path, 'w', encoding='utf-8') as f:
+                f.write(output_html)
+            print(f"      [OK] Synced to G: Drive: {g_drive_path}")
+        except Exception as ge:
+            # Silent fail if G: Drive not mounted
+            pass
+
         print(f"      [SUCCESS] Dashboard written to {OUTPUT_FILE} ({len(output_html)} bytes)")
         
     except Exception as e:
