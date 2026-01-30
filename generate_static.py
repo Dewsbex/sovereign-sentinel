@@ -170,6 +170,17 @@ def render():
     tax_end = datetime(now.year + (1 if now.month > 4 or (now.month == 4 and now.day > 5) else 0), 4, 5)
     days_to_tax = (tax_end - now).days
 
+    # v31.6 Account History Loading
+    history_log = []
+    log_path = "data/history_log.json"
+    if os.path.exists(log_path):
+        try:
+            with open(log_path, 'r') as f:
+                history_log = json.load(f)
+                history_log.sort(key=lambda x: x[0])
+        except Exception as e:
+            print(f"      [WARN] History log load failed: {e}")
+
     context = {
         'version': "v31.6 Platinum",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
@@ -177,34 +188,29 @@ def render():
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
         'return_pct_str': f"{return_rate_pct:+.2f}%",
         'cash_dry_str': format_gbp_truncate(cash_dry),
-        'available_dry_str': format_gbp_truncate(cash_dry), # Added for clarity
+        'available_dry_str': format_gbp_truncate(cash_dry),
         'pending_cash_str': format_gbp_truncate(blocked),
-        'env': meta.get('env', 'LIVE'), # Use meta.get for env
-        'holdings': holdings, # Added for direct access if needed
+        'env': meta.get('env', 'LIVE'),
+        'holdings': holdings,
         'fortress_holdings': fortress_display,
-        'sniper_list': sniper_display, # Keep for backward compatibility
         'sniper_architect': sniper_display,
         'heatmap_dataset': json.dumps(heatmap_series),
-        'account_history': json.dumps(history_log),  # v31.6
-        'pending_orders': [], # Keep existing empty lists
-        'risk_register': [], # Keep existing empty lists
-        'solar': {
-            'phase': 'STABLE', # Changed from 'ACTIVE MONITORING'
-            'tax': {
-                'Limit Sentinel': 'Locked',
-                'Days to April 5': str(days_to_tax), # Keep days to tax
-                'Loss Harvesting': 'N/A (Tax Free)',
-                'Bed & Breakfast': 'Clear'
-            }
-        },
+        'account_history': json.dumps(history_log),
+        'pending_orders': [],
         'portfolio_metrics': {
             'cash_balance': cash_dry,
             'total_wealth': total_wealth,
             'cash_hurdle': 0.038
         },
-        # Removed 'total_return_gbp' and 'return_rate_pct' as they are covered by new keys
-        # Removed 'cash_reserve_str' as it's covered by 'cash_dry_str'
-        # Removed 'analyst_consensus' as it's not in the new context structure
+        'solar': {
+            'phase': 'STABLE',
+            'tax': {
+                'Limit Sentinel': 'Locked',
+                'Days to April 5': str(days_to_tax),
+                'Loss Harvesting': 'N/A (Tax Free)',
+                'Bed & Breakfast': 'Clear'
+            }
+        }
     }
 
     # 7. Rendering Logic
