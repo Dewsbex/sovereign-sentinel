@@ -377,7 +377,13 @@ def main():
                 'fillColor': fill_color, # Fallback
                 'textColor': text_color,
                 'custom_main': f"£{market_val:,.2f}",
-                'custom_sub': f"{'+' if pnl_pct >= 0 else ''}£{abs(pnl_cash):,.2f} ({pnl_pct*100:+.1f}%)"
+                'custom_sub': f"{'+' if pnl_pct >= 0 else ''}£{abs(pnl_cash):,.2f} ({pnl_pct*100:+.1f}%)",
+                # v30.4 Tooltip Injection
+                'company_name': meta.get('name') or meta.get('symbol') or mapped_ticker,
+                'shares_held': f"{qty:,.4f}",
+                'formatted_value': f"£{market_val:,.2f}",
+                'formatted_pl_gbp': f"{'+' if pnl_cash >= 0 else ''}£{pnl_cash:,.2f}",
+                'formatted_pl_pct': f"({pnl_pct*100:+.1f}%)"
             })
 
     except Exception as e:
