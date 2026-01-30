@@ -527,11 +527,15 @@
     </div>
 
     <script>
-        // v32.4 Tooltip Logic
-        function showTT(name, value, weight) {
+        // v32.5 Tooltip Logic (Enhanced Color)
+        function showTT(name, value, weight, color) {
             const tt = document.getElementById('donut-tooltip');
             if (tt) {
-                tt.innerHTML = `<div class='font-bold text-gray-900 text-[0.6rem] leading-tight'>${name}</div><div class='text-emerald-600 font-bold text-sm'>${weight}</div><div class='text-[0.6rem] text-gray-400'>${value}</div>`;
+                tt.innerHTML = `
+                    <div class='font-bold text-gray-900 text-[0.6rem] leading-tight'>${name}</div>
+                    <div class='font-bold text-sm' style='color: ${color}'>${weight}</div>
+                    <div class='text-[0.6rem] text-gray-400'>${value}</div>
+                `;
                 tt.style.opacity = 1;
             }
         }
