@@ -152,7 +152,7 @@ def backfill_history(holdings, cash, fx_rate):
         print(f"[WARN] Backfill failed: {e}")
 
 def run_audit():
-    print(f"[>] Sentinel v31.1 Platinum: Starting Audit...")
+    print(f"[>] Sentinel v32.3: Starting Audit...")
     
     # 1. EXTERNAL RADAR (SniperScope)
     sniper = SniperScope(WATCHLIST_DATA)
@@ -181,7 +181,7 @@ def run_audit():
         return
 
     # 3. BATCH METADATA (v32.3)
-    print("📡 Fetching Company Metadata...")
+    print("[>] Fetching Company Metadata...")
     holdings_tickers = [p.get('instrument', {}).get('ticker') for p in positions]
     yf_tickers = [t.replace("_UK_EQ", ".L").replace("_US_EQ", "") for t in holdings_tickers if t]
     
