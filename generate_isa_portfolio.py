@@ -214,7 +214,7 @@ def deploy_to_github():
         print("Tip: Check if you have unmerged changes or network issues.")
 
 def run_audit():
-    print(f"[>] Sentinel v32.11 Master: Zero-Touch Automation...")
+    print(f"[>] Sentinel v32.12 Master: Zero-Touch Automation...")
     
     # 0. KNOWLEDGE BRIDGE SCAN (v32.4)
     print("[>] Scanning Knowledge Base...")
