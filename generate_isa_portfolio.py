@@ -1,31 +1,33 @@
 import requests, json, os, base64, subprocess, yfinance as yf
 from datetime import datetime
 from dotenv import load_dotenv
+from requests.auth import HTTPBasicAuth
 
 load_dotenv()
 
 API_KEY = os.environ.get("T212_API_KEY")
+API_SECRET = os.environ.get("T212_API_SECRET")
 BASE_URL = "https://live.trading212.com/api/v0/equity"
 
 def run_audit():
-    print("[>] Sentinel v32.5: Unified Data Contract...")
-    if not API_KEY:
-        print("[ERROR] T212_API_KEY Missing!")
+    print("[>] Sentinel v32.6: Implementing API Rules (Key + Secret)...")
+    if not API_KEY or not API_SECRET:
+        print("[ERROR] Credentials (Key or Secret) Missing!")
         return
 
-    # v32.5: Unified Auth (Direct Key)
-    headers = {"Authorization": API_KEY}
+    # v32.6: Correct Auth Pattern (Basic Auth with Secret)
+    auth = HTTPBasicAuth(API_KEY, API_SECRET)
     
     try:
-        # Correct Endpoints (v32.5)
-        r_pos = requests.get(f"{BASE_URL}/portfolio", headers=headers)
+        # Correct Endpoints (v32.5/6)
+        r_pos = requests.get(f"{BASE_URL}/portfolio", auth=auth)
         if r_pos.status_code != 200:
             print(f"[API ERROR] Portfolio: {r_pos.status_code}")
             pos = []
         else:
             pos = r_pos.json()
 
-        r_acc = requests.get(f"{BASE_URL}/account/info", headers=headers)
+        r_acc = requests.get(f"{BASE_URL}/account/info", auth=auth)
         if r_acc.status_code != 200:
             print(f"[API ERROR] Account: {r_acc.status_code}")
             acc = {}
