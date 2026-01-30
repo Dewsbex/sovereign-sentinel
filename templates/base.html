@@ -101,6 +101,12 @@
             stroke: #1f2937 !important;
             stroke-width: 1px !important;
         }
+
+        /* v31.5 SAFE HIGH CONTRAST LABELS */
+        .apexcharts-datalabel {
+            filter: drop-shadow(0px 0px 2px #000) drop-shadow(0px 0px 1px #000);
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -575,27 +581,28 @@
         // v30.6 DYNAMIC HEATMAP LOGIC
         const rawMapData = {{ heatmap_dataset | default ('[]') }};
         const mapData = rawMapData.map(d => {
-            // v31.4: Use Daily P/L % for Heatmap Coloring
-            const dailyPct = d.day_change_pct || 0;
-            const absPctVal = Math.abs(dailyPct);
+            const pct = d.val_pct || 0;
+            // v30.6: Alpha = (pct*100 / 10) capped at 0.9
+            const pctVal = pct * 100;
+            const absPctVal = Math.abs(pctVal);
 
-            // Alpha curve: 3% daily move = max intensity (0.9)
-            let alpha = Math.min(0.9, absPctVal / 3);
-
+            let alpha = Math.min(0.9, absPctVal / 10);
             // Ensure minimum visibility for non-zero moves
-            if (absPctVal > 0 && alpha < 0.2) alpha = 0.2;
+            if (absPctVal > 0 && alpha < 0.1) alpha = 0.1;
 
-            let color = '#374151'; // Default Dark Gray
-            if (dailyPct > 0) {
-                // Emerald using daily %
+            let color = '#374151'; // Default Dark Gray (Neutral)
+            if (pct > 0) {
+                // Emerald
                 color = `rgba(16, 185, 129, ${alpha})`;
-            } else if (dailyPct < 0) {
-                // Rose using daily %
+            } else if (pct < 0) {
+                // Rose
                 color = `rgba(239, 68, 68, ${alpha})`;
             }
 
-            // v31.4: Text always White with Shadow
-            d.textColor = '#FFFFFF';
+            // Text Contrast
+            d.textColor = alpha > 0.5 ? '#FFFFFF' : '#F3F4F6';
+            if (absPctVal < 1) d.textColor = '#9CA3AF'; // Dim text for small moves
+
             d.fillColor = color;
             return d;
         });
@@ -615,8 +622,7 @@
                 enabled: true,
                 style: {
                     fontSize: '10px',
-                    colors: ['#FFFFFF'], // Force White
-                    textShadow: '0px 0px 3px #000000, 1px 1px 1px #000000' // v31.4: Black Edging/Shadow
+                    colors: mapData.map(d => d.textColor)
                 },
                 formatter: function (text, op) {
                     let p = op.w.config.series[0].data[op.dataPointIndex];
@@ -635,17 +641,15 @@
             tooltip: {
                 custom: function ({ series, seriesIndex, dataPointIndex, w }) {
                     var data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
-                    var dayChangeClass = data.day_change_pct >= 0 ? "text-emerald-500" : "text-rose-500";
-                    var daySign = data.day_change_pct >= 0 ? "+" : "";
-
+                    var plColorClass = data.val_pct >= 0 ? "text-emerald-600" : "text-rose-600";
                     return `
                         <div class="p-2 bg-white border border-gray-200 shadow-lg rounded text-xs font-mono">
                             <div class="font-bold text-gray-900 border-b border-gray-100 pb-1 mb-1">${data.company_name}</div>
                             <div class="text-xs text-gray-500 mb-2">${data.x}</div>
-                            <div class="text-gray-600">Price: <span class="font-bold">${data.currency || ''} ${data.price_cur}</span></div>
-                            <div class="${dayChangeClass} font-bold mb-1">Today: ${daySign}£${data.day_pl_gbp} (${daySign}${data.day_change_pct}%)</div>
-                            <div class="text-gray-600">Avg: ${data.price_avg}</div>
-                            <div class="text-gray-600 mt-1">Total P/L: <span class="${plColorClass}">${data.formatted_pl_gbp} ${data.formatted_pl_pct}</span></div>
+                            <div class="text-gray-600">Price: <span class="font-bold">${data.currency || ''} ${data.price_cur}</span> (Avg: ${data.price_avg})</div>
+                            <div class="text-gray-600">Shares Held: <span class="font-bold">${data.shares_held}</span></div>
+                            <div class="text-gray-600">Total Value: <span class="font-bold">${data.formatted_value}</span></div>
+                            <div class="${plColorClass} font-bold mt-1">P/L: ${data.formatted_pl_gbp} ${data.formatted_pl_pct}</div>
                         </div>
                     `;
                 }

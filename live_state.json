@@ -1,23 +1,23 @@
 {
   "meta": {
-    "version": "v31.4 Platinum",
-    "timestamp": "2026-01-30 10:18:46",
-    "fx_rate": 1.374721646308899
+    "version": "v31.3 Platinum",
+    "timestamp": "2026-01-30 14:00:46",
+    "fx_rate": 1.3745137453079224
   },
   "account": {
     "id": 31785628,
     "currency": "GBP",
-    "totalValue": 173373.81,
+    "totalValue": 173516.7,
     "cash": {
-      "availableToTrade": 14836.87,
-      "reservedForOrders": 21605.86,
+      "availableToTrade": 14944.85,
+      "reservedForOrders": 21603.5,
       "inPies": 0
     },
     "investments": {
-      "currentValue": 136931.08,
+      "currentValue": 136968.36,
       "totalCost": 140145.96,
       "realizedProfitLoss": 26122.63,
-      "unrealizedProfitLoss": -3214.88
+      "unrealizedProfitLoss": -3177.6
     }
   },
   "holdings": [
@@ -27,47 +27,41 @@
       "Shares": 190.0,
       "Price": 54.28,
       "Avg_Price": 50.57,
-      "PL": 345.34,
-      "FX_Impact": -167.45,
+      "PL": 344.52,
+      "FX_Impact": -168.21,
       "Tier": "2",
-      "Value": 7502.47,
+      "Value": 7501.65,
       "Currency": "USD",
       "PL_Per_Share_GBP": 3.710000000000001,
-      "PL_Per_Share_Pct": 7.336365434051811,
-      "Day_Change_Pct": -0.6224828986391895,
-      "Day_PL_GBP": -46.701592725535605
+      "PL_Per_Share_Pct": 7.336365434051811
     },
     {
-      "Ticker": "RIO",
+      "Ticker": "RIOl_EQ",
       "Company": "Rio Tinto",
       "Shares": 102.36965673,
-      "Price": 6659.7,
+      "Price": 6715.2,
       "Avg_Price": 4576.67501255,
-      "PL": 2132.39,
+      "PL": 2189.21,
       "FX_Impact": 0.0,
       "Tier": "2",
-      "Value": 6817.51,
+      "Value": 6874.33,
       "Currency": "GBX",
-      "PL_Per_Share_GBP": 2083.0249874499996,
-      "PL_Per_Share_Pct": 45.513937121119596,
-      "Day_Change_Pct": -2.6865235800846836,
-      "Day_PL_GBP": -183.1540137246313
+      "PL_Per_Share_GBP": 2138.5249874499996,
+      "PL_Per_Share_Pct": 46.726607888604946
     },
     {
-      "Ticker": "LGEN",
+      "Ticker": "LGENl_EQ",
       "Company": "Legal & General",
       "Shares": 1000.0,
-      "Price": 264.9,
+      "Price": 264.4,
       "Avg_Price": 259.8,
-      "PL": 51.0,
+      "PL": 46.0,
       "FX_Impact": 0.0,
       "Tier": "2",
-      "Value": 2649.0,
+      "Value": 2644.0,
       "Currency": "GBX",
-      "PL_Per_Share_GBP": 5.099999999999966,
-      "PL_Per_Share_Pct": 1.9630484988452526,
-      "Day_Change_Pct": -0.1505549099300772,
-      "Day_PL_GBP": -3.988199564047745
+      "PL_Per_Share_GBP": 4.599999999999966,
+      "PL_Per_Share_Pct": 1.770592763664344
     },
     {
       "Ticker": "QELL",
@@ -76,30 +70,26 @@
       "Price": 0.0012,
       "Avg_Price": 1.02294022,
       "PL": -216.62,
-      "FX_Impact": -11.95,
+      "FX_Impact": -11.97,
       "Tier": "2",
       "Value": 0.24,
       "Currency": "USD",
       "PL_Per_Share_GBP": -1.0217402199999999,
-      "PL_Per_Share_Pct": -99.88269109215395,
-      "Day_Change_Pct": 0.0,
-      "Day_PL_GBP": 0.0
+      "PL_Per_Share_Pct": -99.88269109215395
     },
     {
-      "Ticker": "BATS",
+      "Ticker": "BATSl_EQ",
       "Company": "British American Tobacco",
       "Shares": 100.0,
-      "Price": 4354.9,
+      "Price": 4353.8,
       "Avg_Price": 4202.7249,
-      "PL": 152.18,
+      "PL": 151.08,
       "FX_Impact": 0.0,
       "Tier": "2",
-      "Value": 4354.9,
+      "Value": 4353.8,
       "Currency": "GBX",
-      "PL_Per_Share_GBP": 152.17509999999947,
-      "PL_Per_Share_Pct": 3.6208674995596186,
-      "Day_Change_Pct": 0.6470996071180957,
-      "Day_PL_GBP": 28.180540790385948
+      "PL_Per_Share_GBP": 151.07510000000002,
+      "PL_Per_Share_Pct": 3.5946940043589346
     },
     {
       "Ticker": "VSNTV",
@@ -107,15 +97,13 @@
       "Shares": 111.0,
       "Price": 32.84,
       "Avg_Price": 33.25963964,
-      "PL": -107.09,
-      "FX_Impact": -73.2,
+      "PL": -107.38,
+      "FX_Impact": -73.5,
       "Tier": "2",
-      "Value": 2651.78,
+      "Value": 2651.49,
       "Currency": "USD",
       "PL_Per_Share_GBP": -0.41963963999999976,
-      "PL_Per_Share_Pct": -1.2617083183767162,
-      "Day_Change_Pct": -2.2030416049574937,
-      "Day_PL_GBP": -58.41981667194184
+      "PL_Per_Share_Pct": -1.2617083183767162
     },
     {
       "Ticker": "NUE",
@@ -123,15 +111,13 @@
       "Shares": 119.1502945,
       "Price": 179.82,
       "Avg_Price": 142.75373864,
-      "PL": 3013.47,
-      "FX_Impact": -199.34,
+      "PL": 3011.77,
+      "FX_Impact": -200.69,
       "Tier": "2",
-      "Value": 15586.34,
+      "Value": 15584.64,
       "Currency": "USD",
       "PL_Per_Share_GBP": 37.06626136,
-      "PL_Per_Share_Pct": 25.965177313831784,
-      "Day_Change_Pct": 3.886136546343265,
-      "Day_PL_GBP": 605.7064549773188
+      "PL_Per_Share_Pct": 25.965177313831784
     },
     {
       "Ticker": "SOLV",
@@ -139,15 +125,13 @@
       "Shares": 100.0,
       "Price": 76.54,
       "Avg_Price": 80.4473,
-      "PL": -409.84,
-      "FX_Impact": -125.6,
+      "PL": -410.44,
+      "FX_Impact": -126.23,
       "Tier": "2",
-      "Value": 5568.0,
+      "Value": 5567.4,
       "Currency": "USD",
       "PL_Per_Share_GBP": -3.9072999999999922,
-      "PL_Per_Share_Pct": -4.856968475014068,
-      "Day_Change_Pct": -0.10444103478894416,
-      "Day_PL_GBP": -5.815276817048411
+      "PL_Per_Share_Pct": -4.856968475014068
     },
     {
       "Ticker": "RE",
@@ -155,15 +139,13 @@
       "Shares": 66.95260406,
       "Price": 329.57,
       "Avg_Price": 333.79806975,
-      "PL": -942.28,
-      "FX_Impact": -736.35,
+      "PL": -944.03,
+      "FX_Impact": -738.12,
       "Tier": "2",
-      "Value": 16051.89,
+      "Value": 16050.14,
       "Currency": "USD",
       "PL_Per_Share_GBP": -4.2280697500000315,
-      "PL_Per_Share_Pct": -1.2666549429619736,
-      "Day_Change_Pct": 0.0,
-      "Day_PL_GBP": 0.0
+      "PL_Per_Share_Pct": -1.2666549429619736
     },
     {
       "Ticker": "NFLX",
@@ -171,15 +153,13 @@
       "Shares": 190.0,
       "Price": 83.11,
       "Avg_Price": 92.46947368,
-      "PL": -1635.32,
-      "FX_Impact": -341.67,
+      "PL": -1636.57,
+      "FX_Impact": -343.06,
       "Tier": "2",
-      "Value": 11487.3,
+      "Value": 11486.05,
       "Currency": "USD",
       "PL_Per_Share_GBP": -9.359473679999994,
-      "PL_Per_Share_Pct": -10.12169022653833,
-      "Day_Change_Pct": -1.7485771954295022,
-      "Day_PL_GBP": -200.8643081705732
+      "PL_Per_Share_Pct": -10.12169022653833
     },
     {
       "Ticker": "CRM",
@@ -187,15 +167,13 @@
       "Shares": 92.0,
       "Price": 214.04,
       "Avg_Price": 242.96684783,
-      "PL": -2230.77,
-      "FX_Impact": -294.79,
+      "PL": -2232.33,
+      "FX_Impact": -296.57,
       "Tier": "2",
-      "Value": 14324.97,
+      "Value": 14323.41,
       "Currency": "USD",
       "PL_Per_Share_GBP": -28.926847830000014,
-      "PL_Per_Share_Pct": -11.905676880756861,
-      "Day_Change_Pct": -6.088789469213573,
-      "Day_PL_GBP": -872.2172648280035
+      "PL_Per_Share_Pct": -11.905676880756861
     },
     {
       "Ticker": "QCOM",
@@ -203,15 +181,13 @@
       "Shares": 108.0,
       "Price": 152.22,
       "Avg_Price": 168.85388889,
-      "PL": -1543.43,
-      "FX_Impact": -236.57,
+      "PL": -1544.73,
+      "FX_Impact": -238.01,
       "Tier": "2",
-      "Value": 11959.32,
+      "Value": 11958.02,
       "Currency": "USD",
       "PL_Per_Share_GBP": -16.63388889000001,
-      "PL_Per_Share_Pct": -9.85105465994696,
-      "Day_Change_Pct": -0.3143390550962208,
-      "Day_PL_GBP": -37.592813483933355
+      "PL_Per_Share_Pct": -9.85105465994696
     },
     {
       "Ticker": "EOG",
@@ -219,15 +195,13 @@
       "Shares": 167.83705587,
       "Price": 112.09,
       "Avg_Price": 114.00211891,
-      "PL": -581.51,
-      "FX_Impact": -348.05,
+      "PL": -583.0,
+      "FX_Impact": -349.56,
       "Tier": "2",
-      "Value": 13685.66,
+      "Value": 13684.17,
       "Currency": "USD",
       "PL_Per_Share_GBP": -1.9121189099999896,
-      "PL_Per_Share_Pct": -1.6772661142461125,
-      "Day_Change_Pct": 0.9547876238874687,
-      "Day_PL_GBP": 130.66898792731774
+      "PL_Per_Share_Pct": -1.6772661142461125
     },
     {
       "Ticker": "CTVA",
@@ -235,15 +209,13 @@
       "Shares": 175.0,
       "Price": 73.82,
       "Avg_Price": 69.24154286,
-      "PL": 362.33,
-      "FX_Impact": -220.54,
+      "PL": 361.31,
+      "FX_Impact": -221.49,
       "Tier": "2",
-      "Value": 9397.73,
+      "Value": 9396.71,
       "Currency": "USD",
       "PL_Per_Share_GBP": 4.578457139999998,
-      "PL_Per_Share_Pct": 6.612297980212854,
-      "Day_Change_Pct": 1.0814418249552733,
-      "Day_PL_GBP": 101.63098281636921
+      "PL_Per_Share_Pct": 6.612297980212854
     },
     {
       "Ticker": "CNNE",
@@ -251,15 +223,13 @@
       "Shares": 1406.16463623,
       "Price": 14.52,
       "Avg_Price": 15.77239921,
-      "PL": -1645.71,
-      "FX_Impact": -364.59,
+      "PL": -1647.33,
+      "FX_Impact": -366.35,
       "Tier": "2",
-      "Value": 14852.99,
+      "Value": 14851.37,
       "Currency": "USD",
       "PL_Per_Share_GBP": -1.25239921,
-      "PL_Per_Share_Pct": -7.940448332083526,
-      "Day_Change_Pct": 1.5363147466289744,
-      "Day_PL_GBP": 228.1886756853269
+      "PL_Per_Share_Pct": -7.940448332083526
     }
   ],
   "sniper": [
@@ -292,8 +262,8 @@
       "tier": "1 (Sleeper)",
       "expected_growth": 0,
       "name": "LGEN_UK_EQ",
-      "live_price": 265.29998779296875,
-      "distance_pct": 10.541661580403645,
+      "live_price": 264.8999938964844,
+      "distance_pct": 10.37499745686849,
       "status": "WATCH"
     },
     {
@@ -303,8 +273,8 @@
       "tier": "1 (Sleeper)",
       "expected_growth": 0,
       "name": "RIO_UK_EQ",
-      "live_price": 6665.0,
-      "distance_pct": 38.854166666666664,
+      "live_price": 6719.0,
+      "distance_pct": 39.979166666666664,
       "status": "WATCH"
     }
   ]
