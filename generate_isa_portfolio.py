@@ -117,7 +117,8 @@ def backfill_history(holdings, cash, fx_rate):
                 total_val_gbp += val
             
             ts_ms = int(timestamp.timestamp() * 1000)
-            simulated_history.append([ts_ms, round(total_val_gbp, 2)])
+            if not pd.isna(total_val_gbp):
+                simulated_history.append([ts_ms, round(total_val_gbp, 2)])
         
         with open(log_path, 'w') as f:
             json.dump(simulated_history, f)
