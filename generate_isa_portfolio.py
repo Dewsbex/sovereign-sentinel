@@ -191,7 +191,7 @@ def backfill_history(holdings, cash, fx_rate):
         print(f"[WARN] Backfill failed: {e}")
 
 def run_audit():
-    print(f"[>] Sentinel v32.7 Master: Starting Audit...")
+    print(f"[>] Sentinel v32.8 Master: Starting Audit...")
     
     # 0. KNOWLEDGE BRIDGE SCAN (v32.4)
     print("[>] Scanning Knowledge Base...")
@@ -231,14 +231,16 @@ def run_audit():
         print(f"[!] Connection Error: {e}")
         return
 
-    # 3. BATCH METADATA (v32.7: Robust Resolution)
+    # 3. BATCH METADATA (v32.8: Robust Resolution)
     print(f"[>] Fetching Company Metadata (Batch)...")
     
     # Cleaning Logic
     def clean_ticker(t):
-        if "l_EQ" in t: return t.replace("l_EQ", ".L") # Handle RIOl_EQ -> RIO.L
+        if "l_EQ" in t: return t.replace("l_EQ", ".L") 
         return t.replace("_UK_EQ", ".L").replace("_US_EQ", "")
-        
+    
+    # Restore Definition
+    holdings_tickers = [p.get('instrument', {}).get('ticker') for p in positions]
     yf_tickers = [clean_ticker(t) for t in holdings_tickers if t]
     
     # Manual Override Map for Stubborn Tickers
