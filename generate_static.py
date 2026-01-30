@@ -125,9 +125,10 @@ def render():
         
         fortress_display.append({
             'ticker': h.get('Ticker', 'N/A'),
+            'company': h.get('Company', h.get('Ticker', 'N/A')), # v32.5: Real name
             'book_cost': truncate_decimal(val - pnl, 2),
             'tier': tier,
-            'weight_current': truncate_decimal(safe_val(h.get('Weight')) / 100.0, 4) if h.get('Weight') else truncate_decimal(weight, 4),
+            'weight_current': truncate_decimal(safe_val(h.get('Weight')) / 100.0, 4) if 'Weight' in h else truncate_decimal(weight, 4), # v32.5
             'weight_target': truncate_decimal(target_weight, 4),
             'real_pl': truncate_decimal(pnl, 2),
             'action': 'HOLD', 
@@ -143,12 +144,16 @@ def render():
     sniper_display = []
     for s in sniper_raw:
         dist = safe_val(s.get('distance_pct'))
+        # v32.5: Ensure Intel Fields are passed
+        snippet = s.get('hypothesis', s.get('default_thesis', 'No intelligence available.'))
+        src = s.get('source', 'System Default')
+        
         sniper_display.append({
             'ticker': s.get('t212_ticker', s.get('ticker', 'N/A')),
             'name': s.get('name', 'N/A'),
             'target_price': truncate_decimal(safe_val(s.get('target_price')), 2),
             'current_price': truncate_decimal(safe_val(s.get('live_price')), 2),
-            'distance_pct': truncate_decimal(dist, 2),  # v31.2: Truncate to 2 decimals
+            'distance_pct': truncate_decimal(dist, 2),
             'expected_growth_pct': truncate_decimal(safe_val(s.get('expected_growth')), 2),
             'sector': 'Technology',
             'industry': 'Software',
@@ -156,8 +161,8 @@ def render():
             'status': s.get('status', 'WATCH'),
             'last_updated': datetime.now().strftime('%H:%M'),
             'is_buy_signal': s.get('status') == 'BUY NOW',
-            'hypothesis': s.get('hypothesis', 'No intelligence available.'),
-            'source': s.get('source', 'System Default'),
+            'hypothesis': snippet,
+            'source': src,
             # For sniper_architect block
             'tier': s.get('tier', '2'),
             'limit_price': truncate_decimal(safe_val(s.get('target_price')), 2),
@@ -184,7 +189,7 @@ def render():
             print(f"      [WARN] History log load failed: {e}")
 
     context = {
-        'version': "v32.4 Platinum",
+        'version': "v32.5 Platinum",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
