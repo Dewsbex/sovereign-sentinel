@@ -47,7 +47,7 @@ def format_gbp(val):
     return format_gbp_truncate(val)
 
 def render():
-    print(f"Starting The Artist (Job B) [v31.5 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"Starting The Artist (Job B) [v31.6 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
     
     # 1. Load Data
     state = load_state()
@@ -170,44 +170,47 @@ def render():
     tax_end = datetime(now.year + (1 if now.month > 4 or (now.month == 4 and now.day > 5) else 0), 4, 5)
     days_to_tax = (tax_end - now).days
 
+    # v31.6 Account History Loading
+    history_log = []
+    log_path = "data/history_log.json"
+    if os.path.exists(log_path):
+        try:
+            with open(log_path, 'r') as f:
+                history_log = json.load(f)
+                history_log.sort(key=lambda x: x[0])
+        except Exception as e:
+            print(f"      [WARN] History log load failed: {e}")
+
     context = {
-        # v31.2: Updated Total Return display
+        'version': "v31.6 Platinum",
+        'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
-        'total_return_str': format_gbp_truncate(total_return),  # Realized + Unrealized
-        'total_return_gbp': format_gbp_truncate(total_return),  # For new display
-        'return_rate_pct': f"{return_rate_pct:+.2f}",  # Already truncated
+        'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
         'return_pct_str': f"{return_rate_pct:+.2f}%",
-        'cash_reserve_str': format_gbp_truncate(cash_dry),
+        'cash_dry_str': format_gbp_truncate(cash_dry),
+        'available_dry_str': format_gbp_truncate(cash_dry),
         'pending_cash_str': format_gbp_truncate(blocked),
-        
-        'env': 'ISA',
-        'analyst_consensus': 'BUY / ACCUMULATE',
-        
+        'env': meta.get('env', 'LIVE'),
+        'holdings': holdings,
         'fortress_holdings': fortress_display,
-        'sniper_list': sniper_display,
-        'sniper_architect': sniper_display, # Provide both names
+        'sniper_architect': sniper_display,
         'heatmap_dataset': json.dumps(heatmap_series),
+        'account_history': json.dumps(history_log),
         'pending_orders': [],
-        'risk_register': [],
-        
+        'portfolio_metrics': {
+            'cash_balance': cash_dry,
+            'total_wealth': total_wealth,
+            'cash_hurdle': 0.038
+        },
         'solar': {
-            'phase': 'ACTIVE MONITORING',
+            'phase': 'STABLE',
             'tax': {
                 'Limit Sentinel': 'Locked',
                 'Days to April 5': str(days_to_tax),
                 'Loss Harvesting': 'N/A (Tax Free)',
                 'Bed & Breakfast': 'Clear'
             }
-        },
-        
-        'portfolio_metrics': {
-            'cash_balance': cash_dry,
-            'total_wealth': total_wealth,
-            'cash_hurdle': 0.038
-        },
-        
-        'last_update': datetime.now().strftime('%H:%M %d/%m'),
-        'version': "v31.5 Platinum"
+        }
     }
 
     # 7. Rendering Logic

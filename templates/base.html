@@ -198,27 +198,52 @@
             </div>
         </div>
 
-        <!-- TAX LOGIC FORK & SOLAR STATUS -->
-        <div class="col-span-12 md:col-span-8 sentinel-card">
-            <div class="flex justify-between items-start">
+        <!-- 💹 PORTFOLIO PERFORMANCE / ACCOUNT VALUE - v31.6 -->
+        <div class="col-span-12 md:col-span-8 sentinel-card" style="border-top: 2px solid #3b82f6;">
+            <div class="flex justify-between items-start mb-4">
                 <div>
-                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1">SOLAR CYCLE // PHASE IV-B
-                    </h2>
-                    <h3 class="text-lg font-bold text-white mb-4">TAX LOGIC ENGINE: {{ env }}</h3>
+                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1">COMMAND CENTER // ACCOUNT
+                        VALUE</h2>
+                    <div class="flex items-baseline gap-3">
+                        <span class="text-4xl font-bold tracking-tight text-gray-900 mono">{{ total_wealth_str }}</span>
+                        <span
+                            class="text-sm font-bold {{ 'text-emerald-500' if total_return_str.startswith('+') else 'text-rose-500' }} mono">
+                            {{ total_return_str }} ({{ return_pct_str }})
+                        </span>
+                    </div>
                 </div>
-                <div
-                    class="mono text-[0.6rem] text-blue-400 px-2 py-1 bg-blue-400/10 border border-blue-400/20 rounded">
-                    PHASE: {{ solar.phase }}
+                <!-- TIMEFRAME SELECTORS -->
+                <div class="flex bg-gray-100 p-1 rounded-lg gap-1">
+                    <button onclick="updateTimeframe('1D')"
+                        class="tf-btn px-3 py-1 text-[0.6rem] font-bold rounded-md transition-all">1D</button>
+                    <button onclick="updateTimeframe('1W')"
+                        class="tf-btn px-3 py-1 text-[0.6rem] font-bold rounded-md transition-all">1W</button>
+                    <button onclick="updateTimeframe('1M')"
+                        class="tf-btn px-3 py-1 text-[0.6rem] font-bold rounded-md transition-all">1M</button>
+                    <button onclick="updateTimeframe('3M')"
+                        class="tf-btn px-3 py-1 text-[0.6rem] font-bold rounded-md transition-all">3M</button>
+                    <button onclick="updateTimeframe('YTD')"
+                        class="tf-btn px-3 py-1 text-[0.6rem] font-bold rounded-md transition-all">YTD</button>
+                    <button onclick="updateTimeframe('1Y')"
+                        class="tf-btn px-3 py-1 text-[0.6rem] font-bold rounded-md transition-all">1Y</button>
+                    <button onclick="updateTimeframe('MAX')"
+                        class="tf-btn active px-3 py-1 text-[0.6rem] font-bold rounded-md bg-white shadow-sm text-blue-600 transition-all">MAX</button>
                 </div>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {% for key, val in solar.tax.items() %}
-                <div class="p-3 bg-white/5 border border-white/5 rounded">
-                    <span class="text-[0.6rem] text-neutral-500 uppercase mono block">{{ key }}</span>
-                    <span class="text-sm font-bold text-white mono">{{ val }}</span>
-                </div>
-                {% endfor %}
-            </div>
+
+            <div id="performance-chart" style="min-height: 250px;"></div>
+
+            <style>
+                .tf-btn {
+                    color: #6b7280;
+                }
+
+                .tf-btn.active {
+                    background: white;
+                    color: #3b82f6;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                }
+            </style>
         </div>
 
         <!-- REMOVED OLD WEALTH ROW (Moved to Header) -->
@@ -658,6 +683,92 @@
             legend: { show: false }
         };
         new ApexCharts(document.querySelector("#heatmap-chart"), options).render();
+
+        // v31.6 PORTFOLIO HISTORY LOGIC
+        const historyData = {{ account_history | default ('[]') }};
+        let historyChart;
+
+        function renderHistory(timeframe = 'MAX') {
+            const now = Date.now();
+            let filteredData = historyData;
+
+            if (timeframe !== 'MAX') {
+                let msLimit = 0;
+                if (timeframe === '1D') msLimit = 24 * 60 * 60 * 1000;
+                else if (timeframe === '1W') msLimit = 7 * 24 * 60 * 60 * 1000;
+                else if (timeframe === '1M') msLimit = 30 * 24 * 60 * 60 * 1000;
+                else if (timeframe === '3M') msLimit = 90 * 24 * 60 * 60 * 1000;
+                else if (timeframe === '1Y') msLimit = 365 * 24 * 60 * 60 * 1000;
+                else if (timeframe === 'YTD') {
+                    const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+                    msLimit = now - startOfYear.getTime();
+                }
+
+                const cutoff = now - msLimit;
+                filteredData = historyData.filter(d => d[0] >= cutoff);
+            }
+
+            const historyOptions = {
+                series: [{ name: 'Account Value', data: filteredData }],
+                chart: {
+                    type: 'area',
+                    height: 250,
+                    toolbar: { show: false },
+                    zoom: { enabled: false },
+                    animations: { enabled: true, easing: 'easeinout', speed: 800 }
+                },
+                colors: ['#3b82f6'],
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.45,
+                        opacityTo: 0.05,
+                        stops: [20, 100]
+                    }
+                },
+                stroke: { curve: 'smooth', width: 3 },
+                dataLabels: { enabled: false },
+                xaxis: {
+                    type: 'datetime',
+                    labels: { style: { colors: '#9ca3af', fontFamily: 'JetBrains Mono' } },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    labels: {
+                        formatter: (val) => '£' + Number(val).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }),
+                        style: { colors: '#9ca3af', fontFamily: 'JetBrains Mono' }
+                    }
+                },
+                grid: { borderColor: '#f3f4f6', strokeDashArray: 4 },
+                tooltip: {
+                    theme: 'light',
+                    x: { format: 'dd MMM yyyy HH:mm' },
+                    y: { formatter: (val) => '£' + Number(val).toLocaleString() }
+                }
+            };
+
+            if (historyChart) {
+                historyChart.updateOptions(historyOptions);
+            } else {
+                historyChart = new ApexCharts(document.querySelector("#performance-chart"), historyOptions);
+                historyChart.render();
+            }
+        }
+
+        function updateTimeframe(tf) {
+            // Update active button state
+            document.querySelectorAll('.tf-btn').forEach(btn => btn.classList.remove('active', 'bg-white', 'shadow-sm', 'text-blue-600'));
+            const activeBtn = Array.from(document.querySelectorAll('.tf-btn')).find(b => b.innerText === tf);
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'bg-white', 'shadow-sm', 'text-blue-600');
+            }
+            renderHistory(tf);
+        }
+
+        // Initial render
+        renderHistory('MAX');
 
         // ASSET ALLOCATION CHART
         // Aggregate mapData for simple donut
