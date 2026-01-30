@@ -1,0 +1,45 @@
+name: Sovereign Sentinel Daemon
+
+on:
+  schedule:
+    - cron: '*/15 9-22 * * 1-5' # Runs every 15 mins during market hours
+  workflow_dispatch: # Allows manual run button
+
+permissions:
+  contents: write
+
+jobs:
+  update-dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: pip install pandas requests yfinance lxml jinja2
+
+      - name: Run Auditor (Fetch)
+        env:
+          # THE COMPATIBILITY FIX:
+          # This tries your existing keys. If "API_KEY" exists, it uses it.
+          # If "T212_API_KEY" exists, it uses that instead.
+          T212_API_KEY: ${{ secrets.T212_API_KEY || secrets.API_KEY || secrets.TRADING212_API_KEY }}
+          # Some older setups didn't use a secret, but if you have one, we grab it:
+          T212_API_SECRET: ${{ secrets.T212_API_SECRET || secrets.API_SECRET || '' }}
+        run: python generate_isa_portfolio.py
+
+      - name: Run Artist (Render)
+        run: python generate_static.py
+
+      - name: Commit & Push
+        run: |
+          git config --global user.name "Sentinel Bot"
+          git config --global user.email "bot@sentinel.com"
+          # We commit the HTML, the JSON state snapshot, and the CSV ledger
+          git add index.html data/live_state.json ISA_PORTFOLIO.csv
+          git commit -m "Sentinel Auto-Update [v31.0]" || exit 0
+          git push
