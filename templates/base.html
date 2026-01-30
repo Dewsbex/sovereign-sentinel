@@ -211,6 +211,37 @@
             text-align: right;
             font-weight: bold;
         }
+
+        /* v32.14 Sovereign Guard CSS */
+        .asset-allocation-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+        }
+
+        #donut-tooltip {
+            position: absolute;
+            top: 51%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            pointer-events: none;
+            text-align: center;
+            visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 120px;
+            height: 120px;
+        }
+
+        #heatmap-chart {
+            z-index: 1;
+            position: relative;
+            transition: opacity 0.3s ease;
+        }
     </style>
 </head>
 
@@ -283,12 +314,22 @@
             <!-- ASSET ALLOCATION (1/3 Width) -->
             <div class="sentinel-card">
                 <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-2">📊 ASSET ALLOCATION</h2>
-                <div class="flex items-center justify-center p-4">
-                    <div class="w-48 h-48 relative">
+                <div class="flex flex-col p-4">
+                    <div class="asset-allocation-container" id="donut-container">
                         {{ allocation_donut | safe }}
-                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                            <span class="text-xs font-bold text-gray-400 opacity-0">Total</span>
+
+                        <!-- Fixed Center Tooltip -->
+                        <div id="donut-tooltip">
+                            <span
+                                class="text-[0.6rem] text-gray-400 uppercase tracking-widest leading-tight">Allocation</span>
+                            <span id="tooltip-ticker" class="text-lg font-bold text-gray-900 leading-none">TOTAL</span>
+                            <span id="tooltip-weight" class="text-xs font-mono text-emerald-500 mt-1">100.0%</span>
                         </div>
+                    </div>
+
+                    <!-- v32.14 Sovereign Guard Legend Grid -->
+                    <div class="mt-6 border-t border-gray-100 pt-4 overflow-y-auto max-height-[200px]">
+                        {{ legend_html | safe }}
                     </div>
                 </div>
             </div>
@@ -519,32 +560,36 @@
 
     </div>
 
-    <!-- Dynamic Tooltip Container -->
-    <!-- Dynamic Tooltip Container -->
-    <div id="donut-tooltip"
-        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none transition-opacity duration-200"
-        style="opacity: 1; z-index: 1000;">
-        <span class="text-xs font-bold text-gray-400">Total</span>
-    </div>
-
     <script>
-        // v32.5 Tooltip Logic (Enhanced Color)
+        // v32.14 Sovereign Guard - Dynamic Centered Tooltip
         function showTT(name, value, weight, color) {
             const tt = document.getElementById('donut-tooltip');
+            const hmap = document.getElementById('heatmap-chart');
             if (tt) {
                 tt.innerHTML = `
-                    <div class='font-bold text-gray-900 text-[0.6rem] leading-tight'>${name}</div>
-                    <div class='font-bold text-sm' style='color: ${color}'>${weight}</div>
-                    <div class='text-[0.6rem] text-gray-400'>${value}</div>
+                    <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest leading-tight">${name}</span>
+                    <span class="text-xs font-bold text-gray-900 leading-none">${weight}</span>
+                    <span class="text-[0.6rem] font-mono text-gray-400 mt-1">${value}</span>
                 `;
+                tt.style.visibility = 'visible';
                 tt.style.opacity = 1;
             }
+            // Interaction Guard: Fade heatmap
+            if (hmap) hmap.style.opacity = '0.2';
         }
+
         function hideTT() {
             const tt = document.getElementById('donut-tooltip');
+            const hmap = document.getElementById('heatmap-chart');
             if (tt) {
-                tt.innerHTML = "<span class='text-xs font-bold text-gray-400'>Total</span>";
+                tt.innerHTML = `
+                    <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest leading-tight">Allocation</span>
+                    <span class="text-lg font-bold text-gray-900 leading-none">TOTAL</span>
+                    <span class="text-xs font-mono text-emerald-500 mt-1">100.0%</span>
+                `;
             }
+            // Reset interaction guard
+            if (hmap) hmap.style.opacity = '1';
         }
 
         // v30.6 DYNAMIC HEATMAP LOGIC
