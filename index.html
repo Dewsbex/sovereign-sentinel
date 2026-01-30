@@ -163,55 +163,6 @@
     <div class="main-grid mt-24"> <!-- Added margin-top for fixed header -->
 
 
-        <!-- 💹 PORTFOLIO PERFORMANCE / ACCOUNT VALUE - v31.6 -->
-        <div class="col-span-12 sentinel-card" style="border-top: 2px solid #3b82f6;">
-            <div class="flex justify-between items-start mb-4">
-                <div>
-                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1">COMMAND CENTER // ACCOUNT
-                        VALUE</h2>
-                    <div class="flex items-baseline gap-3">
-                        <span class="text-4xl font-bold tracking-tight text-gray-900 mono">£172,954.28</span>
-                        <span
-                            class="text-sm font-bold text-emerald-500 mono">
-                            +£22,389.76 (+15.45%)
-                        </span>
-                    </div>
-                </div>
-                <!-- TIMEFRAME SELECTORS -->
-                <div class="flex bg-gray-100 p-1 rounded-lg gap-1">
-                    <button onclick="updateTimeframe('1D')"
-                        class="tf-btn px-3 py-1 text-[0.6rem] font-bold rounded-md transition-all">1D</button>
-                    <button onclick="updateTimeframe('1W')"
-                        class="tf-btn px-3 py-1 text-[0.6rem] font-bold rounded-md transition-all">1W</button>
-                    <button onclick="updateTimeframe('1M')"
-                        class="tf-btn px-3 py-1 text-[0.6rem] font-bold rounded-md transition-all">1M</button>
-                    <button onclick="updateTimeframe('3M')"
-                        class="tf-btn px-3 py-1 text-[0.6rem] font-bold rounded-md transition-all">3M</button>
-                    <button onclick="updateTimeframe('YTD')"
-                        class="tf-btn px-3 py-1 text-[0.6rem] font-bold rounded-md transition-all">YTD</button>
-                    <button onclick="updateTimeframe('1Y')"
-                        class="tf-btn px-3 py-1 text-[0.6rem] font-bold rounded-md transition-all">1Y</button>
-                    <button onclick="updateTimeframe('MAX')"
-                        class="tf-btn active px-3 py-1 text-[0.6rem] font-bold rounded-md bg-white shadow-sm text-blue-600 transition-all">MAX</button>
-                </div>
-            </div>
-
-            <div id="performance-chart" style="min-height: 250px;"></div>
-
-            <style>
-                .tf-btn {
-                    color: #6b7280;
-                }
-
-                .tf-btn.active {
-                    background: white;
-                    color: #3b82f6;
-                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-                }
-            </style>
-        </div>
-
-        <!-- REMOVED OLD WEALTH ROW (Moved to Header) -->
 
 
         <!-- NEW ROW: HEATMAP + ASSET ALLOCATION -->
