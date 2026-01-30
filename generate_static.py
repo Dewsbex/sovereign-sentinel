@@ -47,7 +47,7 @@ def format_gbp(val):
     return format_gbp_truncate(val)
 
 def render():
-    print(f"Starting The Artist (Job B) [v31.1 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"Starting The Artist (Job B) [v31.3 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
     
     # 1. Load Data
     state = load_state()
@@ -101,14 +101,16 @@ def render():
             'x': h.get('Ticker', 'N/A'),
             'y': truncate_decimal(val, 2),
             'val_pct': truncate_decimal(pct, 4),
-            'company_name': h.get('Ticker', 'N/A'),
+            'company_name': h.get('Company', h.get('Ticker', 'N/A')),  # v31.3: Use actual company name
             'shares_held': f"{truncate_decimal(safe_val(h.get('Shares')), 4):,.4f}",
             'formatted_value': format_gbp_truncate(val),
             'formatted_pl_gbp': f"{'+' if pnl >= 0 else ''}{format_gbp_truncate(pnl)}",
             'formatted_pl_pct': f"({truncate_decimal(pct*100, 2):+.2f}%)",
             'price_avg': truncate_decimal(safe_val(h.get('Avg_Price')), 2),
             'price_cur': truncate_decimal(safe_val(h.get('Price')), 2),
-            'currency': h.get('Currency', 'USD' if "_US_" in h.get('Ticker', '') else 'GBP')
+            'currency': h.get('Currency', 'USD' if "_US_" in h.get('Ticker', '') else 'GBP'),
+            'pl_per_share_gbp': truncate_decimal(safe_val(h.get('PL_Per_Share_GBP')), 2),  # v31.3
+            'pl_per_share_pct': truncate_decimal(safe_val(h.get('PL_Per_Share_Pct')), 2)   # v31.3
         })
 
     # 4. Fortress Table
@@ -205,7 +207,7 @@ def render():
         },
         
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
-        'version': "v31.2 Platinum"
+        'version': "v31.3 Platinum"
     }
 
     # 7. Rendering Logic

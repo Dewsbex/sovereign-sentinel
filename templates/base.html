@@ -620,7 +620,16 @@
                 },
                 formatter: function (text, op) {
                     let p = op.w.config.series[0].data[op.dataPointIndex];
-                    return [text, p.custom_main, p.custom_sub];
+                    // v31.3: Show ticker, company name, and P/L per share
+                    let plSign = p.pl_per_share_gbp >= 0 ? '+' : '';
+                    let currency = p.currency || 'GBP';
+                    let plGbp = `${plSign}${currency} ${Math.abs(p.pl_per_share_gbp).toFixed(2)}`;
+                    let plPct = `(${plSign}${p.pl_per_share_pct.toFixed(2)}%)`;
+                    return [
+                        text,                    // Line 1: Ticker
+                        p.company_name,          // Line 2: Company name
+                        `${plGbp} ${plPct}`      // Line 3: P/L per share
+                    ];
                 }
             },
             tooltip: {
@@ -629,7 +638,8 @@
                     var plColorClass = data.val_pct >= 0 ? "text-emerald-600" : "text-rose-600";
                     return `
                         <div class="p-2 bg-white border border-gray-200 shadow-lg rounded text-xs font-mono">
-                            <div class="font-bold text-gray-900 border-b border-gray-100 pb-1 mb-1">${data.x} - ${data.company_name}</div>
+                            <div class="font-bold text-gray-900 border-b border-gray-100 pb-1 mb-1">${data.company_name}</div>
+                            <div class="text-xs text-gray-500 mb-2">${data.x}</div>
                             <div class="text-gray-600">Price: <span class="font-bold">${data.currency || ''} ${data.price_cur}</span> (Avg: ${data.price_avg})</div>
                             <div class="text-gray-600">Shares Held: <span class="font-bold">${data.shares_held}</span></div>
                             <div class="text-gray-600">Total Value: <span class="font-bold">${data.formatted_value}</span></div>
