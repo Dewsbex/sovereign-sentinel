@@ -235,16 +235,6 @@ def render():
         with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
             f.write(output_html)
             
-        # v32.6: Synchronized G: Drive Deployment
-        g_drive_path = r"G:\My Drive\index.html"
-        try:
-            with open(g_drive_path, 'w', encoding='utf-8') as f:
-                f.write(output_html)
-            print(f"      [OK] Synced to G: Drive: {g_drive_path}")
-        except Exception as ge:
-            # Silent fail if G: Drive not mounted
-            pass
-
         print(f"      [SUCCESS] Dashboard written to {OUTPUT_FILE} ({len(output_html)} bytes)")
         
     except Exception as e:
