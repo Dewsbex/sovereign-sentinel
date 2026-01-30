@@ -156,6 +156,8 @@ def render():
             'status': s.get('status', 'WATCH'),
             'last_updated': datetime.now().strftime('%H:%M'),
             'is_buy_signal': s.get('status') == 'BUY NOW',
+            'hypothesis': s.get('hypothesis', 'No intelligence available.'),
+            'source': s.get('source', 'System Default'),
             # For sniper_architect block
             'tier': s.get('tier', '2'),
             'limit_price': truncate_decimal(safe_val(s.get('target_price')), 2),
@@ -182,7 +184,7 @@ def render():
             print(f"      [WARN] History log load failed: {e}")
 
     context = {
-        'version': "v31.6 Platinum",
+        'version': "v32.2 Platinum",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
