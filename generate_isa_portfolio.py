@@ -70,8 +70,9 @@ def update_history_log(total_value):
 def backfill_history(holdings, cash, fx_rate):
     """Generates 1Y of simulated history based on current holdings."""
     log_path = "data/history_log.json"
-    # Only backfill if we have no history
-    if os.path.exists(log_path):
+    
+    # We allow backfill if file doesn't exist OR is very small (likely Just current point)
+    if os.path.exists(log_path) and os.path.getsize(log_path) > 1000:
         return
 
     print("[>] History log missing. Generating 1Y Bionic History...")
@@ -216,11 +217,14 @@ def run_audit():
         json.dump(state, f, indent=2)
     print("[OK] live_state.json saved successfully.")
     
-    # 5. HISTORY ENGINE (v31.6)
+    # 5. HISTORY ENGINE (v31.7)
     total_val = safe_float(summary.get('totalValue'))
-    update_history_log(total_val)
-    if not os.path.exists("data/history_log.json") or os.path.getsize("data/history_log.json") < 100:
+    
+    # Backfill first if needed
+    if not os.path.exists("data/history_log.json") or os.path.getsize("data/history_log.json") < 1000:
         backfill_history(processed_holdings, safe_float(summary.get('cash', {}).get('availableToTrade')), fx_rate)
+        
+    update_history_log(total_val)
 
 if __name__ == "__main__":
     run_audit()
