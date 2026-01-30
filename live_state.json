@@ -1,0 +1,221 @@
+{
+  "meta": {
+    "version": "v31.1",
+    "timestamp": "2026-01-30 01:10:37",
+    "fx_rate": 1.3769742250442505
+  },
+  "account": {
+    "id": 31785628,
+    "currency": "GBP",
+    "totalValue": 173352.61,
+    "cash": {
+      "availableToTrade": 24821.72,
+      "reservedForOrders": 11617.29,
+      "inPies": 0
+    },
+    "investments": {
+      "currentValue": 136913.6,
+      "totalCost": 140145.96,
+      "realizedProfitLoss": 26122.63,
+      "unrealizedProfitLoss": -3232.36
+    }
+  },
+  "holdings": [
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 190.0,
+      "Price": 54.28,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 10313.2
+    },
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 102.36965673,
+      "Price": 6849.0,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 701129.77894377
+    },
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 1000.0,
+      "Price": 265.7,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 265700.0
+    },
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 275.36311,
+      "Price": 0.0012,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 0.330435732
+    },
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 100.0,
+      "Price": 4327.0,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 432700.0
+    },
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 111.0,
+      "Price": 32.84,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 3645.2400000000002
+    },
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 119.1502945,
+      "Price": 179.82,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 21425.60595699
+    },
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 100.0,
+      "Price": 76.54,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 7654.000000000001
+    },
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 66.95260406,
+      "Price": 329.57,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 22065.569720054198
+    },
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 190.0,
+      "Price": 83.11,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 15790.9
+    },
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 92.0,
+      "Price": 214.04,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 19691.68
+    },
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 108.0,
+      "Price": 152.22,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 16439.76
+    },
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 167.83705587,
+      "Price": 112.09,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 18812.855592468302
+    },
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 175.0,
+      "Price": 73.82,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 12918.499999999998
+    },
+    {
+      "Ticker": "UNKNOWN",
+      "Shares": 1406.16463623,
+      "Price": 14.52,
+      "Avg_Price": 0,
+      "PL": 0,
+      "FX_Impact": 0.0,
+      "Tier": "2",
+      "Value": 20417.5105180596
+    }
+  ],
+  "sniper": [
+    {
+      "t212_ticker": "MSFT_US_EQ",
+      "yahoo_ticker": "MSFT",
+      "target_price": 420.0,
+      "tier": "1+ (Cyborg)",
+      "expected_growth": 0,
+      "name": "MSFT_US_EQ",
+      "live_price": NaN,
+      "distance_pct": 0.0,
+      "status": "UNKNOWN"
+    },
+    {
+      "t212_ticker": "GOOGL_US_EQ",
+      "yahoo_ticker": "GOOGL",
+      "target_price": 170.0,
+      "tier": "1+ (Cyborg)",
+      "expected_growth": 0,
+      "name": "GOOGL_US_EQ",
+      "live_price": NaN,
+      "distance_pct": 0.0,
+      "status": "UNKNOWN"
+    },
+    {
+      "t212_ticker": "LGEN_UK_EQ",
+      "yahoo_ticker": "LGEN.L",
+      "target_price": 240.0,
+      "tier": "1 (Sleeper)",
+      "expected_growth": 0,
+      "name": "LGEN_UK_EQ",
+      "live_price": NaN,
+      "distance_pct": 0.0,
+      "status": "UNKNOWN"
+    },
+    {
+      "t212_ticker": "RIO_UK_EQ",
+      "yahoo_ticker": "RIO.L",
+      "target_price": 4800.0,
+      "tier": "1 (Sleeper)",
+      "expected_growth": 0,
+      "name": "RIO_UK_EQ",
+      "live_price": NaN,
+      "distance_pct": 0.0,
+      "status": "UNKNOWN"
+    }
+  ]
+}

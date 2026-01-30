@@ -4,6 +4,8 @@ import json
 import os
 import base64
 from datetime import datetime
+from dotenv import load_dotenv
+load_dotenv()
 from sovereign_architect import SovereignArchitect, SniperScope
 
 # --- CONFIGURATION ---
@@ -23,7 +25,7 @@ WATCHLIST_DATA = [
 def get_headers():
     if not API_KEY:
         # This will show in GitHub Action logs if it fails
-        raise ValueError("❌ CRITICAL: No API Key found. Check Repo Secrets.")
+        raise ValueError("[!] CRITICAL: No API Key found. Check Repo Secrets.")
     
     # Handle keys that don't need a secret (older keys) vs new ones
     if API_SECRET:
@@ -38,35 +40,35 @@ def get_headers():
     }
 
 def run_audit():
-    print(f"🚀 Sentinel v31.1: Starting Audit...")
+    print(f"[>] Sentinel v31.1: Starting Audit...")
     
     # 1. EXTERNAL RADAR (SniperScope)
     sniper = SniperScope(WATCHLIST_DATA)
     df_sniper, fx_rate = sniper.scan_targets()
-    print(f"✅ FX Rate (GBP/USD): {fx_rate:.4f}")
+    print(f"[OK] FX Rate (GBP/USD): {fx_rate:.4f}")
     
     # 2. INTERNAL RADAR (T212 API)
     try:
         headers = get_headers()
         
         # Fetch Positions
-        print("📡 Fetching Positions...")
+        print("[>] Fetching Positions...")
         r_pos = requests.get(f"{BASE_URL}/positions", headers=headers)
         if r_pos.status_code == 401:
-            print("❌ Authentication Failed. Key is invalid.")
+            print("[!] Authentication Failed. Key is invalid.")
             return
         elif r_pos.status_code != 200:
-            print(f"❌ API Error: {r_pos.text}")
+            print(f"[!] API Error: {r_pos.text}")
             return
         positions = r_pos.json()
         
         # Fetch Cash Summary
-        print("📡 Fetching Account Summary...")
+        print("[>] Fetching Account Summary...")
         r_cash = requests.get(f"{BASE_URL}/account/summary", headers=headers)
         summary = r_cash.json()
         
     except Exception as e:
-        print(f"❌ Connection Error: {e}")
+        print(f"[!] Connection Error: {e}")
         return
 
     # 3. COMPUTATION (Architect)
@@ -113,7 +115,7 @@ def run_audit():
     # v31.1: Saving to root as per YAML preference
     with open("live_state.json", "w") as f:
         json.dump(state, f, indent=2)
-    print("✅ live_state.json saved successfully.")
+    print("[OK] live_state.json saved successfully.")
 
 if __name__ == "__main__":
     run_audit()
