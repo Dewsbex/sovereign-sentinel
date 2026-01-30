@@ -53,6 +53,9 @@ def run_audit():
     holdings = []
 
     print(f"[>] Syncing metadata for {len(pos_data)} assets...")
+    if len(pos_data) > 0:
+        print(f"[DEBUG] First Position Keys: {list(pos_data[0].keys())}")
+        print(f"[DEBUG] First Position Sample: {pos_data[0]}")
 
     for p in pos_data:
         ticker = p.get('ticker', 'UNKNOWN')
