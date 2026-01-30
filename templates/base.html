@@ -283,7 +283,14 @@
             <!-- ASSET ALLOCATION (1/3 Width) -->
             <div class="sentinel-card">
                 <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-2">📊 ASSET ALLOCATION</h2>
-                <div id="allocation-chart" style="min-height: 350px;"></div>
+                <div class="flex items-center justify-center p-4">
+                    <div class="w-48 h-48 relative">
+                        {{ allocation_donut | safe }}
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <span class="text-xs font-bold text-gray-400 opacity-0">Total</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
