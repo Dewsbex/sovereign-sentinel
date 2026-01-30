@@ -191,7 +191,7 @@ def backfill_history(holdings, cash, fx_rate):
         print(f"[WARN] Backfill failed: {e}")
 
 def run_audit():
-    print(f"[>] Sentinel v32.8 Master: Starting Audit...")
+    print(f"[>] Sentinel v32.10 Master: Starting Audit...")
     
     # 0. KNOWLEDGE BRIDGE SCAN (v32.4)
     print("[>] Scanning Knowledge Base...")
@@ -209,6 +209,22 @@ def run_audit():
     sniper = SniperScope(WATCHLIST_DATA)
     df_sniper, fx_rate = sniper.scan_targets()
     print(f"[OK] FX Rate (GBP/USD): {fx_rate:.4f}")
+    
+    # v32.10: Apply Robust Metadata to Sniper List
+    if not df_sniper.empty:
+        def clean_sniper_name(row):
+            t = row.get('t212_ticker', row.get('ticker', ''))
+            # 1. Clean Ticker Display
+            clean_t = t.replace("_UK_EQ", "").replace("_US_EQ", "")
+            # 2. Try to get a better name if it's currently just the ticker
+            curr_name = row.get('name', t)
+            if curr_name == t or curr_name == clean_t or "_EQ" in curr_name:
+                # Basic cleaned ticker is better than raw
+                return clean_t
+            return curr_name
+
+        df_sniper['t212_ticker'] = df_sniper['t212_ticker'].apply(lambda x: x.replace("_UK_EQ", "").replace("_US_EQ", ""))
+        df_sniper['name'] = df_sniper.apply(clean_sniper_name, axis=1)
     
     # 2. INTERNAL RADAR (T212 API)
     try:
