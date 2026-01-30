@@ -249,8 +249,36 @@ def render():
         except Exception as e:
             print(f"      [WARN] History log load failed: {e}")
 
+    # v32.14 Sovereign Guard logic: Legend & Invested Funds Weight
+    total_invested = total_wealth - cash_dry - blocked
+    if total_invested <= 0:
+        total_invested = sum(h.get('Value_GBP', h.get('Value', 0)) for h in holdings)
+        
+    legend_html = ""
+    # Sort holdings by value for legend
+    sorted_holdings = sorted(holdings, key=lambda x: x.get('Value_GBP', x.get('Value', 0)), reverse=True)
+    
+    for h in sorted_holdings:
+        val = safe_val(h.get('Value_GBP', h.get('Value', 0)))
+        ticker = h.get('Ticker', 'N/A')
+        weight_invested = (val / total_invested * 100) if total_invested > 0 else 0
+        
+        # Color mapping (simple circles for now)
+        legend_html += f"""
+        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
+            <div class="flex items-center gap-2">
+                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
+                <span class="font-bold text-gray-700">{ticker}</span>
+            </div>
+            <div class="flex gap-3">
+                <span class="text-gray-400">{weight_invested:.1f}%</span>
+                <span class="font-mono font-bold text-gray-800">£{val:,.2f}</span>
+            </div>
+        </div>
+        """
+
     context = {
-        'version': "v32.11 Platinum",
+        'version': "v32.14 Platinum",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
@@ -260,6 +288,7 @@ def render():
         'pending_cash_str': format_gbp_truncate(blocked),
         'env': meta.get('env', 'LIVE'),
         'allocation_donut': donut_chart_svg,
+        'legend_html': legend_html, # v32.14 Legend
         'holdings': holdings,
         'fortress_holdings': fortress_display,
         'sniper_architect': sniper_display,

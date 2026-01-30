@@ -12,7 +12,7 @@ BASE_URL = "https://live.trading212.com/api/v0/equity"
 
 
 def run_audit():
-    print("[>] Sentinel v32.13: Tooltip Refinement...")
+    print("[>] Sentinel v32.14: Sovereign Guard Re-Build...")
     if not API_KEY or not API_SECRET:
         print("[ERROR] Credentials (Key or Secret) Missing!")
         return
@@ -50,50 +50,52 @@ def run_audit():
     total_value_gbp = 0
     holdings = []
 
+    # helper for v32.14 Sovereign Guard (Normalization Fix)
+    def normalize_price(raw_val, ticker):
+        if "_UK_EQ" in ticker:
+            return float(raw_val) / 100.0
+        return float(raw_val)
+
     for p in pos_data:
-        # v32.9: Parse Nested API Structure
+        # v32.14: Precise Schema Mapping
         instr = p.get('instrument', {})
         wallet = p.get('walletImpact', {})
-        
         raw_ticker = instr.get('ticker', 'UNKNOWN')
-        name = instr.get('name', raw_ticker) # Use API name, robust fallback
+        name = instr.get('name', raw_ticker)
         
         # 1. Ticker Cleaning
         ticker_clean = raw_ticker.replace("_US_EQ", "").replace("_UK_EQ", "").replace("l_EQ", "").replace("L_EQ", "")
         
-        # 2. Value & PL (Use WalletImpact for canonical GBP)
-        # API auto-converts to Account Currency (GBP). Trust the API.
-        val_gbp = wallet.get('currentValue', 0.0)
-        pl_gbp = wallet.get('unrealizedProfitLoss', 0.0)
-        
-        # 3. Price Handling (Display Only)
-        # API returns 'currentPrice' in Instrument Currency (e.g. USD or Pence)
-        raw_price = p.get('currentPrice', 0.0)
-        
-        # Sovereign Guard Logic: For UK stocks, price is Pence. 
-        # We want to display £5.40 not 540p in some contexts, or just keep raw.
-        # But 'Price_GBP' logic suggests we want implied price in pounds.
-        # Implied Price GBP = Value GBP / Quantity
+        # 2. Manual Normalization (Sovereign Guard Rule)
         qty = p.get('quantity', 0.0)
-        price_gbp = (val_gbp / qty) if qty > 0 else 0.0
+        raw_price = p.get('currentPrice', 0.0)
+        price_gbp = normalize_price(raw_price, raw_ticker)
+        
+        # Calculate Values based on normalized price
+        val_gbp = price_gbp * qty
+        
+        # Calculate P/L manually to ensure consistency with normalized price
+        avg_price_raw = p.get('averagePricePaid', 0.0)
+        avg_price_gbp = normalize_price(avg_price_raw, raw_ticker)
+        pl_gbp = (price_gbp - avg_price_gbp) * qty
         
         total_value_gbp += val_gbp
 
         holdings.append({
             "Ticker": ticker_clean,
             "Name": name,
-            "Value_GBP": val_gbp,   # Canonical GBP from API
-            "Value": val_gbp,       # Legacy compat
-            "Price_GBP": price_gbp, # Implied GBP Price
-            "Price": raw_price,     # Raw Instrument Price (e.g. $150 or 540p)
-            "PL_GBP": pl_gbp,       # Canonical PL from API
-            "PL": pl_gbp,           # Legacy compat
+            "Value_GBP": val_gbp,   
+            "Value": val_gbp,       
+            "Price_GBP": price_gbp, 
+            "Price": raw_price,     
+            "PL_GBP": pl_gbp,       
+            "PL": pl_gbp,           
             "Shares": qty,
-            "Currency": instr.get('currency', 'GBP'), # Instrument Currency
-            "FX_Impact": wallet.get('fxImpact', 0.0)  # Bonus Data
+            "Currency": instr.get('currency', 'GBP'), 
+            "FX_Impact": wallet.get('fxImpact', 0.0)
         })
 
-    # Calculate Weights after total is known
+    # Calculate Weights
     for h in holdings:
         h["Weight_Pct"] = (h["Value_GBP"] / total_value_gbp * 100) if total_value_gbp > 0 else 0
         h["Weight"] = h["Weight_Pct"]
@@ -119,7 +121,7 @@ def run_audit():
         # Check if anything to commit
         status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True).stdout
         if status:
-            subprocess.run(["git", "commit", "-m", "v32.13 Platinum - Heatmap Tooltip Refinement"], check=True)
+            subprocess.run(["git", "commit", "-m", "v32.14 Platinum - Sovereign Guard Re-Build"], check=True)
             subprocess.run(["git", "push"], check=True)
             print("[SUCCESS] Deployment Handled by Antigravity.")
         else:
