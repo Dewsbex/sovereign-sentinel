@@ -154,6 +154,25 @@
             pointer-events: none;
         }
 
+        /* v32.7 LIVE PULSE */
+        @keyframes pulse-green {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        .live-badge {
+            animation: pulse-green 2s infinite;
+        }
+
         .chip-container:hover .hypothesis-card {
             visibility: visible;
             opacity: 1;
