@@ -14,7 +14,8 @@ def run_audit():
         print("[ERROR] T212_API_KEY Missing!")
         return
 
-    headers = {"Authorization": f"Basic {base64.b64encode(f'{API_KEY}:'.encode()).decode()}"}
+    # v32.4 Fix: Auth Method Trial (Direct Key)
+    headers = {"Authorization": API_KEY}
     
     try:
         # v32.4 Fix: Correct Endpoints & Debug
