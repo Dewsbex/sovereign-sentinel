@@ -46,6 +46,70 @@ def format_gbp(val):
     """Legacy function - use format_gbp_truncate for new code."""
     return format_gbp_truncate(val)
 
+# v32.12: SVG Donut Chart Engine
+def generate_donut_chart(holdings):
+    if not holdings: return ""
+    
+    # 1. Calculate Angles
+    total_val = sum(h['Value'] for h in holdings)
+    if total_val == 0: return ""
+    
+    # Sort for aesthetics (largest first)
+    sorted_holdings = sorted(holdings, key=lambda x: x['Value'], reverse=True)
+    
+    # SVG Config
+    cx, cy, r = 100, 100, 80
+    stroke_width = 25
+    
+    start_angle = 0
+    svg_paths = []
+    
+    # Color Palette (Vibrant & Distinct)
+    colors = [
+        "#37E6B0", "#FF4B4B", "#3B82F6", "#F59E0B", "#10B981", 
+        "#6366F1", "#EC4899", "#8B5CF6", "#14B8A6", "#F97316"
+    ]
+    
+    for i, h in enumerate(sorted_holdings):
+        val = h['Value']
+        pct = val / total_val
+        
+        # Minimum slice for visibility (0.5%)
+        if pct < 0.005: continue
+        
+        angle = pct * 360
+        end_angle = start_angle + angle
+        
+        # Calculate large arc flag
+        large_arc_flag = 1 if angle > 180 else 0
+        
+        # Coords
+        x1 = cx + r * math.cos(math.radians(start_angle - 90))
+        y1 = cy + r * math.sin(math.radians(start_angle - 90))
+        x2 = cx + r * math.cos(math.radians(end_angle - 90))
+        y2 = cy + r * math.sin(math.radians(end_angle - 90))
+        
+        color = colors[i % len(colors)]
+        
+        # Tooltip Content
+        tooltip = f"{h.get('Company', h.get('Ticker'))}: {truncate_decimal(pct*100, 1)}%"
+        
+        path_d = f"M {x1} {y1} A {r} {r} 0 {large_arc_flag} 1 {x2} {y2}"
+        
+        # Add Path
+        svg_paths.append(f'<path d="{path_d}" stroke="{color}" stroke-width="{stroke_width}" fill="none" class="donut-segment"><title>{tooltip}</title></path>')
+        
+        start_angle = end_angle
+
+    svg_content = f"""
+    <svg viewBox="0 0 200 200" class="w-full h-full transform -rotate-90">
+        <circle cx="100" cy="100" r="80" stroke="#f3f4f6" stroke-width="25" fill="none" />
+        {''.join(svg_paths)}
+        <text x="100" y="100" text-anchor="middle" dy="0.3em" class="text-[0.4rem]" fill="#111" transform="rotate(90 100 100)">Invested</text>
+    </svg>
+    """
+    return svg_content
+
 def render():
     print(f"Starting The Artist (Job B) [v31.6 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
     
@@ -177,6 +241,9 @@ def render():
     tax_end = datetime(now.year + (1 if now.month > 4 or (now.month == 4 and now.day > 5) else 0), 4, 5)
     days_to_tax = (tax_end - now).days
 
+    # v32.12: Generate Allocation Oracle Chart
+    donut_chart_svg = generate_donut_chart(holdings)
+
     # v31.6 Account History Loading
     history_log = []
     log_path = "data/history_log.json"
@@ -189,7 +256,7 @@ def render():
             print(f"      [WARN] History log load failed: {e}")
 
     context = {
-        'version': "v32.11 Platinum",
+        'version': "v32.12 Platinum",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
