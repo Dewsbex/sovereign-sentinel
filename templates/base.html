@@ -211,38 +211,6 @@
             text-align: right;
             font-weight: bold;
         }
-
-        /* v32.8 Sovereign Guard Patch CSS */
-        .chart-container {
-            position: relative;
-            width: 100%;
-            /* Adapts to container */
-            margin: 0 auto;
-        }
-
-        /* Force the tooltip into the donut hole */
-        .chart-tooltip {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            /* Centers the box exactly */
-            z-index: 1000;
-            pointer-events: none;
-            /* Prevents overlap from blocking clicks */
-            text-align: center;
-            opacity: 0;
-            /* Hidden by default */
-            transition: opacity 0.2s;
-        }
-
-        /* Restore the Legend Grid */
-        .legend-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 20px;
-        }
     </style>
 </head>
 
@@ -315,15 +283,13 @@
             <!-- ASSET ALLOCATION (1/3 Width) -->
             <div class="sentinel-card">
                 <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-2">📊 ASSET ALLOCATION</h2>
-                <div class="flex flex-col items-center justify-center p-4">
-                    <div class="w-48 h-48 relative chart-container">
+                <div class="flex items-center justify-center p-4">
+                    <div class="w-48 h-48 relative">
                         {{ allocation_donut | safe }}
                         <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <span class="text-xs font-bold text-gray-400 opacity-0">Total</span>
                         </div>
                     </div>
-                    <!-- v32.8 Legend -->
-                    {{ legend_html | safe }}
                 </div>
             </div>
         </div>
@@ -555,7 +521,9 @@
 
     <!-- Dynamic Tooltip Container -->
     <!-- Dynamic Tooltip Container -->
-    <div id="donut-tooltip" class="chart-tooltip">
+    <div id="donut-tooltip"
+        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none transition-opacity duration-200"
+        style="opacity: 1; z-index: 1000;">
         <span class="text-xs font-bold text-gray-400">Total</span>
     </div>
 
