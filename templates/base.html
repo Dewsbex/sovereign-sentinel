@@ -693,18 +693,20 @@
             let filteredData = historyData;
 
             if (timeframe !== 'MAX') {
-                let msLimit = 0;
-                if (timeframe === '1D') msLimit = 24 * 60 * 60 * 1000;
-                else if (timeframe === '1W') msLimit = 7 * 24 * 60 * 60 * 1000;
-                else if (timeframe === '1M') msLimit = 30 * 24 * 60 * 60 * 1000;
-                else if (timeframe === '3M') msLimit = 90 * 24 * 60 * 60 * 1000;
-                else if (timeframe === '1Y') msLimit = 365 * 24 * 60 * 60 * 1000;
+                if (timeframe === '1D') {
+                    const d = new Date();
+                    d.setHours(0, 0, 0, 0);
+                    cutoff = d.getTime();
+                }
+                else if (timeframe === '1W') cutoff = now - (7 * 24 * 60 * 60 * 1000);
+                else if (timeframe === '1M') cutoff = now - (30 * 24 * 60 * 60 * 1000);
+                else if (timeframe === '3M') cutoff = now - (90 * 24 * 60 * 60 * 1000);
+                else if (timeframe === '1Y') cutoff = now - (365 * 24 * 60 * 60 * 1000);
                 else if (timeframe === 'YTD') {
                     const startOfYear = new Date(new Date().getFullYear(), 0, 1);
-                    msLimit = now - startOfYear.getTime();
+                    cutoff = startOfYear.getTime();
                 }
 
-                const cutoff = now - msLimit;
                 filteredData = historyData.filter(d => d[0] >= cutoff);
             }
 
@@ -728,12 +730,14 @@
                     }
                 },
                 stroke: { curve: 'smooth', width: 3 },
+                markers: { size: 0, hover: { size: 6, strokeWidth: 0 } },
                 dataLabels: { enabled: false },
                 xaxis: {
                     type: 'datetime',
                     labels: { style: { colors: '#9ca3af', fontFamily: 'JetBrains Mono' } },
                     axisBorder: { show: false },
-                    axisTicks: { show: false }
+                    axisTicks: { show: false },
+                    crosshairs: { show: true, stroke: { color: '#3b82f6', dashArray: 4 } }
                 },
                 yaxis: {
                     labels: {
