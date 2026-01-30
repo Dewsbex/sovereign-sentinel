@@ -127,7 +127,7 @@ def render():
             'ticker': h.get('Ticker', 'N/A'),
             'book_cost': truncate_decimal(val - pnl, 2),
             'tier': tier,
-            'weight_current': truncate_decimal(weight, 4),
+            'weight_current': truncate_decimal(safe_val(h.get('Weight')) / 100.0, 4) if h.get('Weight') else truncate_decimal(weight, 4),
             'weight_target': truncate_decimal(target_weight, 4),
             'real_pl': truncate_decimal(pnl, 2),
             'action': 'HOLD', 
@@ -184,7 +184,7 @@ def render():
             print(f"      [WARN] History log load failed: {e}")
 
     context = {
-        'version': "v32.2 Platinum",
+        'version': "v32.3 Platinum",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",

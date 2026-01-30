@@ -180,7 +180,25 @@ def run_audit():
         print(f"[!] Connection Error: {e}")
         return
 
-    # 3. COMPUTATION (Architect)
+    # 3. BATCH METADATA (v32.3)
+    print("📡 Fetching Company Metadata...")
+    holdings_tickers = [p.get('instrument', {}).get('ticker') for p in positions]
+    yf_tickers = [t.replace("_UK_EQ", ".L").replace("_US_EQ", "") for t in holdings_tickers if t]
+    
+    company_names = {}
+    try:
+        # Batch fetch for speed
+        info_data = yf.Tickers(" ".join(yf_tickers))
+        for t_raw, t_yf in zip(holdings_tickers, yf_tickers):
+            try:
+                name = info_data.tickers[t_yf].info.get('shortName', t_raw)
+                company_names[t_raw] = name
+            except:
+                company_names[t_raw] = t_raw
+    except Exception as e:
+        print(f"⚠️ Metadata Error: {e}")
+
+    # 4. COMPUTATION (Architect)
     arch = SovereignArchitect(fx_rate)
     # Process Holdings
     processed_holdings = []
@@ -202,12 +220,16 @@ def run_audit():
         pl_per_share_gbp = price - avg
         pl_per_share_pct = ((price - avg) / avg) * 100 if avg > 0 else 0.0
         
+        # v32.3: Allocation Metadata
+        name = company_names.get(ticker, company_name)
+        val_gbp = value_gbp
+        
         is_us = "_US_EQ" in ticker
         tier = arch.get_tier(ticker)
         
         processed_holdings.append({
             "Ticker": ticker.replace("_US_EQ", "").replace("_UK_EQ", ""),
-            "Company": company_name,  # v31.3: Add company name
+            "Company": name,  # v32.3: Use fetched shortName
             "Shares": shares,
             "Price": price,
             "Avg_Price": avg,
@@ -216,14 +238,21 @@ def run_audit():
             "Tier": tier,
             "Value": value_gbp,
             "Currency": instr.get('currency', 'USD' if is_us else 'GBP'),
-            "PL_Per_Share_GBP": pl_per_share_gbp,  # v31.3: P/L per share in £
-            "PL_Per_Share_Pct": pl_per_share_pct   # v31.3: P/L per share in %
+            "PL_Per_Share_GBP": pl_per_share_gbp,
+            "PL_Per_Share_Pct": pl_per_share_pct
         })
+
+    # v32.3: Weight Calculation and Sorting
+    total_val_p = sum([h['Value'] for h in processed_holdings])
+    for h in processed_holdings:
+        h['Weight'] = (h['Value'] / total_val_p) * 100 if total_val_p > 0 else 0
         
-    # 4. SAVE STATE (v32.2)
+    processed_holdings.sort(key=lambda x: x['Value'], reverse=True)
+        
+    # 4. SAVE STATE (v32.3)
     state = {
         "meta": {
-            "version": "v32.2 Platinum",
+            "version": "v32.3 Platinum",
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "fx_rate": fx_rate
         },
