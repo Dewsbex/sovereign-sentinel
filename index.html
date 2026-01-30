@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | v32.11 Platinum</title>
+    <title>SOVEREIGN SENTINEL | v32.8 Platinum (Fixed)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -211,6 +211,38 @@
             text-align: right;
             font-weight: bold;
         }
+
+        /* v32.8 Sovereign Guard Patch CSS */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            /* Adapts to container */
+            margin: 0 auto;
+        }
+
+        /* Force the tooltip into the donut hole */
+        .chart-tooltip {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* Centers the box exactly */
+            z-index: 1000;
+            pointer-events: none;
+            /* Prevents overlap from blocking clicks */
+            text-align: center;
+            opacity: 0;
+            /* Hidden by default */
+            transition: opacity 0.2s;
+        }
+
+        /* Restore the Legend Grid */
+        .legend-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 
@@ -222,7 +254,7 @@
         <div class="flex items-center gap-3">
             <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
             <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">SENTINEL_VIBE <span
-                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v32.11 Platinum</span>
+                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v32.8 Platinum (Fixed)</span>
             </h1>
         </div>
 
@@ -280,159 +312,159 @@
             <!-- ASSET ALLOCATION (1/3 Width) -->
             <div class="sentinel-card">
                 <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-2">📊 ASSET ALLOCATION</h2>
-                <div class="flex items-center justify-center p-4">
-                    <div class="w-48 h-48 relative">
+                <div class="flex flex-col items-center justify-center p-4">
+                    <div class="w-48 h-48 relative chart-container">
                         
     <svg viewBox="0 0 200 200" class="w-full h-full">
         <circle cx="100" cy="100" r="70" stroke="#f3f4f6" stroke-width="20" fill="none" />
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#4f46e5" stroke-width="22"
-                stroke-dasharray="49.28517417111247 439.822971502571"
+                stroke-dasharray="193.0623563399059 439.822971502571"
                 stroke-dashoffset="-0" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('Everest Group', '£16,198.72', '11.2%', '#4f46e5')"
+                onmouseover="showTT('Rio Tinto', '£689,766.75', '43.9%', '#4f46e5')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#10b981" stroke-width="22"
-                stroke-dasharray="47.03731881406207 439.822971502571"
-                stroke-dashoffset="-49.28517417111247" 
+                stroke-dasharray="122.48211079479307 439.822971502571"
+                stroke-dashoffset="-193.0623563399059" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('Nucor', '£15,459.91', '10.7%', '#10b981')"
+                onmouseover="showTT('British American Tobacco', '£437,600.00', '27.8%', '#10b981')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#ef4444" stroke-width="22"
-                stroke-dasharray="44.981538697859214 439.822971502571"
-                stroke-dashoffset="-96.32249298517453" 
+                stroke-dasharray="74.20020011814363 439.822971502571"
+                stroke-dashoffset="-315.54446713469895" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('Cannae', '£14,784.23', '10.2%', '#ef4444')"
+                onmouseover="showTT('Legal & General', '£265,100.00', '16.9%', '#ef4444')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#f59e0b" stroke-width="22"
-                stroke-dasharray="43.39245304060789 439.822971502571"
-                stroke-dashoffset="-141.30403168303374" 
+                stroke-dasharray="6.2097770760629984 439.822971502571"
+                stroke-dashoffset="-389.7446672528426" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('Salesforce', '£14,261.94', '9.9%', '#f59e0b')"
+                onmouseover="showTT('Everest Group', '£22,186.08', '1.4%', '#f59e0b')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#8b5cf6" stroke-width="22"
-                stroke-dasharray="41.814077106907696 439.822971502571"
-                stroke-dashoffset="-184.69648472364162" 
+                stroke-dasharray="5.926555227998916 439.822971502571"
+                stroke-dashoffset="-395.9544443289056" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('EOG Resources', '£13,743.17', '9.5%', '#8b5cf6')"
+                onmouseover="showTT('Nucor', '£21,174.20', '1.3%', '#8b5cf6')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#ec4899" stroke-width="22"
-                stroke-dasharray="36.390454038083426 439.822971502571"
-                stroke-dashoffset="-226.5105618305493" 
+                stroke-dasharray="5.667532412921334 439.822971502571"
+                stroke-dashoffset="-401.8809995569045" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('Qualcomm', '£11,960.57', '8.3%', '#ec4899')"
+                onmouseover="showTT('Cannae', '£20,248.77', '1.3%', '#ec4899')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#06b6d4" stroke-width="22"
-                stroke-dasharray="36.38725937622868 439.822971502571"
-                stroke-dashoffset="-262.9010158686327" 
+                stroke-dasharray="5.467314813261981 439.822971502571"
+                stroke-dashoffset="-407.54853196982583" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('Corteva', '£11,959.52', '8.3%', '#06b6d4')"
+                onmouseover="showTT('Salesforce', '£19,533.44', '1.2%', '#06b6d4')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#4f46e5" stroke-width="22"
-                stroke-dasharray="35.22634968356594 439.822971502571"
-                stroke-dashoffset="-299.2882752448614" 
+                stroke-dasharray="5.268445350218231 439.822971502571"
+                stroke-dashoffset="-413.0158467830878" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('Netflix', '£11,577.96', '8.0%', '#4f46e5')"
+                onmouseover="showTT('EOG Resources', '£18,822.93', '1.2%', '#4f46e5')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#10b981" stroke-width="22"
-                stroke-dasharray="23.230972500673644 439.822971502571"
-                stroke-dashoffset="-334.51462492842734" 
+                stroke-dasharray="4.5850853497674935 439.822971502571"
+                stroke-dashoffset="-418.28429213330605" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('Bristol-Myers Squibb', '£7,635.40', '5.3%', '#10b981')"
+                onmouseover="showTT('Qualcomm', '£16,381.44', '1.0%', '#10b981')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#ef4444" stroke-width="22"
-                stroke-dasharray="20.986403081530973 439.822971502571"
-                stroke-dashoffset="-357.745597429101" 
+                stroke-dasharray="4.584682300774018 439.822971502571"
+                stroke-dashoffset="-422.86937748307355" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('Rio Tinto', '£6,897.67', '4.8%', '#ef4444')"
+                onmouseover="showTT('Corteva', '£16,380.00', '1.0%', '#ef4444')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#f59e0b" stroke-width="22"
-                stroke-dasharray="17.094027077711683 439.822971502571"
-                stroke-dashoffset="-378.73200051063196" 
+                stroke-dasharray="4.438409103558848 439.822971502571"
+                stroke-dashoffset="-427.4540597838476" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('Solventum', '£5,618.35', '3.9%', '#f59e0b')"
+                onmouseover="showTT('Netflix', '£15,857.40', '1.0%', '#f59e0b')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#8b5cf6" stroke-width="22"
-                stroke-dasharray="14.585548164016211 439.822971502571"
-                stroke-dashoffset="-395.82602758834366" 
+                stroke-dasharray="2.9270313570558235 439.822971502571"
+                stroke-dashoffset="-431.89246888740644" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('Danaher', '£4,793.88', '3.3%', '#8b5cf6')"
+                onmouseover="showTT('Bristol-Myers Squibb', '£10,457.60', '0.7%', '#8b5cf6')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#ec4899" stroke-width="22"
-                stroke-dasharray="13.314133596530356 439.822971502571"
-                stroke-dashoffset="-410.41157575235985" 
+                stroke-dasharray="2.153793058880102 439.822971502571"
+                stroke-dashoffset="-434.81950024446223" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('British American Tobacco', '£4,376.00', '3.0%', '#ec4899')"
+                onmouseover="showTT('Solventum', '£7,695.00', '0.5%', '#ec4899')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#06b6d4" stroke-width="22"
-                stroke-dasharray="8.065760549452005 439.822971502571"
-                stroke-dashoffset="-423.72570934889023" 
+                stroke-dasharray="1.8377354731637396 439.822971502571"
+                stroke-dashoffset="-436.97329330334236" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('Legal & General', '£2,651.00', '1.8%', '#06b6d4')"
+                onmouseover="showTT('Danaher', '£6,565.80', '0.4%', '#06b6d4')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
             <circle r="70" cx="100" cy="100" fill="transparent"
                 stroke="#4f46e5" stroke-width="22"
-                stroke-dasharray="8.031136500016785 439.822971502571"
-                stroke-dashoffset="-431.79146989834226" 
+                stroke-dasharray="1.0118964823882348 439.822971502571"
+                stroke-dashoffset="-438.8110287765061" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('Versant Media Group', '£2,639.62', '1.8%', '#4f46e5')"
+                onmouseover="showTT('Versant Media Group', '£3,615.27', '0.2%', '#4f46e5')"
                 onmouseout="hideTT()"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
@@ -444,6 +476,140 @@
                             <span class="text-xs font-bold text-gray-400 opacity-0">Total</span>
                         </div>
                     </div>
+                    <!-- v32.8 Legend -->
+                    
+    <div class="legend-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">RIO</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">477.1%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£689,766.75</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">BATS</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">302.7%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£437,600.00</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">LGEN</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">183.4%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£265,100.00</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">RE</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">15.3%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£22,186.08</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">NUE</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">14.6%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£21,174.20</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">CNNE</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">14.0%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£20,248.77</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">CRM</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">13.5%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£19,533.44</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">EOG</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">13.0%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£18,822.93</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">QCOM</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">11.3%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£16,381.44</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">CTVA</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">11.3%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£16,380.00</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">NFLX</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">11.0%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£15,857.40</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">BMY</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">7.2%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£10,457.60</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">SOLV</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">5.3%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£7,695.00</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">DHR</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">4.5%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£6,565.80</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">VSNTV</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">2.5%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£3,615.27</span>
+            </div>
+        </div>
+        
+        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
+            <span class="ticker" style="font-weight: bold; color: #374151;">QELL</span>
+            <div class="right-data">
+                <span class="weight" style="color: #6b7280; margin-right: 8px;">0.0%</span>
+                <span class="value" style="font-weight: bold; color: #37E6B0;">£0.17</span>
+            </div>
+        </div>
+        
+    </div>
+    
                 </div>
             </div>
         </div>
@@ -480,7 +646,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">BMY</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">Bristol-Myers Squibb</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £7157.12
+                                <div class="text-[0.5rem] text-neutral-400">Book: £9608.3
                                 </div>
                             </td>
                             <td class="p-4">
@@ -491,13 +657,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">5.3%</div>
+                                    <div class="text-gray-700">0.7%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-emerald-600">
-                                    £478.27
+                                    £849.29
                                 </span>
                             </td>
                             <td class="p-4">
@@ -531,7 +697,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">DHR</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">Danaher</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £4760.97
+                                <div class="text-[0.5rem] text-neutral-400">Book: £6545.99
                                 </div>
                             </td>
                             <td class="p-4">
@@ -542,13 +708,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">3.3%</div>
+                                    <div class="text-gray-700">0.4%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-emerald-600">
-                                    £32.9
+                                    £19.8
                                 </span>
                             </td>
                             <td class="p-4">
@@ -582,7 +748,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">RIO</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">Rio Tinto</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £4685.12
+                                <div class="text-[0.5rem] text-neutral-400">Book: £468512.64
                                 </div>
                             </td>
                             <td class="p-4">
@@ -593,13 +759,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">4.8%</div>
+                                    <div class="text-gray-700">43.9%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-emerald-600">
-                                    £2212.55
+                                    £221254.09
                                 </span>
                             </td>
                             <td class="p-4">
@@ -633,7 +799,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">LGEN</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">Legal & General</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £2598.0
+                                <div class="text-[0.5rem] text-neutral-400">Book: £259800.0
                                 </div>
                             </td>
                             <td class="p-4">
@@ -644,13 +810,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">1.8%</div>
+                                    <div class="text-gray-700">16.9%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-emerald-600">
-                                    £53.0
+                                    £5300.0
                                 </span>
                             </td>
                             <td class="p-4">
@@ -684,7 +850,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">QELL</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">Lilium</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £216.86
+                                <div class="text-[0.5rem] text-neutral-400">Book: £281.68
                                 </div>
                             </td>
                             <td class="p-4">
@@ -701,7 +867,7 @@
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-600">
-                                    £-216.74
+                                    £-281.52
                                 </span>
                             </td>
                             <td class="p-4">
@@ -735,7 +901,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">BATS</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">British American Tobacco</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £4202.72
+                                <div class="text-[0.5rem] text-neutral-400">Book: £420272.49
                                 </div>
                             </td>
                             <td class="p-4">
@@ -746,13 +912,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">3.0%</div>
+                                    <div class="text-gray-700">27.8%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-emerald-600">
-                                    £173.28
+                                    £17327.5
                                 </span>
                             </td>
                             <td class="p-4">
@@ -786,7 +952,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">VSNTV</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">Versant Media Group</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £2758.87
+                                <div class="text-[0.5rem] text-neutral-400">Book: £3691.82
                                 </div>
                             </td>
                             <td class="p-4">
@@ -797,13 +963,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">1.8%</div>
+                                    <div class="text-gray-700">0.2%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-600">
-                                    £-119.25
+                                    £-76.56
                                 </span>
                             </td>
                             <td class="p-4">
@@ -837,7 +1003,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">NUE</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">Nucor</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £12572.87
+                                <div class="text-[0.5rem] text-neutral-400">Book: £17009.14
                                 </div>
                             </td>
                             <td class="p-4">
@@ -848,13 +1014,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">10.7%</div>
+                                    <div class="text-gray-700">1.3%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-emerald-600">
-                                    £2887.04
+                                    £4165.04
                                 </span>
                             </td>
                             <td class="p-4">
@@ -888,7 +1054,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">SOLV</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">Solventum</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £5977.84
+                                <div class="text-[0.5rem] text-neutral-400">Book: £8044.73
                                 </div>
                             </td>
                             <td class="p-4">
@@ -899,13 +1065,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">3.9%</div>
+                                    <div class="text-gray-700">0.5%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-600">
-                                    £-359.49
+                                    £-349.73
                                 </span>
                             </td>
                             <td class="p-4">
@@ -939,7 +1105,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">RE</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">Everest Group</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £16994.16
+                                <div class="text-[0.5rem] text-neutral-400">Book: £22348.64
                                 </div>
                             </td>
                             <td class="p-4">
@@ -950,13 +1116,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">11.2%</div>
+                                    <div class="text-gray-700">1.4%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-600">
-                                    £-795.45
+                                    £-162.57
                                 </span>
                             </td>
                             <td class="p-4">
@@ -990,7 +1156,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">NFLX</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">Netflix</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £13122.62
+                                <div class="text-[0.5rem] text-neutral-400">Book: £17569.19
                                 </div>
                             </td>
                             <td class="p-4">
@@ -1001,13 +1167,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">8.0%</div>
+                                    <div class="text-gray-700">1.0%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-600">
-                                    £-1544.66
+                                    £-1711.8
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1041,7 +1207,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">CRM</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">Salesforce</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £16555.74
+                                <div class="text-[0.5rem] text-neutral-400">Book: £22352.95
                                 </div>
                             </td>
                             <td class="p-4">
@@ -1052,13 +1218,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">9.9%</div>
+                                    <div class="text-gray-700">1.2%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-600">
-                                    £-2293.81
+                                    £-2819.52
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1092,7 +1258,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">QCOM</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">Qualcomm</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £13502.75
+                                <div class="text-[0.5rem] text-neutral-400">Book: £18236.22
                                 </div>
                             </td>
                             <td class="p-4">
@@ -1103,13 +1269,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">8.3%</div>
+                                    <div class="text-gray-700">1.0%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-600">
-                                    £-1542.18
+                                    £-1854.79
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1143,7 +1309,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">EOG</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">EOG Resources</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £14267.17
+                                <div class="text-[0.5rem] text-neutral-400">Book: £19133.78
                                 </div>
                             </td>
                             <td class="p-4">
@@ -1154,13 +1320,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">9.5%</div>
+                                    <div class="text-gray-700">1.2%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-600">
-                                    £-524.0
+                                    £-310.86
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1194,7 +1360,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">CTVA</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">Corteva</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £11678.42
+                                <div class="text-[0.5rem] text-neutral-400">Book: £15736.77
                                 </div>
                             </td>
                             <td class="p-4">
@@ -1205,13 +1371,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">8.3%</div>
+                                    <div class="text-gray-700">1.0%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-emerald-600">
-                                    £281.1
+                                    £643.23
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1245,7 +1411,7 @@
                             <td class="p-4">
                                 <span class="font-bold text-gray-900">CNNE</span>
                                 <div class="text-[0.6rem] text-neutral-500 mt-1">Cannae</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £16498.7
+                                <div class="text-[0.5rem] text-neutral-400">Book: £22178.58
                                 </div>
                             </td>
                             <td class="p-4">
@@ -1256,13 +1422,13 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">10.2%</div>
+                                    <div class="text-gray-700">1.3%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-600">
-                                    £-1714.47
+                                    £-1929.82
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1349,9 +1515,7 @@
 
     <!-- Dynamic Tooltip Container -->
     <!-- Dynamic Tooltip Container -->
-    <div id="donut-tooltip"
-        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none transition-opacity duration-200"
-        style="opacity: 1; z-index: 1000;">
+    <div id="donut-tooltip" class="chart-tooltip">
         <span class="text-xs font-bold text-gray-400">Total</span>
     </div>
 
@@ -1376,7 +1540,7 @@
         }
 
         // v30.6 DYNAMIC HEATMAP LOGIC
-        const rawMapData = [{"x": "BMY", "y": 7635.4, "val_pct": 0.0668, "company_name": "Bristol-Myers Squibb", "shares_held": "190.0000", "formatted_value": "\u00a37,635.40", "formatted_pl_gbp": "+\u00a3478.27", "formatted_pl_pct": "(+6.68%)", "price_avg": 0.0, "price_cur": "\u00a340.19", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "DHR", "y": 4793.88, "val_pct": 0.0069, "company_name": "Danaher", "shares_held": "30.0000", "formatted_value": "\u00a34,793.88", "formatted_pl_gbp": "+\u00a332.91", "formatted_pl_pct": "(+0.69%)", "price_avg": 0.0, "price_cur": "\u00a3159.80", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RIO", "y": 6897.67, "val_pct": 0.4722, "company_name": "Rio Tinto", "shares_held": "102.3696", "formatted_value": "\u00a36,897.67", "formatted_pl_gbp": "+\u00a32,212.55", "formatted_pl_pct": "(+47.23%)", "price_avg": 0.0, "price_cur": "\u00a367.38", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "LGEN", "y": 2651.0, "val_pct": 0.0204, "company_name": "Legal & General", "shares_held": "1,000.0000", "formatted_value": "\u00a32,651.00", "formatted_pl_gbp": "+\u00a353.00", "formatted_pl_pct": "(+2.04%)", "price_avg": 0.0, "price_cur": "\u00a32.65", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QELL", "y": 0.12, "val_pct": -0.9995, "company_name": "Lilium", "shares_held": "275.3631", "formatted_value": "\u00a30.12", "formatted_pl_gbp": "\u00a3216.74", "formatted_pl_pct": "(-99.94%)", "price_avg": 0.0, "price_cur": "\u00a30.00", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "BATS", "y": 4376.0, "val_pct": 0.0412, "company_name": "British American Tobacco", "shares_held": "100.0000", "formatted_value": "\u00a34,376.00", "formatted_pl_gbp": "+\u00a3173.28", "formatted_pl_pct": "(+4.12%)", "price_avg": 0.0, "price_cur": "\u00a343.76", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "VSNTV", "y": 2639.62, "val_pct": -0.0433, "company_name": "Versant Media Group", "shares_held": "111.0000", "formatted_value": "\u00a32,639.62", "formatted_pl_gbp": "\u00a3119.25", "formatted_pl_pct": "(-4.32%)", "price_avg": 0.0, "price_cur": "\u00a323.78", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NUE", "y": 15459.91, "val_pct": 0.2296, "company_name": "Nucor", "shares_held": "119.1502", "formatted_value": "\u00a315,459.91", "formatted_pl_gbp": "+\u00a32,887.04", "formatted_pl_pct": "(+22.96%)", "price_avg": 0.0, "price_cur": "\u00a3129.75", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "SOLV", "y": 5618.35, "val_pct": -0.0602, "company_name": "Solventum", "shares_held": "100.0000", "formatted_value": "\u00a35,618.35", "formatted_pl_gbp": "\u00a3359.49", "formatted_pl_pct": "(-6.01%)", "price_avg": 0.0, "price_cur": "\u00a356.18", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RE", "y": 16198.72, "val_pct": -0.0469, "company_name": "Everest Group", "shares_held": "66.9526", "formatted_value": "\u00a316,198.72", "formatted_pl_gbp": "\u00a3795.45", "formatted_pl_pct": "(-4.68%)", "price_avg": 0.0, "price_cur": "\u00a3241.94", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NFLX", "y": 11577.96, "val_pct": -0.1178, "company_name": "Netflix", "shares_held": "190.0000", "formatted_value": "\u00a311,577.96", "formatted_pl_gbp": "\u00a31,544.66", "formatted_pl_pct": "(-11.77%)", "price_avg": 0.0, "price_cur": "\u00a360.94", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CRM", "y": 14261.94, "val_pct": -0.1386, "company_name": "Salesforce", "shares_held": "92.0000", "formatted_value": "\u00a314,261.94", "formatted_pl_gbp": "\u00a32,293.80", "formatted_pl_pct": "(-13.86%)", "price_avg": 0.0, "price_cur": "\u00a3155.02", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QCOM", "y": 11960.57, "val_pct": -0.1143, "company_name": "Qualcomm", "shares_held": "108.0000", "formatted_value": "\u00a311,960.57", "formatted_pl_gbp": "\u00a31,542.18", "formatted_pl_pct": "(-11.42%)", "price_avg": 0.0, "price_cur": "\u00a3110.75", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "EOG", "y": 13743.17, "val_pct": -0.0368, "company_name": "EOG Resources", "shares_held": "167.8370", "formatted_value": "\u00a313,743.17", "formatted_pl_gbp": "\u00a3524.00", "formatted_pl_pct": "(-3.67%)", "price_avg": 0.0, "price_cur": "\u00a381.88", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CTVA", "y": 11959.52, "val_pct": 0.024, "company_name": "Corteva", "shares_held": "225.0000", "formatted_value": "\u00a311,959.52", "formatted_pl_gbp": "+\u00a3281.10", "formatted_pl_pct": "(+2.41%)", "price_avg": 0.0, "price_cur": "\u00a353.15", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CNNE", "y": 14784.23, "val_pct": -0.104, "company_name": "Cannae", "shares_held": "1,406.1646", "formatted_value": "\u00a314,784.23", "formatted_pl_gbp": "\u00a31,714.47", "formatted_pl_pct": "(-10.39%)", "price_avg": 0.0, "price_cur": "\u00a310.51", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}];
+        const rawMapData = [{"x": "BMY", "y": 10457.6, "val_pct": 0.0883, "company_name": "Bristol-Myers Squibb", "shares_held": "190.0000", "formatted_value": "\u00a310,457.60", "formatted_pl_gbp": "+\u00a3849.30", "formatted_pl_pct": "(+8.84%)", "price_avg": 0.0, "price_cur": "\u00a355.04", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "DHR", "y": 6565.8, "val_pct": 0.003, "company_name": "Danaher", "shares_held": "30.0000", "formatted_value": "\u00a36,565.80", "formatted_pl_gbp": "+\u00a319.80", "formatted_pl_pct": "(+0.30%)", "price_avg": 0.0, "price_cur": "\u00a3218.86", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RIO", "y": 689766.74, "val_pct": 0.4722, "company_name": "Rio Tinto", "shares_held": "102.3696", "formatted_value": "\u00a3689,766.75", "formatted_pl_gbp": "+\u00a3221,254.10", "formatted_pl_pct": "(+47.22%)", "price_avg": 0.0, "price_cur": "\u00a36,738.00", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "LGEN", "y": 265100.0, "val_pct": 0.0204, "company_name": "Legal & General", "shares_held": "1,000.0000", "formatted_value": "\u00a3265,100.00", "formatted_pl_gbp": "+\u00a35,300.00", "formatted_pl_pct": "(+2.04%)", "price_avg": 0.0, "price_cur": "\u00a3265.10", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QELL", "y": 0.16, "val_pct": -0.9995, "company_name": "Lilium", "shares_held": "275.3631", "formatted_value": "\u00a30.17", "formatted_pl_gbp": "\u00a3281.51", "formatted_pl_pct": "(-99.94%)", "price_avg": 0.0, "price_cur": "\u00a30.00", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "BATS", "y": 437600.0, "val_pct": 0.0412, "company_name": "British American Tobacco", "shares_held": "100.0000", "formatted_value": "\u00a3437,600.00", "formatted_pl_gbp": "+\u00a317,327.51", "formatted_pl_pct": "(+4.12%)", "price_avg": 0.0, "price_cur": "\u00a34,376.00", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "VSNTV", "y": 3615.27, "val_pct": -0.0208, "company_name": "Versant Media Group", "shares_held": "111.0000", "formatted_value": "\u00a33,615.27", "formatted_pl_gbp": "\u00a376.55", "formatted_pl_pct": "(-2.07%)", "price_avg": 0.0, "price_cur": "\u00a332.57", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NUE", "y": 21174.19, "val_pct": 0.2448, "company_name": "Nucor", "shares_held": "119.1502", "formatted_value": "\u00a321,174.20", "formatted_pl_gbp": "+\u00a34,165.05", "formatted_pl_pct": "(+24.49%)", "price_avg": 0.0, "price_cur": "\u00a3177.71", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "SOLV", "y": 7695.0, "val_pct": -0.0435, "company_name": "Solventum", "shares_held": "100.0000", "formatted_value": "\u00a37,695.00", "formatted_pl_gbp": "\u00a3349.73", "formatted_pl_pct": "(-4.35%)", "price_avg": 0.0, "price_cur": "\u00a376.95", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RE", "y": 22186.08, "val_pct": -0.0073, "company_name": "Everest Group", "shares_held": "66.9526", "formatted_value": "\u00a322,186.08", "formatted_pl_gbp": "\u00a3162.57", "formatted_pl_pct": "(-0.73%)", "price_avg": 0.0, "price_cur": "\u00a3331.37", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NFLX", "y": 15857.4, "val_pct": -0.0975, "company_name": "Netflix", "shares_held": "190.0000", "formatted_value": "\u00a315,857.40", "formatted_pl_gbp": "\u00a31,711.80", "formatted_pl_pct": "(-9.74%)", "price_avg": 0.0, "price_cur": "\u00a383.46", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CRM", "y": 19533.43, "val_pct": -0.1262, "company_name": "Salesforce", "shares_held": "92.0000", "formatted_value": "\u00a319,533.44", "formatted_pl_gbp": "\u00a32,819.51", "formatted_pl_pct": "(-12.61%)", "price_avg": 0.0, "price_cur": "\u00a3212.32", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QCOM", "y": 16381.44, "val_pct": -0.1018, "company_name": "Qualcomm", "shares_held": "108.0000", "formatted_value": "\u00a316,381.44", "formatted_pl_gbp": "\u00a31,854.78", "formatted_pl_pct": "(-10.17%)", "price_avg": 0.0, "price_cur": "\u00a3151.68", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "EOG", "y": 18822.92, "val_pct": -0.0163, "company_name": "EOG Resources", "shares_held": "167.8370", "formatted_value": "\u00a318,822.93", "formatted_pl_gbp": "\u00a3310.85", "formatted_pl_pct": "(-1.62%)", "price_avg": 0.0, "price_cur": "\u00a3112.15", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CTVA", "y": 16380.0, "val_pct": 0.0408, "company_name": "Corteva", "shares_held": "225.0000", "formatted_value": "\u00a316,380.00", "formatted_pl_gbp": "+\u00a3643.23", "formatted_pl_pct": "(+4.09%)", "price_avg": 0.0, "price_cur": "\u00a372.80", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CNNE", "y": 20248.77, "val_pct": -0.0871, "company_name": "Cannae", "shares_held": "1,406.1646", "formatted_value": "\u00a320,248.77", "formatted_pl_gbp": "\u00a31,929.82", "formatted_pl_pct": "(-8.70%)", "price_avg": 0.0, "price_cur": "\u00a314.40", "currency": "GBP", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}];
         const mapData = rawMapData.map(d => {
             const pct = d.val_pct || 0;
             // v30.6: Alpha = (pct*100 / 10) capped at 0.9
