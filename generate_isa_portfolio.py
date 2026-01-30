@@ -12,7 +12,7 @@ BASE_URL = "https://live.trading212.com/api/v0/equity"
 
 
 def run_audit():
-    print("[>] Sentinel v32.10: Heatmap Tile Fix...")
+    print("[>] Sentinel v32.11: Dry Cash Fix...")
     if not API_KEY or not API_SECRET:
         print("[ERROR] Credentials (Key or Secret) Missing!")
         return
@@ -99,7 +99,7 @@ def run_audit():
         h["Weight"] = h["Weight_Pct"]
 
     state = {
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.10"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.11"},
         "account": acc_summary,
         "holdings": holdings,
         "total_gbp": total_value_gbp
@@ -119,7 +119,7 @@ def run_audit():
         # Check if anything to commit
         status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True).stdout
         if status:
-            subprocess.run(["git", "commit", "-m", "v32.7 Platinum - Sovereign Guard"], check=True)
+            subprocess.run(["git", "commit", "-m", "v32.11 Platinum - Dry Cash Fix"], check=True)
             subprocess.run(["git", "push"], check=True)
             print("[SUCCESS] Deployment Handled by Antigravity.")
         else:
