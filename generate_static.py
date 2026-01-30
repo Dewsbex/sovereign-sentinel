@@ -249,44 +249,8 @@ def render():
         except Exception as e:
             print(f"      [WARN] History log load failed: {e}")
 
-    # v32.8 Sovereign Guard: Restore Legend (Invested Funds Denominator)
-    total_invested = sum(h.get('Value_GBP', 0.0) for h in holdings) # Or strictly (total_wealth - cash - pending) if preferred
-    # User said: "Calculate % based on Total Invested Funds (Total Wealth - Cash - Pending)"
-    # Let's align with the instruction.
-    total_invested_funds = total_wealth - cash_dry - blocked
-    
-    # Fallback to sum of holdings if calc is weird
-    if total_invested_funds <= 0:
-        total_invested_funds = sum(h.get('Value_GBP', 0.0) for h in holdings)
-
-    legend_html = ""
-    # Sort holdings by value for legend
-    sorted_holdings_legend = sorted(holdings, key=lambda x: x.get('Value_GBP', 0.0), reverse=True)
-    
-    for h in sorted_holdings_legend:
-        val = safe_val(h.get('Value_GBP', 0.0))
-        weight = (val / total_invested_funds * 100) if total_invested_funds > 0 else 0.0
-        
-        # Legend Item HTML
-        legend_html += f"""
-        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #f3f4f6; padding: 4px 0;">
-            <span class="ticker" style="font-weight: bold; color: #374151;">{h.get('Ticker')}</span>
-            <div class="right-data">
-                <span class="weight" style="color: #6b7280; margin-right: 8px;">{weight:.1f}%</span>
-                <span class="value" style="font-weight: bold; color: {h.get('color', '#37E6B0')};">£{val:,.2f}</span>
-            </div>
-        </div>
-        """
-        
-    # Wrap in Grid
-    final_legend_html = f"""
-    <div class="legend-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
-        {legend_html}
-    </div>
-    """
-
     context = {
-        'version': "v32.8 Platinum (Fixed)", # Overwrite label as requested? "v32.8 Sovereign Guard"
+        'version': "v32.11 Platinum",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
@@ -296,7 +260,6 @@ def render():
         'pending_cash_str': format_gbp_truncate(blocked),
         'env': meta.get('env', 'LIVE'),
         'allocation_donut': donut_chart_svg,
-        'legend_html': final_legend_html, # v32.8 Legend
         'holdings': holdings,
         'fortress_holdings': fortress_display,
         'sniper_architect': sniper_display,
