@@ -1,23 +1,23 @@
 {
   "meta": {
     "version": "v32.6 Platinum",
-    "timestamp": "2026-01-30 18:25:52",
+    "timestamp": "2026-01-30 18:30:02",
     "fx_rate": 1.3719868659973145
   },
   "account": {
     "id": 31785628,
     "currency": "GBP",
-    "totalValue": 172986.67,
+    "totalValue": 173315.3,
     "cash": {
-      "availableToTrade": 828.17,
-      "reservedForOrders": 28305.07,
+      "availableToTrade": 818.04,
+      "reservedForOrders": 28315.21,
       "inPies": 0
     },
     "investments": {
-      "currentValue": 143853.43,
+      "currentValue": 144182.06,
       "totalCost": 147549.95,
       "realizedProfitLoss": 26122.63,
-      "unrealizedProfitLoss": -3696.52
+      "unrealizedProfitLoss": -3367.89
     }
   },
   "holdings": [
@@ -25,136 +25,136 @@
       "Ticker": "RE",
       "Company": "Everest Group, Ltd.",
       "Shares": 66.95260406,
-      "Price": 330.55,
+      "Price": 331.58,
       "Avg_Price": 333.79806975,
-      "PL": -833.18,
-      "FX_Impact": -674.38,
+      "PL": -776.9,
+      "FX_Impact": -668.42,
       "Tier": "2",
-      "Value": 16160.99,
+      "Value": 16217.27,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -3.2480697500000133,
-      "PL_Per_Share_Pct": -0.9730642697942123,
-      "Weight": 11.234527315712379
+      "PL_Per_Share_GBP": -2.2180697500000406,
+      "PL_Per_Share_Pct": -0.664494480648518,
+      "Weight": 11.248561960115124
     },
     {
       "Ticker": "NUE",
       "Company": "Nucor Corporation",
       "Shares": 119.1502945,
-      "Price": 176.95,
+      "Price": 177.46,
       "Avg_Price": 142.75373864,
-      "PL": 2823.17,
-      "FX_Impact": -152.17,
+      "PL": 2873.18,
+      "FX_Impact": -147.64,
       "Tier": "2",
-      "Value": 15396.04,
+      "Value": 15446.05,
       "Currency": "USD",
-      "PL_Per_Share_GBP": 34.196261359999994,
-      "PL_Per_Share_Pct": 23.954722086989957,
-      "Weight": 10.702762141044603
+      "PL_Per_Share_GBP": 34.70626136000001,
+      "PL_Per_Share_Pct": 24.31198068130681,
+      "Weight": 10.713631237812296
     },
     {
       "Ticker": "CNNE",
       "Company": "Cannae Holdings, Inc.",
       "Shares": 1406.16463623,
-      "Price": 14.37,
+      "Price": 14.43,
       "Avg_Price": 15.77239921,
-      "PL": -1743.12,
-      "FX_Impact": -303.09,
+      "PL": -1676.1,
+      "FX_Impact": -297.18,
       "Tier": "2",
-      "Value": 14755.58,
+      "Value": 14822.6,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -1.4023992100000005,
-      "PL_Per_Share_Pct": -8.891476758404979,
-      "Weight": 10.257537846949925
+      "PL_Per_Share_GBP": -1.34239921,
+      "PL_Per_Share_Pct": -8.511065387876394,
+      "Weight": 10.28119618838451
     },
     {
       "Ticker": "CRM",
       "Company": "Salesforce, Inc.",
       "Shares": 92.0,
-      "Price": 211.75,
+      "Price": 211.91,
       "Avg_Price": 242.96684783,
-      "PL": -2330.01,
-      "FX_Impact": -232.81,
+      "PL": -2314.06,
+      "FX_Impact": -226.85,
       "Tier": "2",
-      "Value": 14225.73,
+      "Value": 14241.68,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -31.216847830000006,
-      "PL_Per_Share_Pct": -12.848192298169803,
-      "Weight": 9.889205566673148
+      "PL_Per_Share_GBP": -31.05684783000001,
+      "PL_Per_Share_Pct": -12.782339692586367,
+      "Weight": 9.878260637957705
     },
     {
       "Ticker": "EOG",
       "Company": "EOG Resources, Inc.",
       "Shares": 167.83705587,
-      "Price": 110.23,
+      "Price": 110.33,
       "Avg_Price": 114.00211891,
-      "PL": -757.31,
-      "FX_Impact": -295.0,
+      "PL": -740.11,
+      "FX_Impact": -289.89,
       "Tier": "2",
-      "Value": 13509.86,
+      "Value": 13527.06,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -3.772118909999989,
-      "PL_Per_Share_Pct": -3.308814736134793,
-      "Weight": 9.391559007304012
+      "PL_Per_Share_GBP": -3.6721189099999947,
+      "PL_Per_Share_Pct": -3.2210970682913205,
+      "Weight": 9.382588595256468
     },
     {
       "Ticker": "QCOM",
       "Company": "QUALCOMM Incorporated",
       "Shares": 108.0,
-      "Price": 151.73,
+      "Price": 151.93,
       "Avg_Price": 168.85388889,
-      "PL": -1536.49,
-      "FX_Impact": -186.01,
+      "PL": -1516.34,
+      "FX_Impact": -181.14,
       "Tier": "2",
-      "Value": 11966.26,
+      "Value": 11986.41,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -17.123888890000018,
-      "PL_Per_Share_Pct": -10.141246377307537,
-      "Weight": 8.318504920609222
+      "PL_Per_Share_GBP": -16.92388889,
+      "PL_Per_Share_Pct": -10.022800778384845,
+      "Weight": 8.31396872373362
     },
     {
       "Ticker": "CTVA",
       "Company": "Corteva, Inc.",
       "Shares": 225.0,
-      "Price": 72.34,
+      "Price": 72.49,
       "Avg_Price": 69.9412,
-      "PL": 207.27,
-      "FX_Impact": -186.86,
+      "PL": 236.26,
+      "FX_Impact": -182.67,
       "Tier": "2",
-      "Value": 11885.69,
+      "Value": 11914.68,
       "Currency": "USD",
-      "PL_Per_Share_GBP": 2.3988000000000085,
-      "PL_Per_Share_Pct": 3.4297381228803747,
-      "Weight": 8.262495612650554
+      "PL_Per_Share_GBP": 2.5488,
+      "PL_Per_Share_Pct": 3.6442039884931914,
+      "Weight": 8.264215630309199
     },
     {
       "Ticker": "NFLX",
       "Company": "Netflix, Inc.",
       "Shares": 190.0,
-      "Price": 82.89,
+      "Price": 83.06,
       "Avg_Price": 92.46947368,
-      "PL": -1622.06,
-      "FX_Impact": -292.96,
+      "PL": -1594.26,
+      "FX_Impact": -288.27,
       "Tier": "2",
-      "Value": 11500.56,
+      "Value": 11528.36,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -9.579473679999992,
-      "PL_Per_Share_Pct": -10.359606580167997,
-      "Weight": 7.9947673667262436
+      "PL_Per_Share_GBP": -9.40947367999999,
+      "PL_Per_Share_Pct": -10.175762125090525,
+      "Weight": 7.996257801622146
     },
     {
       "Ticker": "BMY",
       "Company": "Bristol-Myers Squibb Company",
       "Shares": 190.0,
-      "Price": 54.63,
+      "Price": 54.65,
       "Avg_Price": 50.57,
-      "PL": 422.5,
-      "FX_Impact": -140.8,
+      "PL": 428.05,
+      "FX_Impact": -138.24,
       "Tier": "2",
-      "Value": 7579.63,
+      "Value": 7585.18,
       "Currency": "USD",
-      "PL_Per_Share_GBP": 4.060000000000002,
-      "PL_Per_Share_Pct": 8.028475380660476,
-      "Weight": 5.269080686145652
+      "PL_Per_Share_GBP": 4.079999999999998,
+      "PL_Per_Share_Pct": 8.068024520466677,
+      "Weight": 5.261204087286334
     },
     {
       "Ticker": "RIOl_EQ",
@@ -169,37 +169,37 @@
       "Currency": "GBX",
       "PL_Per_Share_GBP": 2161.3249874499998,
       "PL_Per_Share_Pct": 47.22478614984217,
-      "Weight": 4.7950071146489055
+      "Weight": 4.784335981051513
     },
     {
       "Ticker": "SOLV",
       "Company": "Solventum Corporation",
       "Shares": 100.0,
-      "Price": 75.9,
+      "Price": 76.07,
       "Avg_Price": 80.4473,
-      "PL": -435.35,
-      "FX_Impact": -103.29,
+      "PL": -420.9,
+      "FX_Impact": -101.14,
       "Tier": "2",
-      "Value": 5542.49,
+      "Value": 5556.94,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -4.547299999999993,
-      "PL_Per_Share_Pct": -5.652520345617558,
-      "Weight": 3.8529356989926176
+      "PL_Per_Share_GBP": -4.377300000000005,
+      "PL_Per_Share_Pct": -5.441201879988521,
+      "Weight": 3.854383869704465
     },
     {
       "Ticker": "DHR",
       "Company": "Danaher Corporation",
       "Shares": 30.0,
-      "Price": 218.47,
+      "Price": 218.81,
       "Avg_Price": 218.2,
-      "PL": 25.07,
-      "FX_Impact": 19.16,
+      "PL": 34.27,
+      "FX_Impact": 20.9,
       "Tier": "2",
-      "Value": 4786.04,
+      "Value": 4795.24,
       "Currency": "USD",
-      "PL_Per_Share_GBP": 0.27000000000001023,
-      "PL_Per_Share_Pct": 0.12373968835930808,
-      "Weight": 3.327079412467434
+      "PL_Per_Share_GBP": 0.6100000000000136,
+      "PL_Per_Share_Pct": 0.2795600366636176,
+      "Weight": 3.3260563740766753
     },
     {
       "Ticker": "BATSl_EQ",
@@ -214,7 +214,7 @@
       "Currency": "GBX",
       "PL_Per_Share_GBP": 173.27509999999984,
       "PL_Per_Share_Pct": 4.122922725682089,
-      "Weight": 3.0420346484687744
+      "Weight": 3.0352646985259404
     },
     {
       "Ticker": "LGENl_EQ",
@@ -229,22 +229,22 @@
       "Currency": "GBX",
       "PL_Per_Share_GBP": 5.300000000000011,
       "PL_Per_Share_Pct": 2.040030792917633,
-      "Weight": 1.8428779371779527
+      "Weight": 1.8387766717989644
     },
     {
       "Ticker": "VSNTV",
       "Company": "Versant Media Group, Inc.",
       "Shares": 111.0,
-      "Price": 32.29,
+      "Price": 32.38,
       "Avg_Price": 33.25963964,
-      "PL": -141.56,
-      "FX_Impact": -62.96,
+      "PL": -133.31,
+      "FX_Impact": -61.98,
       "Tier": "2",
-      "Value": 2617.31,
+      "Value": 2625.56,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -0.969639640000004,
-      "PL_Per_Share_Pct": -2.9153642387449628,
-      "Weight": 1.8194578852339598
+      "PL_Per_Share_GBP": -0.8796396400000006,
+      "PL_Per_Share_Pct": -2.644765997230151,
+      "Weight": 1.8211310744656692
     },
     {
       "Ticker": "QELL",
@@ -253,13 +253,13 @@
       "Price": 0.0012,
       "Avg_Price": 1.02294022,
       "PL": -216.62,
-      "FX_Impact": -11.17,
+      "FX_Impact": -11.09,
       "Tier": "2",
       "Value": 0.24,
       "Currency": "USD",
       "PL_Per_Share_GBP": -1.0217402199999999,
       "PL_Per_Share_Pct": -99.88269109215395,
-      "Weight": 0.00016683919461437519
+      "Weight": 0.00016646789937070972
     }
   ],
   "sniper": [
@@ -279,8 +279,8 @@
       "target_price": 25.0,
       "expected_growth": 0,
       "name": "MP",
-      "live_price": 57.540000915527344,
-      "distance_pct": 130.16000366210938,
+      "live_price": 57.70000076293945,
+      "distance_pct": 130.8000030517578,
       "status": "WATCH"
     },
     {
@@ -319,8 +319,8 @@
       "target_price": 80.0,
       "expected_growth": 0,
       "name": "NFLX",
-      "live_price": 82.88009643554688,
-      "distance_pct": 3.6001205444335938,
+      "live_price": 83.06400299072266,
+      "distance_pct": 3.8300037384033203,
       "status": "WATCH"
     },
     {

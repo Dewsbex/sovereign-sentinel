@@ -4,6 +4,7 @@ import json
 import os
 import base64
 import glob
+import subprocess
 from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
@@ -190,8 +191,30 @@ def backfill_history(holdings, cash, fx_rate):
     except Exception as e:
         print(f"[WARN] Backfill failed: {e}")
 
+def deploy_to_github():
+    """
+    🤖 ANTIGRAVITY AUTOMATION: Pushes the code to GitHub automatically.
+    """
+    print("\n[AUTO-DEPLOY] Handing off to GitHub...")
+    try:
+        # 1. Stage all files
+        subprocess.run(["git", "add", "."], check=True)
+        
+        # 2. Commit (Timestamped)
+        ts = datetime.now().strftime("%Y-%m-%d %H:%M")
+        msg = f"Antigravity Auto-Update: {ts}"
+        subprocess.run(["git", "commit", "-m", msg], check=True)
+        
+        # 3. Push
+        subprocess.run(["git", "push"], check=True)
+        print("[SUCCESS] Uploaded to GitHub. Cloudflare will sync in ~60s.")
+        
+    except subprocess.CalledProcessError as e:
+        print(f"[GIT ERROR] {e}")
+        print("Tip: Check if you have unmerged changes or network issues.")
+
 def run_audit():
-    print(f"[>] Sentinel v32.10 Master: Starting Audit...")
+    print(f"[>] Sentinel v32.11 Master: Zero-Touch Automation...")
     
     # 0. KNOWLEDGE BRIDGE SCAN (v32.4)
     print("[>] Scanning Knowledge Base...")
@@ -374,6 +397,15 @@ def run_audit():
         backfill_history(processed_holdings, safe_float(summary.get('cash', {}).get('availableToTrade')), fx_rate)
         
     update_history_log(total_val)
+
+    # --- THE TRIGGER (v32.11) ---
+    print("[SUCCESS] Data Audit Complete. Triggering Artist...")
+    
+    # 1. Run The Artist (Job B)
+    subprocess.run(["python", "generate_static.py"], check=True)
+    
+    # 2. Deploy to Cloud
+    deploy_to_github()
 
 if __name__ == "__main__":
     run_audit()
