@@ -12,7 +12,7 @@ BASE_URL = "https://live.trading212.com/api/v0/equity"
 
 
 def run_audit():
-    print("[>] Sentinel v32.9: API Schema Sync...")
+    print("[>] Sentinel v32.10: Heatmap Tile Fix...")
     if not API_KEY or not API_SECRET:
         print("[ERROR] Credentials (Key or Secret) Missing!")
         return
@@ -99,7 +99,7 @@ def run_audit():
         h["Weight"] = h["Weight_Pct"]
 
     state = {
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.9"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.10"},
         "account": acc_summary,
         "holdings": holdings,
         "total_gbp": total_value_gbp

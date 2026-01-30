@@ -103,7 +103,7 @@ def generate_oracle_ring(holdings):
     """
 
 def render():
-    print(f"Starting The Artist (Job B) [v32.7 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"Starting The Artist (Job B) [v32.10 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
     
     # 1. Load Data
     state = load_state()
@@ -250,7 +250,7 @@ def render():
             print(f"      [WARN] History log load failed: {e}")
 
     context = {
-        'version': "v32.7 Platinum",
+        'version': "v32.10 Platinum",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
