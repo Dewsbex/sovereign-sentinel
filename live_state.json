@@ -1,23 +1,23 @@
 {
   "meta": {
     "version": "v31.1",
-    "timestamp": "2026-01-30 01:10:37",
-    "fx_rate": 1.3769742250442505
+    "timestamp": "2026-01-30 01:11:19",
+    "fx_rate": 1.3768794536590576
   },
   "account": {
     "id": 31785628,
     "currency": "GBP",
-    "totalValue": 173352.61,
+    "totalValue": 173359.76,
     "cash": {
-      "availableToTrade": 24821.72,
-      "reservedForOrders": 11617.29,
+      "availableToTrade": 24821.05,
+      "reservedForOrders": 11617.97,
       "inPies": 0
     },
     "investments": {
-      "currentValue": 136913.6,
+      "currentValue": 136920.75,
       "totalCost": 140145.96,
       "realizedProfitLoss": 26122.63,
-      "unrealizedProfitLoss": -3232.36
+      "unrealizedProfitLoss": -3225.21
     }
   },
   "holdings": [
