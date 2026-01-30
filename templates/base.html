@@ -165,41 +165,9 @@
 
     <div class="main-grid mt-24"> <!-- Added margin-top for fixed header -->
 
-        <!-- ✈️ THE FLIGHT DECK (PRE-EXECUTION UI) -->
-        <div class="col-span-12 md:col-span-4 sentinel-card" style="border-top: 2px solid var(--t212-teal);">
-            <h2 class="text-xs mono text-gray-400 uppercase tracking-widest mb-3 font-bold">✈️ PRE-FLIGHT</h2>
-            <div class="space-y-2 mb-4">
-                <div class="flex justify-between text-xs mono p-2 bg-gray-50 rounded border border-gray-100">
-                    <span class="text-gray-500">Account Mode:</span>
-                    <span class="text-gray-800 font-bold">{{ env }} (✅)</span>
-                </div>
-                <div class="flex justify-between text-xs mono p-2 bg-gray-50 rounded border border-gray-100">
-                    <span class="text-gray-500">Connectivity:</span>
-                    <span class="text-emerald-600 font-bold">HEALTHY (✅)</span>
-                </div>
-                <div class="flex justify-between text-xs mono p-2 bg-gray-50 rounded border border-gray-100">
-                    <span class="text-gray-500">Settlement:</span>
-                    <span class="text-gray-800 font-bold">Settled (✅)</span>
-                </div>
-                <div class="flex justify-between text-xs mono p-2 bg-gray-50 rounded border border-gray-100">
-                    <span class="text-gray-500">Director Action:</span>
-                    <span class="text-gray-800 font-bold">CEO Bought 2m ago (✅)</span>
-                </div>
-                <div class="flex justify-between text-xs mono p-2 bg-gray-50 rounded border border-gray-100">
-                    <span class="text-gray-500">Analyst Consensus:</span>
-                    <span class="text-amber-500 font-bold">{{ analyst_consensus }}</span>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 gap-2">
-                <div class="flight-deck-btn text-emerald-600 bg-emerald-50 hover:bg-emerald-100 border-emerald-200">
-                    EXECUTE STRATEGY</div>
-                <div class="flight-deck-btn break-glass bg-rose-50 text-rose-600 border-rose-200 text-[0.6rem]">⚠️ BREAK
-                    GLASS OVERRIDE</div>
-            </div>
-        </div>
 
         <!-- 💹 PORTFOLIO PERFORMANCE / ACCOUNT VALUE - v31.6 -->
-        <div class="col-span-12 md:col-span-8 sentinel-card" style="border-top: 2px solid #3b82f6;">
+        <div class="col-span-12 sentinel-card" style="border-top: 2px solid #3b82f6;">
             <div class="flex justify-between items-start mb-4">
                 <div>
                     <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1">COMMAND CENTER // ACCOUNT
