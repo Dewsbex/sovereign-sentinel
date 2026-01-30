@@ -107,6 +107,91 @@
             filter: drop-shadow(0px 0px 2px #000) drop-shadow(0px 0px 1px #000);
             pointer-events: none;
         }
+
+        /* v32.2 HYPOTHESIS CHIP LOGIC */
+        .chip-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+
+        .chip-icon {
+            background: #f3f4f6;
+            color: #6b7280;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.6em;
+            font-weight: bold;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .chip-icon:hover {
+            background: #3b82f6;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .hypothesis-card {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            width: 280px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            padding: 12px;
+            border-radius: 8px;
+            z-index: 999;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        .chip-container:hover .hypothesis-card {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .hypo-header {
+            border-bottom: 1px solid #f3f4f6;
+            padding-bottom: 6px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .hypo-title {
+            color: #9ca3af;
+            font-size: 0.6em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .hypo-text {
+            color: #374151;
+            font-size: 0.75em;
+            line-height: 1.4;
+            white-space: normal;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .hypo-source {
+            color: #10b981;
+            font-size: 0.6em;
+            margin-top: 8px;
+            display: block;
+            text-align: right;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -315,7 +400,22 @@
                         {% if sniper_architect %}
                         {% for target in sniper_architect %}
                         <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                            <td class="p-4 font-bold text-gray-900">{{ target.ticker }}</td>
+                            <td class="p-4">
+                                <div class="flex items-center">
+                                    <span class="font-bold text-gray-900">{{ target.ticker }}</span>
+                                    <div class="chip-container">
+                                        <span class="chip-icon">THESIS 🎯</span>
+                                        <div class="hypothesis-card">
+                                            <div class="hypo-header">
+                                                <span class="hypo-title">INTELLIGENCE</span>
+                                                <span class="hypo-title">{{ target.tier }}</span>
+                                            </div>
+                                            <div class="hypo-text">{{ target.hypothesis }}</div>
+                                            <span class="hypo-source">SRC: {{ target.source }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
                             <td class="p-4">
                                 <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
                                     {% if target.tier == '1+' %}bg-purple-500/20 text-purple-600

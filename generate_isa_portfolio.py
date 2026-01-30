@@ -14,12 +14,36 @@ API_KEY = os.environ.get("T212_API_KEY")
 API_SECRET = os.environ.get("T212_API_SECRET", "")
 BASE_URL = "https://live.trading212.com/api/v0/equity"
 
-# Watchlist Data
+# Watchlist Data (v32.2 - Strategic Targets)
 WATCHLIST_DATA = [
-    {"ticker": "MSFT_US_EQ", "target": 420.0, "tier": "1+ (Cyborg)"},
-    {"ticker": "GOOGL_US_EQ", "target": 170.0, "tier": "1+ (Cyborg)"},
-    {"ticker": "LGEN_UK_EQ", "target": 240.0, "tier": "1 (Sleeper)"},
-    {"ticker": "RIO_UK_EQ", "target": 4800.0, "tier": "1 (Sleeper)"}
+    {
+        "ticker": "MSFT_US_EQ", 
+        "target": 420.0, 
+        "tier": "1+ (Cyborg)",
+        "hypothesis": "AI dominance via Azure/OpenAI integration remains unparalleled. Cloud growth remains sticky.",
+        "source": "Sentinel-AI"
+    },
+    {
+        "ticker": "GOOGL_US_EQ", 
+        "target": 170.0, 
+        "tier": "1+ (Cyborg)",
+        "hypothesis": "Monopoly on Search + YouTube growth provides massive FCF. Valuation currently attractive.",
+        "source": "Research Case #402"
+    },
+    {
+        "ticker": "LGEN_UK_EQ", 
+        "target": 240.0, 
+        "tier": "1 (Sleeper)",
+        "hypothesis": "Divi-King with massive solvency. Retirement trends favor L&G. Target price allows 8.5% yield entry.",
+        "source": "Internal Alpha"
+    },
+    {
+        "ticker": "RIO_UK_EQ", 
+        "target": 4800.0, 
+        "tier": "1 (Sleeper)",
+        "hypothesis": "Commodity cycle play with Iron Ore dominance. Tier 1 Balance sheet with high dividend safety.",
+        "source": "Cycle Analysis"
+    }
 ]
 
 def safe_float(val, default=0.0):
@@ -196,10 +220,10 @@ def run_audit():
             "PL_Per_Share_Pct": pl_per_share_pct   # v31.3: P/L per share in %
         })
         
-    # 4. SAVE STATE
+    # 4. SAVE STATE (v32.2)
     state = {
         "meta": {
-            "version": "v31.5 Platinum",
+            "version": "v32.2 Platinum",
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "fx_rate": fx_rate
         },
