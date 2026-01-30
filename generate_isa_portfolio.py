@@ -3,6 +3,7 @@ import pandas as pd
 import json
 import os
 import base64
+import glob
 from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
@@ -14,37 +15,75 @@ API_KEY = os.environ.get("T212_API_KEY")
 API_SECRET = os.environ.get("T212_API_SECRET", "")
 BASE_URL = "https://live.trading212.com/api/v0/equity"
 
-# Watchlist Data (v32.2 - Strategic Targets)
+# --- THE KNOWLEDGE BRIDGE (Notebook LM Sync) ---
+LOCAL_KNOWLEDGE_PATH = r"G:\My Drive\NotebookLM Sync"
+
+# Watchlist Data (v32.4 - Intelligence Integrated)
 WATCHLIST_DATA = [
     {
-        "ticker": "MSFT_US_EQ", 
-        "target": 420.0, 
-        "tier": "1+ (Cyborg)",
-        "hypothesis": "AI dominance via Azure/OpenAI integration remains unparalleled. Cloud growth remains sticky.",
-        "source": "Sentinel-AI"
-    },
-    {
-        "ticker": "GOOGL_US_EQ", 
-        "target": 170.0, 
-        "tier": "1+ (Cyborg)",
-        "hypothesis": "Monopoly on Search + YouTube growth provides massive FCF. Valuation currently attractive.",
-        "source": "Research Case #402"
-    },
-    {
-        "ticker": "LGEN_UK_EQ", 
-        "target": 240.0, 
-        "tier": "1 (Sleeper)",
-        "hypothesis": "Divi-King with massive solvency. Retirement trends favor L&G. Target price allows 8.5% yield entry.",
-        "source": "Internal Alpha"
+        "ticker": "MP_US_EQ", 
+        "target": 25.0, 
+        "tier": "1+ (Strategic)", 
+        "tags": ["Rare Earths", "Mining"],
+        "default_thesis": "Policy Premium Play. US Dept of War equity position."
     },
     {
         "ticker": "RIO_UK_EQ", 
         "target": 4800.0, 
-        "tier": "1 (Sleeper)",
-        "hypothesis": "Commodity cycle play with Iron Ore dominance. Tier 1 Balance sheet with high dividend safety.",
-        "source": "Cycle Analysis"
+        "tier": "1 (Standard)", 
+        "tags": ["Copper", "Mining"],
+        "default_thesis": "Copper Shortage. Supply cuts at Escondida/Grasberg."
+    },
+    {
+        "ticker": "NFLX_US_EQ", 
+        "target": 80.0, 
+        "tier": "2 (Watch)", 
+        "tags": ["Streaming", "Tech"],
+        "default_thesis": "Bearish Divergence. Targets falling despite Buy ratings."
+    },
+    {
+        "ticker": "MSFT_US_EQ", 
+        "target": 420.0, 
+        "tier": "1+ (Cyborg)",
+        "tags": ["AI", "Cloud"],
+        "default_thesis": "AI dominance via Azure/OpenAI integration remains unparalleled."
     }
 ]
+
+class KnowledgeBase:
+    def __init__(self, data_path):
+        self.data_path = data_path
+
+    def get_latest_intel(self, ticker, tags=[]):
+        """Scans G: Drive for files matching the Ticker or Tags."""
+        if not os.path.exists(self.data_path):
+            return None, None
+
+        clean_ticker = ticker.split('_')[0]
+        search_terms = [clean_ticker] + tags
+        
+        found_file = None
+        all_files = glob.glob(os.path.join(self.data_path, "*.txt"))
+        
+        for term in search_terms:
+            for f in all_files:
+                filename = os.path.basename(f).lower()
+                if term.lower() in filename:
+                    found_file = f
+                    break
+            if found_file: break
+        
+        if not found_file: return None, None
+
+        try:
+            with open(found_file, "r", encoding="utf-8") as f:
+                content = f.read()
+                # Grab the first 300 characters as the summary
+                snippet = content[:300].replace('\n', ' ').strip() + "..."
+                return snippet, os.path.basename(found_file)
+        except Exception as e:
+            print(f"[!] Intel Read Error: {e}")
+            return None, None
 
 def safe_float(val, default=0.0):
     if val is None: return default
@@ -152,8 +191,20 @@ def backfill_history(holdings, cash, fx_rate):
         print(f"[WARN] Backfill failed: {e}")
 
 def run_audit():
-    print(f"[>] Sentinel v32.3: Starting Audit...")
+    print(f"[>] Sentinel v32.4: Starting Audit...")
     
+    # 0. KNOWLEDGE BRIDGE SCAN (v32.4)
+    print("[>] Scanning Knowledge Base...")
+    kb = KnowledgeBase(LOCAL_KNOWLEDGE_PATH)
+    for target in WATCHLIST_DATA:
+        intel_text, source = kb.get_latest_intel(target['ticker'], target.get('tags', []))
+        if intel_text:
+            target['hypothesis'] = intel_text
+            target['source'] = source
+        else:
+            target['hypothesis'] = target.get('default_thesis', "No recent intelligence found.")
+            target['source'] = "Sentinel Default"
+
     # 1. EXTERNAL RADAR (SniperScope)
     sniper = SniperScope(WATCHLIST_DATA)
     df_sniper, fx_rate = sniper.scan_targets()
@@ -249,10 +300,10 @@ def run_audit():
         
     processed_holdings.sort(key=lambda x: x['Value'], reverse=True)
         
-    # 4. SAVE STATE (v32.3)
+    # 4. SAVE STATE (v32.4)
     state = {
         "meta": {
-            "version": "v32.3 Platinum",
+            "version": "v32.4 Platinum",
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "fx_rate": fx_rate
         },
