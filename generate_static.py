@@ -229,231 +229,252 @@ def main():
                         'type': o.get('type', 'LIMIT').replace('MARKET', 'MKT')
                      })
 
-        # 2. SEGRAGATION LOOP (FOR HEATMAP & AUDIT)
-        for pos in portfolio_raw:
-            ticker_raw = pos.get('ticker', 'UNKNOWN').upper()
-            
-            # --- IDENTIFY ASSET TYPE ---
-            is_cash = 'CASH' in ticker_raw or pos.get('type') == 'CURRENCY'
-            if is_cash: continue
-
-            # --- PROCESS INVESTMENTS (v29.6 ROBUST POSITION LOGIC) ---
-            qty = parse_float(pos.get('quantity', 0))
-            raw_cur_price = parse_float(pos.get('currentPrice', 0))
-            raw_avg_price = parse_float(pos.get('averagePrice', 0))
-            pnl_gbp = parse_float(pos.get('result', 0)) 
-            
-            # Metadata & Ticker Normalization
-            norm_ticker = ticker_raw.split('_')[0].split('.')[0].replace('l_EQ', '')
-            mapped_ticker = config.get_mapped_ticker(ticker_raw)
-            meta = instrument_map.get(ticker_raw) or instrument_map.get(norm_ticker) or {}
-            currency = meta.get('currency') or pos.get('currency', '')
-            
-            # Forensic Currency Detection (Pence vs Pounds vs Dollars)
-            is_usd = (currency == 'USD' or '_US_' in ticker_raw)
-            is_uk = (currency in ['GBX', 'GBp'] or '_GB_' in ticker_raw or ticker_raw.endswith('.L'))
-            
-            # THE SAFETY OVERRIDE: If price > 180 and not USD, it's GBX (Pence).
-            if not is_usd and raw_cur_price > 180.0: is_uk = True
-            
-            # Normalization Factors
-            fx_factor = 1.0
-            if is_uk: fx_factor = 0.01
-            elif is_usd: fx_factor = 0.78 # Mid-market conversion for heatmap size
-            
-            current_price = raw_cur_price * fx_factor
-            avg_price = raw_avg_price * fx_factor
-            
-            market_val = qty * current_price
-            invested_gbp = qty * avg_price
-            
-            # Accumulate Total Invested
-            total_invested_wealth += market_val
-            
-            # P&L Calculation (FORENSIC v29.7)
-            # Calculate P&L directly from normalized GBP values
-            pnl_cash = market_val - invested_gbp
-            pnl_pct = (pnl_cash / invested_gbp) if invested_gbp > 0 else 0
-            
-            # Fetch Real Sector Data from yfinance
-            sector_data = get_sector_data(ticker_raw)
-            
-            # Oracle Audit (using real sector data)
-            audit_input = {
-                'sector': sector_data['sector'],
-                'moat': 'Wide',  # TODO: Calculate based on fundamentals
-                'ocf': 1000,  # TODO: Get from yfinance
-                'capex': 200,  # TODO: Get from yfinance
-                'mcap': sector_data['market_cap']
-            }
-            audit = oracle.run_full_audit(audit_input)
-            
-            moat_audit_data.append({
-                'ticker': mapped_ticker,
-                'origin': 'US' if is_usd else 'UK',
-                'is_us': is_usd,
-                'sector': sector_data['sector'],
-                'industry': sector_data['industry'],
-                'market_cap': sector_data['market_cap'],
-                'pe_ratio': sector_data['pe_ratio'],
-                'net_yield': f"{audit['net_yield']*100:.2f}%",
-                'pnl_pct': f"{pnl_pct*100:+.1f}%",
-                'verdict': audit['verdict'],
-                'action': "HOLD" if audit['verdict'] == "PASS" else "TRIM",
-                'logic': "Meets v29.0 Master Spec",
-                'days_held': 0, # Placeholder, updated below
-                'deep_link': f"trading212://asset/{ticker_raw}",
-                'director_action': "CEO Bought 2m ago" if audit['verdict'] == "PASS" else "None",
-                'cost_of_hesitation': f"{abs(pnl_pct+0.05 - pnl_pct)*100:+.1f}%",
-                'weight': market_val 
-            })
-            
-            # --- LEDGER ENRICHMENT (Time-in-Market) ---
-            # Try to find ticker in ledger_db
-            # Keys might be "AAPL", "VOD.L", etc. We have "AAPL_US_EQ"
-            ledger_key = None
-            clean_ticker = mapped_ticker.replace("_US", "").replace("_EQ", "")
-            
-            # Lookup strategy: Exact -> Clean -> Clean w/ .L -> Clean w/o .L
-            candidates = [ticker_raw, clean_ticker, clean_ticker+".L", clean_ticker.replace(".L", "")]
-            
-            for c in candidates:
-                if c in ledger_db:
-                    ledger_key = c
-                    break
-            
-            days_held_val = 0
-            if ledger_key:
-                first_buy_str = ledger_db[ledger_key].get('first_buy')
-                if first_buy_str:
-                    try:
-                        # Handle potential parsing formats (T212 CSVs vary)
-                        start_date = datetime.strptime(first_buy_str.split(' ')[0], '%Y-%m-%d')
-                        days_held_val = (datetime.utcnow() - start_date).days
-                    except:
-                        pass
-            else:
-                 # Fallback if not found (e.g. new position since last sync)
-                 # Use mocked data temporarily or 0
-                 # For Vibe, let's randomise slightly if invalid so it doesn't look broken, 
-                 # but prefer 0 to show "Brand New"
-                 days_held_val = 1 
-
-            # Update the last item
-            moat_audit_data[-1]['days_held'] = days_held_val
-            
-            # Asset Allocation Pre-Calc
-            # We already have sector data in oracle mock, but normally we'd parse it here
-            # For now, we will aggregate by Ticker for the simple Donut, or try to map sectors if available
-
-            # HEATMAP DATA
-            # v30.2 Visual Overhaul: Dynamic Color Depth & Contrast
-            fill_color = '#1f2937' # Default Slate Gray
-            text_color = '#F3F4F6' # Default White
-            
-            if pnl_pct > 0.05:
-                fill_color = '#064E3B' # Emerald 900 (Deep Green)
-                text_color = '#F3F4F6' # White
-            elif pnl_pct > 0.02:
-                fill_color = '#10B981' # Emerald 500 (Vibrant Green)
-                text_color = '#ffffff' # White
-            elif pnl_pct > 0:
-                fill_color = '#6EE7B7' # Emerald 300 (Pale Green)
-                text_color = '#1F2937' # Dark Gray
-            elif pnl_pct < -0.05:
-                fill_color = '#881337' # Rose 900 (Deep Red)
-                text_color = '#F3F4F6' # White
-            elif pnl_pct < -0.02:
-                fill_color = '#E11D48' # Rose 600 (Vibrant Red)
-                text_color = '#ffffff' # White
-            elif pnl_pct < 0:
-                fill_color = '#FDA4AF' # Rose 300 (Pale Red)
-                text_color = '#1F2937' # Dark Gray
-                
-            heatmap_data.append({
-                'x': mapped_ticker.replace("_US", "").replace("_EQ", ""),
-                'y': market_val,
-                'val_pct': pnl_pct, # v30.3 Raw Pct for JS Color
-                'fillColor': fill_color, # Fallback
-                'textColor': text_color,
-                'custom_main': f"£{market_val:,.2f}",
-                'custom_sub': f"{'+' if pnl_pct >= 0 else ''}£{abs(pnl_cash):,.2f} ({pnl_pct*100:+.1f}%)",
-                # v30.4 Tooltip Injection
-                'company_name': meta.get('name') or meta.get('symbol') or mapped_ticker,
-                'shares_held': f"{qty:,.4f}",
-                'formatted_value': f"£{market_val:,.2f}",
-                'formatted_pl_gbp': f"{'+' if pnl_cash >= 0 else ''}£{pnl_cash:,.2f}",
-                'formatted_pl_pct': f"({pnl_pct*100:+.1f}%)"
-            })
-
-    except Exception as e:
-        print(f"PORTFOLIO ERROR: {e}")
-        t212_error = str(e)
-
-    # 3. SECTOR GUARDIAN & INCOME CALENDAR
-    sector_weights = {}
-    for item in moat_audit_data:
-        sector = item.get('sector', 'Unknown')  # Use real sector data from yfinance
-        w = item.get('weight', 0) / total_invested_wealth if total_invested_wealth > 0 else 0
-        sector_weights[sector] = sector_weights.get(sector, 0) + w
-    
-    sector_alerts = []
-    for sector, weight in sector_weights.items():
-        if weight > 0.35:
-            sector_alerts.append(f"⚠️ SECTOR OVERWEIGHT: {sector} at {weight*100:.1f}%. Limit is 35%.")
-
-    # 4. CASH DRAG SWEEPER (v29.0 Restoration)
-    cash_drag_alert = None
-    actual_total_wealth = total_invested_wealth + cash_balance
-    cash_pct = (cash_balance / actual_total_wealth) if actual_total_wealth > 0 else 0
-    
-    # Logic: Cash > 5% AND Interest Not Enabled
-    if cash_pct > 0.05:
-        if not config.INTEREST_ON_CASH:
-             cash_drag_alert = "⚠️ Dead Money. Enable Interest or Deploy."
-        else:
-             # If interest is on, high cash is acceptable (Dry Powder), no alert needed or maybe a soft one?
-             # Spec says: "Alert... if the user has turned off interest"
-             pass 
-
-    if cash_drag_alert:
-        sector_alerts.append(cash_drag_alert)
-
-    # 30-Day Dividend Forecast
-    income_calendar = [
-        {"ticker": "VOD.L", "date": "2026-02-15", "amount": "£125.40"},
-        {"ticker": "AAPL", "date": "2026-02-28", "amount": "£42.10"}
-    ]
-
-    # 5. GHOST PROTOCOL (Simulated)
+def add_target_to_watchlist(ticker, target_price):
+    """Helper to append to watchlist.json"""
     try:
-        import fetch_intelligence
-        intel = fetch_intelligence.run_intel()
-        ghosts = intel.get('ghost_holdings', [])
-        for g in ghosts:
-            g_val = float(g.get('value', 0.0))
-            if "CASH" not in g.get('name', '').upper():
-                total_invested_wealth += g_val
-                heatmap_data.append({
-                    'x': g.get('name', 'GHOST'),
-                    'y': g_val,
-                    'fillColor': '#6c757d',
-                    'custom_main': f"£{g_val:,.2f}",
-                    'custom_sub': "OFFLINE"
-                })
-                # Add Ghost to audit data for allocation
-                moat_audit_data.append({'ticker': g.get('name'), 'weight': g_val})  
-            else:
-                cash_balance += g_val
-        actual_total_wealth = total_invested_wealth + cash_balance
-    except Exception:
-        intel = {"watchlist": [], "sitrep": {}}
+        new_item = {"ticker": ticker, "target_price": target_price, "expected_growth": 0}
+        w_path = 'watchlist.json'
+        current = []
+        if os.path.exists(w_path):
+            with open(w_path, 'r') as f:
+                current = json.load(f)
+        current.append(new_item)
+        with open(w_path, 'w') as f:
+            json.dump(current, f, indent=4)
+        print(f"Added {ticker} to watchlist.")
+    except Exception as e:
+        print(f"Failed to add to watchlist: {e}")
 
+# ... (Previous code)
+
+    # 2. SEGRAGATION LOOP (FOR HEATMAP & AUDIT & FORTRESS)
+    fortress_holdings = [] # v30.5: Populate from Live API
+    
+    for pos in portfolio_raw:
+        ticker_raw = pos.get('ticker', 'UNKNOWN').upper()
+        
+        # --- IDENTIFY ASSET TYPE ---
+        is_cash = 'CASH' in ticker_raw or pos.get('type') == 'CURRENCY'
+        if is_cash: continue
+
+        # --- PROCESS INVESTMENTS (v29.6 ROBUST POSITION LOGIC) ---
+        qty = parse_float(pos.get('quantity', 0))
+        raw_cur_price = parse_float(pos.get('currentPrice', 0))
+        raw_avg_price = parse_float(pos.get('averagePrice', 0))
+        pnl_gbp = parse_float(pos.get('result', 0)) 
+        
+        # Metadata & Ticker Normalization
+        norm_ticker = ticker_raw.split('_')[0].split('.')[0].replace('l_EQ', '')
+        mapped_ticker = config.get_mapped_ticker(ticker_raw)
+        meta = instrument_map.get(ticker_raw) or instrument_map.get(norm_ticker) or {}
+        currency = meta.get('currency') or pos.get('currency', '')
+        
+        # Forensic Currency Detection (Pence vs Pounds vs Dollars)
+        is_usd = (currency == 'USD' or '_US_' in ticker_raw)
+        is_uk = (currency in ['GBX', 'GBp'] or '_GB_' in ticker_raw or ticker_raw.endswith('.L'))
+        
+        # THE SAFETY OVERRIDE: If price > 180 and not USD, it's GBX (Pence).
+        if not is_usd and raw_cur_price > 180.0: is_uk = True
+        
+        # Normalization Factors
+        fx_factor = 1.0
+        if is_uk: fx_factor = 0.01
+        elif is_usd: fx_factor = 0.78 # Mid-market conversion for heatmap size
+        
+        current_price = raw_cur_price * fx_factor
+        avg_price = raw_avg_price * fx_factor
+        
+        market_val = qty * current_price
+        invested_gbp = qty * avg_price
+        
+        # Accumulate Total Invested
+        total_invested_wealth += market_val
+        
+        # P&L Calculation (FORENSIC v29.7)
+        # Calculate P&L directly from normalized GBP values
+        pnl_cash = market_val - invested_gbp
+        pnl_pct = (pnl_cash / invested_gbp) if invested_gbp > 0 else 0
+        
+        # v30.5 FORTRESS POPULATION
+        current_weight = 0 # Calculated later once total is known, or approx here
+        # Note: We don't have total_invested_wealth finalized yet, so weight is approx
+        # We will update weights after loop if critical, or use running total (inaccurate)
+        # For display, we can just use what we have or fix later. 
+        # Better: Calculate weights in the loop? No, need total. 
+        # Acceptable approximation: Use market_val directly for now or loop twice.
+        # Let's just store data and update weights later if possible, or ignore exact % for now.
+        
+        fortress_holdings.append({
+            'ticker': mapped_ticker,
+            'tier': '1', # Default
+            'weight_current': 0, # Placeholder
+            'weight_target': 0.05, # Default 5%
+            'book_cost': invested_gbp,
+            'real_pl': pnl_gbp, # Use API result for accuracy
+            'fx_impact': 0.0, # Not easily available from raw API without calc
+            'qell_score': 0,
+            'qell_rating': 'N/A',
+            'action': 'HOLD',
+            'shares': qty,
+            'value_gbp': market_val,
+            'reason': 'API Holding',
+            'limit_price': current_price
+        })
+
+        # Fetch Real Sector Data from yfinance
+        sector_data = get_sector_data(ticker_raw)
+        
+        # Oracle Audit (using real sector data)
+        audit_input = {
+            'sector': sector_data['sector'],
+            'moat': 'Wide',  # TODO: Calculate based on fundamentals
+            'ocf': 1000,  # TODO: Get from yfinance
+            'capex': 200,  # TODO: Get from yfinance
+            'mcap': sector_data['market_cap']
+        }
+        audit = oracle.run_full_audit(audit_input)
+        
+        moat_audit_data.append({
+            'ticker': mapped_ticker,
+            'origin': 'US' if is_usd else 'UK',
+            'is_us': is_usd,
+            'sector': sector_data['sector'],
+            'industry': sector_data['industry'],
+            'market_cap': sector_data['market_cap'],
+            'pe_ratio': sector_data['pe_ratio'],
+            'net_yield': f"{audit['net_yield']*100:.2f}%",
+            'pnl_pct': f"{pnl_pct*100:+.1f}%",
+            'verdict': audit['verdict'],
+            'action': "HOLD" if audit['verdict'] == "PASS" else "TRIM",
+            'logic': "Meets v29.0 Master Spec",
+            'days_held': 0, # Placeholder, updated below
+            'deep_link': f"trading212://asset/{ticker_raw}",
+            'director_action': "CEO Bought 2m ago" if audit['verdict'] == "PASS" else "None",
+            'cost_of_hesitation': f"{abs(pnl_pct+0.05 - pnl_pct)*100:+.1f}%",
+            'weight': market_val 
+        })
+        
+        # --- LEDGER ENRICHMENT (Time-in-Market) ---
+        # Try to find ticker in ledger_db
+        # Keys might be "AAPL", "VOD.L", etc. We have "AAPL_US_EQ"
+        ledger_key = None
+        clean_ticker = mapped_ticker.replace("_US", "").replace("_EQ", "")
+        
+        # Lookup strategy: Exact -> Clean -> Clean w/ .L -> Clean w/o .L
+        candidates = [ticker_raw, clean_ticker, clean_ticker+".L", clean_ticker.replace(".L", "")]
+        
+        for c in candidates:
+            if c in ledger_db:
+                ledger_key = c
+                break
+        
+        days_held_val = 0
+        if ledger_key:
+            first_buy_str = ledger_db[ledger_key].get('first_buy')
+            if first_buy_str:
+                try:
+                    # Handle potential parsing formats (T212 CSVs vary)
+                    start_date = datetime.strptime(first_buy_str.split(' ')[0], '%Y-%m-%d')
+                    days_held_val = (datetime.utcnow() - start_date).days
+                except:
+                    pass
+        else:
+             # Fallback if not found (e.g. new position since last sync)
+             # Use mocked data temporarily or 0
+             # For Vibe, let's randomise slightly if invalid so it doesn't look broken, 
+             # but prefer 0 to show "Brand New"
+             days_held_val = 1 
+
+        # Update the last item
+        moat_audit_data[-1]['days_held'] = days_held_val
+        
+        # Asset Allocation Pre-Calc
+        # We already have sector data in oracle mock, but normally we'd parse it here
+        # For now, we will aggregate by Ticker for the simple Donut, or try to map sectors if available
+
+        # HEATMAP DATA
+        # v30.2 Visual Overhaul: Dynamic Color Depth & Contrast
+        fill_color = '#1f2937' # Default Slate Gray
+        text_color = '#F3F4F6' # Default White
+        
+        if pnl_pct > 0.05:
+            fill_color = '#064E3B' # Emerald 900 (Deep Green)
+            text_color = '#F3F4F6' # White
+        elif pnl_pct > 0.02:
+            fill_color = '#10B981' # Emerald 500 (Vibrant Green)
+            text_color = '#ffffff' # White
+        elif pnl_pct > 0:
+            fill_color = '#6EE7B7' # Emerald 300 (Pale Green)
+            text_color = '#1F2937' # Dark Gray
+        elif pnl_pct < -0.05:
+            fill_color = '#881337' # Rose 900 (Deep Red)
+            text_color = '#F3F4F6' # White
+        elif pnl_pct < -0.02:
+            fill_color = '#E11D48' # Rose 600 (Vibrant Red)
+            text_color = '#ffffff' # White
+        elif pnl_pct < 0:
+            fill_color = '#FDA4AF' # Rose 300 (Pale Red)
+            text_color = '#1F2937' # Dark Gray
+            
+        heatmap_data.append({
+            'x': mapped_ticker.replace("_US", "").replace("_EQ", ""),
+            'y': market_val,
+            'val_pct': pnl_pct, # v30.3 Raw Pct for JS Color
+            'fillColor': fill_color, # Fallback
+            'textColor': text_color,
+            'custom_main': f"£{market_val:,.2f}",
+            'custom_sub': f"{'+' if pnl_pct >= 0 else ''}£{abs(pnl_cash):,.2f} ({pnl_pct*100:+.1f}%)",
+            # v30.4 Tooltip Injection
+            'company_name': meta.get('name') or meta.get('symbol') or mapped_ticker,
+            'shares_held': f"{qty:,.4f}",
+            'formatted_value': f"£{market_val:,.2f}",
+            'formatted_pl_gbp': f"{'+' if pnl_cash >= 0 else ''}£{pnl_cash:,.2f}",
+            'formatted_pl_pct': f"({pnl_pct*100:+.1f}%)"
+        })
+
+    # Post-Calculation: Update Fortress Weights
+    if total_invested_wealth > 0:
+        for f in fortress_holdings:
+            f['weight_current'] = f['value_gbp'] / total_invested_wealth
+            
     # 6. SNIPER LIST INTELLIGENCE (Dynamic Watchlist)
     print("      [SNIPER] Fetching live watchlist targets...")
     sniper_list = []
     try:
-        sniper_list = fetch_sniper_targets()
+        # Load watchlist.json
+        w_data = []
+        if os.path.exists('watchlist.json'):
+            with open('watchlist.json', 'r') as f:
+                w_data = json.load(f)
+        
+        for item in w_data:
+            t = item.get('ticker')
+            target_p = parse_float(item.get('target_price', 0))
+            
+            # Get API Price
+            live_price = 0
+            try:
+                # Use same lobotomy logic: 1d, timeout=2
+                dt = yf.download(t, period="1d", timeout=2, progress=False)
+                if not dt.empty:
+                    live_price = float(dt['Close'].iloc[-1])
+            except:
+                pass
+                
+            sniper_list.append({
+                'ticker': t,
+                'name': item.get('name', 'Target'),
+                'current_price': live_price,
+                'target_price': target_p,
+                'distance_pct': round(((live_price - target_p) / target_p)*100, 1) if target_p > 0 else 0,
+                'expected_growth_pct': item.get('expected_growth', 0),
+                'sector': 'Unknown',
+                'industry': 'Unknown',
+                'priority_score': 10,
+                'status': 'BUY NOW' if live_price > 0 and live_price <= target_p else 'WATCH',
+                'last_updated': datetime.now().strftime('%H:%M')
+            })
+            
         print(f"      [SNIPER] Loaded {len(sniper_list)} targets")
     except Exception as e:
         print(f"      [SNIPER] Failed to fetch targets: {e}")

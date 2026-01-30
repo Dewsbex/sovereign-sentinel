@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | PLATINUM MASTER v30.4</title>
+    <title>SOVEREIGN SENTINEL | PLATINUM MASTER v30.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -100,7 +100,7 @@
         <div class="flex items-center gap-3">
             <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
             <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">SENTINEL_VIBE <span
-                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v30.4</span>
+                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v30.5</span>
             </h1>
         </div>
 
@@ -375,6 +375,15 @@
                     <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest">🎯 THE SNIPER LIST</h2>
                     <p class="text-[0.65rem] text-neutral-600 mt-1">Capital Deployment Targets • Deploying £{{
                         portfolio_metrics.cash_balance | round(0) }}</p>
+                </div>
+                <!-- v30.5 Watchlist Input -->
+                <div class="flex items-center gap-2">
+                    <input type="text" placeholder="TICKER"
+                        class="bg-gray-50 border border-gray-200 text-xs px-2 py-1 rounded w-20 mono uppercase">
+                    <input type="text" placeholder="TARGET £"
+                        class="bg-gray-50 border border-gray-200 text-xs px-2 py-1 rounded w-20 mono">
+                    <button
+                        class="bg-gray-900 text-white text-[0.6rem] px-3 py-1 rounded font-bold hover:bg-black transition-colors">ADD</button>
                 </div>
             </div>
             <div class="overflow-x-auto">
