@@ -113,7 +113,7 @@ def run_audit():
     # 4. SAVE STATE
     state = {
         "meta": {
-            "version": "v31.3 Platinum",
+            "version": "v31.5 Platinum",
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "fx_rate": fx_rate
         },

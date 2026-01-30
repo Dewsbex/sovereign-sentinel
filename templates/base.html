@@ -599,10 +599,8 @@
                 color = `rgba(239, 68, 68, ${alpha})`;
             }
 
-            // Text Contrast
-            d.textColor = alpha > 0.5 ? '#FFFFFF' : '#F3F4F6';
-            if (absPctVal < 1) d.textColor = '#9CA3AF'; // Dim text for small moves
-
+            // v31.5: Force all text to White so the black outline/shadow makes it pop
+            d.textColor = '#FFFFFF';
             d.fillColor = color;
             return d;
         });
