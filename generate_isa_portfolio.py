@@ -191,7 +191,7 @@ def backfill_history(holdings, cash, fx_rate):
         print(f"[WARN] Backfill failed: {e}")
 
 def run_audit():
-    print(f"[>] Sentinel v32.6 Master: Starting Audit...")
+    print(f"[>] Sentinel v32.7 Master: Starting Audit...")
     
     # 0. KNOWLEDGE BRIDGE SCAN (v32.4)
     print("[>] Scanning Knowledge Base...")
@@ -231,23 +231,43 @@ def run_audit():
         print(f"[!] Connection Error: {e}")
         return
 
-    # 3. BATCH METADATA (v32.3)
-    print("[>] Fetching Company Metadata...")
-    holdings_tickers = [p.get('instrument', {}).get('ticker') for p in positions]
-    yf_tickers = [t.replace("_UK_EQ", ".L").replace("_US_EQ", "") for t in holdings_tickers if t]
+    # 3. BATCH METADATA (v32.7: Robust Resolution)
+    print(f"[>] Fetching Company Metadata (Batch)...")
     
+    # Cleaning Logic
+    def clean_ticker(t):
+        if "l_EQ" in t: return t.replace("l_EQ", ".L") # Handle RIOl_EQ -> RIO.L
+        return t.replace("_UK_EQ", ".L").replace("_US_EQ", "")
+        
+    yf_tickers = [clean_ticker(t) for t in holdings_tickers if t]
+    
+    # Manual Override Map for Stubborn Tickers
+    manual_overrides = {
+        "RE": "Everest Group, Ltd.",
+        "QELL": "Qell Acquisition Corp."
+    }
+
     company_names = {}
+    
     try:
-        print("[>] Fetching Company Metadata (Batch)...")
+        # 1. Batch Fetch
         info_data = yf.Tickers(" ".join(yf_tickers))
+        
         for t_raw, t_yf in zip(holdings_tickers, yf_tickers):
+            # Check Manual Override first
+            if t_yf in manual_overrides:
+                company_names[t_raw] = manual_overrides[t_yf]
+                continue
+                
             try:
                 # Try batch result
                 name = info_data.tickers[t_yf].info.get('shortName')
+                
+                # If Batch Failed, Retry Individual
                 if not name or name == t_yf:
-                    # Individual Retry for critical resilience
-                    print(f"    [~] Retrying {t_raw} individually...")
+                    print(f"    [~] Retrying {t_raw} -> {t_yf} individually...")
                     name = yf.Ticker(t_yf).info.get('shortName', t_raw)
+                    
                 company_names[t_raw] = name
             except Exception as e:
                 print(f"    [!] Meta Fail for {t_raw}: {e}")
