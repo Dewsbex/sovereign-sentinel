@@ -77,6 +77,7 @@ def run_audit():
     for p in positions:
         instr = p.get('instrument', {})
         ticker = instr.get('ticker', 'UNKNOWN')
+        company_name = instr.get('name', ticker)  # v31.3: Extract company name
         shares = safe_float(p.get('quantity'))
         price = safe_float(p.get('currentPrice'))
         avg = safe_float(p.get('averagePricePaid'))
@@ -86,24 +87,32 @@ def run_audit():
         fx_impact_gbp = safe_float(wallet.get('fxImpact'))
         value_gbp = safe_float(wallet.get('currentValue'))
         
+        # v31.3: Calculate P/L per share
+        pl_per_share_gbp = price - avg
+        pl_per_share_pct = ((price - avg) / avg) * 100 if avg > 0 else 0.0
+        
         is_us = "_US_EQ" in ticker
         tier = arch.get_tier(ticker)
         
         processed_holdings.append({
             "Ticker": ticker.replace("_US_EQ", "").replace("_UK_EQ", ""),
+            "Company": company_name,  # v31.3: Add company name
             "Shares": shares,
             "Price": price,
             "Avg_Price": avg,
             "PL": pl_gbp,
             "FX_Impact": fx_impact_gbp,
             "Tier": tier,
-            "Value": value_gbp
+            "Value": value_gbp,
+            "Currency": instr.get('currency', 'USD' if is_us else 'GBP'),
+            "PL_Per_Share_GBP": pl_per_share_gbp,  # v31.3: P/L per share in £
+            "PL_Per_Share_Pct": pl_per_share_pct   # v31.3: P/L per share in %
         })
         
     # 4. SAVE STATE
     state = {
         "meta": {
-            "version": "v31.2 Platinum",
+            "version": "v31.3 Platinum",
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "fx_rate": fx_rate
         },
