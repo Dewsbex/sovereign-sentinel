@@ -46,15 +46,16 @@ def format_gbp(val):
     """Legacy function - use format_gbp_truncate for new code."""
     return format_gbp_truncate(val)
 
-# v32.4: Perfect Ring Engine
-def generate_donut_chart(holdings):
+# v32.5: Oracle Ring Engine
+def generate_oracle_ring(holdings):
     if not holdings: return ""
     
     # Sort: Largest first for geometry
-    sorted_holdings = sorted(holdings, key=lambda x: x['Value'], reverse=True)
+    sorted_holdings = sorted(holdings, key=lambda x: x.get('Value', 0), reverse=True)
     
-    radius, circum = 70, 2 * math.pi * 70
-    cumulative_offset = 0 # THE FIX
+    radius = 70
+    circum = 2 * math.pi * radius
+    cumulative_offset = 0 # This tracks the total % used so far
     svg_slices = []
     # Vibrant Palette
     colors = ["#4f46e5", "#10b981", "#ef4444", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4"]
@@ -63,7 +64,7 @@ def generate_donut_chart(holdings):
         val = h.get('Value', 0)
         weight = h.get('Weight', 0)
         
-        # Filter dust
+        # Filter dust (< 0.1%)
         if weight < 0.1: continue
         
         color = colors[i % len(colors)]
@@ -77,18 +78,19 @@ def generate_donut_chart(holdings):
         # Safe string escaping for JS
         safe_name = name.replace("'", "\\'")
         
+        # v32.5: Unified Data Contract Tooltip (4 args: Name, Value, Weight, Color)
         svg_slices.append(f"""
             <circle r="{radius}" cx="100" cy="100" fill="transparent"
-                stroke="{color}" stroke-width="20"
+                stroke="{color}" stroke-width="22"
                 stroke-dasharray="{dash_len} {circum}"
                 stroke-dashoffset="-{cumulative_offset}" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment"
-                onmouseover="showTT('{safe_name}', '{val_fmt}', '{pct_fmt}')"
+                onmouseover="showTT('{safe_name}', '{val_fmt}', '{pct_fmt}', '{color}')"
                 onmouseout="hideTT()"
-                style="cursor: pointer; transition: stroke-width 0.2s;"></circle>
+                style="cursor: pointer; transition: all 0.3s;"></circle>
         """)
-        cumulative_offset += dash_len # Push next slice forward
+        cumulative_offset += dash_len # Move the starting line for the next slice
 
     return f"""
     <svg viewBox="0 0 200 200" class="w-full h-full">
@@ -99,7 +101,7 @@ def generate_donut_chart(holdings):
     """
 
 def render():
-    print(f"Starting The Artist (Job B) [v31.6 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"Starting The Artist (Job B) [v32.5 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
     
     # 1. Load Data
     state = load_state()
@@ -229,8 +231,8 @@ def render():
     tax_end = datetime(now.year + (1 if now.month > 4 or (now.month == 4 and now.day > 5) else 0), 4, 5)
     days_to_tax = (tax_end - now).days
 
-    # v32.12: Generate Allocation Oracle Chart
-    donut_chart_svg = generate_donut_chart(holdings)
+    # v32.5: Generate Oracle Ring
+    donut_chart_svg = generate_oracle_ring(holdings)
 
     # v31.6 Account History Loading
     history_log = []
@@ -244,7 +246,7 @@ def render():
             print(f"      [WARN] History log load failed: {e}")
 
     context = {
-        'version': "v32.4 Platinum",
+        'version': "v32.5 Platinum",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
