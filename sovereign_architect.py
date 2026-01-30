@@ -74,7 +74,9 @@ class SniperScope:
             t212_ticker = item.get('ticker')
             y_ticker = self._t212_to_yahoo(t212_ticker)
             
-            targets.append({
+            # Preserve all existing fields and add internal ones
+            target_data = item.copy()
+            target_data.update({
                 't212_ticker': t212_ticker,
                 'yahoo_ticker': y_ticker,
                 'target_price': item.get('target_price', item.get('target', 0)),
@@ -82,6 +84,7 @@ class SniperScope:
                 'expected_growth': item.get('expected_growth', 0),
                 'name': item.get('name', t212_ticker)
             })
+            targets.append(target_data)
             yahoo_tickers.append(y_ticker)
 
         # 2. Add FX Pairs to fetch list
