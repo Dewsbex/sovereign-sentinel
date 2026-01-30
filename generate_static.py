@@ -47,7 +47,7 @@ def format_gbp(val):
     return format_gbp_truncate(val)
 
 def render():
-    print(f"Starting The Artist (Job B) [v31.3 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"Starting The Artist (Job B) [v31.5 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
     
     # 1. Load Data
     state = load_state()
@@ -207,7 +207,7 @@ def render():
         },
         
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
-        'version': "v31.3 Platinum"
+        'version': "v31.5 Platinum"
     }
 
     # 7. Rendering Logic
