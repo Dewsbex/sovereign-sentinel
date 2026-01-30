@@ -1,1 +1,205 @@
-{"meta": {"timestamp": "2026-01-30 19:54"}, "account": {"id": 31785628, "currencyCode": "GBP"}, "holdings": [{"Ticker": "BMY", "Name": "Bristol-Myers Squibb Company", "Value": 10429.1, "Weight": 0.6636177807604295, "PL": 456.52, "Price": 54.89, "Shares": 190.0, "Avg_Price": 52.48726315789474, "Currency": "GBP"}, {"Ticker": "DHR", "Name": "Danaher Corporation", "Value": 6585.9, "Weight": 0.4190697512067305, "PL": 46.99, "Price": 219.53, "Shares": 30.0, "Avg_Price": 217.96366666666665, "Currency": "GBP"}, {"Ticker": "RIOl_EQ", "Name": "RIOl_EQ", "Value": 689766.74704674, "Weight": 43.89079382856605, "PL": 2212.55, "Price": 6738.0, "Shares": 102.36965673, "Avg_Price": 6716.386661920381, "Currency": "GBP"}, {"Ticker": "LGENl_EQ", "Name": "LGENl_EQ", "Value": 265100.0, "Weight": 16.86867262559472, "PL": 53.0, "Price": 265.1, "Shares": 1000.0, "Avg_Price": 265.047, "Currency": "GBP"}, {"Ticker": "QELL", "Name": "QELL_US_EQ", "Value": 0.330435732, "Weight": 2.1026073884974546e-05, "PL": -216.62, "Price": 0.0012, "Shares": 275.36311, "Avg_Price": 0.7878703713507594, "Currency": "GBP"}, {"Ticker": "BATSl_EQ", "Name": "BATSl_EQ", "Value": 437600.0, "Weight": 27.84508163319596, "PL": 173.28, "Price": 4376.0, "Shares": 100.0, "Avg_Price": 4374.267199999999, "Currency": "GBP"}, {"Ticker": "VSNTV", "Name": "Versant Media Group, Inc.", "Value": 3571.98, "Weight": 0.22728993302592163, "PL": -151.19, "Price": 32.18, "Shares": 111.0, "Avg_Price": 33.542072072072074, "Currency": "GBP"}, {"Ticker": "NUE", "Name": "Nucor Corporation", "Value": 21332.66872728, "Weight": 1.3574266502857364, "PL": 3000.81, "Price": 179.04, "Shares": 119.1502945, "Avg_Price": 153.85491747382966, "Currency": "GBP"}, {"Ticker": "SOLV", "Name": "Solventum Corporation", "Value": 7648.0, "Weight": 0.48665261501527124, "PL": -394.5, "Price": 76.48, "Shares": 100.0, "Avg_Price": 80.425, "Currency": "GBP"}, {"Ticker": "RE", "Name": "RE_US_EQ", "Value": 22205.5006625396, "Weight": 1.412966130380261, "PL": -783.29, "Price": 331.66, "Shares": 66.95260406, "Avg_Price": 343.3591715407821, "Currency": "GBP"}, {"Ticker": "NFLX", "Name": "Netflix, Inc.", "Value": 15883.999999999998, "Weight": 1.0107204676912354, "PL": -1526.68, "Price": 83.6, "Shares": 190.0, "Avg_Price": 91.63515789473682, "Currency": "GBP"}, {"Ticker": "CRM", "Name": "Salesforce, Inc.", "Value": 19574.84, "Weight": 1.2455736237585686, "PL": -2265.35, "Price": 212.77, "Shares": 92.0, "Avg_Price": 237.39336956521737, "Currency": "GBP"}, {"Ticker": "QCOM", "Name": "QUALCOMM Incorporated", "Value": 16423.559999999998, "Weight": 1.0450534024398808, "PL": -1512.91, "Price": 152.07, "Shares": 108.0, "Avg_Price": 166.0784259259259, "Currency": "GBP"}, {"Ticker": "EOG", "Name": "EOG Resources, Inc.", "Value": 18749.077511237698, "Weight": 1.1930292363974686, "PL": -579.61, "Price": 111.71, "Shares": 167.83705587, "Avg_Price": 115.16340900431989, "Currency": "GBP"}, {"Ticker": "CTVA", "Name": "Corteva, Inc.", "Value": 16431.75, "Weight": 1.0455745432501546, "PL": 317.4, "Price": 73.03, "Shares": 225.0, "Avg_Price": 71.61933333333333, "Currency": "GBP"}, {"Ticker": "CNNE", "Name": "Cannae Holdings, Inc.", "Value": 20248.770761712, "Weight": 1.2884567523577288, "PL": -1716.31, "Price": 14.4, "Shares": 1406.16463623, "Avg_Price": 15.620561202990793, "Currency": "GBP"}]}
+{
+    "meta": {
+        "timestamp": "2026-01-30 22:10",
+        "version": "v32.7"
+    },
+    "account": {
+        "id": 31785628,
+        "currencyCode": "GBP"
+    },
+    "holdings": [
+        {
+            "Ticker": "BMY",
+            "Name": "Bristol-Myers Squibb Company",
+            "Value_GBP": 10457.6,
+            "Price_GBP": 55.04,
+            "PL_GBP": 478.27,
+            "Shares": 190.0,
+            "Value": 10457.6,
+            "Price": 55.04,
+            "Weight_Pct": 0.6655020858286568,
+            "Weight": 0.6655020858286568
+        },
+        {
+            "Ticker": "DHR",
+            "Name": "Danaher Corporation",
+            "Value_GBP": 6565.8,
+            "Price_GBP": 218.86,
+            "PL_GBP": 32.91,
+            "Shares": 30.0,
+            "Value": 6565.8,
+            "Price": 218.86,
+            "Weight_Pct": 0.41783521985291033,
+            "Weight": 0.41783521985291033
+        },
+        {
+            "Ticker": "RIOl_EQ",
+            "Name": "RIOl_EQ",
+            "Value_GBP": 689766.74704674,
+            "Price_GBP": 6738.0,
+            "PL_GBP": 2212.55,
+            "Shares": 102.36965673,
+            "Value": 689766.74704674,
+            "Price": 6738.0,
+            "Weight_Pct": 43.89546443685482,
+            "Weight": 43.89546443685482
+        },
+        {
+            "Ticker": "LGENl_EQ",
+            "Name": "LGENl_EQ",
+            "Value_GBP": 265100.0,
+            "Price_GBP": 265.1,
+            "PL_GBP": 53.0,
+            "Shares": 1000.0,
+            "Value": 265100.0,
+            "Price": 265.1,
+            "Weight_Pct": 16.870467693655993,
+            "Weight": 16.870467693655993
+        },
+        {
+            "Ticker": "QELL",
+            "Name": "QELL_US_EQ",
+            "Value_GBP": 0.330435732,
+            "Price_GBP": 0.0012,
+            "PL_GBP": -216.62,
+            "Shares": 275.36311,
+            "Value": 0.330435732,
+            "Price": 0.0012,
+            "Weight_Pct": 2.1028311359998378e-05,
+            "Weight": 2.1028311359998378e-05
+        },
+        {
+            "Ticker": "BATSl_EQ",
+            "Name": "BATSl_EQ",
+            "Value_GBP": 437600.0,
+            "Price_GBP": 4376.0,
+            "PL_GBP": 173.28,
+            "Shares": 100.0,
+            "Value": 437600.0,
+            "Price": 4376.0,
+            "Weight_Pct": 27.848044748185075,
+            "Weight": 27.848044748185075
+        },
+        {
+            "Ticker": "VSNTV",
+            "Name": "Versant Media Group, Inc.",
+            "Value_GBP": 3615.27,
+            "Price_GBP": 32.57,
+            "PL_GBP": -119.25,
+            "Shares": 111.0,
+            "Value": 3615.27,
+            "Price": 32.57,
+            "Weight_Pct": 0.23006901448073824,
+            "Weight": 0.23006901448073824
+        },
+        {
+            "Ticker": "NUE",
+            "Name": "Nucor Corporation",
+            "Value_GBP": 21174.198835595,
+            "Price_GBP": 177.71,
+            "PL_GBP": 2887.04,
+            "Shares": 119.1502945,
+            "Value": 21174.198835595,
+            "Price": 177.71,
+            "Weight_Pct": 1.3474863726705162,
+            "Weight": 1.3474863726705162
+        },
+        {
+            "Ticker": "SOLV",
+            "Name": "Solventum Corporation",
+            "Value_GBP": 7695.0,
+            "Price_GBP": 76.95,
+            "PL_GBP": -359.49,
+            "Shares": 100.0,
+            "Value": 7695.0,
+            "Price": 76.95,
+            "Weight_Pct": 0.48969539382377547,
+            "Weight": 0.48969539382377547
+        },
+        {
+            "Ticker": "RE",
+            "Name": "RE_US_EQ",
+            "Value_GBP": 22186.0844073622,
+            "Price_GBP": 331.37,
+            "PL_GBP": -795.45,
+            "Shares": 66.95260406,
+            "Value": 22186.0844073622,
+            "Price": 331.37,
+            "Weight_Pct": 1.4118808760585777,
+            "Weight": 1.4118808760585777
+        },
+        {
+            "Ticker": "NFLX",
+            "Name": "Netflix, Inc.",
+            "Value_GBP": 15857.4,
+            "Price_GBP": 83.46,
+            "PL_GBP": -1544.66,
+            "Shares": 190.0,
+            "Value": 15857.4,
+            "Price": 83.46,
+            "Weight_Pct": 1.0091352486057357,
+            "Weight": 1.0091352486057357
+        },
+        {
+            "Ticker": "CRM",
+            "Name": "Salesforce, Inc.",
+            "Value_GBP": 19533.44,
+            "Price_GBP": 212.32,
+            "PL_GBP": -2293.8,
+            "Shares": 92.0,
+            "Value": 19533.44,
+            "Price": 212.32,
+            "Weight_Pct": 1.2430715521160607,
+            "Weight": 1.2430715521160607
+        },
+        {
+            "Ticker": "QCOM",
+            "Name": "QUALCOMM Incorporated",
+            "Value_GBP": 16381.44,
+            "Price_GBP": 151.68,
+            "PL_GBP": -1542.18,
+            "Shares": 108.0,
+            "Value": 16381.44,
+            "Price": 151.68,
+            "Weight_Pct": 1.0424841731254773,
+            "Weight": 1.0424841731254773
+        },
+        {
+            "Ticker": "EOG",
+            "Name": "EOG Resources, Inc.",
+            "Value_GBP": 18822.9258158205,
+            "Price_GBP": 112.15,
+            "PL_GBP": -524.0,
+            "Shares": 167.83705587,
+            "Value": 18822.9258158205,
+            "Price": 112.15,
+            "Weight_Pct": 1.1978557596223431,
+            "Weight": 1.1978557596223431
+        },
+        {
+            "Ticker": "CTVA",
+            "Name": "Corteva, Inc.",
+            "Value_GBP": 16380.0,
+            "Price_GBP": 72.8,
+            "PL_GBP": 281.1,
+            "Shares": 225.0,
+            "Value": 16380.0,
+            "Price": 72.8,
+            "Weight_Pct": 1.0423925342213698,
+            "Weight": 1.0423925342213698
+        },
+        {
+            "Ticker": "CNNE",
+            "Name": "Cannae Holdings, Inc.",
+            "Value_GBP": 20248.770761712,
+            "Price_GBP": 14.4,
+            "PL_GBP": -1714.47,
+            "Shares": 1406.16463623,
+            "Value": 20248.770761712,
+            "Price": 14.4,
+            "Weight_Pct": 1.2885938625866025,
+            "Weight": 1.2885938625866025
+        }
+    ],
+    "total_gbp": 1571385.0073029615
+}
