@@ -17,8 +17,9 @@ def run_audit():
     headers = {"Authorization": f"Basic {base64.b64encode(f'{API_KEY}:'.encode()).decode()}"}
     
     try:
-        pos = requests.get(f"{BASE_URL}/positions", headers=headers).json()
-        acc = requests.get(f"{BASE_URL}/account/summary", headers=headers).json()
+        # v32.4 Fix: Correct Endpoints
+        pos = requests.get(f"{BASE_URL}/portfolio", headers=headers).json()
+        acc = requests.get(f"{BASE_URL}/account/info", headers=headers).json()
         
         # Handle API errors
         if isinstance(pos, dict) and 'code' in pos:
