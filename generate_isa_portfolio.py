@@ -191,7 +191,7 @@ def backfill_history(holdings, cash, fx_rate):
         print(f"[WARN] Backfill failed: {e}")
 
 def run_audit():
-    print(f"[>] Sentinel v32.4: Starting Audit...")
+    print(f"[>] Sentinel v32.6 Master: Starting Audit...")
     
     # 0. KNOWLEDGE BRIDGE SCAN (v32.4)
     print("[>] Scanning Knowledge Base...")
@@ -238,13 +238,19 @@ def run_audit():
     
     company_names = {}
     try:
-        # Batch fetch for speed
+        print("[>] Fetching Company Metadata (Batch)...")
         info_data = yf.Tickers(" ".join(yf_tickers))
         for t_raw, t_yf in zip(holdings_tickers, yf_tickers):
             try:
-                name = info_data.tickers[t_yf].info.get('shortName', t_raw)
+                # Try batch result
+                name = info_data.tickers[t_yf].info.get('shortName')
+                if not name or name == t_yf:
+                    # Individual Retry for critical resilience
+                    print(f"    [~] Retrying {t_raw} individually...")
+                    name = yf.Ticker(t_yf).info.get('shortName', t_raw)
                 company_names[t_raw] = name
-            except:
+            except Exception as e:
+                print(f"    [!] Meta Fail for {t_raw}: {e}")
                 company_names[t_raw] = t_raw
     except Exception as e:
         print(f"⚠️ Metadata Error: {e}")
@@ -300,10 +306,10 @@ def run_audit():
         
     processed_holdings.sort(key=lambda x: x['Value'], reverse=True)
         
-    # 4. SAVE STATE (v32.4)
+    # 4. SAVE STATE (v32.6)
     state = {
         "meta": {
-            "version": "v32.4 Platinum",
+            "version": "v32.6 Platinum",
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "fx_rate": fx_rate
         },

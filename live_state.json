@@ -1,23 +1,23 @@
 {
   "meta": {
-    "version": "v32.4 Platinum",
-    "timestamp": "2026-01-30 17:30:43",
+    "version": "v32.6 Platinum",
+    "timestamp": "2026-01-30 17:34:22",
     "fx_rate": 1.3719868659973145
   },
   "account": {
     "id": 31785628,
     "currency": "GBP",
-    "totalValue": 173245.73,
+    "totalValue": 173192.29,
     "cash": {
-      "availableToTrade": 871.19,
-      "reservedForOrders": 30909.04,
+      "availableToTrade": 860.35,
+      "reservedForOrders": 30919.87,
       "inPies": 0
     },
     "investments": {
-      "currentValue": 141465.51,
+      "currentValue": 141412.07,
       "totalCost": 144906.93,
       "realizedProfitLoss": 26122.63,
-      "unrealizedProfitLoss": -3441.42
+      "unrealizedProfitLoss": -3494.86
     }
   },
   "holdings": [
@@ -25,121 +25,121 @@
       "Ticker": "RE",
       "Company": "RE_US_EQ",
       "Shares": 66.95260406,
-      "Price": 329.4,
+      "Price": 329.67,
       "Avg_Price": 333.79806975,
-      "PL": -911.84,
-      "FX_Impact": -697.11,
+      "PL": -893.13,
+      "FX_Impact": -691.52,
       "Tier": "2",
-      "Value": 16082.33,
+      "Value": 16101.04,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -4.398069750000047,
-      "PL_Per_Share_Pct": -1.317583937286997,
-      "Weight": 11.368338265379299
+      "PL_Per_Share_GBP": -4.128069750000009,
+      "PL_Per_Share_Pct": -1.2366967110060734,
+      "Weight": 11.38627420266754
     },
     {
       "Ticker": "NUE",
       "Company": "Nucor Corporation",
       "Shares": 119.1502945,
-      "Price": 178.06,
+      "Price": 177.99,
       "Avg_Price": 142.75373864,
-      "PL": 2898.17,
-      "FX_Impact": -169.47,
+      "PL": 2897.39,
+      "FX_Impact": -165.22,
       "Tier": "2",
-      "Value": 15471.04,
+      "Value": 15470.26,
       "Currency": "USD",
-      "PL_Per_Share_GBP": 35.30626136000001,
-      "PL_Per_Share_Pct": 24.732284909914853,
-      "Weight": 10.936227277839327
+      "PL_Per_Share_GBP": 35.236261360000015,
+      "PL_Per_Share_Pct": 24.68324941657725,
+      "Weight": 10.940201524035684
     },
     {
       "Ticker": "CNNE",
       "Company": "Cannae Holdings, Inc.",
       "Shares": 1406.16463623,
-      "Price": 14.42,
+      "Price": 14.34,
       "Avg_Price": 15.77239921,
-      "PL": -1712.4,
-      "FX_Impact": -325.65,
+      "PL": -1789.39,
+      "FX_Impact": -320.1,
       "Tier": "2",
-      "Value": 14786.3,
+      "Value": 14709.31,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -1.3523992099999997,
-      "PL_Per_Share_Pct": -8.57446728296449,
-      "Weight": 10.452195676458444
+      "PL_Per_Share_GBP": -1.4323992099999998,
+      "PL_Per_Share_Pct": -9.081682443669264,
+      "Weight": 10.402075703932146
     },
     {
       "Ticker": "CRM",
       "Company": "Salesforce, Inc.",
       "Shares": 92.0,
-      "Price": 211.98,
+      "Price": 212.23,
       "Avg_Price": 242.96684783,
-      "PL": -2334.39,
-      "FX_Impact": -255.54,
+      "PL": -2312.74,
+      "FX_Impact": -249.95,
       "Tier": "2",
-      "Value": 14221.35,
+      "Value": 14243.0,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -30.986847830000016,
-      "PL_Per_Share_Pct": -12.753529177643616,
-      "Weight": 10.052841683409799
+      "PL_Per_Share_GBP": -30.736847830000016,
+      "PL_Per_Share_Pct": -12.650634481419495,
+      "Weight": 10.07231231452091
     },
     {
       "Ticker": "EOG",
       "Company": "EOG Resources, Inc.",
       "Shares": 167.83705587,
-      "Price": 110.8,
+      "Price": 110.76,
       "Avg_Price": 114.00211891,
-      "PL": -706.36,
-      "FX_Impact": -314.45,
+      "PL": -706.61,
+      "FX_Impact": -309.67,
       "Tier": "2",
-      "Value": 13560.81,
+      "Value": 13560.56,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -3.202118909999996,
-      "PL_Per_Share_Pct": -2.8088240294269773,
-      "Weight": 9.58591666957078
+      "PL_Per_Share_GBP": -3.242118909999988,
+      "PL_Per_Share_Pct": -2.8439110965643613,
+      "Weight": 9.589706907238622
     },
     {
       "Ticker": "QCOM",
       "Company": "QUALCOMM Incorporated",
       "Shares": 108.0,
-      "Price": 152.53,
+      "Price": 152.27,
       "Avg_Price": 168.85388889,
-      "PL": -1490.15,
-      "FX_Impact": -204.55,
+      "PL": -1506.51,
+      "FX_Impact": -199.99,
       "Tier": "2",
-      "Value": 12012.6,
+      "Value": 11996.24,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -16.323888890000006,
-      "PL_Per_Share_Pct": -9.667463981616804,
-      "Weight": 8.491512128323158
+      "PL_Per_Share_GBP": -16.583888889999997,
+      "PL_Per_Share_Pct": -9.821443260216284,
+      "Weight": 8.483456847570618
     },
     {
       "Ticker": "NFLX",
       "Company": "Netflix, Inc.",
       "Shares": 190.0,
-      "Price": 83.51,
+      "Price": 83.56,
       "Avg_Price": 92.46947368,
-      "PL": -1552.17,
-      "FX_Impact": -310.82,
+      "PL": -1541.28,
+      "FX_Impact": -306.43,
       "Tier": "2",
-      "Value": 11570.45,
+      "Value": 11581.34,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -8.959473679999988,
-      "PL_Per_Share_Pct": -9.689115038120748,
-      "Weight": 8.178963463792742
+      "PL_Per_Share_GBP": -8.90947367999999,
+      "PL_Per_Share_Pct": -9.635043139568555,
+      "Weight": 8.190049392730014
     },
     {
       "Ticker": "CTVA",
       "Company": "Corteva, Inc.",
       "Shares": 175.0,
-      "Price": 72.61,
+      "Price": 72.54,
       "Avg_Price": 69.24154286,
-      "PL": 230.6,
-      "FX_Impact": -199.26,
+      "PL": 224.85,
+      "FX_Impact": -196.22,
       "Tier": "2",
-      "Value": 9266.0,
+      "Value": 9260.25,
       "Currency": "USD",
-      "PL_Per_Share_GBP": 3.368457140000004,
-      "PL_Per_Share_Pct": 4.864792147700569,
-      "Weight": 6.54998513069963
+      "PL_Per_Share_GBP": 3.2984571400000107,
+      "PL_Per_Share_Pct": 4.763696768960198,
+      "Weight": 6.548629509972777
     },
     {
       "Ticker": "BMY",
@@ -147,14 +147,14 @@
       "Shares": 190.0,
       "Price": 54.76,
       "Avg_Price": 50.57,
-      "PL": 429.96,
-      "FX_Impact": -150.57,
+      "PL": 432.56,
+      "FX_Impact": -148.17,
       "Tier": "2",
-      "Value": 7587.09,
+      "Value": 7589.69,
       "Currency": "USD",
       "PL_Per_Share_GBP": 4.189999999999998,
       "PL_Per_Share_Pct": 8.285544789400825,
-      "Weight": 5.363190879050276
+      "Weight": 5.367249038151808
     },
     {
       "Ticker": "RIOl_EQ",
@@ -169,37 +169,37 @@
       "Currency": "GBX",
       "PL_Per_Share_GBP": 2161.3249874499998,
       "PL_Per_Share_Pct": 47.22478614984217,
-      "Weight": 4.875851061566255
+      "Weight": 4.877868881731478
     },
     {
       "Ticker": "SOLV",
       "Company": "Solventum Corporation",
       "Shares": 100.0,
-      "Price": 76.29,
+      "Price": 76.14,
       "Avg_Price": 80.4473,
-      "PL": -414.63,
-      "FX_Impact": -111.47,
+      "PL": -423.66,
+      "FX_Impact": -109.46,
       "Tier": "2",
-      "Value": 5563.21,
+      "Value": 5554.18,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -4.157299999999992,
-      "PL_Per_Share_Pct": -5.167730924468556,
-      "Weight": 3.9325429288754035
+      "PL_Per_Share_GBP": -4.307299999999998,
+      "PL_Per_Share_Pct": -5.354188394141255,
+      "Weight": 3.9277845686348205
     },
     {
       "Ticker": "DHR",
       "Company": "Danaher Corporation",
       "Shares": 30.0,
-      "Price": 218.92,
+      "Price": 218.62,
       "Avg_Price": 218.2,
-      "PL": 28.25,
-      "FX_Impact": 12.5,
+      "PL": 23.33,
+      "FX_Impact": 14.14,
       "Tier": "2",
-      "Value": 4789.22,
+      "Value": 4784.3,
       "Currency": "USD",
-      "PL_Per_Share_GBP": 0.7199999999999989,
-      "PL_Per_Share_Pct": 0.3299725022914752,
-      "Weight": 3.385421949886605
+      "PL_Per_Share_GBP": 0.4200000000000159,
+      "PL_Per_Share_Pct": 0.1924839596700348,
+      "Weight": 3.38334366400073
     },
     {
       "Ticker": "BATSl_EQ",
@@ -214,7 +214,7 @@
       "Currency": "GBX",
       "PL_Per_Share_GBP": 173.27509999999984,
       "PL_Per_Share_Pct": 4.122922725682089,
-      "Weight": 3.0933234331903283
+      "Weight": 3.0946035728669172
     },
     {
       "Ticker": "LGENl_EQ",
@@ -229,22 +229,22 @@
       "Currency": "GBX",
       "PL_Per_Share_GBP": 5.300000000000011,
       "PL_Per_Share_Pct": 2.040030792917633,
-      "Weight": 1.873948907995329
+      "Weight": 1.8747244222281072
     },
     {
       "Ticker": "VSNTV",
       "Company": "Versant Media Group, Inc.",
       "Shares": 111.0,
-      "Price": 32.5,
+      "Price": 32.51,
       "Avg_Price": 33.25963964,
-      "PL": -128.21,
-      "FX_Impact": -66.72,
+      "PL": -126.5,
+      "FX_Impact": -65.8,
       "Tier": "2",
-      "Value": 2630.66,
+      "Value": 2632.37,
       "Currency": "USD",
-      "PL_Per_Share_GBP": -0.7596396400000032,
-      "PL_Per_Share_Pct": -2.283968341877089,
-      "Weight": 1.8595708918547689
+      "PL_Per_Share_GBP": -0.7496396400000052,
+      "PL_Per_Share_Pct": -2.253901870597673,
+      "Weight": 1.8615497274012083
     },
     {
       "Ticker": "QELL",
@@ -253,13 +253,13 @@
       "Price": 0.0012,
       "Avg_Price": 1.02294022,
       "PL": -216.62,
-      "FX_Impact": -11.45,
+      "FX_Impact": -11.38,
       "Tier": "2",
       "Value": 0.24,
       "Currency": "USD",
       "PL_Per_Share_GBP": -1.0217402199999999,
       "PL_Per_Share_Pct": -99.88269109215395,
-      "Weight": 0.00016965210785321728
+      "Weight": 0.00016972231661061704
     }
   ],
   "sniper": [
@@ -279,8 +279,8 @@
       "target_price": 25.0,
       "expected_growth": 0,
       "name": "MP_US_EQ",
-      "live_price": 59.040000915527344,
-      "distance_pct": 136.16000366210938,
+      "live_price": 58.849998474121094,
+      "distance_pct": 135.39999389648438,
       "status": "WATCH"
     },
     {
@@ -319,8 +319,8 @@
       "target_price": 80.0,
       "expected_growth": 0,
       "name": "NFLX_US_EQ",
-      "live_price": 83.48999786376953,
-      "distance_pct": 4.362497329711914,
+      "live_price": 83.55000305175781,
+      "distance_pct": 4.437503814697266,
       "status": "WATCH"
     },
     {
@@ -339,8 +339,8 @@
       "target_price": 420.0,
       "expected_growth": 0,
       "name": "MSFT_US_EQ",
-      "live_price": 432.29010009765625,
-      "distance_pct": 2.9262143089657737,
+      "live_price": 431.5899963378906,
+      "distance_pct": 2.759522937593006,
       "status": "WATCH"
     }
   ]
