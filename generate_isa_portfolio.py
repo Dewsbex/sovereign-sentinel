@@ -20,7 +20,7 @@ def normalize_to_pounds(value, ticker):
     return float(value)
 
 def run_audit():
-    print("[>] Sentinel v32.7: Sovereign Guard (Currency Normalization)...")
+    print("[>] Sentinel v32.8: Strict Spec Alignment...")
     if not API_KEY or not API_SECRET:
         print("[ERROR] Credentials (Key or Secret) Missing!")
         return
@@ -29,17 +29,17 @@ def run_audit():
     auth = HTTPBasicAuth(API_KEY, API_SECRET)
     
     try:
-        # Correct Endpoints (v32.5/6)
-        r_pos = requests.get(f"{BASE_URL}/portfolio", auth=auth)
+        # Correct Endpoints (v32.8 Official Spec)
+        r_pos = requests.get(f"{BASE_URL}/positions", auth=auth)
         if r_pos.status_code != 200:
-            print(f"[API ERROR] Portfolio: {r_pos.status_code}")
+            print(f"[API ERROR] Positions: {r_pos.status_code}")
             pos_data = []
         else:
             pos_data = r_pos.json()
 
-        r_acc = requests.get(f"{BASE_URL}/account/info", auth=auth)
+        r_acc = requests.get(f"{BASE_URL}/account/summary", auth=auth)
         if r_acc.status_code != 200:
-            print(f"[API ERROR] Account: {r_acc.status_code}")
+            print(f"[API ERROR] Account Summary: {r_acc.status_code}")
             acc_summary = {}
         else:
             acc_summary = r_acc.json()
@@ -92,7 +92,7 @@ def run_audit():
         h["Weight"] = h["Weight_Pct"]
 
     state = {
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.7"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.8"},
         "account": acc_summary,
         "holdings": holdings,
         "total_gbp": total_value_gbp
