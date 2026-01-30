@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | PLATINUM MASTER v30.4</title>
+    <title>SOVEREIGN SENTINEL | {{ version }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -89,6 +89,18 @@
             border-color: #ef4444 !important;
             color: #ef4444 !important;
         }
+
+        /* v30.7 HEATMAP ALIGNMENT */
+        .apexcharts-datalabel text {
+            text-anchor: start !important;
+            alignment-baseline: hanging !important;
+            dominant-baseline: hanging !important;
+        }
+
+        .apexcharts-treemap-rect {
+            stroke: #1f2937 !important;
+            stroke-width: 1px !important;
+        }
     </style>
 </head>
 
@@ -100,7 +112,8 @@
         <div class="flex items-center gap-3">
             <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
             <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">SENTINEL_VIBE <span
-                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v30.4</span>
+                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">{{
+                    version }}</span>
             </h1>
         </div>
 
@@ -376,6 +389,15 @@
                     <p class="text-[0.65rem] text-neutral-600 mt-1">Capital Deployment Targets • Deploying £{{
                         portfolio_metrics.cash_balance | round(0) }}</p>
                 </div>
+                <!-- v30.5 Watchlist Input -->
+                <div class="flex items-center gap-2">
+                    <input type="text" placeholder="TICKER"
+                        class="bg-gray-50 border border-gray-200 text-xs px-2 py-1 rounded w-20 mono uppercase">
+                    <input type="text" placeholder="TARGET £"
+                        class="bg-gray-50 border border-gray-200 text-xs px-2 py-1 rounded w-20 mono">
+                    <button
+                        class="bg-gray-900 text-white text-[0.6rem] px-3 py-1 rounded font-bold hover:bg-black transition-colors">ADD</button>
+                </div>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs mono">
@@ -550,28 +572,30 @@
     </div>
 
     <script>
-        // v30.3 DYNAMIC HEATMAP LOGIC
+        // v30.6 DYNAMIC HEATMAP LOGIC
         const rawMapData = {{ heatmap_dataset | default ('[]') }};
         const mapData = rawMapData.map(d => {
             const pct = d.val_pct || 0;
-            const absPct = Math.abs(pct);
+            // v30.6: Alpha = (pct*100 / 10) capped at 0.9
+            const pctVal = pct * 100;
+            const absPctVal = Math.abs(pctVal);
 
-            // INTENSITY SCALE (0.2 to 0.9 based on 0% -> 30% range for v30.4)
-            // Multiplier = (0.9 - 0.2) / 0.30 approx 2.33, simplified to 3.0 for punchier look
-            let intensity = Math.min(0.9, Math.max(0.2, absPct * 3.0));
+            let alpha = Math.min(0.9, absPctVal / 10);
+            // Ensure minimum visibility for non-zero moves
+            if (absPctVal > 0 && alpha < 0.1) alpha = 0.1;
 
-            let color = '#1f2937'; // Default Slate
+            let color = '#374151'; // Default Dark Gray (Neutral)
             if (pct > 0) {
                 // Emerald
-                color = `rgba(16, 185, 129, ${intensity})`;
+                color = `rgba(16, 185, 129, ${alpha})`;
             } else if (pct < 0) {
                 // Rose
-                color = `rgba(239, 68, 68, ${intensity})`;
+                color = `rgba(239, 68, 68, ${alpha})`;
             }
 
             // Text Contrast
-            d.textColor = intensity > 0.5 ? '#FFFFFF' : '#1F2937';
-            if (color === '#1f2937') d.textColor = '#FFFFFF';
+            d.textColor = alpha > 0.5 ? '#FFFFFF' : '#F3F4F6';
+            if (absPctVal < 1) d.textColor = '#9CA3AF'; // Dim text for small moves
 
             d.fillColor = color;
             return d;
@@ -606,8 +630,9 @@
                     return `
                         <div class="p-2 bg-white border border-gray-200 shadow-lg rounded text-xs font-mono">
                             <div class="font-bold text-gray-900 border-b border-gray-100 pb-1 mb-1">${data.x} - ${data.company_name}</div>
-                            <div class="text-gray-600">Shares: <span class="font-bold">${data.shares_held}</span></div>
-                            <div class="text-gray-600">Value: <span class="font-bold">${data.formatted_value}</span></div>
+                            <div class="text-gray-600">Price: <span class="font-bold">${data.currency || ''} ${data.price_cur}</span> (Avg: ${data.price_avg})</div>
+                            <div class="text-gray-600">Shares Held: <span class="font-bold">${data.shares_held}</span></div>
+                            <div class="text-gray-600">Total Value: <span class="font-bold">${data.formatted_value}</span></div>
                             <div class="${plColorClass} font-bold mt-1">P/L: ${data.formatted_pl_gbp} ${data.formatted_pl_pct}</div>
                         </div>
                     `;

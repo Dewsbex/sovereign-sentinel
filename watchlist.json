@@ -2,16 +2,22 @@
     {
         "ticker": "AAPL",
         "target_price": 180.0,
-        "expected_growth": 0.05
+        "tier": "2",
+        "expected_growth": 0.05,
+        "name": "Apple Inc."
     },
     {
         "ticker": "MSFT",
         "target_price": 350.0,
-        "expected_growth": 0.06
+        "tier": "1+",
+        "expected_growth": 0.06,
+        "name": "Microsoft"
     },
     {
         "ticker": "GOOGL",
         "target_price": 130.0,
-        "expected_growth": 0.07
+        "tier": "1",
+        "expected_growth": 0.07,
+        "name": "Alphabet"
     }
 ]
