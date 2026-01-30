@@ -1,23 +1,23 @@
 {
   "meta": {
-    "version": "v31.1 Platinum",
-    "timestamp": "2026-01-30 09:21:19",
-    "fx_rate": 1.3749295473098755
+    "version": "v31.2 Platinum",
+    "timestamp": "2026-01-30 09:56:45",
+    "fx_rate": 1.3727400302886963
   },
   "account": {
     "id": 31785628,
     "currency": "GBP",
-    "totalValue": 173360.99,
+    "totalValue": 173544.17,
     "cash": {
-      "availableToTrade": 14837.5,
-      "reservedForOrders": 21605.24,
+      "availableToTrade": 14808.22,
+      "reservedForOrders": 21634.51,
       "inPies": 0
     },
     "investments": {
-      "currentValue": 136918.26,
+      "currentValue": 137101.44,
       "totalCost": 140145.96,
       "realizedProfitLoss": 26122.63,
-      "unrealizedProfitLoss": -3227.7
+      "unrealizedProfitLoss": -3044.52
     }
   },
   "holdings": [
@@ -26,30 +26,30 @@
       "Shares": 190.0,
       "Price": 54.28,
       "Avg_Price": 50.57,
-      "PL": 345.07,
-      "FX_Impact": -167.7,
+      "PL": 355.23,
+      "FX_Impact": -158.23,
       "Tier": "2",
-      "Value": 7502.2
+      "Value": 7512.36
     },
     {
       "Ticker": "RIOl_EQ",
       "Shares": 102.36965673,
-      "Price": 6649.8,
+      "Price": 6666.8,
       "Avg_Price": 4576.67501255,
-      "PL": 2122.26,
+      "PL": 2139.66,
       "FX_Impact": 0.0,
       "Tier": "2",
-      "Value": 6807.38
+      "Value": 6824.78
     },
     {
       "Ticker": "LGENl_EQ",
       "Shares": 1000.0,
-      "Price": 265.2,
+      "Price": 264.9,
       "Avg_Price": 259.8,
-      "PL": 54.0,
+      "PL": 51.0,
       "FX_Impact": 0.0,
       "Tier": "2",
-      "Value": 2652.0
+      "Value": 2649.0
     },
     {
       "Ticker": "QELL",
@@ -57,119 +57,119 @@
       "Price": 0.0012,
       "Avg_Price": 1.02294022,
       "PL": -216.62,
-      "FX_Impact": -11.96,
+      "FX_Impact": -11.68,
       "Tier": "2",
       "Value": 0.24
     },
     {
       "Ticker": "BATSl_EQ",
       "Shares": 100.0,
-      "Price": 4352.8,
+      "Price": 4354.8,
       "Avg_Price": 4202.7249,
-      "PL": 150.08,
+      "PL": 152.08,
       "FX_Impact": 0.0,
       "Tier": "2",
-      "Value": 4352.8
+      "Value": 4354.8
     },
     {
       "Ticker": "VSNTV",
       "Shares": 111.0,
       "Price": 32.84,
       "Avg_Price": 33.25963964,
-      "PL": -107.19,
-      "FX_Impact": -73.31,
+      "PL": -103.6,
+      "FX_Impact": -69.67,
       "Tier": "2",
-      "Value": 2651.68
+      "Value": 2655.27
     },
     {
       "Ticker": "NUE",
       "Shares": 119.1502945,
       "Price": 179.82,
       "Avg_Price": 142.75373864,
-      "PL": 3012.9,
-      "FX_Impact": -199.79,
+      "PL": 3034.02,
+      "FX_Impact": -183.03,
       "Tier": "2",
-      "Value": 15585.77
+      "Value": 15606.89
     },
     {
       "Ticker": "SOLV",
       "Shares": 100.0,
       "Price": 76.54,
       "Avg_Price": 80.4473,
-      "PL": -410.04,
-      "FX_Impact": -125.81,
+      "PL": -402.5,
+      "FX_Impact": -117.88,
       "Tier": "2",
-      "Value": 5567.8
+      "Value": 5575.34
     },
     {
       "Ticker": "RE",
       "Shares": 66.95260406,
       "Price": 329.57,
       "Avg_Price": 333.79806975,
-      "PL": -942.86,
-      "FX_Impact": -736.94,
+      "PL": -921.12,
+      "FX_Impact": -714.92,
       "Tier": "2",
-      "Value": 16051.31
+      "Value": 16073.05
     },
     {
       "Ticker": "NFLX",
       "Shares": 190.0,
       "Price": 83.11,
       "Avg_Price": 92.46947368,
-      "PL": -1635.74,
-      "FX_Impact": -342.14,
+      "PL": -1620.18,
+      "FX_Impact": -324.83,
       "Tier": "2",
-      "Value": 11486.88
+      "Value": 11502.44
     },
     {
       "Ticker": "CRM",
       "Shares": 92.0,
       "Price": 214.04,
       "Avg_Price": 242.96684783,
-      "PL": -2231.29,
-      "FX_Impact": -295.38,
+      "PL": -2211.88,
+      "FX_Impact": -273.35,
       "Tier": "2",
-      "Value": 14324.45
+      "Value": 14343.86
     },
     {
       "Ticker": "QCOM",
       "Shares": 108.0,
       "Price": 152.22,
       "Avg_Price": 168.85388889,
-      "PL": -1543.86,
-      "FX_Impact": -237.05,
+      "PL": -1527.66,
+      "FX_Impact": -219.08,
       "Tier": "2",
-      "Value": 11958.89
+      "Value": 11975.09
     },
     {
       "Ticker": "EOG",
       "Shares": 167.83705587,
       "Price": 112.09,
       "Avg_Price": 114.00211891,
-      "PL": -582.01,
-      "FX_Impact": -348.56,
+      "PL": -563.47,
+      "FX_Impact": -329.7,
       "Tier": "2",
-      "Value": 13685.16
+      "Value": 13703.7
     },
     {
       "Ticker": "CTVA",
       "Shares": 175.0,
       "Price": 73.82,
       "Avg_Price": 69.24154286,
-      "PL": 361.99,
-      "FX_Impact": -220.85,
+      "PL": 374.72,
+      "FX_Impact": -208.91,
       "Tier": "2",
-      "Value": 9397.39
+      "Value": 9410.12
     },
     {
       "Ticker": "CNNE",
       "Shares": 1406.16463623,
       "Price": 14.52,
       "Avg_Price": 15.77239921,
-      "PL": -1646.25,
-      "FX_Impact": -365.18,
+      "PL": -1626.13,
+      "FX_Impact": -343.32,
       "Tier": "2",
-      "Value": 14852.45
+      "Value": 14872.57
     }
   ],
   "sniper": [
@@ -202,8 +202,8 @@
       "tier": "1 (Sleeper)",
       "expected_growth": 0,
       "name": "LGEN_UK_EQ",
-      "live_price": 266.0,
-      "distance_pct": 10.833333333333334,
+      "live_price": 265.4469909667969,
+      "distance_pct": 10.602912902832031,
       "status": "WATCH"
     },
     {
@@ -213,8 +213,8 @@
       "tier": "1 (Sleeper)",
       "expected_growth": 0,
       "name": "RIO_UK_EQ",
-      "live_price": 6680.0,
-      "distance_pct": 39.166666666666664,
+      "live_price": 6661.0,
+      "distance_pct": 38.77083333333333,
       "status": "WATCH"
     }
   ]

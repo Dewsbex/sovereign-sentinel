@@ -9,9 +9,8 @@ load_dotenv()
 from sovereign_architect import SovereignArchitect, SniperScope
 
 # --- CONFIGURATION ---
-# We grab the key injected by the YAML file above
 API_KEY = os.environ.get("T212_API_KEY")
-API_SECRET = os.environ.get("T212_API_SECRET", "") # Default to empty if not needed
+API_SECRET = os.environ.get("T212_API_SECRET", "")
 BASE_URL = "https://live.trading212.com/api/v0/equity"
 
 # Watchlist Data
@@ -22,17 +21,20 @@ WATCHLIST_DATA = [
     {"ticker": "RIO_UK_EQ", "target": 4800.0, "tier": "1 (Sleeper)"}
 ]
 
+def safe_float(val, default=0.0):
+    if val is None: return default
+    try:
+        return float(val)
+    except:
+        return default
+
 def get_headers():
     if not API_KEY:
-        # This will show in GitHub Action logs if it fails
         raise ValueError("[!] CRITICAL: No API Key found. Check Repo Secrets.")
-    
-    # Handle keys that don't need a secret (older keys) vs new ones
     if API_SECRET:
         creds = f"{API_KEY}:{API_SECRET}"
     else:
         creds = f"{API_KEY}:"
-        
     encoded = base64.b64encode(creds.encode("utf-8")).decode("utf-8")
     return {
         "Authorization": f"Basic {encoded}",
@@ -40,7 +42,7 @@ def get_headers():
     }
 
 def run_audit():
-    print(f"[>] Sentinel v31.1: Starting Audit...")
+    print(f"[>] Sentinel v31.1 Platinum: Starting Audit...")
     
     # 1. EXTERNAL RADAR (SniperScope)
     sniper = SniperScope(WATCHLIST_DATA)
@@ -50,8 +52,6 @@ def run_audit():
     # 2. INTERNAL RADAR (T212 API)
     try:
         headers = get_headers()
-        
-        # Fetch Positions
         print("[>] Fetching Positions...")
         r_pos = requests.get(f"{BASE_URL}/positions", headers=headers)
         if r_pos.status_code == 401:
@@ -62,7 +62,6 @@ def run_audit():
             return
         positions = r_pos.json()
         
-        # Fetch Cash Summary
         print("[>] Fetching Account Summary...")
         r_cash = requests.get(f"{BASE_URL}/account/summary", headers=headers)
         summary = r_cash.json()
@@ -76,32 +75,35 @@ def run_audit():
     processed_holdings = []
     
     for p in positions:
-        ticker = p.get('ticker', 'UNKNOWN')
-        shares = p.get('quantity', 0)
-        price = p.get('currentPrice', 0)
-        avg = p.get('averagePrice', 0)
-        pl = p.get('ppl', 0)
+        instr = p.get('instrument', {})
+        ticker = instr.get('ticker', 'UNKNOWN')
+        shares = safe_float(p.get('quantity'))
+        price = safe_float(p.get('currentPrice'))
+        avg = safe_float(p.get('averagePricePaid'))
+        
+        wallet = p.get('walletImpact', {})
+        pl_gbp = safe_float(wallet.get('unrealizedProfitLoss'))
+        fx_impact_gbp = safe_float(wallet.get('fxImpact'))
+        value_gbp = safe_float(wallet.get('currentValue'))
         
         is_us = "_US_EQ" in ticker
-        
         tier = arch.get_tier(ticker)
-        fx_impact = arch.calculate_fx_impact(pl, price, avg, shares, is_us)
         
         processed_holdings.append({
             "Ticker": ticker.replace("_US_EQ", "").replace("_UK_EQ", ""),
             "Shares": shares,
             "Price": price,
             "Avg_Price": avg,
-            "PL": pl,
-            "FX_Impact": fx_impact,
+            "PL": pl_gbp,
+            "FX_Impact": fx_impact_gbp,
             "Tier": tier,
-            "Value": price * shares
+            "Value": value_gbp
         })
         
     # 4. SAVE STATE
     state = {
         "meta": {
-            "version": "v31.1",
+            "version": "v31.2 Platinum",
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "fx_rate": fx_rate
         },
@@ -110,9 +112,12 @@ def run_audit():
         "sniper": df_sniper.to_dict(orient='records')
     }
     
-    pd.DataFrame(processed_holdings).to_csv("ISA_PORTFOLIO.csv", index=False)
+    # Save CSV locally (G Drive not available on this system)
+    # User's other application should look for: c:\Users\steve\Sovereign-Sentinel\ISA_PORTFOLIO.csv
+    csv_path = "ISA_PORTFOLIO.csv"
+    pd.DataFrame(processed_holdings).to_csv(csv_path, index=False)
+    print(f"[OK] ISA_PORTFOLIO.csv saved to {os.path.abspath(csv_path)}")
     
-    # v31.1: Saving to root as per YAML preference
     with open("live_state.json", "w") as f:
         json.dump(state, f, indent=2)
     print("[OK] live_state.json saved successfully.")
