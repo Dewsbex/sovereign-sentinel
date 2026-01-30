@@ -9,18 +9,10 @@ API_KEY = os.environ.get("T212_API_KEY")
 API_SECRET = os.environ.get("T212_API_SECRET")
 BASE_URL = "https://live.trading212.com/api/v0/equity"
 
-def normalize_to_pounds(value, ticker):
-    """
-    STRICT NORMALIZATION: Trading 212 often quotes UK stocks in GBX.
-    We force divide by 100 for all _UK_EQ tickers to ensure £1.00 is not £100.00.
-    """
-    # Broaden check for various UK suffixes
-    if "_UK_EQ" in ticker or "l_EQ" in ticker or "L_EQ" in ticker:
-        return float(value) / 100.0
-    return float(value)
+
 
 def run_audit():
-    print("[>] Sentinel v32.8: Strict Spec Alignment...")
+    print("[>] Sentinel v32.9: API Schema Sync...")
     if not API_KEY or not API_SECRET:
         print("[ERROR] Credentials (Key or Secret) Missing!")
         return
@@ -53,49 +45,61 @@ def run_audit():
     holdings = []
 
     print(f"[>] Syncing metadata for {len(pos_data)} assets...")
-    if len(pos_data) > 0:
-        print(f"[DEBUG] First Position Keys: {list(pos_data[0].keys())}")
-        print(f"[DEBUG] First Position Sample: {pos_data[0]}")
+    
+    # 1. First Pass: Aggregate Normalized Data from WalletImpact
+    total_value_gbp = 0
+    holdings = []
 
     for p in pos_data:
-        ticker = p.get('ticker', 'UNKNOWN')
-        # Metadata Sync for Name: fall back to ticker if yfinance fails
-        try:
-            name = yf.Ticker(ticker.replace("_US_EQ", "").replace("_UK_EQ", ".L")).info.get('shortName', ticker)
-        except:
-            name = ticker
-
-        # Apply Sovereign Guard Normalization
-        raw_price = p.get('currentPrice', 0)
-        price_gbp = normalize_to_pounds(raw_price, ticker)
-        qty = p.get('quantity', 0)
-        val_gbp = price_gbp * qty # Calculate local GBP value
+        # v32.9: Parse Nested API Structure
+        instr = p.get('instrument', {})
+        wallet = p.get('walletImpact', {})
         
-        # PPL Normalization
-        ppl_gbp = normalize_to_pounds(p.get('ppl', 0), ticker)
+        raw_ticker = instr.get('ticker', 'UNKNOWN')
+        name = instr.get('name', raw_ticker) # Use API name, robust fallback
+        
+        # 1. Ticker Cleaning
+        ticker_clean = raw_ticker.replace("_US_EQ", "").replace("_UK_EQ", "").replace("l_EQ", "").replace("L_EQ", "")
+        
+        # 2. Value & PL (Use WalletImpact for canonical GBP)
+        # API auto-converts to Account Currency (GBP). Trust the API.
+        val_gbp = wallet.get('currentValue', 0.0)
+        pl_gbp = wallet.get('unrealizedProfitLoss', 0.0)
+        
+        # 3. Price Handling (Display Only)
+        # API returns 'currentPrice' in Instrument Currency (e.g. USD or Pence)
+        raw_price = p.get('currentPrice', 0.0)
+        
+        # Sovereign Guard Logic: For UK stocks, price is Pence. 
+        # We want to display £5.40 not 540p in some contexts, or just keep raw.
+        # But 'Price_GBP' logic suggests we want implied price in pounds.
+        # Implied Price GBP = Value GBP / Quantity
+        qty = p.get('quantity', 0.0)
+        price_gbp = (val_gbp / qty) if qty > 0 else 0.0
         
         total_value_gbp += val_gbp
 
         holdings.append({
-            "Ticker": ticker.replace("_US_EQ", "").replace("_UK_EQ", ""),
+            "Ticker": ticker_clean,
             "Name": name,
-            "Value_GBP": val_gbp, # EXPLICIT KEY
-            "Price_GBP": price_gbp,
-            "PL_GBP": ppl_gbp,
+            "Value_GBP": val_gbp,   # Canonical GBP from API
+            "Value": val_gbp,       # Legacy compat
+            "Price_GBP": price_gbp, # Implied GBP Price
+            "Price": raw_price,     # Raw Instrument Price (e.g. $150 or 540p)
+            "PL_GBP": pl_gbp,       # Canonical PL from API
+            "PL": pl_gbp,           # Legacy compat
             "Shares": qty,
-            # Legacy keys for backward compat if needed, or just standard ones
-            "Value": val_gbp,
-            "Price": price_gbp
+            "Currency": instr.get('currency', 'GBP'), # Instrument Currency
+            "FX_Impact": wallet.get('fxImpact', 0.0)  # Bonus Data
         })
 
     # Calculate Weights after total is known
     for h in holdings:
         h["Weight_Pct"] = (h["Value_GBP"] / total_value_gbp * 100) if total_value_gbp > 0 else 0
-        # Add Weight key for legacy compat if needed
         h["Weight"] = h["Weight_Pct"]
 
     state = {
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.8"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.9"},
         "account": acc_summary,
         "holdings": holdings,
         "total_gbp": total_value_gbp
