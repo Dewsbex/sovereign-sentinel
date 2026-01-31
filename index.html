@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | v32.14 Platinum</title>
+    <title>SOVEREIGN SENTINEL | v32.13 Sovereign Finality</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -253,7 +253,7 @@
         <div class="flex items-center gap-3">
             <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
             <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">SENTINEL_VIBE <span
-                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v32.14 Platinum</span>
+                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v32.13 Sovereign Finality</span>
             </h1>
         </div>
 
@@ -314,161 +314,326 @@
                 <div class="flex flex-col p-4">
                     <div class="asset-allocation-container" id="donut-container">
                         
-    <svg viewBox="0 0 200 200" class="w-full h-full">
-        <circle cx="100" cy="100" r="70" stroke="#f3f4f6" stroke-width="20" fill="none" />
+    <svg viewBox="0 0 200 200" class="w-full h-full overflow-visible">
+        <circle cx="100" cy="100" r="65" stroke="#f3f4f6" stroke-width="18" fill="none" />
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#4f46e5" stroke-width="22"
-                stroke-dasharray="193.0623563399059 439.822971502571"
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#4f46e5" stroke-width="20"
+                stroke-dasharray="1948.6875112201828 408.4070449666731"
                 stroke-dashoffset="-0" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('Rio Tinto', '£689,766.75', '43.9%', '#4f46e5')"
+                class="donut-segment segment-RIO"
+                data-ticker="RIO"
+                onmouseover="showTT('Rio Tinto', '477.1%', '#4f46e5')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('RIO')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="142.76508785298432" y1="148.95045720855455" x2="155.92357642313334" y2="164.0121363496483" 
+                stroke="#4f46e5" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="160.92357642313334" y="164.0121363496483" dominant-baseline="middle" text-anchor="start" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">RIO 477.1%</text>
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#10b981" stroke-width="22"
-                stroke-dasharray="122.48211079479307 439.822971502571"
-                stroke-dashoffset="-193.0623563399059" 
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#10b981" stroke-width="20"
+                stroke-dasharray="1236.2811900704285 408.4070449666731"
+                stroke-dashoffset="-1948.6875112201828" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('British American Tobacco', '£437,600.00', '27.8%', '#10b981')"
+                class="donut-segment segment-BATS"
+                data-ticker="BATS"
+                onmouseover="showTT('British American Tobacco', '302.7%', '#10b981')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('BATS')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="163.43680756282674" y1="114.16938411635762" x2="182.95582527446575" y2="118.52919461369842" 
+                stroke="#10b981" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="187.95582527446575" y="118.52919461369842" dominant-baseline="middle" text-anchor="start" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">BATS 302.7%</text>
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#ef4444" stroke-width="22"
-                stroke-dasharray="74.20020011814363 439.822971502571"
-                stroke-dashoffset="-315.54446713469895" 
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#ef4444" stroke-width="20"
+                stroke-dasharray="748.9445692131411 408.4070449666731"
+                stroke-dashoffset="-3184.9687012906115" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('Legal & General', '£265,100.00', '16.9%', '#ef4444')"
+                class="donut-segment segment-LGEN"
+                data-ticker="LGEN"
+                onmouseover="showTT('Legal & General', '183.4%', '#ef4444')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('LGEN')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="36.527769460063375" y1="114.00985190089948" x2="16.997852370852115" y2="118.32057556271471" 
+                stroke="#ef4444" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="11.997852370852115" y="118.32057556271471" dominant-baseline="middle" text-anchor="end" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">LGEN 183.4%</text>
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#f59e0b" stroke-width="22"
-                stroke-dasharray="6.2097770760629984 439.822971502571"
-                stroke-dashoffset="-389.7446672528426" 
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#f59e0b" stroke-width="20"
+                stroke-dasharray="62.67879075442577 408.4070449666731"
+                stroke-dashoffset="-3933.9132705037528" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('Everest Group', '£22,186.08', '1.4%', '#f59e0b')"
+                class="donut-segment segment-RE"
+                data-ticker="RE"
+                onmouseover="showTT('Everest Group', '15.3%', '#f59e0b')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('RE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="37.137606074358025" y1="116.53237520555987" x2="17.795331020314336" y2="121.61925988419368" 
+                stroke="#f59e0b" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="12.795331020314336" y="121.61925988419368" dominant-baseline="middle" text-anchor="end" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">RE 15.3%</text>
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#8b5cf6" stroke-width="22"
-                stroke-dasharray="5.926555227998916 439.822971502571"
-                stroke-dashoffset="-395.9544443289056" 
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#8b5cf6" stroke-width="20"
+                stroke-dasharray="59.820072521154636 408.4070449666731"
+                stroke-dashoffset="-3996.5920612581785" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('Nucor', '£21,174.20', '1.3%', '#8b5cf6')"
+                class="donut-segment segment-NUE"
+                data-ticker="NUE"
+                onmouseover="showTT('Nucor', '14.6%', '#8b5cf6')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('NUE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="49.66808256688178" y1="58.86974243326733" x2="34.181338741306945" y2="46.214278566580354" 
+                stroke="#8b5cf6" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="29.181338741306945" y="46.214278566580354" dominant-baseline="middle" text-anchor="end" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">NUE 14.6%</text>
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#ec4899" stroke-width="22"
-                stroke-dasharray="5.667532412921334 439.822971502571"
-                stroke-dashoffset="-401.8809995569045" 
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#ec4899" stroke-width="20"
+                stroke-dasharray="57.20560880884964 408.4070449666731"
+                stroke-dashoffset="-4056.412133779333" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('Cannae', '£20,248.77', '1.3%', '#ec4899')"
+                class="donut-segment segment-CNNE"
+                data-ticker="CNNE"
+                onmouseover="showTT('Cannae', '14.0%', '#ec4899')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('CNNE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="100.94445528112274" y1="35.006861868179044" x2="101.2350569060836" y2="15.008973212234125" 
+                stroke="#ec4899" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="106.2350569060836" y="15.008973212234125" dominant-baseline="middle" text-anchor="start" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">CNNE 14.0%</text>
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#06b6d4" stroke-width="22"
-                stroke-dasharray="5.467314813261981 439.822971502571"
-                stroke-dashoffset="-407.54853196982583" 
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#06b6d4" stroke-width="20"
+                stroke-dasharray="55.18469938155692 408.4070449666731"
+                stroke-dashoffset="-4113.617742588182" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('Salesforce', '£19,533.44', '1.2%', '#06b6d4')"
+                class="donut-segment segment-CRM"
+                data-ticker="CRM"
+                onmouseover="showTT('Salesforce', '13.5%', '#06b6d4')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('CRM')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="150.05954875672347" y1="58.53867370339888" x2="165.46248683571528" y2="45.78134253521392" 
+                stroke="#06b6d4" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="170.46248683571528" y="45.78134253521392" dominant-baseline="middle" text-anchor="start" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">CRM 13.5%</text>
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#4f46e5" stroke-width="22"
-                stroke-dasharray="5.268445350218231 439.822971502571"
-                stroke-dashoffset="-413.0158467830878" 
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#3b82f6" stroke-width="20"
+                stroke-dasharray="53.17739745930064 408.4070449666731"
+                stroke-dashoffset="-4168.802441969739" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('EOG Resources', '£18,822.93', '1.2%', '#4f46e5')"
+                class="donut-segment segment-EOG"
+                data-ticker="EOG"
+                onmouseover="showTT('EOG Resources', '13.0%', '#3b82f6')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('EOG')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="164.3473361919036" y1="109.18805338502841" x2="184.14651655864319" y2="112.01514673426792" 
+                stroke="#3b82f6" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="189.14651655864319" y="112.01514673426792" dominant-baseline="middle" text-anchor="start" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">EOG 13.0%</text>
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#10b981" stroke-width="22"
-                stroke-dasharray="4.5850853497674935 439.822971502571"
-                stroke-dashoffset="-418.28429213330605" 
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#f43f5e" stroke-width="20"
+                stroke-dasharray="46.27985863406609 408.4070449666731"
+                stroke-dashoffset="-4221.97983942904" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('Qualcomm', '£16,381.44', '1.0%', '#10b981')"
+                class="donut-segment segment-QCOM"
+                data-ticker="QCOM"
+                onmouseover="showTT('Qualcomm', '11.3%', '#f43f5e')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('QCOM')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="140.05310881786343" y1="151.19324637121963" x2="152.37714230028297" y2="166.94501448544105" 
+                stroke="#f43f5e" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="157.37714230028297" y="166.94501448544105" dominant-baseline="middle" text-anchor="start" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">QCOM 11.3%</text>
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#ef4444" stroke-width="22"
-                stroke-dasharray="4.584682300774018 439.822971502571"
-                stroke-dashoffset="-422.86937748307355" 
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#10b981" stroke-width="20"
+                stroke-dasharray="46.275790432709364 408.4070449666731"
+                stroke-dashoffset="-4268.259698063106" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('Corteva', '£16,380.00', '1.0%', '#ef4444')"
+                class="donut-segment segment-CTVA"
+                data-ticker="CTVA"
+                onmouseover="showTT('Corteva', '11.3%', '#10b981')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('CTVA')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="96.87758098817798" y1="164.92496052763232" x2="95.91683667684813" y2="184.90187145921146" 
+                stroke="#10b981" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="90.91683667684813" y="184.90187145921146" dominant-baseline="middle" text-anchor="end" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">CTVA 11.3%</text>
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#f59e0b" stroke-width="22"
-                stroke-dasharray="4.438409103558848 439.822971502571"
-                stroke-dashoffset="-427.4540597838476" 
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#4f46e5" stroke-width="20"
+                stroke-dasharray="44.79937235699911 408.4070449666731"
+                stroke-dashoffset="-4314.535488495815" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('Netflix', '£15,857.40', '1.0%', '#f59e0b')"
+                class="donut-segment segment-NFLX"
+                data-ticker="NFLX"
+                onmouseover="showTT('Netflix', '11.0%', '#4f46e5')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('NFLX')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="55.758494046829185" y1="147.62025987954655" x2="42.145722984315086" y2="162.27264753479164" 
+                stroke="#4f46e5" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="37.145722984315086" y="162.27264753479164" dominant-baseline="middle" text-anchor="end" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">NFLX 11.0%</text>
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#8b5cf6" stroke-width="22"
-                stroke-dasharray="2.9270313570558235 439.822971502571"
-                stroke-dashoffset="-431.89246888740644" 
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#10b981" stroke-width="20"
+                stroke-dasharray="29.54418229725894 408.4070449666731"
+                stroke-dashoffset="-4359.334860852814" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('Bristol-Myers Squibb', '£10,457.60', '0.7%', '#8b5cf6')"
+                class="donut-segment segment-BMY"
+                data-ticker="BMY"
+                onmouseover="showTT('Bristol-Myers Squibb', '7.2%', '#10b981')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('BMY')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="37.02534180809871" y1="116.09945420233865" x2="17.64852390289832" y2="121.05313241844284" 
+                stroke="#10b981" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="12.648523902898319" y="121.05313241844284" dominant-baseline="middle" text-anchor="end" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">BMY 7.2%</text>
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#ec4899" stroke-width="22"
-                stroke-dasharray="2.153793058880102 439.822971502571"
-                stroke-dashoffset="-434.81950024446223" 
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#ef4444" stroke-width="20"
+                stroke-dasharray="21.739450999981596 408.4070449666731"
+                stroke-dashoffset="-4388.879043150073" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('Solventum', '£7,695.00', '0.5%', '#ec4899')"
+                class="donut-segment segment-SOLV"
+                data-ticker="SOLV"
+                onmouseover="showTT('Solventum', '5.3%', '#ef4444')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('SOLV')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="35.674628161131224" y1="90.65941448348836" x2="15.882206056863893" y2="87.78538817071555" 
+                stroke="#ef4444" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="10.882206056863893" y="87.78538817071555" dominant-baseline="middle" text-anchor="end" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">SOLV 5.3%</text>
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#06b6d4" stroke-width="22"
-                stroke-dasharray="1.8377354731637396 439.822971502571"
-                stroke-dashoffset="-436.97329330334236" 
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#f59e0b" stroke-width="20"
+                stroke-dasharray="18.54930310275233 408.4070449666731"
+                stroke-dashoffset="-4410.618494150054" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('Danaher', '£6,565.80', '0.4%', '#06b6d4')"
+                class="donut-segment segment-DHR"
+                data-ticker="DHR"
+                onmouseover="showTT('Danaher', '4.5%', '#f59e0b')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('DHR')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="41.58774846700406" y1="71.48668958458148" x2="23.614747995312996" y2="62.71336330291425" 
+                stroke="#f59e0b" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="18.614747995312996" y="62.71336330291425" dominant-baseline="middle" text-anchor="end" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">DHR 4.5%</text>
         
-            <circle r="70" cx="100" cy="100" fill="transparent"
-                stroke="#4f46e5" stroke-width="22"
-                stroke-dasharray="1.0118964823882348 439.822971502571"
-                stroke-dashoffset="-438.8110287765061" 
+            <!-- Slice -->
+            <circle r="65" cx="100" cy="100" fill="transparent"
+                stroke="#8b5cf6" stroke-width="20"
+                stroke-dasharray="10.213643277024492 408.4070449666731"
+                stroke-dashoffset="-4429.167797252807" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('Versant Media Group', '£3,615.27', '0.2%', '#4f46e5')"
+                class="donut-segment segment-VSNTV"
+                data-ticker="VSNTV"
+                onmouseover="showTT('Versant Media Group', '2.5%', '#8b5cf6')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('VSNTV')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="49.26897758685826" y1="59.363029579983326" x2="33.6594322289685" y2="46.859346373824344" 
+                stroke="#8b5cf6" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="28.659432228968498" y="46.859346373824344" dominant-baseline="middle" text-anchor="end" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">VSNTV 2.5%</text>
         
-        <text x="100" y="95" text-anchor="middle" class="text-[0.5rem] font-bold fill-gray-400">TOTAL</text>
-        <text x="100" y="110" text-anchor="middle" class="text-[0.6rem] font-bold fill-gray-900">ASSETS</text>
+        <text x="100" y="98" text-anchor="middle" class="text-[0.5rem] font-bold fill-gray-400">ALLOCATION</text>
+        <text x="100" y="108" text-anchor="middle" class="text-[0.7rem] font-black fill-gray-900 tracking-tighter">WEIGHTS</text>
     </svg>
     
 
@@ -483,183 +648,127 @@
 
                     <!-- v32.14 Sovereign Guard Legend Grid -->
                     <div class="mt-6 border-t border-gray-100 pt-4 overflow-y-auto max-height-[200px]">
-                        
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">RIO</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">477.1%</span>
-                <span class="font-mono font-bold text-gray-800">£689,766.75</span>
-            </div>
+                        <div class="grid grid-cols-4 gap-2">
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('RIO')"
+             onmouseover="showTT('Rio Tinto', '477.1%', '#4f46e5')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #4f46e5;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">RIO</span>
         </div>
         
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">BATS</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">302.7%</span>
-                <span class="font-mono font-bold text-gray-800">£437,600.00</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('BATS')"
+             onmouseover="showTT('British American Tobacco', '302.7%', '#10b981')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #10b981;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">BATS</span>
         </div>
         
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">LGEN</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">183.4%</span>
-                <span class="font-mono font-bold text-gray-800">£265,100.00</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('LGEN')"
+             onmouseover="showTT('Legal & General', '183.4%', '#ef4444')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #ef4444;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">LGEN</span>
         </div>
         
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">RE</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">15.3%</span>
-                <span class="font-mono font-bold text-gray-800">£22,186.08</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('RE')"
+             onmouseover="showTT('Everest Group', '15.3%', '#f59e0b')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #f59e0b;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">RE</span>
         </div>
         
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">NUE</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">14.6%</span>
-                <span class="font-mono font-bold text-gray-800">£21,174.20</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('NUE')"
+             onmouseover="showTT('Nucor', '14.6%', '#8b5cf6')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #8b5cf6;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">NUE</span>
         </div>
         
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">CNNE</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">14.0%</span>
-                <span class="font-mono font-bold text-gray-800">£20,248.77</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('CNNE')"
+             onmouseover="showTT('Cannae', '14.0%', '#ec4899')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #ec4899;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">CNNE</span>
         </div>
         
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">CRM</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">13.5%</span>
-                <span class="font-mono font-bold text-gray-800">£19,533.44</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('CRM')"
+             onmouseover="showTT('Salesforce', '13.5%', '#06b6d4')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #06b6d4;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">CRM</span>
         </div>
         
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">EOG</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">13.0%</span>
-                <span class="font-mono font-bold text-gray-800">£18,822.93</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('EOG')"
+             onmouseover="showTT('EOG Resources', '13.0%', '#3b82f6')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #3b82f6;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">EOG</span>
         </div>
         
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">QCOM</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">11.3%</span>
-                <span class="font-mono font-bold text-gray-800">£16,381.44</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('QCOM')"
+             onmouseover="showTT('Qualcomm', '11.3%', '#f43f5e')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #f43f5e;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">QCOM</span>
         </div>
         
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">CTVA</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">11.3%</span>
-                <span class="font-mono font-bold text-gray-800">£16,380.00</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('CTVA')"
+             onmouseover="showTT('Corteva', '11.3%', '#10b981')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #10b981;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">CTVA</span>
         </div>
         
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">NFLX</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">11.0%</span>
-                <span class="font-mono font-bold text-gray-800">£15,857.40</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('NFLX')"
+             onmouseover="showTT('Netflix', '11.0%', '#4f46e5')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #4f46e5;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">NFLX</span>
         </div>
         
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">BMY</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">7.2%</span>
-                <span class="font-mono font-bold text-gray-800">£10,457.60</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('BMY')"
+             onmouseover="showTT('Bristol-Myers Squibb', '7.2%', '#10b981')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #10b981;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">BMY</span>
         </div>
         
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">SOLV</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">5.3%</span>
-                <span class="font-mono font-bold text-gray-800">£7,695.00</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('SOLV')"
+             onmouseover="showTT('Solventum', '5.3%', '#ef4444')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #ef4444;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">SOLV</span>
         </div>
         
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">DHR</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">4.5%</span>
-                <span class="font-mono font-bold text-gray-800">£6,565.80</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('DHR')"
+             onmouseover="showTT('Danaher', '4.5%', '#f59e0b')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #f59e0b;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">DHR</span>
         </div>
         
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">VSNTV</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">2.5%</span>
-                <span class="font-mono font-bold text-gray-800">£3,615.27</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('VSNTV')"
+             onmouseover="showTT('Versant Media Group', '2.5%', '#8b5cf6')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: #8b5cf6;"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">VSNTV</span>
         </div>
-        
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">QELL</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">0.0%</span>
-                <span class="font-mono font-bold text-gray-800">£0.17</span>
-            </div>
         </div>
-        
                     </div>
                 </div>
             </div>
@@ -1565,15 +1674,15 @@
     </div>
 
     <script>
-        // v32.14 Sovereign Guard - Dynamic Centered Tooltip
-        function showTT(name, value, weight, color) {
+        // v32.13 Sovereign Finality - Artist interaction
+        function showTT(name, weight, color) {
             const tt = document.getElementById('donut-tooltip');
             const hmap = document.getElementById('heatmap-chart');
             if (tt) {
                 tt.innerHTML = `
-                    <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest leading-tight">${name}</span>
-                    <span class="text-xs font-bold text-gray-900 leading-none">${weight}</span>
-                    <span class="text-[0.6rem] font-mono text-gray-400 mt-1">${value}</span>
+                    <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest leading-tight overflow-hidden text-ellipsis whitespace-nowrap w-full px-1">${name}</span>
+                    <span class="text-xl font-black text-gray-900 leading-none">${weight}</span>
+                    <div class="w-8 h-1 mt-2 rounded-full" style="background-color: ${color}"></div>
                 `;
                 tt.style.visibility = 'visible';
                 tt.style.opacity = 1;
@@ -1588,12 +1697,29 @@
             if (tt) {
                 tt.innerHTML = `
                     <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest leading-tight">Allocation</span>
-                    <span class="text-lg font-bold text-gray-900 leading-none">TOTAL</span>
+                    <span class="text-xl font-black text-gray-900 leading-none">TOTAL</span>
                     <span class="text-xs font-mono text-emerald-500 mt-1">100.0%</span>
                 `;
             }
             // Reset interaction guard
             if (hmap) hmap.style.opacity = '1';
+        }
+
+        function highlightSegment(ticker) {
+            // Reset all segments
+            document.querySelectorAll('.donut-segment').forEach(s => {
+                s.style.strokeWidth = "20";
+                s.style.opacity = "0.7";
+            });
+
+            // Highlight target
+            const target = document.querySelector(`.segment-${ticker}`);
+            if (target) {
+                target.style.strokeWidth = "26";
+                target.style.opacity = "1";
+                // Trigger the tooltip for this segment by simulating mouseover
+                target.dispatchEvent(new Event('mouseover'));
+            }
         }
 
         // v30.6 DYNAMIC HEATMAP LOGIC

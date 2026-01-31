@@ -561,15 +561,15 @@
     </div>
 
     <script>
-        // v32.14 Sovereign Guard - Dynamic Centered Tooltip
-        function showTT(name, value, weight, color) {
+        // v32.13 Sovereign Finality - Artist interaction
+        function showTT(name, weight, color) {
             const tt = document.getElementById('donut-tooltip');
             const hmap = document.getElementById('heatmap-chart');
             if (tt) {
                 tt.innerHTML = `
-                    <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest leading-tight">${name}</span>
-                    <span class="text-xs font-bold text-gray-900 leading-none">${weight}</span>
-                    <span class="text-[0.6rem] font-mono text-gray-400 mt-1">${value}</span>
+                    <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest leading-tight overflow-hidden text-ellipsis whitespace-nowrap w-full px-1">${name}</span>
+                    <span class="text-xl font-black text-gray-900 leading-none">${weight}</span>
+                    <div class="w-8 h-1 mt-2 rounded-full" style="background-color: ${color}"></div>
                 `;
                 tt.style.visibility = 'visible';
                 tt.style.opacity = 1;
@@ -584,12 +584,29 @@
             if (tt) {
                 tt.innerHTML = `
                     <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest leading-tight">Allocation</span>
-                    <span class="text-lg font-bold text-gray-900 leading-none">TOTAL</span>
+                    <span class="text-xl font-black text-gray-900 leading-none">TOTAL</span>
                     <span class="text-xs font-mono text-emerald-500 mt-1">100.0%</span>
                 `;
             }
             // Reset interaction guard
             if (hmap) hmap.style.opacity = '1';
+        }
+
+        function highlightSegment(ticker) {
+            // Reset all segments
+            document.querySelectorAll('.donut-segment').forEach(s => {
+                s.style.strokeWidth = "20";
+                s.style.opacity = "0.7";
+            });
+
+            // Highlight target
+            const target = document.querySelector(`.segment-${ticker}`);
+            if (target) {
+                target.style.strokeWidth = "26";
+                target.style.opacity = "1";
+                // Trigger the tooltip for this segment by simulating mouseover
+                target.dispatchEvent(new Event('mouseover'));
+            }
         }
 
         // v30.6 DYNAMIC HEATMAP LOGIC

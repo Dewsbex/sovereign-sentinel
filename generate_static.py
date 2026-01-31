@@ -1,5 +1,5 @@
 """
-The Artist (Job B) - v31.2 Platinum
+The Artist (Job B) - v32.13 Sovereign Finality
 The Renderer for Sovereign Sentinel.
 STRICT RULE: NO NETWORK CALLS.
 Reads live_state.json and generates index.html.
@@ -47,63 +47,91 @@ def format_gbp(val):
     return format_gbp_truncate(val)
 
 # v32.5: Oracle Ring Engine
-def generate_oracle_ring(holdings):
+# v32.13: Sovereign Finality - Artist Ring
+def generate_oracle_ring(holdings, total_invested):
     if not holdings: return ""
     
+    # Sort: Largest first
+    sorted_holdings = sorted(holdings, key=lambda x: x.get('Value_GBP', 0), reverse=True)
     
-    # Sort: Largest first for geometry
-    sorted_holdings = sorted(holdings, key=lambda x: x.get('Value_GBP', x.get('Value', 0)), reverse=True)
-    
-    radius = 70
+    radius = 65
     circum = 2 * math.pi * radius
-    cumulative_offset = 0 # This tracks the total % used so far
-    svg_slices = []
-    # Vibrant Palette
-    colors = ["#4f46e5", "#10b981", "#ef4444", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4"]
+    cumulative_offset = 0
+    svg_elements = []  # Slices + Lines + Labels
+    
+    # Vibrant Palette - Fixed for legend consistency
+    colors = ["#4f46e5", "#10b981", "#ef4444", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4", "#3b82f6", "#f43f5e", "#10b981"]
 
     for i, h in enumerate(sorted_holdings):
-        val = h.get('Value_GBP', h.get('Value', 0))
-        weight = h.get('Weight_Pct', h.get('Weight', 0))
+        val = h.get('Value_GBP', 0)
+        # Denominator: (Value_GBP / (Total_Wealth - Cash - Pending)) * 100
+        weight = (val / total_invested * 100) if total_invested > 0 else 0
         
-        # Filter dust (< 0.1%)
-        if weight < 0.1: continue
+        # Filter dust (< 0.5%) for visualization clarity
+        if weight < 0.5: continue
         
         color = colors[i % len(colors)]
         dash_len = (weight / 100) * circum
         
-        # Tooltip content
-        name = h.get('Name', h.get('Ticker', 'Asset'))
-        val_fmt = f"£{val:,.2f}" # Pre-formatted string
+        # Calculate angle for label positioning (middle of slice)
+        # Slices start at -90 degrees (top)
+        start_angle_deg = (cumulative_offset / circum) * 360 - 90
+        slice_angle_deg = (dash_len / circum) * 360
+        mid_angle_deg = start_angle_deg + (slice_angle_deg / 2)
+        mid_angle_rad = math.radians(mid_angle_deg)
+        
+        # Point on the ring
+        px = 100 + radius * math.cos(mid_angle_rad)
+        py = 100 + radius * math.sin(mid_angle_rad)
+        
+        # External Label point
+        ex = 100 + (radius + 20) * math.cos(mid_angle_rad)
+        ey = 100 + (radius + 20) * math.sin(mid_angle_rad)
+        
+        # Text alignment based on side
+        text_anchor = "start" if math.cos(mid_angle_rad) > 0 else "end"
+        label_offset = 5 if text_anchor == "start" else -5
+        
+        ticker = h.get('Ticker', 'Asset')
+        safe_name = h.get('Name', ticker).replace("'", "\\'")
         pct_fmt = f"{weight:.1f}%"
         
-        # Safe string escaping for JS
-        safe_name = name.replace("'", "\\'")
-        
-        # v32.7: Sovereign Guard Tooltip (No Math in JS)
-        svg_slices.append(f"""
+        # v32.13: Leader Lines & External Labels
+        svg_elements.append(f"""
+            <!-- Slice -->
             <circle r="{radius}" cx="100" cy="100" fill="transparent"
-                stroke="{color}" stroke-width="22"
+                stroke="{color}" stroke-width="20"
                 stroke-dasharray="{dash_len} {circum}"
                 stroke-dashoffset="-{cumulative_offset}" 
                 transform="rotate(-90 100 100)"
-                class="donut-segment"
-                onmouseover="showTT('{safe_name}', '{val_fmt}', '{pct_fmt}', '{color}')"
+                class="donut-segment segment-{ticker}"
+                data-ticker="{ticker}"
+                onmouseover="showTT('{safe_name}', '{pct_fmt}', '{color}')"
                 onmouseout="hideTT()"
+                onclick="highlightSegment('{ticker}')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
+            
+            <!-- Leader Line -->
+            <line x1="{px}" y1="{py}" x2="{ex}" y2="{ey}" 
+                stroke="{color}" stroke-width="0.5" opacity="0.6" />
+                
+            <!-- Label -->
+            <text x="{ex + label_offset}" y="{ey}" dominant-baseline="middle" text-anchor="{text_anchor}" 
+                class="text-[0.45rem] font-bold fill-gray-600 mono">{ticker} {pct_fmt}</text>
         """)
-        cumulative_offset += dash_len # Move the starting line for the next slice
+        cumulative_offset += dash_len
 
     return f"""
-    <svg viewBox="0 0 200 200" class="w-full h-full">
-        <circle cx="100" cy="100" r="{radius}" stroke="#f3f4f6" stroke-width="20" fill="none" />
-        {''.join(svg_slices)}
-        <text x="100" y="95" text-anchor="middle" class="text-[0.5rem] font-bold fill-gray-400">TOTAL</text>
-        <text x="100" y="110" text-anchor="middle" class="text-[0.6rem] font-bold fill-gray-900">ASSETS</text>
+    <svg viewBox="0 0 200 200" class="w-full h-full overflow-visible">
+        <circle cx="100" cy="100" r="{radius}" stroke="#f3f4f6" stroke-width="18" fill="none" />
+        {''.join(svg_elements)}
+        <text x="100" y="98" text-anchor="middle" class="text-[0.5rem] font-bold fill-gray-400">ALLOCATION</text>
+        <text x="100" y="108" text-anchor="middle" class="text-[0.7rem] font-black fill-gray-900 tracking-tighter">WEIGHTS</text>
     </svg>
     """
 
 def render():
-    print(f"Starting The Artist (Job B) [v32.10 Platinum]... ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"Starting The Artist (Job B) [v32.13 Sovereign Finality]... ({datetime.now().strftime('%H:%M:%S')})")
     
     # 1. Load Data
     state = load_state()
@@ -235,9 +263,6 @@ def render():
     tax_end = datetime(now.year + (1 if now.month > 4 or (now.month == 4 and now.day > 5) else 0), 4, 5)
     days_to_tax = (tax_end - now).days
 
-    # v32.5: Generate Oracle Ring
-    donut_chart_svg = generate_oracle_ring(holdings)
-
     # v31.6 Account History Loading
     history_log = []
     log_path = "data/history_log.json"
@@ -252,33 +277,40 @@ def render():
     # v32.14 Sovereign Guard logic: Legend & Invested Funds Weight
     total_invested = total_wealth - cash_dry - blocked
     if total_invested <= 0:
-        total_invested = sum(h.get('Value_GBP', h.get('Value', 0)) for h in holdings)
+        total_invested = sum(h.get('Value_GBP', 0) for h in holdings)
         
-    legend_html = ""
-    # Sort holdings by value for legend
-    sorted_holdings = sorted(holdings, key=lambda x: x.get('Value_GBP', x.get('Value', 0)), reverse=True)
+    # v32.13: Generate Oracle Ring with the correct denominator
+    donut_chart_svg = generate_oracle_ring(holdings, total_invested)
+
+    # v32.13: Compact, Multi-column Legend (Tickers Only)
+    legend_html = '<div class="grid grid-cols-4 gap-2">'
+    sorted_holdings = sorted(holdings, key=lambda x: x.get('Value_GBP', 0), reverse=True)
     
-    for h in sorted_holdings:
-        val = safe_val(h.get('Value_GBP', h.get('Value', 0)))
-        ticker = h.get('Ticker', 'N/A')
-        weight_invested = (val / total_invested * 100) if total_invested > 0 else 0
+    colors = ["#4f46e5", "#10b981", "#ef4444", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4", "#3b82f6", "#f43f5e", "#10b981"]
+    
+    for i, h in enumerate(sorted_holdings):
+        val = h.get('Value_GBP', 0)
+        weight = (val / total_invested * 100) if total_invested > 0 else 0
+        if weight < 0.1: continue # Still filter tiny dust for legend
         
-        # Color mapping (simple circles for now)
+        ticker = h.get('Ticker', 'N/A')
+        color = colors[i % len(colors)]
+        safe_name = h.get('Name', ticker).replace("'", "\\'")
+        pct_fmt = f"{weight:.1f}%"
+        
         legend_html += f"""
-        <div class="flex items-center justify-between text-[0.65rem] border-b border-gray-50 py-1">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981;"></div>
-                <span class="font-bold text-gray-700">{ticker}</span>
-            </div>
-            <div class="flex gap-3">
-                <span class="text-gray-400">{weight_invested:.1f}%</span>
-                <span class="font-mono font-bold text-gray-800">£{val:,.2f}</span>
-            </div>
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+             onclick="highlightSegment('{ticker}')"
+             onmouseover="showTT('{safe_name}', '{pct_fmt}', '{color}')"
+             onmouseout="hideTT()">
+            <div class="w-2 h-2 rounded-full" style="background-color: {color};"></div>
+            <span class="text-[0.6rem] font-bold text-gray-700 mono">{ticker}</span>
         </div>
         """
+    legend_html += "</div>"
 
     context = {
-        'version': "v32.14 Platinum",
+        'version': "v32.13 Sovereign Finality",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
@@ -288,7 +320,7 @@ def render():
         'pending_cash_str': format_gbp_truncate(blocked),
         'env': meta.get('env', 'LIVE'),
         'allocation_donut': donut_chart_svg,
-        'legend_html': legend_html, # v32.14 Legend
+        'legend_html': legend_html, # v32.13 Compact Legend
         'holdings': holdings,
         'fortress_holdings': fortress_display,
         'sniper_architect': sniper_display,
