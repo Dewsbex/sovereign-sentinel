@@ -46,6 +46,30 @@ class Strategy_ORB:
         self.titan_cap = float(cfg.get("STRATEGY_CAP_GBP", 500.0))
         logger.info(f"🛡️ Titan Shield Active. Hard Deck: £{self.titan_cap:.2f}")
 
+        # Load Watchlist from JSON
+        self.watchlist = self.load_watchlist()
+
+    def load_watchlist(self):
+        """Loads tickers from watchlist.json"""
+        default = ["TSLA", "NVDA", "AAPL", "AMD", "PLTR"]
+        try:
+            with open('watchlist.json', 'r') as f:
+                data = json.load(f)
+                # Extract 'ticker' field from list of dicts
+                tickers = [item.get('ticker') for item in data if item.get('ticker')]
+                if tickers:
+                    logger.info(f"Loaded {len(tickers)} tickers from watchlist.json")
+                    return tickers
+                else:
+                    logger.warning("Components missing in watchlist.json. Using default.")
+                    return default
+        except FileNotFoundError:
+            logger.warning("watchlist.json not found. Using default.")
+            return default
+        except Exception as e:
+            logger.warning(f"Error loading watchlist: {e}. Using default.")
+            return default
+
     # --- 1. API Handling (Rate Limits) ---
     def t212_request(self, method, endpoint, payload=None):
         """
@@ -338,7 +362,7 @@ def run():
     
     # 1. Startup & Gatekeeper
     bot.get_cash_balance()
-    bot.scan_candidates(UNIVERSE)
+    bot.scan_candidates(bot.watchlist)
     
     # 2. Observation (Simulate wait if testing, or real logic)
     # For CI/CD run at 14:15, we assume we move straight to observation logic?

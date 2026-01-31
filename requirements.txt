@@ -4,3 +4,4 @@ feedparser
 yfinance
 python-dotenv
 pandas
+websocket-client

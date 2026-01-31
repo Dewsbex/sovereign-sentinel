@@ -700,7 +700,8 @@
                         <div class="p-2 bg-white border border-gray-200 shadow-lg rounded text-xs font-mono">
                             <div class="font-bold text-gray-900 border-b border-gray-100 pb-1 mb-1">${data.company_name}</div>
                             <div class="text-xs text-gray-500 mb-2">${data.x}</div>
-                            <div class="text-gray-600">Price: <span class="font-bold">${data.currency || ''} ${data.price_cur}</span></div>
+                            <div class="text-gray-600">Price: <span class="font-bold">${data.price_cur}</span></div>
+                            <div class="text-gray-600">Avg Price: <span class="font-bold text-blue-600">${data.price_avg}</span></div>
                             <div class="text-gray-600">Shares Held: <span class="font-bold">${data.shares_held}</span></div>
                             <div class="text-gray-600">Total Value: <span class="font-bold">${data.formatted_value}</span></div>
                             <div class="${plColorClass} font-bold mt-1">P/L: ${data.formatted_pl_gbp} ${data.formatted_pl_pct}</div>

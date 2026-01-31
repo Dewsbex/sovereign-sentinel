@@ -187,13 +187,13 @@ def render():
             'y': truncate_decimal(val, 2),
             'val_pct': truncate_decimal(pct, 4),
             'company_name': h.get('Name', h.get('Ticker', 'N/A')),
-            'shares_held': f"{truncate_decimal(safe_val(h.get('Shares')), 4):,.4f}",
+            'shares_held': f"{truncate_decimal(safe_val(h.get('Shares')), 2):,.2f}",
             'formatted_value': f"£{val:,.2f}", # Pre-formatted
             'formatted_pl_gbp': f"{'+' if pnl >= 0 else ''}£{abs(pnl):,.2f}",
             'formatted_pl_pct': f"({pct*100:+.2f}%)",
-            'price_avg': truncate_decimal(safe_val(h.get('Avg_Price')), 2),
-            'price_cur': f"£{safe_val(h.get('Price_GBP', h.get('Price', 0))):,.2f}",
-            'currency': 'GBP', # Normalized
+            'price_avg': f"{h.get('Currency', '')} {truncate_decimal(safe_val(h.get('Avg_Price')), 2)}",
+            'price_cur': f"{h.get('Currency', '')} {truncate_decimal(safe_val(h.get('Price')), 2)}",
+            'currency': h.get('Currency', 'GBP'), 
             'pl_per_share_gbp': 0, # Legacy placeholder or calc if needed
             'pl_per_share_pct': 0
         })
