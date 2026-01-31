@@ -330,7 +330,7 @@ def render():
     legend_html += "</div>"
 
     context = {
-        'version': "v32.13 Sovereign Finality",
+        'version': "v32.15 Sovereign Finality",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
