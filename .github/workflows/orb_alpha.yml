@@ -1,0 +1,50 @@
+name: ORB Alpha Sidecar
+
+on:
+    workflow_dispatch:
+        inputs:
+            strategy_limit:
+                description: "New Strategy Limit (GBP)"
+                required: true
+                default: "500"
+            execution_mode:
+                description: "Execution Mode"
+                required: true
+                default: "Live"
+                type: choice
+                options:
+                    - Live
+                    - Paper
+
+jobs:
+    orb-sidecar-execution:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v3
+
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.9"
+
+            - name: Update Configuration (Persistence)
+              # This step "Self-Commits" the new limit if it changed
+              run: |
+                  echo "Updating Strategy Cap to £${{ github.event.inputs.strategy_limit }}"
+                  # Using python one-liner to safely update JSON since jq might not be basic enough (though it usually is)
+                  python -c "import json; config={'STRATEGY_CAP_GBP': float('${{ github.event.inputs.strategy_limit }}')}; print(json.dumps(config, indent=2))" > config.json
+
+                  # Check for changes and commit
+                  git config user.name "Sovereign Sentinel Bot"
+                  git config user.email "bot@sovereign-sentinel"
+                  git add config.json
+                  # Only commit if there are changes
+                  git diff --quiet && git diff --staged --quiet || (git commit -m "⚙️ ORB Config Update: Limit -> £${{ github.event.inputs.strategy_limit }}" && git push)
+
+            - name: Run ORB Sidecar
+              run: |
+                  python orb_sidecar.py

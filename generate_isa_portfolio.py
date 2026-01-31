@@ -52,9 +52,20 @@ def run_audit():
 
     # v32.13: Sovereign Finality - Strict Unit Normalization
     def normalize_uk_units(raw_val, ticker, currency):
-        # Check Ticker OR Currency
-        if "_UK_EQ" in ticker or currency in ["GBX", "GBp"]:
-            return float(raw_val) / 100.0
+        # 1. Price Threshold Heuristic: If price > 200 and it's a known UK ticker style, it's likely pence.
+        # Most UK stocks are < £100. Exception is e.g. AstraZeneca ~£100.
+        # But if we see 10000+, it's definitely pence.
+        
+        is_uk = "_UK_EQ" in ticker or ticker.endswith("l_EQ") or ticker.endswith(".L")
+        is_pence = currency in ["GBX", "GBp", "gbx", "gbp"]
+        
+        if is_uk or is_pence:
+            # Safety: If value is already small (e.g. < 200), assumes pounds.
+            # If value > 200, assume pence.
+            # Exception: Some US stocks are > $200. But we checked is_uk.
+            if float(raw_val) > 150.0:
+                 return float(raw_val) / 100.0
+        
         return float(raw_val)
 
     for p in pos_data:
