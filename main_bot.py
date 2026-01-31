@@ -5,6 +5,7 @@ import json
 import logging
 import datetime
 import requests
+import subprocess
 import yfinance as yf
 from requests.auth import HTTPBasicAuth
 
@@ -27,6 +28,7 @@ except ImportError:
 # API Config
 API_KEY = os.environ.get("T212_API_KEY")
 API_SECRET = os.environ.get("T212_API_SECRET")
+DISCORD_WEBHOOK = os.environ.get("DISCORD_WEBHOOK_URL")
 BASE_URL = "https://live.trading212.com/api/v0/equity"
 IS_LIVE = True # Set False to simulate T212 calls locally
 
@@ -40,6 +42,8 @@ class Strategy_ORB:
         self.positions = {} # {ticker: {'size': X, 'entry': Y, 'stop': Z, 'target': A}}
         self.cash_balance = 0.0
         self.titan_cap = 500.0 # Default
+        self.audit_log = [] # List of closed trades for history
+        self.status = "INITIALIZING"
 
         # Load Titan Shield Cap
         cfg = orb_sidecar.load_config()
@@ -69,6 +73,55 @@ class Strategy_ORB:
         except Exception as e:
             logger.warning(f"Error loading watchlist: {e}. Using default.")
             return default
+
+    # --- State Management & Git Sync ---
+    def save_state(self, push=False):
+        """Saves current bot state to data/trade_state.json and optionally pushes to git."""
+        state = {
+            "status": self.status,
+            "updated": datetime.datetime.utcnow().strftime("%H:%M:%S GMT"),
+            "titan_cap": self.titan_cap,
+            "cash_balance": self.cash_balance,
+            "targets": [
+                {
+                    "ticker": t,
+                    "rvol": self.orb_levels[t].get('rvol', 0) if t in self.orb_levels else 0,
+                    "high": self.orb_levels[t]['high'] if t in self.orb_levels else 0,
+                    "low": self.orb_levels[t]['low'] if t in self.orb_levels else 0,
+                    "last_poll_price": self.orb_levels[t].get('last_price', 0) if t in self.orb_levels else 0
+                } for t in self.watchlist if t in self.orb_levels
+            ],
+            "active_positions": self.positions,
+            "audit_log": self.audit_log
+        }
+        
+        try:
+            os.makedirs("data", exist_ok=True)
+            with open("data/trade_state.json", "w") as f:
+                json.dump(state, f, indent=4)
+                
+            if push:
+                self.git_sync()
+        except Exception as e:
+            logger.error(f"State Save Failed: {e}")
+
+    def git_sync(self):
+        """Commits and pushes trade_state.json to repo."""
+        if not IS_LIVE: return
+        try:
+            subprocess.run(["git", "add", "data/trade_state.json"], check=False, stdout=subprocess.DEVNULL)
+            subprocess.run(["git", "commit", "-m", "🤖 ORB State Update"], check=False, stdout=subprocess.DEVNULL)
+            subprocess.run(["git", "push"], check=False, stdout=subprocess.DEVNULL)
+            logger.info("📡 State Synced to GitHub.")
+        except Exception as e:
+            logger.error(f"Git Sync Failed: {e}")
+
+    def discord_alert(self, message):
+        """Sends message to Discord Webhook."""
+        if not DISCORD_WEBHOOK: return
+        try:
+            requests.post(DISCORD_WEBHOOK, json={"content": message})
+        except: pass
 
     # --- 1. API Handling (Rate Limits) ---
     def t212_request(self, method, endpoint, payload=None):
@@ -120,6 +173,7 @@ class Strategy_ORB:
     
     # --- 2. Gatekeeper Module (14:15 GMT) ---
     def scan_candidates(self, tickers):
+        self.status = "GATEKEEPER_SCAN"
         logger.info("🕵️ Gatekeeper: Scanning Candidates (Gap > 2%, NR7, Vol > 1M)...")
         candidates = []
         
@@ -183,13 +237,20 @@ class Strategy_ORB:
                     
             except Exception as e:
                 logger.error(f"Scan error {t}: {e}")
-                
+        
+        # Ensure we have at least defaults if scan fails or yields nothing (for Demo stability)
+        if not candidates and IS_LIVE: # In strict live, we might want empty. For now strict.
+             pass 
+
         self.watchlist = candidates[:5] # Max 5
+        self.save_state(push=True) # First sync
         logger.info(f"📋 Final Watchlist: {self.watchlist}")
 
     # --- 3. Observation Module (14:30 - 14:45 GMT) ---
     def monitor_observation_window(self):
+        self.status = "OBSERVING_RANGE"
         logger.info("🔭 Observation Phase: Tracking 15m High/Low...")
+        self.save_state(push=False) # Local update
         
         # Wait for 14:45 GMT (or simulate)
         # In this script, we assume it's running AT or AFTER 14:45 for simplicity 
@@ -226,6 +287,7 @@ class Strategy_ORB:
                 self.orb_levels[t] = {
                     'high': high_15, 
                     'low': low_15,
+                    'rvol': rvol,
                     'trigger_long': high_15 * 1.0005, # +0.05%
                     'trigger_short': low_15 * 0.9995
                 }
@@ -233,6 +295,9 @@ class Strategy_ORB:
                 
             except Exception as e:
                 logger.error(f"Observation error {t}: {e}")
+
+        self.status = "WATCHING_RANGE"
+        self.save_state(push=True) # Push ranges
 
     # --- 4. Risk Management ---
     def calculate_size(self, ticker, entry_price, stop_loss):
@@ -281,12 +346,18 @@ class Strategy_ORB:
                     # fast_info is cached. history is better for 'current'.
                     # For performance, we assume 1s poll is ok request-wise on yahoo.
                     dat = yf.Ticker(t)
-                    curr_price = dat.fast_info['last_price']
+                    curr_price = float(dat.fast_info['last_price'])
+                    
+                    # Update State with live price for UI Needle
+                    self.orb_levels[t]['last_price'] = curr_price
+                    
+                    # Flash Amber Logic (UI handled, we just update price)
                     
                     levels = self.orb_levels[t]
                     
                     # LONG TRIGGER
                     if curr_price > levels['trigger_long']:
+                        self.status = "TRIGGERED"
                         logger.info(f"⚡ BREAKOUT: {t} @ {curr_price:.2f}")
                         
                         stop_loss = levels['low']
@@ -296,6 +367,7 @@ class Strategy_ORB:
                             success = self.execute_trade(t, "BUY", qty, curr_price, stop_loss)
                             if success:
                                 del self.orb_levels[t] # Remove from watch
+                                self.save_state(push=True) # Push Trade
                         else:
                             logger.warning(f"Quantity 0 for {t}. Skipping.")
                             del self.orb_levels[t]
@@ -309,10 +381,23 @@ class Strategy_ORB:
                     # logger.error(f"Poll error {t}: {e}")
                     pass
             
-            time.sleep(1) # Polling Interval
+            # Throttle Git Pushes during poll?
+            # We only push on events (Trade).
+            # We might want to save local state occasionally for UI freshness if user pulls locally?
+            # For cloudflare, we need push. doing it active loop is bad.
+            # Strategy Monitor says "Active Targets". We pushed ranges already.
+            # UI needs live price? Not feasible to push git every second.
+            # UI will likely use T212 / Yahoo JS fetch for live price needle on frontend side?
+            # Or we push every minute.
+            
+            if datetime.datetime.now().second % 60 == 0:
+                 self.save_state(push=True) # Heartbeat updates every minute
+
+            time.sleep(1)
 
     def execute_trade(self, ticker, side, qty, price, stop):
         logger.info(f"🚀 EXECUTING {side} {qty} {ticker}...")
+        self.discord_alert(f"🚀 **ORB TRIGGER**: {side} {ticker} @ {price:.2f}")
         
         if not IS_LIVE:
             logger.info(f"[SIMULATION] Order Placed. Audit Passing.")
@@ -336,11 +421,13 @@ class Strategy_ORB:
         
         order_id = res.get('id')
         logger.info(f"   ✅ Order Sent (ID: {order_id})")
-        
+        self.status = "AUDITING_SLIPPAGE"
         # 2. Wait 5s for Fill
         time.sleep(5)
         
         # 3. Slippage Audit
+        slippage = 0.0
+        fill_price = price
         fill_data = self.t212_request("GET", f"/orders/{order_id}")
         if fill_data:
             fill_price = float(fill_data.get('filledPrice', price)) # Fallback to Trigger if pending
@@ -349,12 +436,58 @@ class Strategy_ORB:
             slippage = (fill_price - price) / price
             logger.info(f"   ⚖️ Slippage: {slippage:.2%}")
             
+            # Log Outcome
+            self.audit_log.append({
+                "ticker": ticker,
+                "action": side,
+                "entry": fill_price,
+                "slippage_pct": slippage,
+                "time": datetime.datetime.utcnow().strftime("%H:%M:%S")
+            })
+
             if slippage > 0.003: # 0.3%
                 logger.critical(f"   🛑 KILL SWITCH: Slippage > 0.3%. Closing immediately.")
+                self.discord_alert(f"🛑 **SLIPPAGE KILL**: {ticker} {slippage:.2%}")
                 # self.close_position(ticker, qty) # Implement Close
                 return False
                 
+        self.status = "WATCHING_RANGE"
         return True
+
+    # --- Phase 5: Recap & Wall of Truth ---
+    def session_recap(self):
+        logger.info("🏁 Generating Session Recap...")
+        
+        # Wall of Truth (Persist History)
+        history_file = "data/orb_history.json"
+        history = []
+        if os.path.exists(history_file):
+            try:
+                with open(history_file, 'r') as f: history = json.load(f)
+            except: pass
+            
+        # Append today's log
+        today_summary = {
+            "date": datetime.datetime.utcnow().strftime("%Y-%m-%d"),
+            "trades": self.audit_log,
+            "turnover": sum([t['entry'] for t in self.audit_log]), # Approx
+        }
+        history.append(today_summary)
+        
+        os.makedirs("data", exist_ok=True)
+        with open(history_file, 'w') as f:
+            json.dump(history, f, indent=4)
+            
+        # Discord Summary
+        msg = "🌙 **ORB Session Recap**\n"
+        if not self.audit_log:
+            msg += "No trades executed."
+        else:
+            for t in self.audit_log:
+                msg += f"- {t['ticker']}: Entry {t['entry']:.2f}, Slippage {t['slippage_pct']:.2%}\n"
+        
+        self.discord_alert(msg)
+        self.git_sync() # Final push
 
 # --- Main Entry ---
 def run():
@@ -375,6 +508,7 @@ def run():
     
     bot.monitor_observation_window()
     bot.monitor_breakout()
+    bot.session_recap()
 
 if __name__ == "__main__":
     run()
