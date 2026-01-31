@@ -87,7 +87,8 @@ def run_audit():
             "Value_GBP": val_gbp,   
             "Value": val_gbp,       
             "Price_GBP": price_gbp, 
-            "Price": raw_price,     
+            "Price": price_gbp,     # v32.13: Strictly Normalized
+            "Avg_Price": avg_price_gbp, # v32.13: Added Avg Price
             "PL_GBP": pl_gbp,       
             "PL": pl_gbp,           
             "Shares": qty,
@@ -101,7 +102,7 @@ def run_audit():
         h["Weight"] = h["Weight_Pct"]
 
     state = {
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.11"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.13 Sovereign Finality"},
         "account": acc_summary,
         "holdings": holdings,
         "total_gbp": total_value_gbp
