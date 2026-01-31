@@ -1,6 +1,6 @@
 {
     "meta": {
-        "timestamp": "2026-01-31 00:50",
+        "timestamp": "2026-01-31 00:51",
         "version": "v32.13 Sovereign Finality"
     },
     "account": {
@@ -33,8 +33,8 @@
             "Shares": 190.0,
             "Currency": "USD",
             "FX_Impact": -141.83,
-            "Weight_Pct": 0.6655021558005897,
-            "Weight": 0.6655021558005897
+            "Weight_Pct": 5.422863613832299,
+            "Weight": 5.422863613832299
         },
         {
             "Ticker": "DHR",
@@ -49,40 +49,40 @@
             "Shares": 30.0,
             "Currency": "USD",
             "FX_Impact": 18.45,
-            "Weight_Pct": 0.41783526378476055,
-            "Weight": 0.41783526378476055
+            "Weight_Pct": 3.4047427627467206,
+            "Weight": 3.4047427627467206
         },
         {
             "Ticker": "RIO",
             "Name": "Rio Tinto",
-            "Value_GBP": 689766.74704674,
-            "Value": 689766.74704674,
-            "Price_GBP": 6738.0,
-            "Price": 6738.0,
-            "Avg_Price": 4576.67501255,
-            "PL_GBP": 221254.09704722805,
-            "PL": 221254.09704722805,
+            "Value_GBP": 6897.6674704674,
+            "Value": 6897.6674704674,
+            "Price_GBP": 67.38,
+            "Price": 67.38,
+            "Avg_Price": 45.7667501255,
+            "PL_GBP": 2212.5409704722797,
+            "PL": 2212.5409704722797,
             "Shares": 102.36965673,
             "Currency": "GBX",
             "FX_Impact": null,
-            "Weight_Pct": 43.89546905209278,
-            "Weight": 43.89546905209278
+            "Weight_Pct": 3.576835023897676,
+            "Weight": 3.576835023897676
         },
         {
             "Ticker": "LGEN",
             "Name": "Legal & General",
-            "Value_GBP": 265100.0,
-            "Value": 265100.0,
-            "Price_GBP": 265.1,
-            "Price": 265.1,
-            "Avg_Price": 259.8,
-            "PL_GBP": 5300.000000000011,
-            "PL": 5300.000000000011,
+            "Value_GBP": 2651.0000000000005,
+            "Value": 2651.0000000000005,
+            "Price_GBP": 2.6510000000000002,
+            "Price": 2.6510000000000002,
+            "Avg_Price": 2.5980000000000003,
+            "PL_GBP": 52.999999999999936,
+            "PL": 52.999999999999936,
             "Shares": 1000.0,
             "Currency": "GBX",
             "FX_Impact": null,
-            "Weight_Pct": 16.87046946744342,
-            "Weight": 16.87046946744342
+            "Weight_Pct": 1.3746950964149927,
+            "Weight": 1.3746950964149927
         },
         {
             "Ticker": "QELL",
@@ -97,24 +97,24 @@
             "Shares": 275.36311,
             "Currency": "USD",
             "FX_Impact": -11.2,
-            "Weight_Pct": 1.0514156785474002e-05,
-            "Weight": 1.0514156785474002e-05
+            "Weight_Pct": 8.567491144109742e-05,
+            "Weight": 8.567491144109742e-05
         },
         {
             "Ticker": "BATS",
             "Name": "British American Tobacco",
-            "Value_GBP": 437600.0,
-            "Value": 437600.0,
-            "Price_GBP": 4376.0,
-            "Price": 4376.0,
-            "Avg_Price": 4202.7249,
-            "PL_GBP": 17327.509999999984,
-            "PL": 17327.509999999984,
+            "Value_GBP": 4376.0,
+            "Value": 4376.0,
+            "Price_GBP": 43.76,
+            "Price": 43.76,
+            "Avg_Price": 42.027249000000005,
+            "PL_GBP": 173.27509999999933,
+            "PL": 173.27509999999933,
             "Shares": 100.0,
             "Currency": "GBX",
             "FX_Impact": null,
-            "Weight_Pct": 27.84804767617216,
-            "Weight": 27.84804767617216
+            "Weight_Pct": 2.2692062398762753,
+            "Weight": 2.2692062398762753
         },
         {
             "Ticker": "VSNTV",
@@ -129,8 +129,8 @@
             "Shares": 111.0,
             "Currency": "USD",
             "FX_Impact": -63.36,
-            "Weight_Pct": 0.23006903867055514,
-            "Weight": 0.23006903867055514
+            "Weight_Pct": 1.8747242328239266,
+            "Weight": 1.8747242328239266
         },
         {
             "Ticker": "NUE",
@@ -145,8 +145,8 @@
             "Shares": 119.1502945,
             "Currency": "USD",
             "FX_Impact": -153.99,
-            "Weight_Pct": 1.3474865143473462,
-            "Weight": 1.3474865143473462
+            "Weight_Pct": 10.980032934669365,
+            "Weight": 10.980032934669365
         },
         {
             "Ticker": "SOLV",
@@ -161,8 +161,8 @@
             "Shares": 100.0,
             "Currency": "USD",
             "FX_Impact": -104.14,
-            "Weight_Pct": 0.489695445311117,
-            "Weight": 0.489695445311117
+            "Weight_Pct": 3.9902975356142454,
+            "Weight": 3.9902975356142454
         },
         {
             "Ticker": "RE",
@@ -177,8 +177,8 @@
             "Shares": 66.95260406,
             "Currency": "USD",
             "FX_Impact": -676.76,
-            "Weight_Pct": 1.4118810245059468,
-            "Weight": 1.4118810245059468
+            "Weight_Pct": 11.504753467917743,
+            "Weight": 11.504753467917743
         },
         {
             "Ticker": "NFLX",
@@ -193,8 +193,8 @@
             "Shares": 190.0,
             "Currency": "USD",
             "FX_Impact": -294.82,
-            "Weight_Pct": 1.0091353547077981,
-            "Weight": 1.0091353547077981
+            "Weight_Pct": 8.222968699317654,
+            "Weight": 8.222968699317654
         },
         {
             "Ticker": "CRM",
@@ -209,8 +209,8 @@
             "Shares": 92.0,
             "Currency": "USD",
             "FX_Impact": -235.19,
-            "Weight_Pct": 1.243071682814553,
-            "Weight": 1.243071682814553
+            "Weight_Pct": 10.129205652250647,
+            "Weight": 10.129205652250647
         },
         {
             "Ticker": "QCOM",
@@ -225,8 +225,8 @@
             "Shares": 108.0,
             "Currency": "USD",
             "FX_Impact": -187.95,
-            "Weight_Pct": 1.0424842827338978,
-            "Weight": 1.0424842827338978
+            "Weight_Pct": 8.494713406343422,
+            "Weight": 8.494713406343422
         },
         {
             "Ticker": "EOG",
@@ -241,8 +241,8 @@
             "Shares": 167.83705587,
             "Currency": "USD",
             "FX_Impact": -297.04,
-            "Weight_Pct": 1.197855885566776,
-            "Weight": 1.197855885566776
+            "Weight_Pct": 9.760763417273335,
+            "Weight": 9.760763417273335
         },
         {
             "Ticker": "CTVA",
@@ -257,8 +257,8 @@
             "Shares": 225.0,
             "Currency": "USD",
             "FX_Impact": -188.54,
-            "Weight_Pct": 1.0423926438201554,
-            "Weight": 1.0423926438201554
+            "Weight_Pct": 8.493966683997577,
+            "Weight": 8.493966683997577
         },
         {
             "Ticker": "CNNE",
@@ -273,9 +273,9 @@
             "Shares": 1406.16463623,
             "Currency": "USD",
             "FX_Impact": -305.45,
-            "Weight_Pct": 1.2885939980713819,
-            "Weight": 1.2885939980713819
+            "Weight_Pct": 10.500145558112695,
+            "Weight": 10.500145558112695
         }
     ],
-    "total_gbp": 1571384.8420850954
+    "total_gbp": 192842.76250882307
 }

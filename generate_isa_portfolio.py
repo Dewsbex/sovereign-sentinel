@@ -51,8 +51,9 @@ def run_audit():
     holdings = []
 
     # v32.13: Sovereign Finality - Strict Unit Normalization
-    def normalize_uk_units(raw_val, ticker):
-        if "_UK_EQ" in ticker:
+    def normalize_uk_units(raw_val, ticker, currency):
+        # Check Ticker OR Currency
+        if "_UK_EQ" in ticker or currency in ["GBX", "GBp"]:
             return float(raw_val) / 100.0
         return float(raw_val)
 
@@ -62,6 +63,9 @@ def run_audit():
         wallet = p.get('walletImpact', {})
         raw_ticker = instr.get('ticker', 'UNKNOWN')
         name = instr.get('name', raw_ticker)
+        currency = instr.get('currency', 'GBP')
+        
+        # 1. Ticker Cleaning
         
         # 1. Ticker Cleaning
         ticker_clean = raw_ticker.replace("_US_EQ", "").replace("_UK_EQ", "").replace("l_EQ", "").replace("L_EQ", "")
@@ -74,8 +78,8 @@ def run_audit():
         raw_avg = p.get('averagePricePaid', 0.0)
         
         # Apply the fix immediately
-        price_gbp = normalize_uk_units(raw_price, raw_ticker)
-        avg_price_gbp = normalize_uk_units(raw_avg, raw_ticker)
+        price_gbp = normalize_uk_units(raw_price, raw_ticker, currency)
+        avg_price_gbp = normalize_uk_units(raw_avg, raw_ticker, currency)
         
         # Calculate Values based on normalized price
         val_gbp = price_gbp * qty
