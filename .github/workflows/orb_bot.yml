@@ -1,29 +1,22 @@
 name: ORB Trading Bot
-
 on:
-    schedule:
-        - cron: "20 14 * * 1-5" # 14:20 GMT, Monday-Friday
-    workflow_dispatch: # Allow manual run for testing
+  schedule:
+    - cron: '15 14 * * 1-5' # 14:15 GMT, Monday-Friday
+  workflow_dispatch:      # Allow manual trigger
 
 jobs:
-    trade:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-
-        steps:
-            - uses: actions/checkout@v3
-
-            - name: Set up Python
-              uses: actions/setup-python@v4
-              with:
-                  python-version: "3.10"
-
-            - name: Install Dependencies
-              run: pip install yfinance requests websocket-client
-
-            - name: Run Bot
-              env:
-                  T212_API_KEY: ${{ secrets.T212_API_KEY }}
-                  T212_API_SECRET: ${{ secrets.T212_API_SECRET }}
-              run: python main_bot.py
+  trade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install Dependencies
+        run: pip install yfinance websocket-client requests
+      - name: Run Bot
+        env:
+          T212_API_KEY: ${{ secrets.T212_API_KEY }}
+          T212_API_SECRET: ${{ secrets.T212_API_SECRET }}
+        run: python main_bot.py
