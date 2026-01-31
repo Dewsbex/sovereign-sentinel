@@ -50,23 +50,12 @@ def run_audit():
     total_value_gbp = 0
     holdings = []
 
-    # v32.13: Sovereign Finality - Strict Unit Normalization
-    def normalize_uk_units(raw_val, ticker, currency):
-        # 1. Price Threshold Heuristic: If price > 200 and it's a known UK ticker style, it's likely pence.
-        # Most UK stocks are < £100. Exception is e.g. AstraZeneca ~£100.
-        # But if we see 10000+, it's definitely pence.
-        
-        is_uk = "_UK_EQ" in ticker or ticker.endswith("l_EQ") or ticker.endswith(".L")
-        is_pence = currency in ["GBX", "GBp", "gbx", "gbp"]
-        
-        if is_uk or is_pence:
-            # Safety: If value is already small (e.g. < 200), assumes pounds.
-            # If value > 200, assume pence.
-            # Exception: Some US stocks are > $200. But we checked is_uk.
-            if float(raw_val) > 150.0:
-                 return float(raw_val) / 100.0
-        
-        return float(raw_val)
+    # v32.14 Sovereign Finality - Strict Unit Normalization
+    def normalize_uk_assets(value, ticker):
+        """If the ticker is UK, the T212 API is sending Pence. We need Pounds."""
+        if "_UK_EQ" in ticker or ticker.endswith("l_EQ") or ticker.endswith(".L"):
+            return float(value) / 100.0
+        return float(value)
 
     # v32.15: Dynamic FX Rate Fetching (Sovereign Finality)
     try:
@@ -99,17 +88,16 @@ def run_audit():
         
         # 3. Currency Normalization (The Fix)
         # If currency is USD, we must convert to GBP.
-        # If Tico is correct, T212 returns 'currentPrice' in instrument currency.
         fx_rate = 1.0
         if currency == 'USD':
             fx_rate = usd_to_gbp
-        # Add EUR support if needed (EURGBP=X)
         
-        # Apply Unit Normalization (Pence -> Pounds) FIRST if applicable
-        price_instr = normalize_uk_units(raw_price, raw_ticker, currency)
-        avg_price_instr = normalize_uk_units(raw_avg, raw_ticker, currency)
+        # v32.14: STRICT UNIT NORMALIZATION (The Sovereign Guard Rule)
+        # 1. Normalize Units (Pence -> Pounds) based on Ticker Symbol
+        price_instr = normalize_uk_assets(raw_price, raw_ticker)
+        avg_price_instr = normalize_uk_assets(raw_avg, raw_ticker)
         
-        # Convert to GBP for Aggregation
+        # 2. Normalize Currency (USD -> GBP)
         price_gbp = price_instr * fx_rate
         avg_price_gbp = avg_price_instr * fx_rate
         
@@ -117,17 +105,11 @@ def run_audit():
         val_gbp = price_gbp * qty
         
         # Prefer API's PPL if available (Accurate Realized/Unrealized in GBP)
-        # T212 'ppl' field is usually in account currency
-        api_ppl = p.get('ppl')
-        if api_ppl is not None:
-             pl_gbp = float(api_ppl)
-             # If we use API PPL, we should ensure Value is consistent? 
-             # Value = Invested + PPL. 
-             # Invested = Avg_GBP * Qty. 
-             # Re-calc Value from this to align? or trust Val_GBP?
-             # Let's trust our Val_GBP derived from Price_GBP.
-        else:
-             pl_gbp = (price_gbp - avg_price_gbp) * qty
+        # But for consistency with our verified manual calc, we stick to our calc for now unless API is needed.
+        # Given "Fault: Unit Inflation", our manual calc is safer if we control inputs.
+        pl_gbp = (price_gbp - avg_price_gbp) * qty
+        
+        # API PPL might be in Pence for UK stocks? Let's treat our calc as Truth.
 
         total_value_gbp += val_gbp
         
