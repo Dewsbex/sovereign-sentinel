@@ -137,12 +137,9 @@ class Strategy_ORB:
                 # 3. Gap Check (Current vs Yesterday Close)
                 # Need live price.
                 # Position Sizing (Dynamic from Config)
-                try:
-                    with open('config.json', 'r') as f:
-                        config = json.load(f)
-                        pos_size = float(config.get('STRATEGY_CAP_GBP', 500.0))
-                except Exception:
-                    pos_size = 500.0
+                # 3. Gap Check (Current vs Yesterday Close)
+                # Need live price.
+                pos_size = self.titan_cap
                 
                 current_price = dat.fast_info['last_price']
                 # The line `quantity = pos_size / float(current_price) - prev_close) / prev_close)`
@@ -304,7 +301,7 @@ class Strategy_ORB:
             "orderType": "MARKET",
             "timeValidity": "DAY"
         }
-        res = self.t212_request("POST", "/orders/place_market", payload) # Assuming custom endpoint wrapper or standard
+        res = self.t212_request("POST", "/orders", payload) # Standard V0 Endpoint
         # Note: Official API path is /equity/orders/market?
         # Using simplified path based on user instruction "POST /orders/place_market" -> likely conceptual.
         # Official T212 Public API v0: POST /api/v0/equity/orders/limit or market.
