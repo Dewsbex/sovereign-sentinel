@@ -54,50 +54,67 @@ def generate_oracle_ring(holdings, total_invested):
     # Sort: Largest first
     sorted_holdings = sorted(holdings, key=lambda x: x.get('Value_GBP', 0), reverse=True)
     
+    # v32.14: Sovereign Finality - Leader Lines
+    # Parameters for layout
     radius = 65
+    label_r = 90 # Radius for label placement
     circum = 2 * math.pi * radius
     cumulative_offset = 0
-    svg_elements = []  # Slices + Lines + Labels
+    svg_elements = []
     
-    # Vibrant Palette - Fixed for legend consistency
+    # Vibrant Palette
     colors = ["#4f46e5", "#10b981", "#ef4444", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4", "#3b82f6", "#f43f5e", "#10b981"]
 
     for i, h in enumerate(sorted_holdings):
         val = h.get('Value_GBP', 0)
-        # Denominator: (Value_GBP / (Total_Wealth - Cash - Pending)) * 100
         weight = (val / total_invested * 100) if total_invested > 0 else 0
         
-        # Filter dust (< 0.5%) for visualization clarity
-        if weight < 0.5: continue
+        if weight < 1.0: continue # Filter strictly for chart cleanliness
         
         color = colors[i % len(colors)]
         dash_len = (weight / 100) * circum
         
-        # Calculate angle for label positioning (middle of slice)
-        # Slices start at -90 degrees (top)
-        start_angle_deg = (cumulative_offset / circum) * 360 - 90
-        slice_angle_deg = (dash_len / circum) * 360
-        mid_angle_deg = start_angle_deg + (slice_angle_deg / 2)
-        mid_angle_rad = math.radians(mid_angle_deg)
+        # Angles for Slice Placement
+        # Note: SVG circle stroke starts at 3 o'clock (0 rad). We rotate -90 to start at 12 o'clock.
+        # accumulated length determines the start of this segment.
         
-        # Point on the ring
-        px = 100 + radius * math.cos(mid_angle_rad)
-        py = 100 + radius * math.sin(mid_angle_rad)
+        # Angle of the generic start of this segment (in 0-1 percentage of circle)
+        segment_start_pct = (cumulative_offset / circum)
+        segment_len_pct = (dash_len / circum)
         
-        # External Label point
-        ex = 100 + (radius + 20) * math.cos(mid_angle_rad)
-        ey = 100 + (radius + 20) * math.sin(mid_angle_rad)
+        # Midpoint of the segment in degrees (0 = top/12oclock due to rotate(-90))
+        # But 'cumulative_offset' is a stroke-dashoffset which goes COUNTER-clockwise or clockwise depending on impl.
+        # Standard logic: offset pushes the start back? 
+        # Easier Math: Just track cumulative degrees.
+        # Let's use pure angles for the Leader Lines math, unrelated to the stroke-dash trickery, 
+        # ensuring we map 1:1.
+        # Stroke Dash logic: dasharray="len gap", offset="-Start".
+        # This draws the segment starting at 'Start' around the circle.
         
-        # Text alignment based on side
-        text_anchor = "start" if math.cos(mid_angle_rad) > 0 else "end"
-        label_offset = 5 if text_anchor == "start" else -5
+        mid_angle_turn = segment_start_pct + (segment_len_pct / 2)
+        # Convert turn (0-1) to Radians, adjusted for -90deg rotation.
+        # 0 turn = Top (12). 0.25 = Right (3). 
+        mid_angle_rad = (mid_angle_turn * 2 * math.pi) - (math.pi / 2)
+        
+        # Points
+        # Surface Point (on ring)
+        sx = 100 + radius * math.cos(mid_angle_rad)
+        sy = 100 + radius * math.sin(mid_angle_rad)
+        
+        # Elbow Point (slightly out)
+        ex = 100 + label_r * math.cos(mid_angle_rad)
+        ey = 100 + label_r * math.sin(mid_angle_rad)
+        
+        # Label alignment
+        is_right = math.cos(mid_angle_rad) >= 0
+        text_anchor = "start" if is_right else "end"
+        label_x = ex + (5 if is_right else -5)
         
         ticker = h.get('Ticker', 'Asset')
         safe_name = h.get('Name', ticker).replace("'", "\\'")
-        # NO £ Signs in tooltip or label
         pct_fmt = f"{weight:.1f}%"
         
-        # v32.13: Leader Lines & External Labels
+        # SVG Construction
         svg_elements.append(f"""
             <!-- Slice -->
             <circle r="{radius}" cx="100" cy="100" fill="transparent"
@@ -107,18 +124,19 @@ def generate_oracle_ring(holdings, total_invested):
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-{ticker}"
                 data-ticker="{ticker}"
-                onmouseover="showTT('{safe_name}', '{pct_fmt}', '{color}')"
+                onmouseover="showTT('{safe_name}', '{pct_fmt}')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('{ticker}')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <path d="M {px} {py} L {ex} {ey}" stroke="{color}" stroke-width="1" fill="none" opacity="0.6" />
+            <line x1="{sx}" y1="{sy}" x2="{ex}" y2="{ey}" stroke="{color}" stroke-width="1" opacity="0.6" />
                 
-            <!-- Label -->
-            <text x="{ex + label_offset}" y="{ey}" dominant-baseline="middle" text-anchor="{text_anchor}" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">{ticker} {pct_fmt}</text>
+            <!-- Label (Ticker + %) -->
+            <text x="{label_x}" y="{ey}" dy="0.3em" text-anchor="{text_anchor}" 
+                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">{ticker} {pct_fmt}</text>
         """)
+        
         cumulative_offset += dash_len
 
     return f"""
