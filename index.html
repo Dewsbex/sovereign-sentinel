@@ -1681,7 +1681,136 @@
         <!-- ⚠️ THE RISK REGISTER (Toxic Assets) - v27.0 -->
         
 
-        <!-- 🎯 SNIPER LIST REMOVED (REDUNDANT) -->
+        <!-- 🏛️ SENTINEL ORB DASHBOARD (Strategy Monitor) - v32.16 -->
+        <div class="col-span-12 sentinel-card" style="border-top: 3px solid #6366f1;">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest">🏛️ SENTINEL ORB COMM</h2>
+                    <p class="text-[0.65rem] text-neutral-600 mt-1">Strategic Automation Monitor • Phase 4 Audit </p>
+                </div>
+                <!-- Status Badge -->
+                <div id="orb-status" class="px-3 py-1 rounded text-[0.6rem] font-bold bg-gray-100 text-gray-500 border border-gray-200 uppercase tracking-wider">
+                    OFFLINE
+                </div>
+            </div>
+
+            <!-- 1. The Strategy Monitor -->
+            <div class="mb-8">
+                <h3 class="text-[0.6rem] mono uppercase text-gray-400 mb-2">Active Targets</h3>
+                <div id="orb-targets" class="flex flex-wrap gap-2">
+                    <span class="text-xs text-gray-400 italic">Waiting for 14:30 GMT Scan...</span>
+                </div>
+            </div>
+
+            <!-- 2. The Live Logic Feed (Needle) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                 <!-- Canvas for Logic Feed -->
+                 <div class="border border-gray-100 rounded-lg p-4 bg-gray-50 relative overflow-hidden h-40 flex items-center justify-center">
+                     <span class="absolute top-2 left-2 text-[0.6rem] uppercase text-gray-400 font-mono">Simulated Logic Feed</span>
+                     <div id="needle-container" class="w-full relative h-12">
+                         <!-- Range Lines via JS -->
+                         <div class="absolute w-full h-px bg-emerald-500 top-0 opacity-50"></div> <!-- High -->
+                         <div class="absolute w-full h-px bg-rose-500 bottom-0 opacity-50"></div> <!-- Low -->
+                         <div id="price-needle" class="absolute w-1 h-8 bg-indigo-600 rounded-full transition-all duration-500 ease-out" 
+                              style="left: 50%; top: -8px; box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);"></div>
+                     </div>
+                 </div>
+                 
+                 <!-- 3. The Outcome Ledger -->
+                 <div class="border border-gray-100 rounded-lg overflow-hidden">
+                     <table class="w-full text-left text-[0.6rem] mono">
+                         <thead class="bg-gray-50 text-gray-400 uppercase">
+                             <tr>
+                                 <th class="p-2">Time</th>
+                                 <th class="p-2">Ticker</th>
+                                 <th class="p-2">Entry</th>
+                                 <th class="p-2 text-right">Slippage Tax</th>
+                             </tr>
+                         </thead>
+                         <tbody id="orb-ledger">
+                             <tr><td colspan="4" class="p-2 text-center text-gray-400">No Executions Today</td></tr>
+                         </tbody>
+                     </table>
+                 </div>
+            </div>
+            
+            <div class="text-[0.5rem] text-right text-gray-300 mono">
+                Refreshes automatically via State Contract (trade_state.json)
+            </div>
+        </div>
+
+        <script>
+            // ORB Dashboard Logic
+            async function fetchOrbState() {
+                try {
+                    const response = await fetch('data/trade_state.json?' + new Date().getTime());
+                    if (!response.ok) return;
+                    const state = await response.json();
+                    renderOrb(state);
+                } catch (e) { console.log("ORB State Offline", e); }
+            }
+
+            function renderOrb(state) {
+                // Status
+                const statusEl = document.getElementById('orb-status');
+                statusEl.innerText = state.status;
+                if(state.status.includes('TRIGGERED')) {
+                    statusEl.className = "px-3 py-1 rounded text-[0.6rem] font-bold bg-amber-500/20 text-amber-600 border border-amber-500/30 uppercase tracking-wider animate-pulse";
+                } else if (state.status.includes('WATCHING')) {
+                    statusEl.className = "px-3 py-1 rounded text-[0.6rem] font-bold bg-indigo-500/20 text-indigo-600 border border-indigo-500/30 uppercase tracking-wider";
+                }
+
+                // Targets
+                const targetsEl = document.getElementById('orb-targets');
+                if (state.targets && state.targets.length > 0) {
+                    targetsEl.innerHTML = state.targets.map(t => `
+                        <div class="flex items-center gap-2 px-2 py-1 bg-white border border-gray-200 rounded text-xs font-mono shadow-sm">
+                            <span class="font-bold text-gray-900">${t.ticker}</span>
+                            <span class="text-[0.6rem] text-gray-500">RVOL ${t.rvol.toFixed(1)}</span>
+                             <div class="w-1.5 h-1.5 rounded-full ${t.last_poll_price > t.high ? 'bg-emerald-500' : 'bg-gray-300'}"></div>
+                        </div>
+                    `).join('');
+                } else {
+                    targetsEl.innerHTML = '<span class="text-xs text-gray-400 italic">No Active Targets</span>';
+                }
+
+                // Needle Logic (First Target Visualizer)
+                if (state.targets && state.targets.length > 0) {
+                    const t = state.targets[0]; // Visualize first target
+                    const range = t.high - t.low;
+                    const pct = (t.last_poll_price - t.low) / range;
+                    // Clamp 0-100%
+                    let leftPct = Math.max(0, Math.min(100, pct * 100));
+                    
+                    const needle = document.getElementById('price-needle');
+                    needle.style.left = `${leftPct}%`;
+                    
+                    // Trigger Warning Color
+                    if (leftPct > 95) needle.style.backgroundColor = '#10b981'; // Green High
+                    else if (leftPct < 5) needle.style.backgroundColor = '#ef4444'; // Red Low
+                    else needle.style.backgroundColor = '#6366f1'; // Indigo Neutral
+                }
+
+                // Ledger
+                const ledgerEl = document.getElementById('orb-ledger');
+                if (state.audit_log && state.audit_log.length > 0) {
+                    ledgerEl.innerHTML = state.audit_log.map(l => `
+                        <tr class="border-b border-gray-50">
+                            <td class="p-2 font-mono text-gray-500">${l.time}</td>
+                            <td class="p-2 font-bold">${l.ticker}</td>
+                            <td class="p-2 text-gray-600">${l.entry}</td>
+                            <td class="p-2 text-right ${l.slippage_pct > 0.002 ? 'text-rose-500 font-bold' : 'text-emerald-500'}">
+                                ${ (l.slippage_pct * 100).toFixed(2) }%
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            }
+
+            // Poll every 5s
+            setInterval(fetchOrbState, 5000);
+            fetchOrbState();
+        </script>
 
     </div>
 
