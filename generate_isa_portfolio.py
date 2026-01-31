@@ -134,11 +134,63 @@ def run_audit():
         h["Weight_Pct"] = (h["Value_GBP"] / total_value_gbp * 100) if total_value_gbp > 0 else 0
         h["Weight"] = h["Weight_Pct"]
 
+    # 4. Sniper / Watchlist Logic (v32.14)
+    sniper_data = []
+    try:
+        if os.path.exists('watchlist.json'):
+            with open('watchlist.json', 'r') as f:
+                watchlist = json.load(f)
+                
+            print(f"[>] Processing {len(watchlist)} Sniper targets...")
+            
+            for item in watchlist:
+                ticker = item.get('ticker')
+                if not ticker: continue
+                
+                try:
+                    # Fetch live price
+                    yf_tick = yf.Ticker(ticker)
+                    # fast_info is efficient
+                    live_price = float(yf_tick.fast_info['last_price'])
+                    
+                    target_price = float(item.get('target_price', 0))
+                    
+                    # Calculate Distance
+                    dist = 0.0
+                    if target_price > 0:
+                        dist = ((live_price - target_price) / target_price) * 100
+                        
+                    # Status Logic
+                    status = "WATCH"
+                    if dist <= 1.0 and dist >= -1.0: status = "BUY ZONE"
+                    if dist < -5.0: status = "DEEP VALUE"
+                    if dist > 10.0: status = "EXTENDED"
+                    
+                    sniper_data.append({
+                        "ticker": ticker,
+                        "name": item.get('name', ticker),
+                        "t212_ticker": f"{ticker}_US_EQ", # Assumption, logical guess
+                        "target_price": target_price,
+                        "live_price": live_price,
+                        "distance_pct": dist,
+                        "expected_growth": item.get('expected_growth', 0),
+                        "tier": item.get('tier', '2'),
+                        "status": status,
+                        "source": "Manual Watchlist"
+                    })
+                except Exception as e:
+                    print(f"[WARN] Sniper Fetch Error {ticker}: {e}")
+                    # Include with partial data if possible or skip
+                    continue
+    except Exception as e:
+        print(f"[ERROR] Sniper Logic Failed: {e}")
+
     state = {
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.13 Sovereign Finality"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.14 Sovereign Finality"},
         "account": acc_summary,
         "holdings": holdings,
-        "total_gbp": total_value_gbp
+        "total_gbp": total_value_gbp,
+        "sniper": sniper_data
     }
 
     # Save to live_state.json
