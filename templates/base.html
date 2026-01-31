@@ -242,6 +242,34 @@
             position: relative;
             transition: opacity 0.3s ease;
         }
+
+        /* v32.13: Compact Legend Grid */
+        .ticker-legend {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-top: 16px;
+        }
+
+        .legend-ticker {
+            font-size: 0.6rem;
+            font-weight: bold;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 4px;
+            background: #ffffff;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .legend-ticker:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-color: #d1d5db;
+        }
     </style>
 </head>
 

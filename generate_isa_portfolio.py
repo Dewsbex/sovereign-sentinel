@@ -46,12 +46,12 @@ def run_audit():
 
     print(f"[>] Syncing metadata for {len(pos_data)} assets...")
     
-    # 1. First Pass: Aggregate Normalized Data from WalletImpact
+    # 1. First Pass: Aggregate Normalized Data
     total_value_gbp = 0
     holdings = []
 
-    # helper for v32.14 Sovereign Guard (Normalization Fix)
-    def normalize_price(raw_val, ticker):
+    # v32.13: Sovereign Finality - Strict Unit Normalization
+    def normalize_uk_units(raw_val, ticker):
         if "_UK_EQ" in ticker:
             return float(raw_val) / 100.0
         return float(raw_val)
@@ -68,27 +68,30 @@ def run_audit():
         
         # 2. Manual Normalization (Sovereign Guard Rule)
         qty = p.get('quantity', 0.0)
+        
+        # STRICT UNIT NORMALIZATION
         raw_price = p.get('currentPrice', 0.0)
-        price_gbp = normalize_price(raw_price, raw_ticker)
+        raw_avg = p.get('averagePricePaid', 0.0)
+        
+        # Apply the fix immediately
+        price_gbp = normalize_uk_units(raw_price, raw_ticker)
+        avg_price_gbp = normalize_uk_units(raw_avg, raw_ticker)
         
         # Calculate Values based on normalized price
         val_gbp = price_gbp * qty
-        
-        # Calculate P/L manually to ensure consistency with normalized price
-        avg_price_raw = p.get('averagePricePaid', 0.0)
-        avg_price_gbp = normalize_price(avg_price_raw, raw_ticker)
         pl_gbp = (price_gbp - avg_price_gbp) * qty
         
         total_value_gbp += val_gbp
-
+        
+        # v32.13: Enforce Normalized Values in State
         holdings.append({
             "Ticker": ticker_clean,
             "Name": name,
             "Value_GBP": val_gbp,   
             "Value": val_gbp,       
             "Price_GBP": price_gbp, 
-            "Price": price_gbp,     # v32.13: Strictly Normalized
-            "Avg_Price": avg_price_gbp, # v32.13: Added Avg Price
+            "Price": price_gbp,     # Normalized
+            "Avg_Price": avg_price_gbp, # Normalized
             "PL_GBP": pl_gbp,       
             "PL": pl_gbp,           
             "Shares": qty,
