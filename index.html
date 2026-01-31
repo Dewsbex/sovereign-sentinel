@@ -242,6 +242,34 @@
             position: relative;
             transition: opacity 0.3s ease;
         }
+
+        /* v32.13: Compact Legend Grid */
+        .ticker-legend {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-top: 16px;
+        }
+
+        .legend-ticker {
+            font-size: 0.6rem;
+            font-weight: bold;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 4px;
+            background: #ffffff;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .legend-ticker:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-color: #d1d5db;
+        }
     </style>
 </head>
 
@@ -331,12 +359,11 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="142.76508785298432" y1="148.95045720855455" x2="155.92357642313334" y2="164.0121363496483" 
-                stroke="#4f46e5" stroke-width="0.5" opacity="0.6" />
+            <path d="M 142.76508785298432 148.95045720855455 L 155.92357642313334 164.0121363496483" stroke="#4f46e5" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="160.92357642313334" y="164.0121363496483" dominant-baseline="middle" text-anchor="start" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">RIO 477.1%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">RIO 477.1%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
@@ -352,12 +379,11 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="163.43680756282674" y1="114.16938411635762" x2="182.95582527446575" y2="118.52919461369842" 
-                stroke="#10b981" stroke-width="0.5" opacity="0.6" />
+            <path d="M 163.43680756282674 114.16938411635762 L 182.95582527446575 118.52919461369842" stroke="#10b981" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="187.95582527446575" y="118.52919461369842" dominant-baseline="middle" text-anchor="start" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">BATS 302.7%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">BATS 302.7%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
@@ -373,12 +399,11 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="36.527769460063375" y1="114.00985190089948" x2="16.997852370852115" y2="118.32057556271471" 
-                stroke="#ef4444" stroke-width="0.5" opacity="0.6" />
+            <path d="M 36.527769460063375 114.00985190089948 L 16.997852370852115 118.32057556271471" stroke="#ef4444" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="11.997852370852115" y="118.32057556271471" dominant-baseline="middle" text-anchor="end" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">LGEN 183.4%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">LGEN 183.4%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
@@ -394,12 +419,11 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="37.137606074358025" y1="116.53237520555987" x2="17.795331020314336" y2="121.61925988419368" 
-                stroke="#f59e0b" stroke-width="0.5" opacity="0.6" />
+            <path d="M 37.137606074358025 116.53237520555987 L 17.795331020314336 121.61925988419368" stroke="#f59e0b" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="12.795331020314336" y="121.61925988419368" dominant-baseline="middle" text-anchor="end" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">RE 15.3%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">RE 15.3%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
@@ -415,12 +439,11 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="49.66808256688178" y1="58.86974243326733" x2="34.181338741306945" y2="46.214278566580354" 
-                stroke="#8b5cf6" stroke-width="0.5" opacity="0.6" />
+            <path d="M 49.66808256688178 58.86974243326733 L 34.181338741306945 46.214278566580354" stroke="#8b5cf6" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="29.181338741306945" y="46.214278566580354" dominant-baseline="middle" text-anchor="end" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">NUE 14.6%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">NUE 14.6%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
@@ -436,12 +459,11 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="100.94445528112274" y1="35.006861868179044" x2="101.2350569060836" y2="15.008973212234125" 
-                stroke="#ec4899" stroke-width="0.5" opacity="0.6" />
+            <path d="M 100.94445528112274 35.006861868179044 L 101.2350569060836 15.008973212234125" stroke="#ec4899" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="106.2350569060836" y="15.008973212234125" dominant-baseline="middle" text-anchor="start" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">CNNE 14.0%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">CNNE 14.0%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
@@ -457,12 +479,11 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="150.05954875672347" y1="58.53867370339888" x2="165.46248683571528" y2="45.78134253521392" 
-                stroke="#06b6d4" stroke-width="0.5" opacity="0.6" />
+            <path d="M 150.05954875672347 58.53867370339888 L 165.46248683571528 45.78134253521392" stroke="#06b6d4" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="170.46248683571528" y="45.78134253521392" dominant-baseline="middle" text-anchor="start" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">CRM 13.5%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">CRM 13.5%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
@@ -478,12 +499,11 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="164.3473361919036" y1="109.18805338502841" x2="184.14651655864319" y2="112.01514673426792" 
-                stroke="#3b82f6" stroke-width="0.5" opacity="0.6" />
+            <path d="M 164.3473361919036 109.18805338502841 L 184.14651655864319 112.01514673426792" stroke="#3b82f6" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="189.14651655864319" y="112.01514673426792" dominant-baseline="middle" text-anchor="start" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">EOG 13.0%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">EOG 13.0%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
@@ -499,12 +519,11 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="140.05310881786343" y1="151.19324637121963" x2="152.37714230028297" y2="166.94501448544105" 
-                stroke="#f43f5e" stroke-width="0.5" opacity="0.6" />
+            <path d="M 140.05310881786343 151.19324637121963 L 152.37714230028297 166.94501448544105" stroke="#f43f5e" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="157.37714230028297" y="166.94501448544105" dominant-baseline="middle" text-anchor="start" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">QCOM 11.3%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">QCOM 11.3%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
@@ -520,12 +539,11 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="96.87758098817798" y1="164.92496052763232" x2="95.91683667684813" y2="184.90187145921146" 
-                stroke="#10b981" stroke-width="0.5" opacity="0.6" />
+            <path d="M 96.87758098817798 164.92496052763232 L 95.91683667684813 184.90187145921146" stroke="#10b981" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="90.91683667684813" y="184.90187145921146" dominant-baseline="middle" text-anchor="end" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">CTVA 11.3%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">CTVA 11.3%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
@@ -541,12 +559,11 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="55.758494046829185" y1="147.62025987954655" x2="42.145722984315086" y2="162.27264753479164" 
-                stroke="#4f46e5" stroke-width="0.5" opacity="0.6" />
+            <path d="M 55.758494046829185 147.62025987954655 L 42.145722984315086 162.27264753479164" stroke="#4f46e5" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="37.145722984315086" y="162.27264753479164" dominant-baseline="middle" text-anchor="end" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">NFLX 11.0%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">NFLX 11.0%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
@@ -562,12 +579,11 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="37.02534180809871" y1="116.09945420233865" x2="17.64852390289832" y2="121.05313241844284" 
-                stroke="#10b981" stroke-width="0.5" opacity="0.6" />
+            <path d="M 37.02534180809871 116.09945420233865 L 17.64852390289832 121.05313241844284" stroke="#10b981" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="12.648523902898319" y="121.05313241844284" dominant-baseline="middle" text-anchor="end" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">BMY 7.2%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">BMY 7.2%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
@@ -583,12 +599,11 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="35.674628161131224" y1="90.65941448348836" x2="15.882206056863893" y2="87.78538817071555" 
-                stroke="#ef4444" stroke-width="0.5" opacity="0.6" />
+            <path d="M 35.674628161131224 90.65941448348836 L 15.882206056863893 87.78538817071555" stroke="#ef4444" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="10.882206056863893" y="87.78538817071555" dominant-baseline="middle" text-anchor="end" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">SOLV 5.3%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">SOLV 5.3%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
@@ -604,12 +619,11 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="41.58774846700406" y1="71.48668958458148" x2="23.614747995312996" y2="62.71336330291425" 
-                stroke="#f59e0b" stroke-width="0.5" opacity="0.6" />
+            <path d="M 41.58774846700406 71.48668958458148 L 23.614747995312996 62.71336330291425" stroke="#f59e0b" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="18.614747995312996" y="62.71336330291425" dominant-baseline="middle" text-anchor="end" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">DHR 4.5%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">DHR 4.5%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
@@ -625,15 +639,13 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="49.26897758685826" y1="59.363029579983326" x2="33.6594322289685" y2="46.859346373824344" 
-                stroke="#8b5cf6" stroke-width="0.5" opacity="0.6" />
+            <path d="M 49.26897758685826 59.363029579983326 L 33.6594322289685 46.859346373824344" stroke="#8b5cf6" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="28.659432228968498" y="46.859346373824344" dominant-baseline="middle" text-anchor="end" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">VSNTV 2.5%</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">VSNTV 2.5%</text>
         
-        <text x="100" y="98" text-anchor="middle" class="text-[0.5rem] font-bold fill-gray-400">ALLOCATION</text>
-        <text x="100" y="108" text-anchor="middle" class="text-[0.7rem] font-black fill-gray-900 tracking-tighter">WEIGHTS</text>
+        <!-- NO CENTER TEXT As Requested -->
     </svg>
     
 
@@ -648,125 +660,125 @@
 
                     <!-- v32.14 Sovereign Guard Legend Grid -->
                     <div class="mt-6 border-t border-gray-100 pt-4 overflow-y-auto max-height-[200px]">
-                        <div class="grid grid-cols-4 gap-2">
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+                        <div class="ticker-legend">
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('RIO')"
              onmouseover="showTT('Rio Tinto', '477.1%', '#4f46e5')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #4f46e5;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">RIO</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #4f46e5;">
+            RIO
         </div>
         
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('BATS')"
              onmouseover="showTT('British American Tobacco', '302.7%', '#10b981')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #10b981;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">BATS</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #10b981;">
+            BATS
         </div>
         
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('LGEN')"
              onmouseover="showTT('Legal & General', '183.4%', '#ef4444')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #ef4444;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">LGEN</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #ef4444;">
+            LGEN
         </div>
         
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('RE')"
              onmouseover="showTT('Everest Group', '15.3%', '#f59e0b')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #f59e0b;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">RE</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #f59e0b;">
+            RE
         </div>
         
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('NUE')"
              onmouseover="showTT('Nucor', '14.6%', '#8b5cf6')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #8b5cf6;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">NUE</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #8b5cf6;">
+            NUE
         </div>
         
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('CNNE')"
              onmouseover="showTT('Cannae', '14.0%', '#ec4899')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #ec4899;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">CNNE</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #ec4899;">
+            CNNE
         </div>
         
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('CRM')"
              onmouseover="showTT('Salesforce', '13.5%', '#06b6d4')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #06b6d4;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">CRM</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #06b6d4;">
+            CRM
         </div>
         
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('EOG')"
              onmouseover="showTT('EOG Resources', '13.0%', '#3b82f6')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #3b82f6;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">EOG</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #3b82f6;">
+            EOG
         </div>
         
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('QCOM')"
              onmouseover="showTT('Qualcomm', '11.3%', '#f43f5e')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #f43f5e;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">QCOM</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #f43f5e;">
+            QCOM
         </div>
         
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('CTVA')"
              onmouseover="showTT('Corteva', '11.3%', '#10b981')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #10b981;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">CTVA</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #10b981;">
+            CTVA
         </div>
         
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('NFLX')"
              onmouseover="showTT('Netflix', '11.0%', '#4f46e5')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #4f46e5;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">NFLX</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #4f46e5;">
+            NFLX
         </div>
         
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('BMY')"
              onmouseover="showTT('Bristol-Myers Squibb', '7.2%', '#10b981')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #10b981;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">BMY</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #10b981;">
+            BMY
         </div>
         
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('SOLV')"
              onmouseover="showTT('Solventum', '5.3%', '#ef4444')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #ef4444;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">SOLV</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #ef4444;">
+            SOLV
         </div>
         
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('DHR')"
              onmouseover="showTT('Danaher', '4.5%', '#f59e0b')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #f59e0b;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">DHR</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #f59e0b;">
+            DHR
         </div>
         
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('VSNTV')"
              onmouseover="showTT('Versant Media Group', '2.5%', '#8b5cf6')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: #8b5cf6;"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">VSNTV</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid #8b5cf6;">
+            VSNTV
         </div>
         </div>
                     </div>

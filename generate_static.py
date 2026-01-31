@@ -94,6 +94,7 @@ def generate_oracle_ring(holdings, total_invested):
         
         ticker = h.get('Ticker', 'Asset')
         safe_name = h.get('Name', ticker).replace("'", "\\'")
+        # NO £ Signs in tooltip or label
         pct_fmt = f"{weight:.1f}%"
         
         # v32.13: Leader Lines & External Labels
@@ -112,12 +113,11 @@ def generate_oracle_ring(holdings, total_invested):
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="{px}" y1="{py}" x2="{ex}" y2="{ey}" 
-                stroke="{color}" stroke-width="0.5" opacity="0.6" />
+            <path d="M {px} {py} L {ex} {ey}" stroke="{color}" stroke-width="1" fill="none" opacity="0.6" />
                 
             <!-- Label -->
             <text x="{ex + label_offset}" y="{ey}" dominant-baseline="middle" text-anchor="{text_anchor}" 
-                class="text-[0.45rem] font-bold fill-gray-600 mono">{ticker} {pct_fmt}</text>
+                class="text-[0.45rem] font-bold fill-gray-600 mono" style="pointer-events: none;">{ticker} {pct_fmt}</text>
         """)
         cumulative_offset += dash_len
 
@@ -125,8 +125,7 @@ def generate_oracle_ring(holdings, total_invested):
     <svg viewBox="0 0 200 200" class="w-full h-full overflow-visible">
         <circle cx="100" cy="100" r="{radius}" stroke="#f3f4f6" stroke-width="18" fill="none" />
         {''.join(svg_elements)}
-        <text x="100" y="98" text-anchor="middle" class="text-[0.5rem] font-bold fill-gray-400">ALLOCATION</text>
-        <text x="100" y="108" text-anchor="middle" class="text-[0.7rem] font-black fill-gray-900 tracking-tighter">WEIGHTS</text>
+        <!-- NO CENTER TEXT As Requested -->
     </svg>
     """
 
@@ -282,8 +281,9 @@ def render():
     # v32.13: Generate Oracle Ring with the correct denominator
     donut_chart_svg = generate_oracle_ring(holdings, total_invested)
 
-    # v32.13: Compact, Multi-column Legend (Tickers Only)
-    legend_html = '<div class="grid grid-cols-4 gap-2">'
+    # v32.13: Compact Grid Legend (Tickers Only)
+    # Using 'ticker-legend' class for updated CSS
+    legend_html = '<div class="ticker-legend">'
     sorted_holdings = sorted(holdings, key=lambda x: x.get('Value_GBP', 0), reverse=True)
     
     colors = ["#4f46e5", "#10b981", "#ef4444", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4", "#3b82f6", "#f43f5e", "#10b981"]
@@ -291,7 +291,9 @@ def render():
     for i, h in enumerate(sorted_holdings):
         val = h.get('Value_GBP', 0)
         weight = (val / total_invested * 100) if total_invested > 0 else 0
-        if weight < 0.1: continue # Still filter tiny dust for legend
+        
+        # Show even small holdings in legend if they exist, but maybe limit count if massive
+        if weight < 0.01: continue 
         
         ticker = h.get('Ticker', 'N/A')
         color = colors[i % len(colors)]
@@ -299,12 +301,12 @@ def render():
         pct_fmt = f"{weight:.1f}%"
         
         legend_html += f"""
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors" 
+        <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('{ticker}')"
              onmouseover="showTT('{safe_name}', '{pct_fmt}', '{color}')"
-             onmouseout="hideTT()">
-            <div class="w-2 h-2 rounded-full" style="background-color: {color};"></div>
-            <span class="text-[0.6rem] font-bold text-gray-700 mono">{ticker}</span>
+             onmouseout="hideTT()"
+             style="border-left: 3px solid {color};">
+            {ticker}
         </div>
         """
     legend_html += "</div>"
