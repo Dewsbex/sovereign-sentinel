@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | v32.15 Sovereign Finality</title>
+    <title>SOVEREIGN SENTINEL | v32.16 Sovereign Finality</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -141,8 +141,8 @@
             opacity: 0;
             position: absolute;
             bottom: 130%;
-            left: 0; /* Anchor left to keep it on screen */
-            /* transform: translateX(-50%) translateY(10px); REMOVED CENTER ALIGN */
+            left: auto;
+            right: 0; /* Anchor right as requested to keep it on screen */
             transform: translateY(10px);
             width: 280px;
             background: white;
@@ -282,7 +282,7 @@
         <div class="flex items-center gap-3">
             <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
             <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">SENTINEL_VIBE <span
-                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v32.15 Sovereign Finality</span>
+                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v32.16 Sovereign Finality</span>
             </h1>
         </div>
 
@@ -354,7 +354,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-RE"
                 data-ticker="RE"
-                onmouseover="showTT('Everest Group', '11.2%')"
+                onmouseover="showTT('Everest Group', '11.2%', '#4f46e5')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('RE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
@@ -374,7 +374,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-NUE"
                 data-ticker="NUE"
-                onmouseover="showTT('Nucor', '10.7%')"
+                onmouseover="showTT('Nucor', '10.7%', '#10b981')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('NUE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
@@ -394,7 +394,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-CNNE"
                 data-ticker="CNNE"
-                onmouseover="showTT('Cannae', '10.2%')"
+                onmouseover="showTT('Cannae', '10.2%', '#ef4444')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('CNNE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
@@ -414,7 +414,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-CRM"
                 data-ticker="CRM"
-                onmouseover="showTT('Salesforce', '9.9%')"
+                onmouseover="showTT('Salesforce', '9.9%', '#f59e0b')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('CRM')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
@@ -434,7 +434,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-EOG"
                 data-ticker="EOG"
-                onmouseover="showTT('EOG Resources', '9.5%')"
+                onmouseover="showTT('EOG Resources', '9.5%', '#8b5cf6')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('EOG')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
@@ -454,7 +454,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-QCOM"
                 data-ticker="QCOM"
-                onmouseover="showTT('Qualcomm', '8.3%')"
+                onmouseover="showTT('Qualcomm', '8.3%', '#ec4899')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('QCOM')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
@@ -474,7 +474,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-CTVA"
                 data-ticker="CTVA"
-                onmouseover="showTT('Corteva', '8.3%')"
+                onmouseover="showTT('Corteva', '8.3%', '#06b6d4')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('CTVA')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
@@ -494,7 +494,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-NFLX"
                 data-ticker="NFLX"
-                onmouseover="showTT('Netflix', '8.0%')"
+                onmouseover="showTT('Netflix', '8.0%', '#3b82f6')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('NFLX')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
@@ -514,7 +514,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-BMY"
                 data-ticker="BMY"
-                onmouseover="showTT('Bristol-Myers Squibb', '5.3%')"
+                onmouseover="showTT('Bristol-Myers Squibb', '5.3%', '#f43f5e')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('BMY')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
@@ -534,7 +534,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-RIO"
                 data-ticker="RIO"
-                onmouseover="showTT('Rio Tinto', '4.8%')"
+                onmouseover="showTT('Rio Tinto', '4.8%', '#10b981')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('RIO')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
@@ -554,7 +554,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-SOLV"
                 data-ticker="SOLV"
-                onmouseover="showTT('Solventum', '3.9%')"
+                onmouseover="showTT('Solventum', '3.9%', '#4f46e5')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('SOLV')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
@@ -574,7 +574,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-DHR"
                 data-ticker="DHR"
-                onmouseover="showTT('Danaher', '3.3%')"
+                onmouseover="showTT('Danaher', '3.3%', '#10b981')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('DHR')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
@@ -594,7 +594,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-BATS"
                 data-ticker="BATS"
-                onmouseover="showTT('British American Tobacco', '3.0%')"
+                onmouseover="showTT('British American Tobacco', '3.0%', '#ef4444')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('BATS')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
@@ -614,7 +614,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-LGEN"
                 data-ticker="LGEN"
-                onmouseover="showTT('Legal & General', '1.8%')"
+                onmouseover="showTT('Legal & General', '1.8%', '#f59e0b')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('LGEN')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
@@ -634,7 +634,7 @@
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-VSNTV"
                 data-ticker="VSNTV"
-                onmouseover="showTT('Versant Media Group', '1.8%')"
+                onmouseover="showTT('Versant Media Group', '1.8%', '#8b5cf6')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('VSNTV')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
