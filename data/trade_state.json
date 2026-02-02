@@ -1,9 +1,17 @@
 {
-    "status": "WATCHING_CANDIDATES",
-    "updated": "23:09:41 GMT",
+    "status": "WATCHING_RANGE",
+    "updated": "23:09:43 GMT",
     "titan_cap": 500.0,
     "cash_balance": 870.86,
-    "targets": [],
+    "targets": [
+        {
+            "ticker": "AAPL",
+            "rvol": 3.1311891706830073,
+            "high": 263.9700012207031,
+            "low": 259.2049865722656,
+            "last_poll_price": 0
+        }
+    ],
     "active_positions": {},
     "audit_log": []
 }
