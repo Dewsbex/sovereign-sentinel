@@ -60,28 +60,32 @@ class Strategy_ORB:
         logger.info(f"🛡️ Titan Shield Active. Hard Deck: £{self.titan_cap:.2f}")
 
         # Load Watchlist from JSON
-        self.watchlist = self.load_watchlist()
+        self.load_watchlist() # Call to load and set instance variables
 
     def load_watchlist(self):
-        """Loads tickers from watchlist.json"""
-        default = ["TSLA", "NVDA", "AAPL", "AMD", "PLTR"]
+        """Loads tickers and company names from watchlist.json"""
+        default_tickers = ["TSLA", "NVDA", "AAPL", "AMD", "PLTR"]
+        default_lookup = {
+            "TSLA": "Tesla Inc", "NVDA": "NVIDIA Corp", "AAPL": "Apple Inc",
+            "AMD": "Advanced Micro Devices Inc", "PLTR": "Palantir Technologies Inc"
+        }
+        
         try:
             with open('watchlist.json', 'r') as f:
                 data = json.load(f)
-                # Extract 'ticker' field from list of dicts
-                tickers = [item.get('ticker') for item in data if item.get('ticker')]
-                if tickers:
-                    logger.info(f"Loaded {len(tickers)} tickers from watchlist.json")
-                    return tickers
-                else:
-                    logger.warning("Components missing in watchlist.json. Using default.")
-                    return default
+                # Create ticker list and name lookup dict
+                self.watchlist = [item.get('ticker') for item in data if item.get('ticker')]
+                self.watchlist_lookup = {item.get('ticker'): item.get('name', item.get('ticker')) for item in data if item.get('ticker')}
+                logger.info(f"Loaded {len(self.watchlist)} tickers from watchlist.json")
+                return
         except FileNotFoundError:
             logger.warning("watchlist.json not found. Using default.")
-            return default
         except Exception as e:
             logger.warning(f"Error loading watchlist: {e}. Using default.")
-            return default
+        
+        # Fallback to defaults
+        self.watchlist = default_tickers
+        self.watchlist_lookup = default_lookup
 
     # --- State Management & Git Sync ---
     def save_state(self, push=False):
@@ -432,8 +436,8 @@ class Strategy_ORB:
             
             logger.info(f"   🎯 {t} Locked: RVOL {candidate['rvol']:.2f} | Buy > ${self.orb_levels[t]['trigger_long']:.2f} (Current: ${curr_price:.2f})")
             
-            # Get company name from watchlist
-            company_name = next((item['name'] for item in self.watchlist if item['ticker'] == t), t)
+            # Get company name from watchlist lookup
+            company_name = self.watchlist_lookup.get(t, t)
             
             # Notification of new target locked
             self.broadcast_notification(
