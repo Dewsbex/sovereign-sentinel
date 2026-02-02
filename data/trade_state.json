@@ -1,9 +1,45 @@
 {
-    "status": "WATCHING_CANDIDATES",
-    "updated": "21:41:41 GMT",
+    "status": "WATCHING_RANGE",
+    "updated": "21:41:48 GMT",
     "titan_cap": 500.0,
     "cash_balance": 0.0,
-    "targets": [],
+    "targets": [
+        {
+            "ticker": "AAPL",
+            "rvol": 3.1311891706830073,
+            "high": 263.9700012207031,
+            "low": 259.2049865722656,
+            "last_poll_price": 0
+        },
+        {
+            "ticker": "MSFT",
+            "rvol": 3.546679088088234,
+            "high": 430.3800048828125,
+            "low": 424.5199890136719,
+            "last_poll_price": 0
+        },
+        {
+            "ticker": "GOOGL",
+            "rvol": 2.3223663459715183,
+            "high": 339.6499938964844,
+            "low": 335.6300048828125,
+            "last_poll_price": 0
+        },
+        {
+            "ticker": "TSLA",
+            "rvol": 2.1551018923912206,
+            "high": 421.70001220703125,
+            "low": 414.5,
+            "last_poll_price": 0
+        },
+        {
+            "ticker": "NVDA",
+            "rvol": 1.7110009037607508,
+            "high": 188.02999877929688,
+            "low": 186.60000610351562,
+            "last_poll_price": 0
+        }
+    ],
     "active_positions": {},
     "audit_log": []
 }
