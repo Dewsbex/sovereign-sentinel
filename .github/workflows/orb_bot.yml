@@ -4,6 +4,9 @@ on:
     - cron: '15 14 * * 1-5' # 14:15 GMT, Monday-Friday
   workflow_dispatch:      # Allow manual trigger
 
+permissions:
+  contents: write
+
 jobs:
   trade:
     runs-on: ubuntu-latest
