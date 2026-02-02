@@ -217,10 +217,7 @@ class Strategy_ORB:
                 
                 if not is_nr7: 
                     # logger.info(f"{t}: Failed NR7")
-                    pass # Continue for verification purposes or remove? 
-                         # Spec says "Gap Check... NR7 Filter... Pass Condition".
-                         # We'll stick to strict spec, but for Verification I might loosen it if universe is small.
-                    # continue 
+                    pass 
                 
                 # 3. Gap Check (Current vs Yesterday Close)
                 try:
@@ -232,8 +229,10 @@ class Strategy_ORB:
                 prev_close = yesterday['Close']
                 gap_pct = abs((current_price - prev_close) / prev_close)
                 
+                logger.info(f"   🔎 {t}: Gap {gap_pct:.2%} | NR7: {is_nr7} | Vol: {avg_vol/1e6:.1f}M")
+                
                 if gap_pct > 0.02 or is_nr7: 
-                    logger.info(f"   ✨ {t}: Gap {gap_pct:.2%} | NR7: {is_nr7}")
+                    logger.info(f"   ✨ {t} QUALIFIED")
                     candidates.append(t)
                     
             except Exception as e:

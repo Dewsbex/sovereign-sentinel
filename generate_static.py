@@ -179,7 +179,20 @@ def render():
         # v31.2: Fix Total Return = Realized + Unrealized P/L
         realized_pl = safe_val(invest_data.get('realizedProfitLoss'))
         unrealized_pl = safe_val(invest_data.get('unrealizedProfitLoss'))
-        total_return = realized_pl + unrealized_pl
+        
+        # v32.17: Include Dividends from Ledger if available
+        total_dividends = 0.0
+        try:
+            cache_path = os.path.join(os.path.dirname(__file__), "data", "ledger_cache.json")
+            if os.path.exists(cache_path):
+                with open(cache_path, 'r') as f:
+                    ledger = json.load(f)
+                    assets = ledger.get('assets', {})
+                    total_dividends = sum(a.get('dividends', 0) for a in assets.values())
+        except:
+            pass
+            
+        total_return = realized_pl + unrealized_pl + total_dividends
         total_cost = safe_val(invest_data.get('totalCost'))
     else:
         total_return = safe_val(account.get('ppl'))
@@ -330,8 +343,9 @@ def render():
     legend_html += "</div>"
 
     context = {
-        'version': "v0.04 Sovereign Finality",
+        'version': "v0.08 Sovereign Finality",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
+        'sync_time': datetime.now().strftime('%d/%m %H:%M'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
         'return_pct_str': f"{return_rate_pct:+.2f}%",
