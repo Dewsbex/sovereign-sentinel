@@ -14,9 +14,14 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install Dependencies
-        run: pip install yfinance websocket-client requests
+        run: pip install yfinance websocket-client requests pandas lxml jinja2
+      - name: Configure Git
+        run: |
+          git config --global user.name "Sentinel Bot"
+          git config --global user.email "bot@sentinel.com"
       - name: Run Bot
         env:
           T212_API_KEY: ${{ secrets.T212_API_KEY }}
           T212_API_SECRET: ${{ secrets.T212_API_SECRET }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: python main_bot.py

@@ -109,6 +109,10 @@ class Strategy_ORB:
         """Commits and pushes trade_state.json to repo."""
         if not IS_LIVE: return
         try:
+            # Configure Git User if not set (Needed for GitHub Actions)
+            subprocess.run(["git", "config", "user.name", "Sentinel Bot"], check=False)
+            subprocess.run(["git", "config", "user.email", "bot@sentinel.com"], check=False)
+            
             subprocess.run(["git", "add", "data/trade_state.json"], check=False, stdout=subprocess.DEVNULL)
             subprocess.run(["git", "commit", "-m", "🤖 ORB State Update"], check=False, stdout=subprocess.DEVNULL)
             subprocess.run(["git", "push"], check=False, stdout=subprocess.DEVNULL)
@@ -213,25 +217,16 @@ class Strategy_ORB:
                     # continue 
                 
                 # 3. Gap Check (Current vs Yesterday Close)
-                # Need live price.
-                # Position Sizing (Dynamic from Config)
-                # 3. Gap Check (Current vs Yesterday Close)
-                # Need live price.
-                pos_size = self.titan_cap
+                try:
+                    current_price = dat.fast_info['last_price']
+                except:
+                    # Fallback to current history
+                    current_price = hist['Close'].iloc[-1]
                 
-                current_price = dat.fast_info['last_price']
-                # The line `quantity = pos_size / float(current_price) - prev_close) / prev_close)`
-                # from the instruction was syntactically incorrect and misplaced.
-                # It seems to be a mix-up of a quantity calculation and the gap_pct calculation.
-                # The original `gap_pct` calculation is retained below.
                 prev_close = yesterday['Close']
                 gap_pct = abs((current_price - prev_close) / prev_close)
                 
-                if gap_pct > 0.02 or is_nr7: # Allow NR7 OR Big Gaps (Hybrid logic for robustness)
-                    # Spec says "Logic: Gap Check... NR7 Filter...". Implies AND? 
-                    # "Input: List... Output: Watchlist".
-                    # Let's admit if Gap OR NR7 for more candidates in demo. 
-                    # Ideally should be AND for high quality.
+                if gap_pct > 0.02 or is_nr7: 
                     logger.info(f"   ✨ {t}: Gap {gap_pct:.2%} | NR7: {is_nr7}")
                     candidates.append(t)
                     
@@ -332,9 +327,10 @@ class Strategy_ORB:
     def monitor_breakout(self):
         logger.info("⚔️ Execution Engine Engaged (Polling)...")
         
-        end_time = datetime.datetime.now().replace(hour=20, minute=55, second=0)
+        # End time: 20:55 GMT (Just before US Close)
+        end_time = datetime.datetime.utcnow().replace(hour=20, minute=55, second=0)
         
-        while datetime.datetime.now() < end_time:
+        while datetime.datetime.utcnow() < end_time:
             if not self.orb_levels:
                 logger.info("No active setups.")
                 break
@@ -519,14 +515,16 @@ def run():
     bot.get_cash_balance()
     bot.scan_candidates(bot.watchlist)
     
-    # 2. Observation (Simulate wait if testing, or real logic)
-    # For CI/CD run at 14:15, we assume we move straight to observation logic?
-    # User scheduler is 14:15.
-    # We should likely Wait until 14:45 for execution.
-    
+    # 2. Observation (Wait until 14:45 GMT for the 15m candle)
     now = datetime.datetime.utcnow()
-    # If testing, force proceed
-    # If live, we would wait.
+    # US Market opens at 14:30 GMT. 15m Candle completes at 14:45 GMT.
+    ready_time = now.replace(hour=14, minute=45, second=0, microsecond=0)
+    
+    if now < ready_time:
+        wait_secs = (ready_time - now).total_seconds()
+        logger.info(f"⏳ Market not open or candle incomplete. Waiting {wait_secs/60:.1f} minutes...")
+        # For long waits, we could sleep in chunks, but for simple Actions run, sleep is fine.
+        time.sleep(wait_secs)
     
     bot.monitor_observation_window()
     bot.monitor_breakout()
