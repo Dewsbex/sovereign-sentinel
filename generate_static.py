@@ -148,7 +148,7 @@ def generate_oracle_ring(holdings, total_invested):
     """
 
 def render():
-    print(f"Starting The Artist (Job B) [v0.01 Sovereign Finality]... ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"Starting The Artist (Job B) [v0.03 Sovereign Finality]... ({datetime.now().strftime('%H:%M:%S')})")
     
     # 1. Load Data
     state = load_state()
@@ -330,7 +330,7 @@ def render():
     legend_html += "</div>"
 
     context = {
-        'version': "v0.01 Sovereign Finality",
+        'version': "v0.03 Sovereign Finality",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
