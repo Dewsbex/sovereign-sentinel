@@ -186,13 +186,13 @@ class Strategy_ORB:
         """
         Executes T212 API calls with strict rate limiting.
         """
-        if not API_KEY or not API_SECRET:
+        if not T212_API_KEY or not T212_API_SECRET:
             if IS_LIVE: logger.warning("⚠️ No API Credentials.")
             return None
 
         url = f"{BASE_URL}{endpoint}"
         headers = {"Content-Type": "application/json"}
-        auth = HTTPBasicAuth(API_KEY, API_SECRET)
+        auth = HTTPBasicAuth(T212_API_KEY, T212_API_SECRET)
 
         # Rate Limit Sleep
         time.sleep(1.5) 
