@@ -176,12 +176,22 @@ def render():
         
     invest_data = account.get('investments', {})
     if isinstance(invest_data, dict):
-        # v31.2: Fix Total Return = Realized + Unrealized P/L
+        # Total Return Calculation (v0.09)
+        # =====================================
+        # Trading 212 API provides:
+        # - realizedProfitLoss: Gains/losses from closed positions + dividends
+        # - unrealizedProfitLoss: Paper gains/losses on open positions
+        # 
+        # Total Return = Realized P/L + Unrealized P/L
+        # 
+        # Note: The T212 mobile app may show a slightly different value due to:
+        # 1. Timing differences between API calls and app display
+        # 2. Interest/fees that may not be included in these P/L fields
+        # 3. Historical data the API doesn't expose
+        # 
+        # The dashboard shows the exact API values for maximum accuracy and reliability.
         realized_pl = safe_val(invest_data.get('realizedProfitLoss'))
         unrealized_pl = safe_val(invest_data.get('unrealizedProfitLoss'))
-        
-        # v0.09: T212's realizedProfitLoss ALREADY includes dividends
-        # No need to add them separately - that was causing double-counting
         total_return = realized_pl + unrealized_pl
         total_cost = safe_val(invest_data.get('totalCost'))
     else:

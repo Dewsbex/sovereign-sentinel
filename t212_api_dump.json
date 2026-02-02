@@ -1,0 +1,377 @@
+{
+  "summary": {
+    "id": 31785628,
+    "currency": "GBP",
+    "totalValue": 174357.04,
+    "cash": {
+      "availableToTrade": 858.18,
+      "reservedForOrders": 19065.19,
+      "inPies": 0
+    },
+    "investments": {
+      "currentValue": 154433.68,
+      "totalCost": 156829.19,
+      "realizedProfitLoss": 26122.63,
+      "unrealizedProfitLoss": -2395.51
+    }
+  },
+  "positions": [
+    {
+      "instrument": {
+        "ticker": "BMY_US_EQ",
+        "name": "Bristol-Myers Squibb",
+        "isin": "US1101221083",
+        "currency": "USD"
+      },
+      "createdAt": "2025-12-11T16:41:20.000+02:00",
+      "quantity": 190.0,
+      "quantityAvailableForTrading": 190.0,
+      "quantityInPies": 0,
+      "currentPrice": 55.51,
+      "averagePricePaid": 50.57,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 7157.13,
+        "currentValue": 7721.24,
+        "unrealizedProfitLoss": 564.11,
+        "fxImpact": -123.03
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "DHR_US_EQ",
+        "name": "Danaher",
+        "isin": "US2358511028",
+        "currency": "USD"
+      },
+      "createdAt": "2026-01-30T16:31:57.000+02:00",
+      "quantity": 30.0,
+      "quantityAvailableForTrading": 30.0,
+      "quantityInPies": 0,
+      "currentPrice": 221.56,
+      "averagePricePaid": 218.2,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 4760.97,
+        "currentValue": 4866.03,
+        "unrealizedProfitLoss": 105.06,
+        "fxImpact": 31.27
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "RIOl_EQ",
+        "name": "Rio Tinto",
+        "isin": "GB0007188757",
+        "currency": "GBX"
+      },
+      "createdAt": "2024-04-05T16:34:29.000+03:00",
+      "quantity": 102.36965673,
+      "quantityAvailableForTrading": 102.36965673,
+      "quantityInPies": 0,
+      "currentPrice": 6802.0,
+      "averagePricePaid": 4576.67501255,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 4685.12,
+        "currentValue": 6963.18,
+        "unrealizedProfitLoss": 2278.06,
+        "fxImpact": null
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "LGENl_EQ",
+        "name": "Legal & General",
+        "isin": "GB0005603997",
+        "currency": "GBX"
+      },
+      "createdAt": "2026-01-22T13:40:43.000+02:00",
+      "quantity": 1000.0,
+      "quantityAvailableForTrading": 1000.0,
+      "quantityInPies": 0,
+      "currentPrice": 267.6,
+      "averagePricePaid": 259.8,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 2598.0,
+        "currentValue": 2676.0,
+        "unrealizedProfitLoss": 78.0,
+        "fxImpact": null
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "QELL_US_EQ",
+        "name": "Lilium",
+        "isin": "NL0015000F41",
+        "currency": "USD"
+      },
+      "createdAt": "2024-07-18T13:59:37.000+03:00",
+      "quantity": 275.36311,
+      "quantityAvailableForTrading": 275.36311,
+      "quantityInPies": 0,
+      "currentPrice": 0.00079,
+      "averagePricePaid": 1.02294022,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 216.86,
+        "currentValue": 0.16,
+        "unrealizedProfitLoss": -216.7,
+        "fxImpact": -10.65
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "BATSl_EQ",
+        "name": "British American Tobacco",
+        "isin": "GB0002875804",
+        "currency": "GBX"
+      },
+      "createdAt": "2026-01-21T10:00:34.000+02:00",
+      "quantity": 100.0,
+      "quantityAvailableForTrading": 100.0,
+      "quantityInPies": 0,
+      "currentPrice": 4432.0,
+      "averagePricePaid": 4202.7249,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 4202.72,
+        "currentValue": 4432.0,
+        "unrealizedProfitLoss": 229.28,
+        "fxImpact": null
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "VSNTV_US_EQ",
+        "name": "Versant Media Group",
+        "isin": "US9252831030",
+        "currency": "USD"
+      },
+      "createdAt": "2026-01-16T17:26:36.000+02:00",
+      "quantity": 111.0,
+      "quantityAvailableForTrading": 111.0,
+      "quantityInPies": 0,
+      "currentPrice": 32.64,
+      "averagePricePaid": 33.25963964,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 2758.87,
+        "currentValue": 2652.38,
+        "unrealizedProfitLoss": -106.49,
+        "fxImpact": -56.14
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "NUE_US_EQ",
+        "name": "Nucor",
+        "isin": "US6703461052",
+        "currency": "USD"
+      },
+      "createdAt": "2024-04-09T16:30:08.000+03:00",
+      "quantity": 119.1502945,
+      "quantityAvailableForTrading": 119.1502945,
+      "quantityInPies": 0,
+      "currentPrice": 180.5,
+      "averagePricePaid": 142.75373864,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 12572.87,
+        "currentValue": 15744.7,
+        "unrealizedProfitLoss": 3171.83,
+        "fxImpact": -120.71
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "SOLV_US_EQ",
+        "name": "Solventum",
+        "isin": "US83444M1018",
+        "currency": "USD"
+      },
+      "createdAt": "2026-01-20T18:35:44.000+02:00",
+      "quantity": 100.0,
+      "quantityAvailableForTrading": 100.0,
+      "quantityInPies": 0,
+      "currentPrice": 77.09,
+      "averagePricePaid": 80.4473,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 5977.84,
+        "currentValue": 5643.65,
+        "unrealizedProfitLoss": -334.19,
+        "fxImpact": -88.41
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "RE_US_EQ",
+        "name": "Everest Group",
+        "isin": "BMG3223R1088",
+        "currency": "USD"
+      },
+      "createdAt": "2025-01-29T22:59:55.000+02:00",
+      "quantity": 66.95260406,
+      "quantityAvailableForTrading": 66.95260406,
+      "quantityInPies": 0,
+      "currentPrice": 330.67,
+      "averagePricePaid": 333.79806975,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 16994.17,
+        "currentValue": 16207.81,
+        "unrealizedProfitLoss": -786.36,
+        "fxImpact": -633.04
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "NFLX_US_EQ",
+        "name": "Netflix",
+        "isin": "US64110L1061",
+        "currency": "USD"
+      },
+      "createdAt": "2025-12-17T20:15:50.000+02:00",
+      "quantity": 190.0,
+      "quantityAvailableForTrading": 190.0,
+      "quantityInPies": 0,
+      "currentPrice": 83.24,
+      "averagePricePaid": 92.46947368,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 13122.62,
+        "currentValue": 11578.38,
+        "unrealizedProfitLoss": -1544.24,
+        "fxImpact": -260.45
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "CRM_US_EQ",
+        "name": "Salesforce",
+        "isin": "US79466L3024",
+        "currency": "USD"
+      },
+      "createdAt": "2026-01-02T16:33:49.000+02:00",
+      "quantity": 92.0,
+      "quantityAvailableForTrading": 92.0,
+      "quantityInPies": 0,
+      "currentPrice": 211.98,
+      "averagePricePaid": 242.96684783,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 16555.74,
+        "currentValue": 14277.26,
+        "unrealizedProfitLoss": -2278.48,
+        "fxImpact": -191.46
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "QCOM_US_EQ",
+        "name": "Qualcomm",
+        "isin": "US7475251036",
+        "currency": "USD"
+      },
+      "createdAt": "2026-01-12T16:31:39.000+02:00",
+      "quantity": 108.0,
+      "quantityAvailableForTrading": 108.0,
+      "quantityInPies": 0,
+      "currentPrice": 152.78,
+      "averagePricePaid": 168.85388889,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 13502.75,
+        "currentValue": 12079.59,
+        "unrealizedProfitLoss": -1423.16,
+        "fxImpact": -152.27
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "EOG_US_EQ",
+        "name": "EOG Resources",
+        "isin": "US26875P1012",
+        "currency": "USD"
+      },
+      "createdAt": "2025-09-05T18:06:13.000+03:00",
+      "quantity": 167.83705587,
+      "quantityAvailableForTrading": 167.83705587,
+      "quantityInPies": 0,
+      "currentPrice": 109.51,
+      "averagePricePaid": 114.00211891,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 14267.17,
+        "currentValue": 13455.62,
+        "unrealizedProfitLoss": -811.55,
+        "fxImpact": -259.6
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "CTVA_US_EQ",
+        "name": "Corteva",
+        "isin": "US22052L1044",
+        "currency": "USD"
+      },
+      "createdAt": "2026-01-16T21:23:42.000+02:00",
+      "quantity": 225.0,
+      "quantityAvailableForTrading": 225.0,
+      "quantityInPies": 0,
+      "currentPrice": 73.32,
+      "averagePricePaid": 69.9412,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 11678.42,
+        "currentValue": 12077.22,
+        "unrealizedProfitLoss": 398.8,
+        "fxImpact": -157.75
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "MSFT_US_EQ",
+        "name": "Microsoft",
+        "isin": "US5949181045",
+        "currency": "USD"
+      },
+      "createdAt": "2026-02-02T05:28:59.127+02:00",
+      "quantity": 30.0,
+      "quantityAvailableForTrading": 30.0,
+      "quantityInPies": 0,
+      "currentPrice": 424.54,
+      "averagePricePaid": 423.35,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 9279.24,
+        "currentValue": 9323.99,
+        "unrealizedProfitLoss": 44.75,
+        "fxImpact": 18.61
+      }
+    },
+    {
+      "instrument": {
+        "ticker": "CNNE_US_EQ",
+        "name": "Cannae",
+        "isin": "US13765N1072",
+        "currency": "USD"
+      },
+      "createdAt": "2026-01-16T17:41:05.000+02:00",
+      "quantity": 1406.16463623,
+      "quantityAvailableForTrading": 1406.16463623,
+      "quantityInPies": 0,
+      "currentPrice": 14.31,
+      "averagePricePaid": 15.77239921,
+      "walletImpact": {
+        "currency": "GBP",
+        "totalCost": 16498.7,
+        "currentValue": 14731.19,
+        "unrealizedProfitLoss": -1767.51,
+        "fxImpact": -262.07
+      }
+    }
+  ]
+}
