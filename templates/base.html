@@ -447,7 +447,10 @@
 
             <!-- 1. The Strategy Monitor -->
             <div class="mb-8">
-                <h3 class="text-[0.6rem] mono uppercase text-gray-400 mb-2">Active Targets</h3>
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-[0.6rem] mono uppercase text-gray-400">Active Targets</h3>
+                    <div class="text-[0.6rem] mono text-gray-400">LAST SYNC: <span id="orb-last-sync" class="text-indigo-500 font-bold">NEVER</span></div>
+                </div>
                 <div id="orb-targets" class="flex flex-wrap gap-2">
                     <span class="text-xs text-gray-400 italic">Waiting for 14:30 GMT Scan...</span>
                 </div>
@@ -530,9 +533,14 @@
                 const statusEl = document.getElementById('orb-status');
                 statusEl.innerText = state.status;
                 if(state.status.includes('TRIGGERED')) {
-                    statusEl.className = "px-3 py-1 rounded text-[0.6rem] font-bold bg-amber-500/20 text-amber-600 border border-amber-500/30 uppercase tracking-wider animate-pulse";
+                    statusEl.className = "px-3 py-1.5 rounded text-[0.65rem] font-bold bg-amber-500/20 text-amber-600 border border-amber-500/30 uppercase tracking-wider animate-pulse";
                 } else if (state.status.includes('WATCHING') || state.status.includes('OBSERVING')) {
-                    statusEl.className = "px-3 py-1 rounded text-[0.6rem] font-bold bg-indigo-500/20 text-indigo-600 border border-indigo-500/30 uppercase tracking-wider";
+                    statusEl.className = "px-3 py-1.5 rounded text-[0.65rem] font-bold bg-indigo-500/20 text-indigo-600 border border-indigo-500/30 uppercase tracking-wider";
+                }
+
+                // Last Sync Timestamp
+                if (state.updated) {
+                    document.getElementById('orb-last-sync').innerText = state.updated;
                 }
 
                 // Targets & Needle Logic
