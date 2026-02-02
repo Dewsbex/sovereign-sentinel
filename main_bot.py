@@ -9,6 +9,13 @@ import subprocess
 import yfinance as yf
 from requests.auth import HTTPBasicAuth
 
+# Load .env file for local testing
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # Will use system environment variables
+
 # --- Configuration & Setup ---
 logging.basicConfig(
     level=logging.INFO,
@@ -26,11 +33,13 @@ except ImportError:
     sys.exit(1)
 
 # API Config
-API_KEY = os.environ.get("T212_API_KEY")
-API_SECRET = os.environ.get("T212_API_SECRET")
-DISCORD_WEBHOOK = os.environ.get("DISCORD_WEBHOOK_URL")
+T212_API_KEY = os.getenv('T212_API_KEY', '')
+T212_API_SECRET = os.getenv('T212_API_SECRET', '')
+DISCORD_WEBHOOK_URL = os.getenv('DISCORD_WEBHOOK_URL', '')
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', '')
+TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '')
 BASE_URL = "https://live.trading212.com/api/v0/equity"
-IS_LIVE = True # Set False to simulate T212 calls locally
+IS_LIVE = bool(T212_API_KEY and T212_API_SECRET) # Set False to simulate T212 calls locally
 
 # Watchlist for Gatekeeper (Focusing on Liquid Names)
 UNIVERSE = ["TSLA", "NVDA", "AAPL", "AMD", "MSFT", "AMZN", "META", "GOOGL", "NFLX", "QQQ"]
@@ -128,10 +137,45 @@ class Strategy_ORB:
 
     def discord_alert(self, message):
         """Sends message to Discord Webhook."""
-        if not DISCORD_WEBHOOK: return
+        if not DISCORD_WEBHOOK_URL: return
         try:
-            requests.post(DISCORD_WEBHOOK, json={"content": message})
+            requests.post(DISCORD_WEBHOOK_URL, json={"content": message})
         except: pass
+
+    def broadcast_notification(self, title, message):
+        """Send notifications to Discord, Telegram, and Windows Toast."""
+        # 1. Discord (Phone/Laptop)
+        self.discord_alert(f"🔔 **{title}**\n{message}")
+        
+        # 2. Telegram (Phone/Laptop)
+        if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
+            try:
+                # Convert markdown bold to HTML for Telegram
+                import re
+                telegram_message = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', message)
+                
+                url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+                payload = {
+                    'chat_id': TELEGRAM_CHAT_ID,
+                    'text': f"🔔 <b>{title}</b>\n\n{telegram_message}",
+                    'parse_mode': 'HTML'
+                }
+                response = requests.post(url, json=payload, timeout=5)
+                if response.status_code == 200:
+                    logger.info(f"📱 Telegram Sent: {title}")
+                else:
+                    logger.debug(f"Telegram failed: {response.status_code}")
+            except Exception as e:
+                logger.debug(f"Telegram notification failed: {e}")
+        
+        # 3. Windows Toast (Laptop Popup)
+        try:
+            # We use a simple PowerShell one-liner for the toast notification
+            cmd = f'powershell -Command "Add-Type -AssemblyName System.Windows.Forms; $t = New-Object System.Windows.Forms.NotifyIcon; $t.Icon = [System.Drawing.SystemIcons]::Information; $t.Visible = $true; $t.ShowBalloonTip(10000, \\"{title}\\", \\"{message}\\", [System.Windows.Forms.ToolTipIcon]::Info)"'
+            subprocess.run(cmd, shell=True, capture_output=True)
+            logger.info(f"🖥️ Local Popup Sent: {title}")
+        except Exception as e:
+            logger.debug(f"Local popup failed: {e}")
 
     # --- 1. API Handling (Rate Limits) ---
     def t212_request(self, method, endpoint, payload=None):
@@ -170,6 +214,61 @@ class Strategy_ORB:
             logger.error(f"❌ Network Error: {e}")
             return None
 
+    def get_current_price(self, ticker):
+        """Fetches the most accurate price, handling session and post-market."""
+        try:
+            dat = yf.Ticker(ticker)
+            # 1. Try Fast Info (Lightweight)
+            price = float(dat.fast_info['last_price'])
+            
+            # 2. Check for Post-Market if it's late
+            now_hour = datetime.datetime.utcnow().hour
+            if now_hour >= 21 or now_hour < 14:
+                info = dat.info
+                post = info.get('postMarketPrice', info.get('preMarketPrice'))
+                if post: price = post
+            
+            if price > 0: return price
+            
+            # 3. Fallback to 1m history
+            df = yf.download(ticker, period='1d', interval='1m', progress=False)
+            if not df.empty:
+                return float(df['Close'].iloc[-1])
+                
+        except:
+            pass
+        return 0.0
+
+    def get_bid_ask_spread(self, ticker):
+        """Returns (bid, ask, spread_pct) or (0, 0, 1.0) if unavailable."""
+        try:
+            dat = yf.Ticker(ticker)
+            bid = float(dat.info.get('bid', 0))
+            ask = float(dat.info.get('ask', 0))
+            if bid > 0 and ask > 0:
+                mid = (bid + ask) / 2
+                spread_pct = (ask - bid) / mid if mid > 0 else 1.0
+                return bid, ask, spread_pct
+        except:
+            pass
+        return 0, 0, 1.0
+
+    def is_news_blackout(self):
+        """Returns True if current time is in CPI/PPI blackout window (13:25-13:35 GMT)."""
+        now = datetime.datetime.utcnow()
+        # News blackout: 13:25 - 13:35 GMT on major data release days
+        if now.hour == 13 and 25 <= now.minute <= 35:
+            self.broadcast_notification(
+                "📰 NEWS BLACKOUT ACTIVE",
+                f"**Window**: 13:25 - 13:35 GMT\n"
+                f"**Reason**: CPI/PPI data release\n"
+                f"**Status**: All new entries paused\n"
+                f"**Existing Positions**: Still monitored\n\n"
+                f"⏸️ Trading will resume at 13:36 GMT"
+            )
+            return True
+        return False
+
     def get_cash_balance(self):
         """Fetches account cash balance."""
         if not IS_LIVE: 
@@ -184,7 +283,7 @@ class Strategy_ORB:
     # --- 2. Gatekeeper Module (14:15 GMT) ---
     def scan_candidates(self, tickers):
         self.status = "GATEKEEPER_SCAN"
-        logger.info("🕵️ Gatekeeper: Scanning Candidates (Gap > 2%, NR7, Vol > 1M)...")
+        logger.info("🕵️ Gatekeeper: Scanning Candidates (Gap ≥2%, RVOL ≥1.5, Vol ≥1M, Price ≥$10)...")
         candidates = []
         
         for t in tickers:
@@ -195,7 +294,7 @@ class Strategy_ORB:
                 
                 if len(hist) < 8: continue
                 
-                # 1. Volume Check (> 1M avg)
+                # 1. Volume Check (≥ 1M avg - Production Strict)
                 avg_vol = hist['Volume'].mean()
                 if avg_vol < 1_000_000: continue
                 
@@ -219,19 +318,21 @@ class Strategy_ORB:
                     # logger.info(f"{t}: Failed NR7")
                     pass 
                 
-                # 3. Gap Check (Current vs Yesterday Close)
+                # 3. Price Filter (Min $10 to avoid penny stocks)
                 try:
-                    current_price = dat.fast_info['last_price']
-                except:
-                    # Fallback to current history
                     current_price = hist['Close'].iloc[-1]
+                except:
+                    current_price = dat.info.get('regularMarketPrice', hist['Close'].iloc[-1])
+                
+                if current_price < 10.0:
+                    continue
                 
                 prev_close = yesterday['Close']
                 gap_pct = abs((current_price - prev_close) / prev_close)
                 
-                logger.info(f"   🔎 {t}: Gap {gap_pct:.2%} | NR7: {is_nr7} | Vol: {avg_vol/1e6:.1f}M")
+                logger.info(f"   🔎 {t}: Gap {gap_pct:.2%} | NR7: {is_nr7} | Vol: {avg_vol/1e6:.1f}M | Price: ${current_price:.2f}")
                 
-                if gap_pct > 0.02 or is_nr7: 
+                if gap_pct >= 0.02 or is_nr7: # Strict Gap: ≥2%
                     logger.info(f"   ✨ {t} QUALIFIED")
                     candidates.append(t)
                     
@@ -256,55 +357,120 @@ class Strategy_ORB:
     # --- 3. Observation Module (14:30 - 14:45 GMT) ---
     def monitor_observation_window(self):
         self.status = "OBSERVING_RANGE"
-        logger.info("🔭 Observation Phase: Tracking 15m High/Low...")
+        logger.info("🔭 Observation Phase: Tracking 15m High/Low (1m Candle Clean Data)...")
         self.save_state(push=False) # Local update
         
-        # Wait for 14:45 GMT (or simulate)
-        # In this script, we assume it's running AT or AFTER 14:45 for simplicity 
-        # OR we just pull the 15m candle from yfinance if time passed.
+        # RVOL ranking for top-5 selection
+        rvol_candidates = []
         
         for t in self.watchlist:
             try:
-                # Get today's 15m data
-                df = yf.download(t, period="1d", interval="15m", progress=False)
-                if df.empty: continue
+                dat = yf.Ticker(t)
                 
-                # First candle (14:30-14:45)
-                first = df.iloc[0]
-                high_15 = float(first['High'].iloc[0] if isinstance(first['High'], (list, object)) else first['High'])
-                low_15 = float(first['Low'].iloc[0] if isinstance(first['Low'], (list, object)) else first['Low'])
+                # Get 1-minute candles from 14:30-14:45 GMT (15 candles)
+                df_1m = yf.download(t, period="1d", interval="1m", progress=False)
+                if df_1m.empty: continue
                 
-                # RVOL Check (Notebook Alpha)
-                # Current 15m Vol vs Avg 15m Vol?
-                # Formula: Current_Vol_15m / Avg_Vol_15m_Last_10_Days
-                # Hard to get 15m avg history easily from yfinance without bulk download.
-                # Simplified: Compare to recent daily avg * 0.03 (approx 15m ratio).
-                # OR just use standard volume check. Spec says "Calculate RVOL".
-                vol_15 = float(first['Volume'].iloc[0] if isinstance(first['Volume'], (list, object)) else first['Volume'])
+                # Filter for 14:30-14:45 GMT window
+                df_1m.index = df_1m.index.tz_localize(None) if df_1m.index.tz is None else df_1m.index.tz_convert('UTC').tz_localize(None)
+                start_window = datetime.datetime.utcnow().replace(hour=14, minute=30, second=0, microsecond=0)
+                end_window = datetime.datetime.utcnow().replace(hour=14, minute=45, second=0, microsecond=0)
                 
-                # Mock average for safety if data missing
-                avg_vol_day = yf.Ticker(t).info.get('averageVolume', 10000000)
-                avg_vol_15_est = avg_vol_day / 26.0 # 26 15m bars in session
+                window_data = df_1m[(df_1m.index >= start_window) & (df_1m.index < end_window)]
+                
+                if len(window_data) < 5:  # Need at least 5 minutes of data
+                    continue
+                
+                # "Clean High" Rule: Use highest 1m close (filters bad prints)
+                high_15 = float(window_data['Close'].max())
+                low_15 = float(window_data['Low'].min())
+                vol_15 = float(window_data['Volume'].sum())
+                
+                # RVOL Check
+                avg_vol_day = dat.info.get('averageVolume', 10000000)
+                avg_vol_15_est = avg_vol_day / 26.0
                 rvol = vol_15 / avg_vol_15_est
                 
-                if rvol < 1.5:
-                    logger.info(f"   🗑️ {t} Dropped: Low Energy (RVOL {rvol:.2f})")
+                if rvol < 1.5: # Strict RVOL: ≥1.5
+                    logger.info(f"   🗑️ {t} Dropped: Low Energy (RVOL {rvol:.2f} < 1.5)")
                     continue
-                    
-                self.orb_levels[t] = {
-                    'high': high_15, 
-                    'low': low_15,
+                
+                # Store for ranking
+                rvol_candidates.append({
+                    'ticker': t,
                     'rvol': rvol,
-                    'trigger_long': high_15 * 1.0005, # +0.05%
-                    'trigger_short': low_15 * 0.9995
-                }
-                logger.info(f"   🎯 {t} Locked: Buy > {self.orb_levels[t]['trigger_long']:.2f}")
+                    'high': high_15,
+                    'low': low_15,
+                    'volume': vol_15
+                })
                 
             except Exception as e:
                 logger.error(f"Observation error {t}: {e}")
+        
+        # Rank by RVOL and select top 5
+        rvol_candidates.sort(key=lambda x: x['rvol'], reverse=True)
+        top_5 = rvol_candidates[:5]
+        
+        logger.info(f"🏆 Top 5 RVOL Candidates:")
+        for candidate in top_5:
+            t = candidate['ticker']
+            self.orb_levels[t] = {
+                'high': candidate['high'],
+                'low': candidate['low'],
+                'rvol': candidate['rvol'],
+                'trigger_long': candidate['high'] + 0.01,  # Synthetic limit
+                'trigger_short': candidate['low'] - 0.01
+            }
+            # Track latest price for the UI needle
+            dat = yf.Ticker(t)
+            curr_price = self.get_current_price(t)
+            self.orb_levels[t]['last_price'] = curr_price
+            
+            logger.info(f"   🎯 {t} Locked: RVOL {candidate['rvol']:.2f} | Buy > ${self.orb_levels[t]['trigger_long']:.2f} (Current: ${curr_price:.2f})")
+            
+            # Get company name from watchlist
+            company_name = next((item['name'] for item in self.watchlist if item['ticker'] == t), t)
+            
+            # Notification of new target locked
+            self.broadcast_notification(
+                "🎯 ORB TARGET LOCKED",
+                f"**Company**: {company_name}\n"
+                f"**Ticker**: {t}\n"
+                f"**RVOL**: {candidate['rvol']:.2f}x\n"
+                f"**Trigger Price**: ${self.orb_levels[t]['trigger_long']:.2f} (BUY above this)\n"
+                f"**Current Price**: ${curr_price:.2f}\n"
+                f"**Range**: ${candidate['low']:.2f} - ${candidate['high']:.2f}"
+            )
 
         self.status = "WATCHING_RANGE"
         self.save_state(push=True) # Push ranges
+        
+        # ALWAYS send summary notification
+        targets_locked = len(self.orb_levels)
+        candidates_scanned = len(self.watchlist)
+        
+        if targets_locked > 0:
+            target_list = "\n".join([f"  • {t} (RVOL: {self.orb_levels[t]['rvol']:.2f}x)" for t in self.orb_levels.keys()])
+            self.broadcast_notification(
+                "✅ ORB SCAN COMPLETE",
+                f"**Candidates Scanned**: {candidates_scanned}\n"
+                f"**Targets Locked**: {targets_locked}\n\n"
+                f"**Active Targets**:\n{target_list}\n\n"
+                f"**Status**: Monitoring for breakouts until 20:55 GMT\n"
+                f"**Next Alert**: Flash Amber when price approaches trigger"
+            )
+        else:
+            self.broadcast_notification(
+                "ℹ️ ORB SCAN COMPLETE - NO TARGETS",
+                f"**Candidates Scanned**: {candidates_scanned}\n"
+                f"**Targets Locked**: 0\n\n"
+                f"**Rejection Reasons**:\n"
+                f"  • RVOL < 1.5 (insufficient energy)\n"
+                f"  • Gap < 2% (insufficient separation)\n"
+                f"  • Volume < 1M (low liquidity)\n\n"
+                f"**Status**: No actionable setups today\n"
+                f"**Next Run**: Tomorrow 14:15 GMT"
+            )
 
     # --- 4. Risk Management ---
     def calculate_size(self, ticker, entry_price, stop_loss):
@@ -332,39 +498,60 @@ class Strategy_ORB:
         if not allowed:
             logger.info(f"   🛡️ Titan Shield: {reason}")
             shares = safe_val / entry_price
-            
-        return max(0, int(shares)) # Whole shares only for simplicity
+        
+        # FRACTIONAL SHARES for precise 1% risk targeting
+        return max(0.0, round(shares, 4))  # Round to 4 decimal places
 
     # --- 5. Execution Engine (The "Main Loop") ---
     def monitor_breakout(self):
-        logger.info("⚔️ Execution Engine Engaged (Polling)...")
+        logger.info("⚔️ Execution Engine Engaged (100ms Polling)...")
         
         # End time: 20:55 GMT (Just before US Close)
         end_time = datetime.datetime.utcnow().replace(hour=20, minute=55, second=0)
         
         while datetime.datetime.utcnow() < end_time:
+            # Check for news blackout window
+            if self.is_news_blackout():
+                time.sleep(60)  # Wait 1 minute during blackout
+                continue
+            
             if not self.orb_levels:
                 logger.info("No active setups.")
                 break
                 
             for t in list(self.orb_levels.keys()):
                 try:
-                    # Poll Price (Fast)
-                    # Note: yfinance .fast_info or .history(period='1d', interval='1m').iloc[-1]
-                    # fast_info is cached. history is better for 'current'.
-                    # For performance, we assume 1s poll is ok request-wise on yahoo.
-                    dat = yf.Ticker(t)
-                    curr_price = float(dat.fast_info['last_price'])
+                    # Poll Price (Enhanced Accuracy)
+                    curr_price = self.get_current_price(t)
+                    if curr_price == 0: continue
                     
                     # Update State with live price for UI Needle
                     self.orb_levels[t]['last_price'] = curr_price
                     
-                    # Flash Amber Logic (UI handled, we just update price)
-                    
                     levels = self.orb_levels[t]
+                    synthetic_trigger = levels['high'] + 0.01
                     
-                    # LONG TRIGGER
-                    if curr_price > levels['trigger_long']:
+                    # FLASH AMBER: Alert when price is within 0.1% of trigger
+                    proximity_pct = abs(curr_price - synthetic_trigger) / synthetic_trigger
+                    if proximity_pct < 0.001 and not levels.get('flash_amber_sent', False):
+                        company_name = next((item['name'] for item in self.watchlist if item['ticker'] == t), t)
+                        gap_to_trigger = abs(curr_price - synthetic_trigger)
+                        
+                        self.broadcast_notification(
+                            f"🟡 FLASH AMBER: APPROACHING TRIGGER",
+                            f"**Company**: {company_name}\n"
+                            f"**Ticker**: {t}\n"
+                            f"**Current Price**: ${curr_price:.2f}\n"
+                            f"**Trigger Price**: ${synthetic_trigger:.2f} (BUY above this)\n"
+                            f"**Gap to Trigger**: ${gap_to_trigger:.2f}\n\n"
+                            f"⚠️ VERIFY BID-ASK SPREAD MANUALLY\n"
+                            f"Trade execution imminent - check market conditions"
+                        )
+                        self.orb_levels[t]['flash_amber_sent'] = True
+                    
+                    # SYNTHETIC LIMIT TRIGGER (High + $0.01 clearance)
+                    
+                    if curr_price > synthetic_trigger:
                         self.status = "TRIGGERED"
                         logger.info(f"⚡ BREAKOUT: {t} @ {curr_price:.2f}")
                         
@@ -372,8 +559,59 @@ class Strategy_ORB:
                         qty = self.calculate_size(t, curr_price, stop_loss)
                         
                         if qty > 0:
-                            success = self.execute_trade(t, "BUY", qty, curr_price, stop_loss)
+                            # SPREAD GUARD: Abort if spread > 0.1%
+                            bid, ask, spread_pct = self.get_bid_ask_spread(t)
+                            if spread_pct > 0.001:  # 0.1% threshold
+                                company_name = next((item['name'] for item in self.watchlist if item['ticker'] == t), t)
+                                logger.warning(f"⚠️ {t} ABORTED: Spread {spread_pct:.2%} > 0.1% (Bid: ${bid:.2f}, Ask: ${ask:.2f})")
+                                
+                                self.broadcast_notification(
+                                    "❌ TRADE ABORTED: SPREAD TOO WIDE",
+                                    f"**Company**: {company_name}\n"
+                                    f"**Ticker**: {t}\n"
+                                    f"**Reason**: Bid-ask spread exceeds safety limit\n"
+                                    f"**Bid**: ${bid:.2f}\n"
+                                    f"**Ask**: ${ask:.2f}\n"
+                                    f"**Spread**: {spread_pct:.2%} (limit: 0.10%)\n\n"
+                                    f"✅ Capital protected - no execution"
+                                )
+                                continue
+                            
+                            # BROADCAST BEFORE EXECUTION
+                            company_name = next((item['name'] for item in self.watchlist if item['ticker'] == t), t)
+                            risk_pct = (qty * curr_price / self.cash_balance) if self.cash_balance > 0 else 0
+                            
+                            self.broadcast_notification(
+                                f"🚀 TRADE EXECUTING: BUY ORDER",
+                                f"**Company**: {company_name}\n"
+                                f"**Ticker**: {t}\n"
+                                f"**Action**: BUY\n"
+                                f"**Quantity**: {qty} shares\n"
+                                f"**Expected Price**: ${synthetic_trigger:.2f}\n"
+                                f"**Stop Loss**: ${stop_loss:.2f}\n"
+                                f"**Risk**: {risk_pct:.1%} of capital"
+                            )
+                            
+                            # Execute and track fill price
+                            success, fill_price = self.execute_trade(t, "BUY", qty, curr_price, stop_loss)
                             if success:
+                                # SLIPPAGE AUDIT
+                                slippage_pct = abs(fill_price - synthetic_trigger) / synthetic_trigger
+                                if slippage_pct > 0.003:  # 0.3% threshold
+                                    company_name = next((item['name'] for item in self.watchlist if item['ticker'] == t), t)
+                                    slippage_dollars = abs(fill_price - synthetic_trigger) * qty
+                                    
+                                    self.broadcast_notification(
+                                        "⚠️ CRITICAL SLIPPAGE DETECTED",
+                                        f"**Company**: {company_name}\n"
+                                        f"**Ticker**: {t}\n"
+                                        f"**Expected Price**: ${synthetic_trigger:.2f}\n"
+                                        f"**Actual Fill**: ${fill_price:.2f}\n"
+                                        f"**Slippage**: {slippage_pct:.2%} (${abs(fill_price - synthetic_trigger):.2f} per share)\n"
+                                        f"**Total Impact**: -${slippage_dollars:.2f}\n\n"
+                                        f"⚠️ Review execution quality with broker"
+                                    )
+                                
                                 del self.orb_levels[t] # Remove from watch
                                 self.save_state(push=True) # Push Trade
                         else:
@@ -401,7 +639,7 @@ class Strategy_ORB:
             if datetime.datetime.now().second % 60 == 0:
                  self.save_state(push=True) # Heartbeat updates every minute
 
-            time.sleep(1)
+            time.sleep(0.1)  # 100ms polling for rapid execution
 
     def execute_trade(self, ticker, side, qty, price, stop):
         logger.info(f"🚀 EXECUTING {side} {qty} {ticker}...")
@@ -409,7 +647,7 @@ class Strategy_ORB:
         
         if not IS_LIVE:
             logger.info(f"[SIMULATION] Order Placed. Audit Passing.")
-            return True
+            return True, price  # Return success and simulated fill price
 
         # 1. Place Order
         payload = {
@@ -425,9 +663,10 @@ class Strategy_ORB:
         # Let's use the provided `t212_request` base.
         # Adjusting payload to standard T212 API if needed, but sticking to user instruction names where possible.
         
-        if not res: return False
+        if not res: return False, 0.0
         
         order_id = res.get('id')
+        fill_price = float(res.get('fillPrice', price))  # Get actual fill price
         logger.info(f"   ✅ Order Sent (ID: {order_id})")
         self.status = "AUDITING_SLIPPAGE"
         # 2. Wait 5s for Fill
@@ -507,15 +746,42 @@ class Strategy_ORB:
         os.makedirs("data", exist_ok=True)
         with open(history_file, 'w') as f:
             json.dump(history, f, indent=4)
-            
-        # Discord Summary
-        msg = "🌙 **ORB Session Recap**\n"
-        if not self.audit_log:
-            msg += "No trades executed."
-        else:
-            for t in self.audit_log:
-                msg += f"- {t['ticker']}: Entry {t['entry']:.2f}, Slippage {t['slippage_pct']:.2%}\n"
         
+        # Final Summary Notification
+        trade_count = len(self.audit_log)
+        total_pnl = sum([t.get('pnl', 0) for t in self.audit_log])
+        
+        if trade_count > 0:
+            trade_summary = "\n".join([
+                f"  • {t['ticker']}: {t['action']} {t['qty']} @ ${t['entry']:.2f}"
+                for t in self.audit_log
+            ])
+            self.broadcast_notification(
+                "🏁 SESSION COMPLETE",
+                f"**Trades Executed**: {trade_count}\n"
+                f"**P&L**: ${total_pnl:.2f}\n\n"
+                f"**Trade Summary**:\n{trade_summary}\n\n"
+                f"**Status**: Session closed successfully\n"
+                f"**Next Run**: Tomorrow 14:15 GMT"
+            )
+        else:
+            self.broadcast_notification(
+                "🏁 SESSION COMPLETE - NO TRADES",
+                f"**Trades Executed**: 0\n"
+                f"**Targets Monitored**: {len(self.orb_levels) if hasattr(self, 'orb_levels') else 0}\n\n"
+                f"**Outcome**: No breakouts triggered today\n"
+                f"**Status**: Capital preserved\n"
+                f"**Next Run**: Tomorrow 14:15 GMT"
+            )
+            
+        # Discord Summary (keep for legacy)
+        msg = "🌙 **ORB Session Recap**\n"
+        msg += f"Trades: {len(self.audit_log)}\n"
+        if self.audit_log:
+            msg += "```\n"
+            for t in self.audit_log:
+                msg += f"{t['ticker']}: {t['action']} {t['qty']} @ {t['entry']}\n"
+            msg += "```\n"
         self.discord_alert(msg)
         self.git_sync() # Final push
 

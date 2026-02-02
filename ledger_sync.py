@@ -74,8 +74,13 @@ class LedgerSync:
             return False
             
         current_year = datetime.utcnow().year
-        start_year = 2021 # Reasonable start for T212 history. Adjust if needed.
+        start_year = 2021 # Full history for accuracy
         combined_data = {}
+        combined_global_data = {
+            'interest': 0.0,
+            'fees_taxes': 0.0,
+            'other_income': 0.0
+        }
         
         # Iterating BACKWARDS (Newest first)
         for year in range(current_year, start_year - 1, -1):
@@ -110,16 +115,21 @@ class LedgerSync:
                 print(f"   [WARN] Could not save raw CSV: {e}")
 
             # 3. Parse & Merge
-            chunk_data = self._analyze_csv(csv_content)
-            self._merge_data(combined_data, chunk_data)
+            if csv_content:
+                assets_data, global_data = self._analyze_csv(csv_content)
+                self._merge_data(combined_data, assets_data)
+                for key in combined_global_data:
+                    combined_global_data[key] += global_data.get(key, 0.0)
+                print(f"      [CHUNK] Processed {len(assets_data)} assets for {year}.")
+                print(f"      [CHUNK METRICS] Interest: £{global_data['interest']:,.2f} | Fees: £{global_data['fees_taxes']:,.2f}")
             
             # Sleep to avoid rate limits between chunks
-            print("   [SLEEP] Cooling down for 20s...")
-            time.sleep(20)
+            print("   [SLEEP] Cooling down for 5s...")
+            time.sleep(5)
         
         # 4. Save Final Cache
         if combined_data:
-            self._save_cache(combined_data)
+            self._save_cache(combined_data, combined_global_data)
             print(f"DTO LEDGER SYNC COMPLETE. Cached {len(combined_data)} assets.")
             return True
         else:
@@ -216,10 +226,12 @@ class LedgerSync:
     def _analyze_csv(self, csv_text):
         """Parses CSV and calculates metrics per ticker."""
         data = {}
+        global_data = {
+            'interest': 0.0,
+            'fees_taxes': 0.0,
+            'other_income': 0.0
+        }
         reader = csv.DictReader(io.StringIO(csv_text))
-        
-        # We need to map weird tickers if necessary, but usually CSV matches API
-        # T212 CSV Columns: Header, Action, Time, ISIN, Ticker, Name, No. of shares, Price / share, Total, ...
         
         for row in reader:
             ticker = row.get('Ticker')
@@ -227,12 +239,41 @@ class LedgerSync:
             date_str = row.get('Time')
             total_val = row.get('Total') # Amount involved
             
-            if not ticker or not date_str:
+            if not date_str or not action:
+                continue
+            
+            # Try to extract amount from Total column
+            try:
+                amt = float(str(total_val).replace('£','').replace('$','').replace(',',''))
+            except:
+                amt = 0.0
+                
+            # --- 1. Column-based fee/tax extraction ---
+            # These are often hidden columns in the CSV
+            fee_cols = [
+                'Transaction fee', 'Dividend tax', 'Tax on dividend income (GBP)', 
+                'Withholding tax', 'Charge amount (GBP)', 'Deposit fee', 
+                'Currency conversion fee'
+            ]
+            
+            for col in fee_cols:
+                raw_fee = row.get(col)
+                if raw_fee:
+                    try:
+                        fee_val = float(str(raw_fee).replace('£','').replace('$','').replace(',',''))
+                        global_data['fees_taxes'] -= abs(fee_val)
+                    except:
+                        pass
+
+            # --- 2. Action-based income tracking ---
+            if 'interest' in action.lower():
+                global_data['interest'] += amt
+            elif not ticker and 'bonus' in action.lower():
+                global_data['other_income'] += amt
+
+            if not ticker:
                 continue
                 
-            # Normalize Ticker (remove suffixes like .L or _US if needed for matching)
-            # But the API usually returns full tickers. We'll store what we get.
-            
             if ticker not in data:
                 data[ticker] = {
                     'first_buy': None,
@@ -269,11 +310,12 @@ class LedgerSync:
                  except:
                      pass
         
-        return data
+        return data, global_data
 
-    def _save_cache(self, data):
+    def _save_cache(self, data, global_data):
         meta = {
             "last_sync": datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
+            "global": global_data,
             "assets": data
         }
         with open(self.cache_file, 'w') as f:
