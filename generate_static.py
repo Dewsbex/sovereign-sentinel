@@ -148,7 +148,7 @@ def generate_oracle_ring(holdings, total_invested):
     """
 
 def render():
-    print(f"Starting The Artist (Job B) [v0.04 Sovereign Finality]... ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"Starting The Artist (Job B) [v0.10 Sovereign Finality]... ({datetime.now().strftime('%H:%M:%S')})")
     
     # 1. Load Data
     state = load_state()
@@ -176,23 +176,41 @@ def render():
         
     invest_data = account.get('investments', {})
     if isinstance(invest_data, dict):
-        # Total Return Calculation (v0.09)
-        # =====================================
-        # Trading 212 API provides:
-        # - realizedProfitLoss: Gains/losses from closed positions + dividends
-        # - unrealizedProfitLoss: Paper gains/losses on open positions
-        # 
-        # Total Return = Realized P/L + Unrealized P/L
-        # 
-        # Note: The T212 mobile app may show a slightly different value due to:
-        # 1. Timing differences between API calls and app display
-        # 2. Interest/fees that may not be included in these P/L fields
-        # 3. Historical data the API doesn't expose
-        # 
-        # The dashboard shows the exact API values for maximum accuracy and reliability.
+        # v0.10: COMPREHENSIVE TOTAL RETURN (matches T212 Mobile App methodology)
+        # ======================================================================
+        # Realized P/L from API: £{realized_pl:,.2f} (Trade gains/losses)
+        # Unrealized P/L from API: £{unrealized_pl:,.2f} (Paper gains/losses)
+        # Dividends from Ledger: £{total_dividends:,.2f}
+        # Interest from Ledger: £{total_interest:,.2f}
+        # Fees/Taxes from Ledger: £{total_fees:,.2f}
+        
         realized_pl = safe_val(invest_data.get('realizedProfitLoss'))
         unrealized_pl = safe_val(invest_data.get('unrealizedProfitLoss'))
-        total_return = realized_pl + unrealized_pl
+        
+        # Load supplemental data from Ledger Cache
+        total_dividends = 0.0
+        total_interest = 0.0
+        total_fees = 0.0
+        other_income = 0.0
+        
+        try:
+            cache_path = os.path.join(os.path.dirname(__file__), "data", "ledger_cache.json")
+            if os.path.exists(cache_path):
+                with open(cache_path, 'r') as f:
+                    ledger = json.load(f)
+                    assets = ledger.get('assets', {})
+                    total_dividends = sum(a.get('dividends', 0) for a in assets.values())
+                    
+                    globs = ledger.get('global', {})
+                    total_interest = globs.get('interest', 0.0)
+                    total_fees = globs.get('fees_taxes', 0.0) # This is usually negative in our cache
+                    other_income = globs.get('other_income', 0.0)
+        except:
+            pass
+
+        # Formula matches Trading 212 app:
+        # P/L + Dividends + Interest + Other - Fees/Taxes
+        total_return = realized_pl + unrealized_pl + total_dividends + total_interest + total_fees + other_income
         total_cost = safe_val(invest_data.get('totalCost'))
     else:
         total_return = safe_val(account.get('ppl'))
@@ -343,8 +361,9 @@ def render():
     legend_html += "</div>"
 
     context = {
-        'version': "v0.09 Sovereign Finality",
+        'version': "v0.10 Sovereign Finality",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.10 Sovereign Finality"},
         'sync_time': datetime.now().strftime('%d/%m %H:%M'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
