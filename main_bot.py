@@ -109,13 +109,19 @@ class Strategy_ORB:
         """Commits and pushes trade_state.json to repo."""
         if not IS_LIVE: return
         try:
-            # Configure Git User if not set (Needed for GitHub Actions)
+            # Explicitly set identity in case runner environment is fresh
             subprocess.run(["git", "config", "user.name", "Sentinel Bot"], check=False)
             subprocess.run(["git", "config", "user.email", "bot@sentinel.com"], check=False)
-            
-            subprocess.run(["git", "add", "data/trade_state.json"], check=False, stdout=subprocess.DEVNULL)
-            subprocess.run(["git", "commit", "-m", "🤖 ORB State Update"], check=False, stdout=subprocess.DEVNULL)
-            subprocess.run(["git", "push"], check=False, stdout=subprocess.DEVNULL)
+
+            # Only commit if there are changes
+            diff = subprocess.run(["git", "status", "--porcelain", "data/trade_state.json"], capture_output=True, text=True).stdout
+            if not diff:
+                logger.info("📡 No changes to trade_state.json, skipping sync.")
+                return
+
+            subprocess.run(["git", "add", "data/trade_state.json"], check=False)
+            subprocess.run(["git", "commit", "-m", "🤖 ORB State Update"], check=False)
+            subprocess.run(["git", "push"], check=False)
             logger.info("📡 State Synced to GitHub.")
         except Exception as e:
             logger.error(f"Git Sync Failed: {e}")
@@ -238,8 +244,15 @@ class Strategy_ORB:
              pass 
 
         self.watchlist = candidates[:5] # Max 5
-        self.save_state(push=True) # First sync
-        logger.info(f"📋 Final Watchlist: {self.watchlist}")
+        
+        if not self.watchlist:
+            self.status = "IDLE - NO CANDIDATES"
+            logger.info("📋 No candidates matched criteria (Gap > 2% or NR7).")
+        else:
+            self.status = "WATCHING_CANDIDATES"
+            logger.info(f"📋 Final Watchlist: {self.watchlist}")
+            
+        self.save_state(push=True) # Sync decision to dashboard
 
     # --- 3. Observation Module (14:30 - 14:45 GMT) ---
     def monitor_observation_window(self):

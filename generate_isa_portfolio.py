@@ -186,7 +186,7 @@ def run_audit():
         print(f"[ERROR] Sniper Logic Failed: {e}")
 
     state = {
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.03 Sovereign Finality"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.04 Sovereign Finality"},
         "account": acc_summary,
         "holdings": holdings,
         "total_gbp": total_value_gbp,
