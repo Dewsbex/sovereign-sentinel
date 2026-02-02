@@ -72,13 +72,20 @@ class Strategy_ORB:
         
         try:
             with open('watchlist.json', 'r') as f:
-                    return default
+                data = json.load(f)
+                # Create ticker list and name lookup dict
+                self.watchlist = [item.get('ticker') for item in data if item.get('ticker')]
+                self.watchlist_lookup = {item.get('ticker'): item.get('name', item.get('ticker')) for item in data if item.get('ticker')}
+                logger.info(f"Loaded {len(self.watchlist)} tickers from watchlist.json")
+                return
         except FileNotFoundError:
             logger.warning("watchlist.json not found. Using default.")
-            return default
         except Exception as e:
             logger.warning(f"Error loading watchlist: {e}. Using default.")
-            return default
+        
+        # Fallback to defaults
+        self.watchlist = default_tickers
+        self.watchlist_lookup = default_lookup
 
     # --- State Management & Git Sync ---
     def save_state(self, push=False):
