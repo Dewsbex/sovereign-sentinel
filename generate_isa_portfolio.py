@@ -71,9 +71,7 @@ def run_audit():
         usd_to_gbp = 0.79
 
     for p in pos_data:
-        # v32.14: Precise Schema Mapping
         instr = p.get('instrument', {})
-        wallet = p.get('walletImpact', {})
         raw_ticker = instr.get('ticker', 'UNKNOWN')
         name = instr.get('name', raw_ticker)
         currency = instr.get('currency', 'GBP')
@@ -81,52 +79,37 @@ def run_audit():
         # 1. Ticker Cleaning
         ticker_clean = raw_ticker.replace("_US_EQ", "").replace("_UK_EQ", "").replace("l_EQ", "").replace("L_EQ", "")
         
-        # 2. Manual Normalization (Sovereign Guard Rule)
-        qty = p.get('quantity', 0.0)
-        raw_price = p.get('currentPrice', 0.0)
-        raw_avg = p.get('averagePricePaid', 0.0)
+        # 2. Extract Values directly from API (already normalized in GBP for GBP accounts)
+        qty = float(p.get('quantity', 0.0))
         
-        # 3. Currency Normalization (The Fix)
-        # If currency is USD, we must convert to GBP.
-        fx_rate = 1.0
-        if currency == 'USD':
-            fx_rate = usd_to_gbp
+        # v32.17: Fields are nested in walletImpact for latest API schema
+        wi = p.get('walletImpact', {})
+        val_gbp = float(wi.get('currentValue', 0.0))
+        cost_gbp = float(wi.get('totalCost', 0.0))
+        pl_gbp = float(wi.get('unrealizedProfitLoss', val_gbp - cost_gbp))
+
+        # Prices for display (keep instrument currency)
+        raw_price = float(p.get('currentPrice', 0.0))
+        raw_avg = float(p.get('averagePricePaid', 0.0))
         
-        # v32.14: STRICT UNIT NORMALIZATION (The Sovereign Guard Rule)
-        # 1. Normalize Units (Pence -> Pounds) based on Ticker Symbol
-        price_instr = normalize_uk_assets(raw_price, raw_ticker)
-        avg_price_instr = normalize_uk_assets(raw_avg, raw_ticker)
-        
-        # 2. Normalize Currency (USD -> GBP)
-        price_gbp = price_instr * fx_rate
-        avg_price_gbp = avg_price_instr * fx_rate
-        
-        # Calculate Values 
-        val_gbp = price_gbp * qty
-        
-        # Prefer API's PPL if available (Accurate Realized/Unrealized in GBP)
-        # But for consistency with our verified manual calc, we stick to our calc for now unless API is needed.
-        # Given "Fault: Unit Inflation", our manual calc is safer if we control inputs.
-        pl_gbp = (price_gbp - avg_price_gbp) * qty
-        
-        # API PPL might be in Pence for UK stocks? Let's treat our calc as Truth.
+        price_display = normalize_uk_assets(raw_price, raw_ticker)
+        avg_display = normalize_uk_assets(raw_avg, raw_ticker)
 
         total_value_gbp += val_gbp
         
-        # v32.13: Enforce Normalized Values in State
         holdings.append({
             "Ticker": ticker_clean,
             "Name": name,
             "Value_GBP": val_gbp,   
             "Value": val_gbp,       
-            "Price_GBP": price_gbp, 
-            "Price": price_instr,     # Display Instrument Price (e.g. $)
-            "Avg_Price": avg_price_instr, # Display Instrument Avg
+            "Price_GBP": val_gbp / qty if qty > 0 else 0, 
+            "Price": price_display,     
+            "Avg_Price": avg_display, 
             "PL_GBP": pl_gbp,       
             "PL": pl_gbp,           
             "Shares": qty,
             "Currency": currency, 
-            "FX_Impact": wallet.get('fxImpact', 0.0)
+            "FX_Impact": wi.get('fxImpact', 0.0)
         })
 
     # Calculate Weights
@@ -186,7 +169,7 @@ def run_audit():
         print(f"[ERROR] Sniper Logic Failed: {e}")
 
     state = {
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.04 Sovereign Finality"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.08 Sovereign Finality"},
         "account": acc_summary,
         "holdings": holdings,
         "total_gbp": total_value_gbp,
