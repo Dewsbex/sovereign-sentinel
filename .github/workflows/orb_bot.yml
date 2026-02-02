@@ -27,4 +27,6 @@ jobs:
           T212_API_KEY: ${{ secrets.T212_API_KEY }}
           T212_API_SECRET: ${{ secrets.T212_API_SECRET }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python main_bot.py
