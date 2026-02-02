@@ -367,15 +367,83 @@
         <!-- 🏛️ SENTINEL ORB DASHBOARD (Strategy Monitor) - v32.16 -->
         <div class="col-span-12 sentinel-card" style="border-top: 3px solid #6366f1;">
             <div class="flex justify-between items-start mb-6">
-                <div>
-                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest">🏛️ SENTINEL ORB COMM</h2>
-                    <p class="text-[0.65rem] text-neutral-600 mt-1">Strategic Automation Monitor • Phase 4 Audit </p>
-                </div>
-                <!-- Status Badge -->
-                <div id="orb-status" class="px-3 py-1 rounded text-[0.6rem] font-bold bg-gray-100 text-gray-500 border border-gray-200 uppercase tracking-wider">
-                    OFFLINE
+                <!-- Status Badge & Controls -->
+                <div class="flex gap-2 items-center">
+                    <button id="run-orb-btn" onclick="triggerOrbWorkflow()" 
+                        class="px-3 py-1.5 rounded text-[0.65rem] font-bold bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95 transition-all uppercase tracking-widest shadow-lg shadow-indigo-500/20 flex items-center gap-2 border border-indigo-400/30">
+                        <span id="btn-icon">⚡</span> LAUNCH SESSION
+                    </button>
+                    <div id="orb-status" class="px-3 py-1.5 rounded text-[0.65rem] font-bold bg-gray-100 text-gray-500 border border-gray-200 uppercase tracking-wider">
+                        OFFLINE
+                    </div>
                 </div>
             </div>
+
+            <script>
+                async function triggerOrbWorkflow() {
+                    const OWNER = "Dewsbex";
+                    const REPO = "sovereign-sentinel";
+                    const WORKFLOW_ID = "orb_bot.yml"; 
+                    
+                    let token = localStorage.getItem('GH_SENTINEL_TOKEN');
+                    if (!token) {
+                        token = prompt("🔐 SENTINEL SECURITY: Enter GitHub PAT (repo scope) to authorize remote trigger:");
+                        if (token) {
+                            localStorage.setItem('GH_SENTINEL_TOKEN', token);
+                        } else {
+                            return;
+                        }
+                    }
+
+                    const btn = document.getElementById('run-orb-btn');
+                    const icon = document.getElementById('btn-icon');
+                    const originalText = btn.innerHTML;
+                    
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    btn.innerHTML = `⏳ DISPATCHING...`;
+
+                    try {
+                        const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/${WORKFLOW_ID}/dispatches`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `token ${token}`,
+                                'Accept': 'application/vnd.github.v3+json',
+                            },
+                            body: JSON.stringify({ ref: 'main' }) // Assuming 'main' branch
+                        });
+
+                        if (response.status === 204) {
+                            btn.innerHTML = `✅ SESSION DISPATCHED`;
+                            btn.classList.replace('bg-indigo-600', 'bg-emerald-600');
+                            setTimeout(() => {
+                                btn.innerHTML = originalText;
+                                btn.classList.replace('bg-emerald-600', 'bg-indigo-600');
+                                btn.disabled = false;
+                                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                            }, 5000);
+                        } else {
+                            const err = await response.json().catch(() => ({ message: "Unknown Error" }));
+                            if (response.status === 401) {
+                                localStorage.removeItem('GH_SENTINEL_TOKEN');
+                                alert("❌ AUTH FAILED: Token cleared. Please try again.");
+                            } else {
+                                alert(`❌ ERROR: ${err.message}`);
+                            }
+                            resetBtn(btn, originalText);
+                        }
+                    } catch (e) {
+                        alert(`❌ NETWORK ERROR: ${e.message}`);
+                        resetBtn(btn, originalText);
+                    }
+                }
+
+                function resetBtn(btn, text) {
+                    btn.innerHTML = text;
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            </script>
 
             <!-- 1. The Strategy Monitor -->
             <div class="mb-8">

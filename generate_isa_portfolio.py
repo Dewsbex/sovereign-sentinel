@@ -186,7 +186,7 @@ def run_audit():
         print(f"[ERROR] Sniper Logic Failed: {e}")
 
     state = {
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.16 Sovereign Finality"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.01 Sovereign Finality"},
         "account": acc_summary,
         "holdings": holdings,
         "total_gbp": total_value_gbp,
@@ -199,22 +199,9 @@ def run_audit():
     with open(state_file, "w") as f:
         json.dump(state, f, indent=4)
 
-    # 🤖 AUTO-DEPLOY Hand-off
-    print("[>] Triggering Auto-Deploy...")
-    try:
-        subprocess.run(["python", "generate_static.py"], check=True)
-        subprocess.run(["git", "add", "."], check=True)
-        # Check if anything to commit
-        status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True).stdout
-        if status:
-            subprocess.run(["git", "commit", "-m", "v32.15 Sovereign Finality - UI Fixes"], check=True)
-            subprocess.run(["git", "push"], check=True)
-            print("[SUCCESS] Deployment Handled by Antigravity.")
-        else:
-            print("[INFO] Nothing to commit (clean working tree).")
-            
-    except subprocess.CalledProcessError as e:
-        print(f"[ERROR] Deployment Error: {e}")
+    # v32.16: Deployment logic removed from script. 
+    # Use sentinel-daemon.yml or manual git commands for deployment.
+    pass
 
 if __name__ == "__main__":
     run_audit()
