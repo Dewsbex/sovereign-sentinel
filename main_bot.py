@@ -136,18 +136,17 @@ class Strategy_ORB:
             logger.error(f"Git Sync Failed: {e}")
 
     def discord_alert(self, message):
-        """Sends message to Discord Webhook."""
-        if not DISCORD_WEBHOOK_URL: return
+        """Sends message to Discord Webhook (OPTIONAL - will skip if not configured)."""
+        if not DISCORD_WEBHOOK_URL:
+            return  # Discord is optional, skip silently
         try:
-            requests.post(DISCORD_WEBHOOK_URL, json={"content": message})
-        except: pass
+            requests.post(DISCORD_WEBHOOK_URL, json={"content": message}, timeout=5)
+        except Exception as e:
+            logger.debug(f"Discord notification skipped: {e}")
 
     def broadcast_notification(self, title, message):
-        """Send notifications to Discord, Telegram, and Windows Toast."""
-        # 1. Discord (Phone/Laptop)
-        self.discord_alert(f"🔔 **{title}**\n{message}")
-        
-        # 2. Telegram (Phone/Laptop)
+        """Send notifications to Telegram (primary) and Discord (optional)."""
+        # 1. Telegram (PRIMARY - Phone/Laptop)
         if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
             try:
                 # Convert markdown bold to HTML for Telegram
@@ -164,9 +163,14 @@ class Strategy_ORB:
                 if response.status_code == 200:
                     logger.info(f"📱 Telegram Sent: {title}")
                 else:
-                    logger.debug(f"Telegram failed: {response.status_code}")
+                    logger.warning(f"Telegram failed: {response.status_code}")
             except Exception as e:
-                logger.debug(f"Telegram notification failed: {e}")
+                logger.error(f"Telegram notification failed: {e}")
+        else:
+            logger.warning("⚠️ Telegram not configured - notifications disabled")
+        
+        # 2. Discord (OPTIONAL - Phone/Laptop)
+        self.discord_alert(f"🔔 **{title}**\n{message}")
         
         # 3. Windows Toast (Laptop Popup)
         try:
