@@ -180,19 +180,9 @@ def render():
         realized_pl = safe_val(invest_data.get('realizedProfitLoss'))
         unrealized_pl = safe_val(invest_data.get('unrealizedProfitLoss'))
         
-        # v32.17: Include Dividends from Ledger if available
-        total_dividends = 0.0
-        try:
-            cache_path = os.path.join(os.path.dirname(__file__), "data", "ledger_cache.json")
-            if os.path.exists(cache_path):
-                with open(cache_path, 'r') as f:
-                    ledger = json.load(f)
-                    assets = ledger.get('assets', {})
-                    total_dividends = sum(a.get('dividends', 0) for a in assets.values())
-        except:
-            pass
-            
-        total_return = realized_pl + unrealized_pl + total_dividends
+        # v0.09: T212's realizedProfitLoss ALREADY includes dividends
+        # No need to add them separately - that was causing double-counting
+        total_return = realized_pl + unrealized_pl
         total_cost = safe_val(invest_data.get('totalCost'))
     else:
         total_return = safe_val(account.get('ppl'))
@@ -343,7 +333,7 @@ def render():
     legend_html += "</div>"
 
     context = {
-        'version': "v0.08 Sovereign Finality",
+        'version': "v0.09 Sovereign Finality",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         'sync_time': datetime.now().strftime('%d/%m %H:%M'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
