@@ -38,6 +38,20 @@ T212_API_SECRET = os.getenv('T212_API_SECRET', '')
 DISCORD_WEBHOOK_URL = os.getenv('DISCORD_WEBHOOK_URL', '')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', '')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '')
+ALPHA_VANTAGE_API_KEY = os.getenv('ALPHA_VANTAGE_API_KEY', '')
+
+# Alpha Vantage Client (Fallback for market data)
+try:
+    from alpha_vantage.timeseries import TimeSeries
+    if ALPHA_VANTAGE_API_KEY:
+        av_ts = TimeSeries(key=ALPHA_VANTAGE_API_KEY, output_format='pandas')
+        logger.info("✅ Alpha Vantage fallback configured")
+    else:
+        av_ts = None
+        logger.info("ℹ️ Alpha Vantage API key not set (yfinance only)")
+except ImportError:
+    av_ts = None
+    logger.warning("⚠️ alpha-vantage package not installed (pip install alpha-vantage)")
 BASE_URL = "https://live.trading212.com/api/v0/equity"
 IS_LIVE = bool(T212_API_KEY and T212_API_SECRET) # Set False to simulate T212 calls locally
 
@@ -286,7 +300,31 @@ class Strategy_ORB:
         data = self.t212_request("GET", "/account/cash")
         if data:
             self.cash_balance = float(data.get('free', 0.0))
-            logger.info(f"💰 Cash Balance: £{self.cash_balance:,.2f}")
+            logger.info(f"💰 Cash Balance: £{self.cash_balance:,.2f}\")")
+    
+    def get_stock_data_alpha_vantage(self, ticker):
+        """
+        Fallback method: Fetch stock data from Alpha Vantage when yfinance fails.
+        Returns DataFrame in same format as yf.Ticker().history()
+        """
+        if not av_ts:
+            return None
+        
+        try:
+            # Get intraday data (1min intervals, last 5 days for volume/price calculations)
+            data, meta_data = av_ts.get_daily(symbol=ticker, outputsize='compact')
+            
+            # Rename columns to match yfinance format
+            data.columns = ['Open', 'High', 'Low', 'Close', 'Volume']
+            
+            # Add 1-second delay to respect rate limits (25 requests/min = 1 request every 2.4s)
+            time.sleep(1)
+            
+            logger.info(f"   ✅ {ticker}: Retrieved from Alpha Vantage (fallback)")
+            return data
+        except Exception as e:
+            logger.debug(f"   ❌ {ticker}: Alpha Vantage failed - {e}")
+            return None
     
     # --- 2. Gatekeeper Module (14:15 GMT) ---
     def scan_candidates(self, tickers):
@@ -297,10 +335,17 @@ class Strategy_ORB:
         for t in tickers:
             try:
                 # Fetch 10 days history for Vol & NR7
+                # Try yfinance first
                 dat = yf.Ticker(t)
                 hist = dat.history(period="10d")
                 
-                if len(hist) < 8: continue
+                # Fallback to Alpha Vantage if yfinance fails
+                if len(hist) < 8:
+                    logger.debug(f"   ⚠️ {t}: yfinance data insufficient ({len(hist)} days), trying Alpha Vantage...")
+                    hist = self.get_stock_data_alpha_vantage(t)
+                    if hist is None or len(hist) < 8:
+                        logger.debug(f"   ❌ {t}: Both sources failed, skipping")
+                        continue
                 
                 # 1. Volume Check (≥ 1M avg - Production Strict)
                 avg_vol = hist['Volume'].mean()
