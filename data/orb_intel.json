@@ -1,5 +1,11 @@
 {
-    "timestamp": "2026-02-03 20:33:32",
-    "briefing": "No active ORB setups identified for this session. Capital preserved.",
-    "targets": []
+    "timestamp": "2026-02-03 14:45:00",
+    "briefing": "<b>ServiceNow (NOW)</b> leads with exceptional RVOL (8.8x) following a technical breakout. <b>NVIDIA (NVDA)</b> and <b>Coinbase (COIN)</b> show strong momentum with 2.5x relative volume and clear gap-fill paths. <b>AppLovin (APP)</b> remains the most volatile target with a 26% gap to fill. Capital deployed at trigger levels with strictly enforced 3% stop-loss protocols.",
+    "targets": [
+        {"ticker": "NOW", "company": "ServiceNow", "trigger": 1112.17, "alert": 1111.0, "stop": 1085.0, "rvol": 8.89, "gap_to_fill": 1.54},
+        {"ticker": "NVDA", "company": "NVIDIA", "trigger": 1185.95, "alert": 1184.0, "stop": 1150.0, "rvol": 1.91, "gap_to_fill": 4.63},
+        {"ticker": "COIN", "company": "Coinbase", "trigger": 1187.24, "alert": 1186.0, "stop": 1155.0, "rvol": 2.59, "gap_to_fill": 3.72},
+        {"ticker": "MSTR", "company": "MicroStrategy", "trigger": 1139.62, "alert": 1138.0, "stop": 1105.0, "rvol": 1.62, "gap_to_fill": 1.69},
+        {"ticker": "APP", "company": "AppLovin", "trigger": 483.3, "alert": 482.0, "stop": 460.0, "rvol": 3.11, "gap_to_fill": 26.56}
+    ]
 }
