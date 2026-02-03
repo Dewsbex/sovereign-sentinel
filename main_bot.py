@@ -146,6 +146,9 @@ class Strategy_ORB:
                 logger.info("📡 No changes to trade_state.json, skipping sync.")
                 return
 
+            # Pull first to avoid conflicts
+            subprocess.run(["git", "pull", "--rebase"], check=False)
+            
             subprocess.run(["git", "add", "data/trade_state.json"], check=False)
             subprocess.run(["git", "commit", "-m", "🤖 ORB State Update"], check=False)
             subprocess.run(["git", "push"], check=False)
