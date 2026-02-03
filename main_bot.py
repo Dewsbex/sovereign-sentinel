@@ -210,7 +210,7 @@ class Strategy_ORB:
             logger.debug(f"Local popup failed: {e}")
 
     def generate_intelligence_briefing(self):
-        """Generates an AI-style briefing based on current ORB targets (v0.15.8)."""
+        """Generates an AI-style briefing based on current ORB targets (v0.15.9)."""
         if not self.orb_levels:
             return "No active ORB setups identified for this session. Capital preserved."
         
