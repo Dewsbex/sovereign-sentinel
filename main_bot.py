@@ -210,7 +210,7 @@ class Strategy_ORB:
             logger.debug(f"Local popup failed: {e}")
 
     def generate_intelligence_briefing(self):
-        """Generates an AI-style briefing based on current ORB targets (v0.14)."""
+        """Generates an AI-style briefing based on current ORB targets (v0.15)."""
         if not self.orb_levels:
             return "No active ORB setups identified for this session. Capital preserved."
         
@@ -226,8 +226,7 @@ class Strategy_ORB:
         today_date = datetime.datetime.now().strftime("%d/%m/%Y")
         
         brief = f"Set alerts for these exact prices today. Based on the High of the Day established in the first 15 minutes of {today_date}. Buy when price breaks above these levels.\n\n"
-        brief += f"**Priority**: Watch **{company_name} ({top['ticker']})** first. It has the highest volume ({top['rvol']:.2f}x) and is closest to the trigger. "
-        brief += "\n\n**Operational Tip**: In the Trading 212 app, set the alert slightly below these numbers (e.g., set NVDA at $181.20) so you have time to unlock your phone and check the spread."
+        brief += f"<b>Priority</b>: Watch <b>{company_name} ({top['ticker']})</b> first. It has the highest volume ({top['rvol']:.2f}x) and is closest to the trigger. "
         
         return brief
 
@@ -242,6 +241,7 @@ class Strategy_ORB:
                     "company": self.watchlist_lookup.get(t, t),
                     "trigger": levels['high'],
                     "alert": levels['high'] * 0.999,
+                    "limit": levels['high'] * 1.001, # Buy Limit at 0.1% buffer
                     "stop": levels['low'],
                     "rvol": levels['rvol'],
                     "gap_to_fill": abs(levels['last_price'] - levels['high'])
