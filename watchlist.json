@@ -32,6 +32,8 @@
     {"ticker": "SNOW", "name": "Snowflake", "category": "fintech"},
     {"ticker": "AZN", "name": "AstraZeneca ADR", "category": "adr"},
     {"ticker": "BABA", "name": "Alibaba", "category": "adr"},
+    {"ticker": "PDD", "name": "PDD Holdings", "category": "adr"},
+    {"ticker": "NIO", "name": "NIO Inc", "category": "adr"},
     {"ticker": "MARA", "name": "Marathon Digital", "category": "crypto"},
     {"ticker": "RIOT", "name": "Riot Platforms", "category": "crypto"},
     {"ticker": "CLSK", "name": "CleanSpark", "category": "crypto"}
