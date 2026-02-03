@@ -1,6 +1,6 @@
 """
-The Artist (Job B) - v0.15.11 Sovereign Finality
-The Renderer for Sovereign Sentinel.
+The Artist (Job B) -# SOVEREIGN SENTINEL | generate_static.py v0.15.12
+# Static Site Generator for Sovereign Sentinel Dashboard
 STRICT RULE: NO NETWORK CALLS.
 Reads live_state.json and generates index.html.
 """
@@ -370,7 +370,7 @@ def render():
     legend_html += "</div>"
 
     context = {
-        'version': "v0.15.11 Sovereign Finality",
+        'version': 'v0.15.12',
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
         "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.15.11 Sovereign Finality"},
         'sync_time': datetime.now().strftime('%d/%m %H:%M'),
