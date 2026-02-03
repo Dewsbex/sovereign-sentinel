@@ -428,6 +428,51 @@
             </div>
         </div>
 
+        <!-- 🎯 OPERATIONAL INTELLIGENCE (v0.12) -->
+        {% if orb_intel.briefing %}
+        <div class="col-span-12 sentinel-card border-l-4 border-indigo-500 bg-indigo-50/30">
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- AI Briefing Section -->
+                <div class="md:w-1/2">
+                    <h2 class="text-xs mono text-indigo-600 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <i class="fas fa-brain text-indigo-500"></i> AI OPERATIONAL BRIEF
+                    </h2>
+                    <div class="text-sm text-gray-800 leading-relaxed font-medium">
+                        {{ orb_intel.briefing | safe }}
+                    </div>
+                </div>
+
+                <!-- Live Target Tracker Section -->
+                <div class="md:w-1/2 border-l border-indigo-100 md:pl-8">
+                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <i class="fas fa-crosshairs text-rose-500"></i> ACTIVE TARGET TRACKER
+                    </h2>
+                    <div class="space-y-4">
+                        {% for target in orb_intel.targets %}
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between items-end">
+                                <span class="text-sm font-bold text-gray-900">{{ target.ticker }}</span>
+                                <span class="text-[0.6rem] mono text-gray-500">TRIGGER: <span class="text-indigo-600 font-bold">${{ target.trigger | round(2) }}</span></span>
+                            </div>
+                            <!-- Proximity Bar -->
+                            {% set proximity = (1 - (target.gap_to_fill / target.trigger)) * 100 %}
+                            <div class="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="h-full bg-indigo-500 transition-all duration-500" style="width: {{ (proximity if proximity < 100 else 100) if proximity > 0 else 0 }}%"></div>
+                            </div>
+                            <div class="flex justify-between text-[0.55rem] mono font-bold uppercase">
+                                <span class="text-gray-400">RVOL: {{ target.rvol | round(2) }}x</span>
+                                <span class="{% if target.gap_to_fill < 1 %}text-rose-500 animate-pulse{% else %}text-gray-500{% endif %}">
+                                    GAP: ${{ target.gap_to_fill | round(2) }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <!-- 🏛️ SENTINEL ORB DASHBOARD (Strategy Monitor) - v32.16 -->
         <div class="col-span-12 sentinel-card" style="border-top: 3px solid #6366f1;">
             <div class="flex justify-between items-start mb-6">
@@ -939,7 +984,7 @@
         }
 
         // v30.6 DYNAMIC HEATMAP LOGIC
-        const rawMapData = {{ heatmap_dataset | default ('[]') }};
+        const rawMapData = {{ heatmap_dataset | default ('[]') | safe }};
         const mapData = rawMapData.map(d => {
             const pct = d.val_pct || 0;
             // v30.6: Alpha = (pct*100 / 10) capped at 0.9
@@ -1018,7 +1063,7 @@
         new ApexCharts(document.querySelector("#heatmap-chart"), options).render();
 
         // v31.6 PORTFOLIO HISTORY LOGIC
-        const historyData = {{ account_history | default ('[]') }};
+        const historyData = {{ account_history | default ('[]') | safe }};
         let historyChart;
 
         function renderHistory(timeframe = 'MAX') {

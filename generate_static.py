@@ -159,6 +159,7 @@ def render():
     holdings = state.get('holdings', [])
     sniper_raw = state.get('sniper', [])
     account = state.get('account', {})
+    orb_intel = state.get('orb_intel', {})
     
     print(f"      [DATA] Snapshot Timestamp: {meta.get('timestamp', 'N/A')}")
     print(f"      [DATA] Processing {len(holdings)} holdings.")
@@ -393,6 +394,7 @@ def render():
             'total_wealth': total_wealth,
             'cash_hurdle': 0.038
         },
+        'orb_intel': orb_intel,
         'solar': {
             'phase': 'STABLE',
             'tax': {

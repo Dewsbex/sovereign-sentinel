@@ -153,6 +153,13 @@ class Strategy_ORB:
             subprocess.run(["git", "commit", "-m", "🤖 ORB State Update"], check=False)
             subprocess.run(["git", "push"], check=False)
             logger.info("📡 State Synced to GitHub.")
+            
+            # v0.12: Force Dashboard Regeneration if on a local-ish or dev environment
+            # In GitHub Actions, Job A usually follows Job B. 
+            # We add a trigger if specific env var is set or just call the scripts.
+            if os.path.exists("generate_static.py") and os.environ.get("SENTINEL_AUTO_RENDER"):
+                logger.info("🎨 Auto-Rendering Dashboard...")
+                subprocess.run(["python", "generate_static.py"], check=False)
         except Exception as e:
             logger.error(f"Git Sync Failed: {e}")
 
@@ -201,6 +208,50 @@ class Strategy_ORB:
             logger.info(f"🖥️ Local Popup Sent: {title}")
         except Exception as e:
             logger.debug(f"Local popup failed: {e}")
+
+    def generate_intelligence_briefing(self):
+        """Generates an AI-style briefing based on current ORB targets."""
+        if not self.orb_levels:
+            return "No active ORB setups identified. Market monitoring continues for high-probability gaps."
+        
+        # Sort by RVOL to find priority
+        sorted_targets = sorted(
+            [{'ticker': t, **levels} for t, levels in self.orb_levels.items()],
+            key=lambda x: x['rvol'], 
+            reverse=True
+        )
+        
+        top = sorted_targets[0]
+        ticker_list = ", ".join([x['ticker'] for x in sorted_targets])
+        
+        brief = f"Based on the ORB Target Locked logs, here are the target levels for today's session. "
+        brief += f"We have **{len(sorted_targets)} active targets**: {ticker_list}. "
+        brief += f"**Priority**: Watch **{top['ticker']}** first. It has the highest volume relative to its average ({top['rvol']:.2f}x) and is currently the strongest candidate for a momentum breakout. "
+        brief += "\n\n**Operational Tip**: Set your Trading 212 alerts slightly below the trigger prices to allow time to verify the bid-ask spread before the candle crosses."
+        
+        return brief
+
+    def save_intel(self):
+        """Saves intelligence briefing to data/orb_intel.json for the dashboard."""
+        intel = {
+            "timestamp": datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+            "briefing": self.generate_intelligence_briefing(),
+            "targets": [
+                {
+                    "ticker": t,
+                    "company": self.watchlist_lookup.get(t, t),
+                    "trigger": levels['high'],
+                    "rvol": levels['rvol'],
+                    "gap_to_fill": abs(levels['last_price'] - levels['high'])
+                } for t, levels in self.orb_levels.items()
+            ]
+        }
+        try:
+            os.makedirs("data", exist_ok=True)
+            with open("data/orb_intel.json", "w") as f:
+                json.dump(intel, f, indent=4)
+        except Exception as e:
+            logger.error(f"Failed to save intel: {e}")
 
     # --- 1. API Handling (Rate Limits) ---
     def t212_request(self, method, endpoint, payload=None):
@@ -500,6 +551,15 @@ class Strategy_ORB:
 
         self.status = "WATCHING_RANGE"
         self.save_state(push=True) # Push ranges
+        self.save_intel()         # Generate and save v0.12 intelligence
+        
+        # Always sync intel to the repo so Renderer can find it
+        try:
+            subprocess.run(["git", "add", "data/orb_intel.json"], check=False)
+            subprocess.run(["git", "commit", "-m", "🧠 ORB Intelligence Update"], check=False)
+            subprocess.run(["git", "push"], check=False)
+        except:
+            pass
         
         # ALWAYS send summary notification
         targets_locked = len(self.orb_levels)
