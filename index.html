@@ -271,6 +271,26 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             border-color: #d1d5db;
         }
+        
+        /* v32.15: See All Button */
+        .see-all-btn {
+            background: #f3f4f6;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 8px 24px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+        
+        .see-all-btn:hover {
+            background: #e5e7eb;
+            color: #374151;
+            border-color: #d1d5db;
+        }
     </style>
 </head>
 
@@ -291,7 +311,7 @@
             <div class="flex flex-col text-right">
                 <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Total
                     Wealth</span>
-                <span class="text-lg font-bold text-gray-800 mono leading-none">£174,225.61</span>
+                <span class="text-lg font-bold text-gray-800 mono leading-none">£174,440.58</span>
             </div>
             <div class="h-6 w-px bg-gray-200"></div>
             <div class="flex flex-col text-right">
@@ -299,19 +319,19 @@
                     Return</span>
                 <div class="flex items-baseline justify-end gap-2">
                     <span
-                        class="text-lg font-bold text-emerald-500 mono leading-none">+£23,593.65 <span class="text-xs">(+15.04%)</span></span>
+                        class="text-lg font-bold text-emerald-500 mono leading-none">+£23,808.62 <span class="text-xs">(+15.18%)</span></span>
                 </div>
             </div>
             <div class="h-6 w-px bg-gray-200"></div>
             <div class="flex flex-col text-right">
                 <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Cash
                     (Dry)</span>
-                <span class="text-lg font-bold text-gray-800 mono leading-none">£902.56</span>
+                <span class="text-lg font-bold text-gray-800 mono leading-none">£870.81</span>
             </div>
             <div class="h-6 w-px bg-gray-200"></div>
             <div class="flex flex-col text-right">
                 <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Pending</span>
-                <span class="text-lg font-bold text-gray-400 mono leading-none">£19,022.84</span>
+                <span class="text-lg font-bold text-gray-400 mono leading-none">£19,054.59</span>
             </div>
         </div>
 
@@ -320,7 +340,7 @@
             <span class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200">LIVE</span>
             <div class="text-right hidden sm:block">
                 <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
-                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">03/02 14:03</span>
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">03/02 14:51</span>
             </div>
         </div>
     </nav>
@@ -336,6 +356,257 @@
             <div class="md:col-span-2 sentinel-card">
                 <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-2">🔥 MARKET HEATMAP</h2>
                 <div id="heatmap-chart" style="min-height: 400px;"></div>
+                
+                <!-- See All Button -->
+                <div class="text-center mt-4">
+                    <button id="see-all-btn" class="see-all-btn">
+                        See all holdings
+                    </button>
+                </div>
+                
+                <!-- Fortress Section (Hidden by default) -->
+                <div id="fortress-section" style="display: none; margin-top: 24px;" class="border-t border-gray-200 pt-4">
+                    <h3 class="text-xs mono text-neutral-600 uppercase tracking-widest mb-3">📦 THE FORTRESS (Complete Holdings)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-[0.65rem] mono">
+                            <thead class="text-neutral-600 border-b border-gray-200">
+                                <tr>
+                                    <th class="p-2">Ticker</th>
+                                    <th class="p-2">Company</th>
+                                    <th class="p-2 text-right">Shares</th>
+                                    <th class="p-2 text-right">Avg Price</th>
+                                    <th class="p-2 text-right">Current</th>
+                                    <th class="p-2 text-right">Value</th>
+                                    <th class="p-2 text-right">Real P/L</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">NUE</td>
+                                    <td class="p-2 text-gray-700">Nucor</td>
+                                    <td class="p-2 text-right">119.1502</td>
+                                    <td class="p-2 text-right">£142.75</td>
+                                    <td class="p-2 text-right">£181.02</td>
+                                    <td class="p-2 text-right font-semibold">£15781.62</td>
+                                    <td class="p-2 text-right font-bold text-emerald-600">
+                                        +£3208.75
+                                        <span class="text-[0.55rem] ml-1">(+25.5%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">RIO</td>
+                                    <td class="p-2 text-gray-700">Rio Tinto</td>
+                                    <td class="p-2 text-right">102.3696</td>
+                                    <td class="p-2 text-right">£45.76</td>
+                                    <td class="p-2 text-right">£69.44</td>
+                                    <td class="p-2 text-right font-semibold">£7109.37</td>
+                                    <td class="p-2 text-right font-bold text-emerald-600">
+                                        +£2424.25
+                                        <span class="text-[0.55rem] ml-1">(+51.7%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">BMY</td>
+                                    <td class="p-2 text-gray-700">Bristol-Myers Squibb</td>
+                                    <td class="p-2 text-right">190.0</td>
+                                    <td class="p-2 text-right">£50.57</td>
+                                    <td class="p-2 text-right">£55.91</td>
+                                    <td class="p-2 text-right font-semibold">£7772.72</td>
+                                    <td class="p-2 text-right font-bold text-emerald-600">
+                                        +£615.59
+                                        <span class="text-[0.55rem] ml-1">(+8.6%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">CTVA</td>
+                                    <td class="p-2 text-gray-700">Corteva</td>
+                                    <td class="p-2 text-right">225.0</td>
+                                    <td class="p-2 text-right">£69.94</td>
+                                    <td class="p-2 text-right">£73.19</td>
+                                    <td class="p-2 text-right font-semibold">£12049.37</td>
+                                    <td class="p-2 text-right font-bold text-emerald-600">
+                                        +£370.95
+                                        <span class="text-[0.55rem] ml-1">(+3.2%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">BATS</td>
+                                    <td class="p-2 text-gray-700">British American Tobacco</td>
+                                    <td class="p-2 text-right">100.0</td>
+                                    <td class="p-2 text-right">£42.02</td>
+                                    <td class="p-2 text-right">£44.56</td>
+                                    <td class="p-2 text-right font-semibold">£4456.8</td>
+                                    <td class="p-2 text-right font-bold text-emerald-600">
+                                        +£254.08
+                                        <span class="text-[0.55rem] ml-1">(+6.0%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">DHR</td>
+                                    <td class="p-2 text-gray-700">Danaher</td>
+                                    <td class="p-2 text-right">30.0</td>
+                                    <td class="p-2 text-right">£218.2</td>
+                                    <td class="p-2 text-right">£223.46</td>
+                                    <td class="p-2 text-right font-semibold">£4905.14</td>
+                                    <td class="p-2 text-right font-bold text-emerald-600">
+                                        +£144.16
+                                        <span class="text-[0.55rem] ml-1">(+3.0%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">LGEN</td>
+                                    <td class="p-2 text-gray-700">Legal & General</td>
+                                    <td class="p-2 text-right">1000.0</td>
+                                    <td class="p-2 text-right">£2.59</td>
+                                    <td class="p-2 text-right">£2.67</td>
+                                    <td class="p-2 text-right font-semibold">£2677.0</td>
+                                    <td class="p-2 text-right font-bold text-emerald-600">
+                                        +£79.0
+                                        <span class="text-[0.55rem] ml-1">(+3.0%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">MSFT</td>
+                                    <td class="p-2 text-gray-700">Microsoft</td>
+                                    <td class="p-2 text-right">30.0</td>
+                                    <td class="p-2 text-right">£423.35</td>
+                                    <td class="p-2 text-right">£423.27</td>
+                                    <td class="p-2 text-right font-semibold">£9291.12</td>
+                                    <td class="p-2 text-right font-bold text-emerald-600">
+                                        +£11.89
+                                        <span class="text-[0.55rem] ml-1">(+0.1%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">VSNTV</td>
+                                    <td class="p-2 text-gray-700">Versant Media Group</td>
+                                    <td class="p-2 text-right">111.0</td>
+                                    <td class="p-2 text-right">£33.25</td>
+                                    <td class="p-2 text-right">£32.47</td>
+                                    <td class="p-2 text-right font-semibold">£2637.96</td>
+                                    <td class="p-2 text-right font-bold text-rose-500">
+                                        £-120.91
+                                        <span class="text-[0.55rem] ml-1">(-4.4%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">QELL</td>
+                                    <td class="p-2 text-gray-700">Lilium</td>
+                                    <td class="p-2 text-right">275.3631</td>
+                                    <td class="p-2 text-right">£1.02</td>
+                                    <td class="p-2 text-right">£0.0</td>
+                                    <td class="p-2 text-right font-semibold">£0.18</td>
+                                    <td class="p-2 text-right font-bold text-rose-500">
+                                        £-216.68
+                                        <span class="text-[0.55rem] ml-1">(-99.9%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">SOLV</td>
+                                    <td class="p-2 text-gray-700">Solventum</td>
+                                    <td class="p-2 text-right">100.0</td>
+                                    <td class="p-2 text-right">£80.44</td>
+                                    <td class="p-2 text-right">£76.91</td>
+                                    <td class="p-2 text-right font-semibold">£5627.46</td>
+                                    <td class="p-2 text-right font-bold text-rose-500">
+                                        £-350.38
+                                        <span class="text-[0.55rem] ml-1">(-5.9%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">RE</td>
+                                    <td class="p-2 text-gray-700">Everest Group</td>
+                                    <td class="p-2 text-right">66.9526</td>
+                                    <td class="p-2 text-right">£333.79</td>
+                                    <td class="p-2 text-right">£331.7</td>
+                                    <td class="p-2 text-right font-semibold">£16249.61</td>
+                                    <td class="p-2 text-right font-bold text-rose-500">
+                                        £-744.56
+                                        <span class="text-[0.55rem] ml-1">(-4.4%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">EOG</td>
+                                    <td class="p-2 text-gray-700">EOG Resources</td>
+                                    <td class="p-2 text-right">167.837</td>
+                                    <td class="p-2 text-right">£114.0</td>
+                                    <td class="p-2 text-right">£108.38</td>
+                                    <td class="p-2 text-right font-semibold">£13309.66</td>
+                                    <td class="p-2 text-right font-bold text-rose-500">
+                                        £-957.51
+                                        <span class="text-[0.55rem] ml-1">(-6.7%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">QCOM</td>
+                                    <td class="p-2 text-gray-700">Qualcomm</td>
+                                    <td class="p-2 text-right">108.0</td>
+                                    <td class="p-2 text-right">£168.85</td>
+                                    <td class="p-2 text-right">£152.59</td>
+                                    <td class="p-2 text-right font-semibold">£12058.13</td>
+                                    <td class="p-2 text-right font-bold text-rose-500">
+                                        £-1444.62
+                                        <span class="text-[0.55rem] ml-1">(-10.7%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">NFLX</td>
+                                    <td class="p-2 text-gray-700">Netflix</td>
+                                    <td class="p-2 text-right">190.0</td>
+                                    <td class="p-2 text-right">£92.46</td>
+                                    <td class="p-2 text-right">£82.74</td>
+                                    <td class="p-2 text-right font-semibold">£11502.68</td>
+                                    <td class="p-2 text-right font-bold text-rose-500">
+                                        £-1619.94
+                                        <span class="text-[0.55rem] ml-1">(-12.3%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">CNNE</td>
+                                    <td class="p-2 text-gray-700">Cannae</td>
+                                    <td class="p-2 text-right">1406.1646</td>
+                                    <td class="p-2 text-right">£15.77</td>
+                                    <td class="p-2 text-right">£14.46</td>
+                                    <td class="p-2 text-right font-semibold">£14877.65</td>
+                                    <td class="p-2 text-right font-bold text-rose-500">
+                                        £-1621.05
+                                        <span class="text-[0.55rem] ml-1">(-9.8%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">CRM</td>
+                                    <td class="p-2 text-gray-700">Salesforce</td>
+                                    <td class="p-2 text-right">92.0</td>
+                                    <td class="p-2 text-right">£242.96</td>
+                                    <td class="p-2 text-right">£210.78</td>
+                                    <td class="p-2 text-right font-semibold">£14188.85</td>
+                                    <td class="p-2 text-right font-bold text-rose-500">
+                                        £-2366.89
+                                        <span class="text-[0.55rem] ml-1">(-14.3%)</span>
+                                    </td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <!-- ASSET ALLOCATION (1/3 Width) -->
@@ -350,7 +621,7 @@
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#4f46e5" stroke-width="20"
-                stroke-dasharray="42.9380795948282 408.4070449666731"
+                stroke-dasharray="42.95018264199609 408.4070449666731"
                 stroke-dashoffset="-0" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-RE"
@@ -361,17 +632,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="121.08080839635868" y1="38.51342002228442" x2="129.1888116257274" y2="14.864735415470747" stroke="#4f46e5" stroke-width="1" opacity="0.6" />
+            <line x1="121.08653272789468" y1="38.515382919664965" x2="129.1967376232388" y2="14.867453273382253" stroke="#4f46e5" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="134.1888116257274" y="14.864735415470747" dy="0.3em" text-anchor="start" 
+            <text x="134.1967376232388" y="14.867453273382253" dy="0.3em" text-anchor="start" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">RE 10.5%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#10b981" stroke-width="20"
-                stroke-dasharray="41.701452272811736 408.4070449666731"
-                stroke-dashoffset="-42.9380795948282" 
+                stroke-dasharray="41.71321412554383 408.4070449666731"
+                stroke-dashoffset="-42.95018264199609" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-NUE"
                 data-ticker="NUE"
@@ -381,17 +652,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="154.03174547900267" y1="63.86732115532705" x2="174.81318604784983" y2="49.97013698429898" stroke="#10b981" stroke-width="1" opacity="0.6" />
+            <line x1="154.041740474506" y1="63.882271853200166" x2="174.82702527239297" y2="49.99083795058484" stroke="#10b981" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="179.81318604784983" y="49.97013698429898" dy="0.3em" text-anchor="start" 
+            <text x="179.82702527239297" y="49.99083795058484" dy="0.3em" text-anchor="start" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">NUE 10.2%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#ef4444" stroke-width="20"
-                stroke-dasharray="39.31281691236618 408.4070449666731"
-                stroke-dashoffset="-84.63953186763993" 
+                stroke-dasharray="39.32388437529843 408.4070449666731"
+                stroke-dashoffset="-84.66339676753992" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-CNNE"
                 data-ticker="CNNE"
@@ -401,17 +672,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="164.96296950239082" y1="102.1937623917465" x2="189.94872700331035" y2="103.03751715780285" stroke="#ef4444" stroke-width="1" opacity="0.6" />
+            <line x1="164.96197064849503" y1="102.22314404933013" x2="189.94734397483927" y2="103.07819945291865" stroke="#ef4444" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="194.94872700331035" y="103.03751715780285" dy="0.3em" text-anchor="start" 
+            <text x="194.94734397483927" y="103.07819945291865" dy="0.3em" text-anchor="start" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">CNNE 9.6%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#f59e0b" stroke-width="20"
-                stroke-dasharray="37.49272149920159 408.4070449666731"
-                stroke-dashoffset="-123.9523487800061" 
+                stroke-dasharray="37.50328155444261 408.4070449666731"
+                stroke-dashoffset="-123.98728114283836" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-CRM"
                 data-ticker="CRM"
@@ -421,17 +692,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="152.7290108387451" y1="138.0085702962832" x2="173.00939962287782" y2="152.62725117946906" stroke="#f59e0b" stroke-width="1" opacity="0.6" />
+            <line x1="152.70548666560194" y1="138.04118393717602" x2="172.97682769083343" y2="152.67240852839754" stroke="#f59e0b" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="178.00939962287782" y="152.62725117946906" dy="0.3em" text-anchor="start" 
+            <text x="177.97682769083343" y="152.67240852839754" dy="0.3em" text-anchor="start" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">CRM 9.2%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#8b5cf6" stroke-width="20"
-                stroke-dasharray="35.16954234404588 408.4070449666731"
-                stroke-dashoffset="-161.4450702792077" 
+                stroke-dasharray="35.179449100801165 408.4070449666731"
+                stroke-dashoffset="-161.49056269728095" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-EOG"
                 data-ticker="EOG"
@@ -441,17 +712,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="124.54907725344634" y1="160.18590205358996" x2="133.9910300432334" y2="183.33432592035533" stroke="#8b5cf6" stroke-width="1" opacity="0.6" />
+            <line x1="124.50236023786255" y1="160.20493619940157" x2="133.92634494473276" y2="183.3606808914791" stroke="#8b5cf6" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="138.9910300432334" y="183.33432592035533" dy="0.3em" text-anchor="start" 
+            <text x="138.92634494473276" y="183.3606808914791" dy="0.3em" text-anchor="start" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">EOG 8.6%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#ec4899" stroke-width="20"
-                stroke-dasharray="31.862482047347903 408.4070449666731"
-                stroke-dashoffset="-196.61461262325358" 
+                stroke-dasharray="31.871465581077466 408.4070449666731"
+                stroke-dashoffset="-196.6700117980821" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-QCOM"
                 data-ticker="QCOM"
@@ -461,17 +732,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="91.6805525561729" y1="164.46539222117087" x2="88.48076507777786" y2="189.25977384469815" stroke="#ec4899" stroke-width="1" opacity="0.6" />
+            <line x1="91.62115774151873" y1="164.45769932605015" x2="88.39852610364132" y2="189.24912214376178" stroke="#ec4899" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="83.48076507777786" y="189.25977384469815" dy="0.3em" text-anchor="end" 
+            <text x="83.39852610364132" y="189.24912214376178" dy="0.3em" text-anchor="end" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">QCOM 7.8%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#06b6d4" stroke-width="20"
-                stroke-dasharray="31.83932224968167 408.4070449666731"
-                stroke-dashoffset="-228.47709467060147" 
+                stroke-dasharray="31.84831157307704 408.4070449666731"
+                stroke-dashoffset="-228.54147737915957" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-CTVA"
                 data-ticker="CTVA"
@@ -481,17 +752,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="62.31966058156212" y1="152.96406348942003" x2="47.82722234370139" y2="173.33485713919697" stroke="#06b6d4" stroke-width="1" opacity="0.6" />
+            <line x1="62.263558279109965" y1="152.9241057198501" x2="47.7495422326138" y2="173.27953099671552" stroke="#06b6d4" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="42.82722234370139" y="173.33485713919697" dy="0.3em" text-anchor="end" 
+            <text x="42.7495422326138" y="173.27953099671552" dy="0.3em" text-anchor="end" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">CTVA 7.8%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#3b82f6" stroke-width="20"
-                stroke-dasharray="30.39475964713264 408.4070449666731"
-                stroke-dashoffset="-260.31641692028313" 
+                stroke-dasharray="30.403327025844657 408.4070449666731"
+                stroke-dashoffset="-260.3897889522366" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-NFLX"
                 data-ticker="NFLX"
@@ -501,17 +772,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="42.157827100674716" y1="129.6527070313076" x2="19.910837524011143" y2="141.0575943510413" stroke="#3b82f6" stroke-width="1" opacity="0.6" />
+            <line x1="42.12244219858246" y1="129.58358164495252" x2="19.861843044191104" y2="140.96188227762656" stroke="#3b82f6" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="14.910837524011143" y="141.0575943510413" dy="0.3em" text-anchor="end" 
+            <text x="14.861843044191104" y="140.96188227762656" dy="0.3em" text-anchor="end" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">NFLX 7.4%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#f43f5e" stroke-width="20"
-                stroke-dasharray="24.550947158285936 408.4070449666731"
-                stroke-dashoffset="-290.71117656741575" 
+                stroke-dasharray="24.55786510879517 408.4070449666731"
+                stroke-dashoffset="-290.79311597808123" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-MSFT"
                 data-ticker="MSFT"
@@ -521,17 +792,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="35.0846995127759" y1="103.31719198319934" x2="10.117276248458936" y2="104.59303505366063" stroke="#f43f5e" stroke-width="1" opacity="0.6" />
+            <line x1="35.08039734247454" y1="103.23190203889511" x2="10.111319397272453" y2="104.474941284624" stroke="#f43f5e" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="5.117276248458936" y="104.59303505366063" dy="0.3em" text-anchor="end" 
+            <text x="5.111319397272453" y="104.474941284624" dy="0.3em" text-anchor="end" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">MSFT 6.0%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#10b981" stroke-width="20"
-                stroke-dasharray="20.538690873906084 408.4070449666731"
-                stroke-dashoffset="-315.2621237257017" 
+                stroke-dasharray="20.544477290537795 408.4070449666731"
+                stroke-dashoffset="-315.3509810868764" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-BMY"
                 data-ticker="BMY"
@@ -541,17 +812,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="37.82276167693393" y1="81.05294127003762" x2="13.90843924498543" y2="73.76561098928286" stroke="#10b981" stroke-width="1" opacity="0.6" />
+            <line x1="37.849568279178406" y1="80.96519406677616" x2="13.94555607886241" y2="73.64411486169007" stroke="#10b981" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="8.90843924498543" y="73.76561098928286" dy="0.3em" text-anchor="end" 
+            <text x="8.94555607886241" y="73.64411486169007" dy="0.3em" text-anchor="end" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">BMY 5.0%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#4f46e5" stroke-width="20"
-                stroke-dasharray="18.890480861935288 408.4070449666731"
-                stroke-dashoffset="-335.8008145996078" 
+                stroke-dasharray="18.791142677856744 408.4070449666731"
+                stroke-dashoffset="-335.8954583774142" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-RIO"
                 data-ticker="RIO"
@@ -561,17 +832,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="46.31976427058571" y1="63.34713801032021" x2="25.673519759272523" y2="49.2498833989049" stroke="#4f46e5" stroke-width="1" opacity="0.6" />
+            <line x1="46.34513790214406" y1="63.31000445271133" x2="25.708652479891768" y2="49.198467703754154" stroke="#4f46e5" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="20.673519759272523" y="49.2498833989049" dy="0.3em" text-anchor="end" 
+            <text x="20.708652479891768" y="49.198467703754154" dy="0.3em" text-anchor="end" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">RIO 4.6%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#10b981" stroke-width="20"
-                stroke-dasharray="14.870045860436727 408.4070449666731"
-                stroke-dashoffset="-354.69129546154306" 
+                stroke-dasharray="14.874229892934496 408.4070449666731"
+                stroke-dashoffset="-354.6866010552709" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-SOLV"
                 data-ticker="SOLV"
@@ -581,17 +852,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="57.531752588061615" y1="50.79178969157292" x2="41.19781127577762" y2="31.86555495756251" stroke="#10b981" stroke-width="1" opacity="0.6" />
+            <line x1="57.529782484321245" y1="50.79349002244791" x2="41.19508343982942" y2="31.867909261850954" stroke="#10b981" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="36.19781127577762" y="31.86555495756251" dy="0.3em" text-anchor="end" 
+            <text x="36.19508343982942" y="31.867909261850954" dy="0.3em" text-anchor="end" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">SOLV 3.6%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#ef4444" stroke-width="20"
-                stroke-dasharray="12.961360912656247 408.4070449666731"
-                stroke-dashoffset="-369.5613413219798" 
+                stroke-dasharray="12.965028630506252 408.4070449666731"
+                stroke-dashoffset="-369.5608309482054" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-DHR"
                 data-ticker="DHR"
@@ -601,17 +872,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="68.95586039040725" y1="42.892545181035125" x2="57.015806694410045" y2="20.92813948143325" stroke="#ef4444" stroke-width="1" opacity="0.6" />
+            <line x1="68.95702317943379" y1="42.89191309352248" x2="57.01741670998524" y2="20.92726428333883" stroke="#ef4444" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="52.015806694410045" y="20.92813948143325" dy="0.3em" text-anchor="end" 
+            <text x="52.01741670998524" y="20.92726428333883" dy="0.3em" text-anchor="end" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">DHR 3.2%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#f59e0b" stroke-width="20"
-                stroke-dasharray="11.777882017741273 408.4070449666731"
-                stroke-dashoffset="-382.52270223463603" 
+                stroke-dasharray="11.779998042959072 408.4070449666731"
+                stroke-dashoffset="-382.5258595787117" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-BATS"
                 data-ticker="BATS"
@@ -621,17 +892,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="80.31847370654226" y1="38.05133154974248" x2="72.74865590136622" y2="14.224920607335733" stroke="#f59e0b" stroke-width="1" opacity="0.6" />
+            <line x1="80.32249122075254" y1="38.05005530072977" x2="72.75421861334968" y2="14.223153493318136" stroke="#f59e0b" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="67.74865590136622" y="14.224920607335733" dy="0.3em" text-anchor="end" 
+            <text x="67.75421861334968" y="14.223153493318136" dy="0.3em" text-anchor="end" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">BATS 2.9%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#8b5cf6" stroke-width="20"
-                stroke-dasharray="7.080281000822037 408.4070449666731"
-                stroke-dashoffset="-394.3005842523773" 
+                stroke-dasharray="7.075716828442253 408.4070449666731"
+                stroke-dashoffset="-394.3058576216707" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-LGEN"
                 data-ticker="LGEN"
@@ -641,17 +912,17 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="89.48015479727535" y1="35.8569344596728" x2="85.4340604885351" y2="11.186524636470025" stroke="#8b5cf6" stroke-width="1" opacity="0.6" />
+            <line x1="89.48310665561631" y1="35.85645040705295" x2="85.4381476770072" y2="11.18585440976561" stroke="#8b5cf6" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="80.4340604885351" y="11.186524636470025" dy="0.3em" text-anchor="end" 
+            <text x="80.4381476770072" y="11.18585440976561" dy="0.3em" text-anchor="end" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">LGEN 1.7%</text>
         
             <!-- Slice -->
             <circle r="65" cx="100" cy="100" fill="transparent"
                 stroke="#ec4899" stroke-width="20"
-                stroke-dasharray="6.970569730734534 408.4070449666731"
-                stroke-dashoffset="-401.3808652531993" 
+                stroke-dasharray="6.972528190047638 408.4070449666731"
+                stroke-dashoffset="-401.38157445011296" 
                 transform="rotate(-90 100 100)"
                 class="donut-segment segment-VSNTV"
                 data-ticker="VSNTV"
@@ -661,10 +932,10 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="96.46085619439013" y1="35.096421815717946" x2="95.09964703838634" y2="10.133507129455623" stroke="#ec4899" stroke-width="1" opacity="0.6" />
+            <line x1="96.46254211752102" y1="35.09632990554627" x2="95.10198139349065" y2="10.133379869217919" stroke="#ec4899" stroke-width="1" opacity="0.6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="90.09964703838634" y="10.133507129455623" dy="0.3em" text-anchor="end" 
+            <text x="90.10198139349065" y="10.133379869217919" dy="0.3em" text-anchor="end" 
                 class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">VSNTV 1.7%</text>
         
         <!-- NO CENTER TEXT As Requested -->
@@ -1053,7 +1324,7 @@
         </script>
 
         <!-- 🛡️ THE FORTRESS (Holdings Management) - v27.0 -->
-        <div class="col-span-12 sentinel-card" style="border-top: 3px solid #37E6B0;">
+        <div id="fortress-section" class="col-span-12 sentinel-card" style="border-top: 3px solid #37E6B0; display: none;">
             <div class="flex justify-between items-start mb-6">
                 <div>
                     <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest">🛡️ THE FORTRESS</h2>
@@ -1082,9 +1353,9 @@
                         
                         <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                             <td class="p-4">
-                                <span class="font-bold text-gray-900">BMY</span>
-                                <div class="text-[0.6rem] text-neutral-500 mt-1">Bristol-Myers Squibb</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £7157.13
+                                <span class="font-bold text-gray-900">NUE</span>
+                                <div class="text-[0.6rem] text-neutral-500 mt-1">Nucor</div>
+                                <div class="text-[0.5rem] text-neutral-400">Book: £12572.87
                                 </div>
                             </td>
                             <td class="p-4">
@@ -1095,18 +1366,18 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">5.0%</div>
+                                    <div class="text-gray-700">10.2%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-emerald-600">
-                                    £602.59
+                                    £3208.75
                                 </span>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-500">
-                                    £-138.56
+                                    £-127.37
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1124,58 +1395,7 @@
                                     </span>
                                     
                                     <div class="text-[0.6rem] text-neutral-600">
-                                        190.0 shares @ £55.91
-                                    </div>
-                                    
-                                </div>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                            <td class="p-4">
-                                <span class="font-bold text-gray-900">DHR</span>
-                                <div class="text-[0.6rem] text-neutral-500 mt-1">Danaher</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £4760.97
-                                </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
-                                    bg-gray-500/20 text-gray-600">
-                                    TIER 2
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">3.2%</div>
-                                    <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
-                                </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-emerald-600">
-                                    £135.96
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-emerald-500">
-                                    £20.69
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
-                                    bg-blue-500/20 text-blue-600
-                                    ">
-                                    5/8
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <div class="flex flex-col items-end gap-1">
-                                    <span class="font-bold 
-                                        text-gray-600">
-                                        HOLD
-                                    </span>
-                                    
-                                    <div class="text-[0.6rem] text-neutral-600">
-                                        30.0 shares @ £223.46
+                                        119.1502 shares @ £0
                                     </div>
                                     
                                 </div>
@@ -1203,7 +1423,7 @@
                             </td>
                             <td class="p-4">
                                 <span class="text-emerald-600">
-                                    £2451.89
+                                    £2424.25
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1226,7 +1446,211 @@
                                     </span>
                                     
                                     <div class="text-[0.6rem] text-neutral-600">
-                                        102.3696 shares @ £69.71
+                                        102.3696 shares @ £0
+                                    </div>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                            <td class="p-4">
+                                <span class="font-bold text-gray-900">BMY</span>
+                                <div class="text-[0.6rem] text-neutral-500 mt-1">Bristol-Myers Squibb</div>
+                                <div class="text-[0.5rem] text-neutral-400">Book: £7157.13
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
+                                    bg-gray-500/20 text-gray-600">
+                                    TIER 2
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="text-gray-700">5.0%</div>
+                                    <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-emerald-600">
+                                    £615.59
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-rose-500">
+                                    £-126.79
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
+                                    bg-blue-500/20 text-blue-600
+                                    ">
+                                    5/8
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span class="font-bold 
+                                        text-gray-600">
+                                        HOLD
+                                    </span>
+                                    
+                                    <div class="text-[0.6rem] text-neutral-600">
+                                        190.0 shares @ £0
+                                    </div>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                            <td class="p-4">
+                                <span class="font-bold text-gray-900">CTVA</span>
+                                <div class="text-[0.6rem] text-neutral-500 mt-1">Corteva</div>
+                                <div class="text-[0.5rem] text-neutral-400">Book: £11678.42
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
+                                    bg-gray-500/20 text-gray-600">
+                                    TIER 2
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="text-gray-700">7.8%</div>
+                                    <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-emerald-600">
+                                    £370.95
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-rose-500">
+                                    £-163.9
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
+                                    bg-blue-500/20 text-blue-600
+                                    ">
+                                    5/8
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span class="font-bold 
+                                        text-gray-600">
+                                        HOLD
+                                    </span>
+                                    
+                                    <div class="text-[0.6rem] text-neutral-600">
+                                        225.0 shares @ £0
+                                    </div>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                            <td class="p-4">
+                                <span class="font-bold text-gray-900">BATS</span>
+                                <div class="text-[0.6rem] text-neutral-500 mt-1">British American Tobacco</div>
+                                <div class="text-[0.5rem] text-neutral-400">Book: £4202.72
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
+                                    bg-gray-500/20 text-gray-600">
+                                    TIER 2
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="text-gray-700">2.9%</div>
+                                    <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-emerald-600">
+                                    £254.08
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-emerald-500">
+                                    £0.0
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
+                                    bg-blue-500/20 text-blue-600
+                                    ">
+                                    5/8
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span class="font-bold 
+                                        text-gray-600">
+                                        HOLD
+                                    </span>
+                                    
+                                    <div class="text-[0.6rem] text-neutral-600">
+                                        100.0 shares @ £0
+                                    </div>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                            <td class="p-4">
+                                <span class="font-bold text-gray-900">DHR</span>
+                                <div class="text-[0.6rem] text-neutral-500 mt-1">Danaher</div>
+                                <div class="text-[0.5rem] text-neutral-400">Book: £4760.97
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
+                                    bg-gray-500/20 text-gray-600">
+                                    TIER 2
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="text-gray-700">3.2%</div>
+                                    <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-emerald-600">
+                                    £144.16
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-emerald-500">
+                                    £28.71
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
+                                    bg-blue-500/20 text-blue-600
+                                    ">
+                                    5/8
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span class="font-bold 
+                                        text-gray-600">
+                                        HOLD
+                                    </span>
+                                    
+                                    <div class="text-[0.6rem] text-neutral-600">
+                                        30.0 shares @ £0
                                     </div>
                                     
                                 </div>
@@ -1254,7 +1678,7 @@
                             </td>
                             <td class="p-4">
                                 <span class="text-emerald-600">
-                                    £77.0
+                                    £79.0
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1277,7 +1701,109 @@
                                     </span>
                                     
                                     <div class="text-[0.6rem] text-neutral-600">
-                                        1000.0 shares @ £2.67
+                                        1000.0 shares @ £0
+                                    </div>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                            <td class="p-4">
+                                <span class="font-bold text-gray-900">MSFT</span>
+                                <div class="text-[0.6rem] text-neutral-500 mt-1">Microsoft</div>
+                                <div class="text-[0.5rem] text-neutral-400">Book: £9279.24
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
+                                    bg-gray-500/20 text-gray-600">
+                                    TIER 2
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="text-gray-700">6.0%</div>
+                                    <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-emerald-600">
+                                    £11.89
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-emerald-500">
+                                    £13.65
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
+                                    bg-blue-500/20 text-blue-600
+                                    ">
+                                    5/8
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span class="font-bold 
+                                        text-gray-600">
+                                        HOLD
+                                    </span>
+                                    
+                                    <div class="text-[0.6rem] text-neutral-600">
+                                        30.0 shares @ £0
+                                    </div>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                            <td class="p-4">
+                                <span class="font-bold text-gray-900">VSNTV</span>
+                                <div class="text-[0.6rem] text-neutral-500 mt-1">Versant Media Group</div>
+                                <div class="text-[0.5rem] text-neutral-400">Book: £2758.87
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
+                                    bg-gray-500/20 text-gray-600">
+                                    TIER 2
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="text-gray-700">1.7%</div>
+                                    <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-rose-600">
+                                    £-120.91
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-rose-500">
+                                    £-57.59
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
+                                    bg-blue-500/20 text-blue-600
+                                    ">
+                                    5/8
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span class="font-bold 
+                                        text-gray-600">
+                                        HOLD
+                                    </span>
+                                    
+                                    <div class="text-[0.6rem] text-neutral-600">
+                                        111.0 shares @ £0
                                     </div>
                                     
                                 </div>
@@ -1310,7 +1836,7 @@
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-500">
-                                    £-11.1
+                                    £-10.76
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1328,160 +1854,7 @@
                                     </span>
                                     
                                     <div class="text-[0.6rem] text-neutral-600">
-                                        275.3631 shares @ £0.0
-                                    </div>
-                                    
-                                </div>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                            <td class="p-4">
-                                <span class="font-bold text-gray-900">BATS</span>
-                                <div class="text-[0.6rem] text-neutral-500 mt-1">British American Tobacco</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £4202.72
-                                </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
-                                    bg-gray-500/20 text-gray-600">
-                                    TIER 2
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">2.9%</div>
-                                    <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
-                                </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-emerald-600">
-                                    £247.08
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-emerald-500">
-                                    £0.0
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
-                                    bg-blue-500/20 text-blue-600
-                                    ">
-                                    5/8
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <div class="flex flex-col items-end gap-1">
-                                    <span class="font-bold 
-                                        text-gray-600">
-                                        HOLD
-                                    </span>
-                                    
-                                    <div class="text-[0.6rem] text-neutral-600">
-                                        100.0 shares @ £44.49
-                                    </div>
-                                    
-                                </div>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                            <td class="p-4">
-                                <span class="font-bold text-gray-900">VSNTV</span>
-                                <div class="text-[0.6rem] text-neutral-500 mt-1">Versant Media Group</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £2758.87
-                                </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
-                                    bg-gray-500/20 text-gray-600">
-                                    TIER 2
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">1.7%</div>
-                                    <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
-                                </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-rose-600">
-                                    £-125.32
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-rose-500">
-                                    £-62.11
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
-                                    bg-blue-500/20 text-blue-600
-                                    ">
-                                    5/8
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <div class="flex flex-col items-end gap-1">
-                                    <span class="font-bold 
-                                        text-gray-600">
-                                        HOLD
-                                    </span>
-                                    
-                                    <div class="text-[0.6rem] text-neutral-600">
-                                        111.0 shares @ £32.47
-                                    </div>
-                                    
-                                </div>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                            <td class="p-4">
-                                <span class="font-bold text-gray-900">NUE</span>
-                                <div class="text-[0.6rem] text-neutral-500 mt-1">Nucor</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £12572.87
-                                </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
-                                    bg-gray-500/20 text-gray-600">
-                                    TIER 2
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">10.2%</div>
-                                    <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
-                                </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-emerald-600">
-                                    £3182.35
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-rose-500">
-                                    £-148.19
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
-                                    bg-blue-500/20 text-blue-600
-                                    ">
-                                    5/8
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <div class="flex flex-col items-end gap-1">
-                                    <span class="font-bold 
-                                        text-gray-600">
-                                        HOLD
-                                    </span>
-                                    
-                                    <div class="text-[0.6rem] text-neutral-600">
-                                        119.1502 shares @ £181.02
+                                        275.3631 shares @ £0
                                     </div>
                                     
                                 </div>
@@ -1509,12 +1882,12 @@
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-600">
-                                    £-359.79
+                                    £-350.38
                                 </span>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-500">
-                                    £-101.4
+                                    £-91.56
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1532,7 +1905,7 @@
                                     </span>
                                     
                                     <div class="text-[0.6rem] text-neutral-600">
-                                        100.0 shares @ £76.91
+                                        100.0 shares @ £0
                                     </div>
                                     
                                 </div>
@@ -1560,12 +1933,12 @@
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-600">
-                                    £-771.74
+                                    £-744.56
                                 </span>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-500">
-                                    £-669.13
+                                    £-641.78
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1583,160 +1956,7 @@
                                     </span>
                                     
                                     <div class="text-[0.6rem] text-neutral-600">
-                                        66.9526 shares @ £331.7
-                                    </div>
-                                    
-                                </div>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                            <td class="p-4">
-                                <span class="font-bold text-gray-900">NFLX</span>
-                                <div class="text-[0.6rem] text-neutral-500 mt-1">Netflix</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £13122.62
-                                </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
-                                    bg-gray-500/20 text-gray-600">
-                                    TIER 2
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">7.4%</div>
-                                    <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
-                                </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-rose-600">
-                                    £-1639.18
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-rose-500">
-                                    £-288.83
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
-                                    bg-blue-500/20 text-blue-600
-                                    ">
-                                    5/8
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <div class="flex flex-col items-end gap-1">
-                                    <span class="font-bold 
-                                        text-gray-600">
-                                        HOLD
-                                    </span>
-                                    
-                                    <div class="text-[0.6rem] text-neutral-600">
-                                        190.0 shares @ £82.74
-                                    </div>
-                                    
-                                </div>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                            <td class="p-4">
-                                <span class="font-bold text-gray-900">CRM</span>
-                                <div class="text-[0.6rem] text-neutral-500 mt-1">Salesforce</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £16555.74
-                                </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
-                                    bg-gray-500/20 text-gray-600">
-                                    TIER 2
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">9.2%</div>
-                                    <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
-                                </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-rose-600">
-                                    £-2390.62
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-rose-500">
-                                    £-227.56
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
-                                    bg-blue-500/20 text-blue-600
-                                    ">
-                                    5/8
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <div class="flex flex-col items-end gap-1">
-                                    <span class="font-bold 
-                                        text-gray-600">
-                                        HOLD
-                                    </span>
-                                    
-                                    <div class="text-[0.6rem] text-neutral-600">
-                                        92.0 shares @ £210.78
-                                    </div>
-                                    
-                                </div>
-                            </td>
-                        </tr>
-                        
-                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                            <td class="p-4">
-                                <span class="font-bold text-gray-900">QCOM</span>
-                                <div class="text-[0.6rem] text-neutral-500 mt-1">Qualcomm</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £13502.75
-                                </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
-                                    bg-gray-500/20 text-gray-600">
-                                    TIER 2
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">7.8%</div>
-                                    <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
-                                </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-rose-600">
-                                    £-1464.79
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-rose-500">
-                                    £-181.72
-                                </span>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
-                                    bg-blue-500/20 text-blue-600
-                                    ">
-                                    5/8
-                                </span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <div class="flex flex-col items-end gap-1">
-                                    <span class="font-bold 
-                                        text-gray-600">
-                                        HOLD
-                                    </span>
-                                    
-                                    <div class="text-[0.6rem] text-neutral-600">
-                                        108.0 shares @ £152.59
+                                        66.9526 shares @ £0
                                     </div>
                                     
                                 </div>
@@ -1764,12 +1984,12 @@
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-600">
-                                    £-979.77
+                                    £-957.51
                                 </span>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-500">
-                                    £-290.5
+                                    £-267.08
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1787,7 +2007,7 @@
                                     </span>
                                     
                                     <div class="text-[0.6rem] text-neutral-600">
-                                        167.837 shares @ £108.38
+                                        167.837 shares @ £0
                                     </div>
                                     
                                 </div>
@@ -1796,9 +2016,9 @@
                         
                         <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                             <td class="p-4">
-                                <span class="font-bold text-gray-900">CTVA</span>
-                                <div class="text-[0.6rem] text-neutral-500 mt-1">Corteva</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £11678.41
+                                <span class="font-bold text-gray-900">QCOM</span>
+                                <div class="text-[0.6rem] text-neutral-500 mt-1">Qualcomm</div>
+                                <div class="text-[0.5rem] text-neutral-400">Book: £13502.75
                                 </div>
                             </td>
                             <td class="p-4">
@@ -1814,13 +2034,13 @@
                                 </div>
                             </td>
                             <td class="p-4">
-                                <span class="text-emerald-600">
-                                    £350.79
+                                <span class="text-rose-600">
+                                    £-1444.62
                                 </span>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-500">
-                                    £-183.17
+                                    £-159.4
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1838,7 +2058,7 @@
                                     </span>
                                     
                                     <div class="text-[0.6rem] text-neutral-600">
-                                        225.0 shares @ £73.19
+                                        108.0 shares @ £0
                                     </div>
                                     
                                 </div>
@@ -1847,9 +2067,9 @@
                         
                         <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                             <td class="p-4">
-                                <span class="font-bold text-gray-900">MSFT</span>
-                                <div class="text-[0.6rem] text-neutral-500 mt-1">Microsoft</div>
-                                <div class="text-[0.5rem] text-neutral-400">Book: £9279.24
+                                <span class="font-bold text-gray-900">NFLX</span>
+                                <div class="text-[0.6rem] text-neutral-500 mt-1">Netflix</div>
+                                <div class="text-[0.5rem] text-neutral-400">Book: £13122.62
                                 </div>
                             </td>
                             <td class="p-4">
@@ -1860,18 +2080,18 @@
                             </td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    <div class="text-gray-700">6.0%</div>
+                                    <div class="text-gray-700">7.4%</div>
                                     <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
                                 </div>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-600">
-                                    £-3.65
+                                    £-1619.94
                                 </span>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-500">
-                                    £-1.9
+                                    £-267.33
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1889,7 +2109,7 @@
                                     </span>
                                     
                                     <div class="text-[0.6rem] text-neutral-600">
-                                        30.0 shares @ £423.27
+                                        190.0 shares @ £0
                                     </div>
                                     
                                 </div>
@@ -1917,12 +2137,12 @@
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-600">
-                                    £-1645.93
+                                    £-1621.05
                                 </span>
                             </td>
                             <td class="p-4">
                                 <span class="text-rose-500">
-                                    £-297.88
+                                    £-270.74
                                 </span>
                             </td>
                             <td class="p-4">
@@ -1940,7 +2160,58 @@
                                     </span>
                                     
                                     <div class="text-[0.6rem] text-neutral-600">
-                                        1406.1646 shares @ £14.46
+                                        1406.1646 shares @ £0
+                                    </div>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                            <td class="p-4">
+                                <span class="font-bold text-gray-900">CRM</span>
+                                <div class="text-[0.6rem] text-neutral-500 mt-1">Salesforce</div>
+                                <div class="text-[0.5rem] text-neutral-400">Book: £16555.74
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
+                                    bg-gray-500/20 text-gray-600">
+                                    TIER 2
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="text-gray-700">9.2%</div>
+                                    <div class="text-[0.6rem] text-neutral-500">→ 5.0%</div>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-rose-600">
+                                    £-2366.89
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-rose-500">
+                                    £-200.2
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-bold 
+                                    bg-blue-500/20 text-blue-600
+                                    ">
+                                    5/8
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span class="font-bold 
+                                        text-gray-600">
+                                        HOLD
+                                    </span>
+                                    
+                                    <div class="text-[0.6rem] text-neutral-600">
+                                        92.0 shares @ £0
                                     </div>
                                     
                                 </div>
@@ -1958,7 +2229,7 @@
             <div class="flex justify-between items-start mb-6">
                 <div>
                     <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest">🎯 THE SNIPER LIST</h2>
-                    <p class="text-[0.65rem] text-neutral-600 mt-1">Capital Deployment Targets • Deploying £903.0</p>
+                    <p class="text-[0.65rem] text-neutral-600 mt-1">Capital Deployment Targets • Deploying £871.0</p>
                 </div>
                 <!-- v30.5 Watchlist Input -->
                 <div class="flex items-center gap-2">
@@ -2011,7 +2282,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2046,7 +2317,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2081,7 +2352,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2116,7 +2387,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2151,7 +2422,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2186,7 +2457,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2221,7 +2492,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2256,7 +2527,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2291,7 +2562,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2326,7 +2597,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2361,7 +2632,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2396,7 +2667,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2431,7 +2702,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2466,7 +2737,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2501,7 +2772,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2536,7 +2807,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2571,7 +2842,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2606,7 +2877,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2641,7 +2912,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2676,7 +2947,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2711,7 +2982,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2746,7 +3017,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2781,7 +3052,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2816,7 +3087,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2851,7 +3122,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2886,7 +3157,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2921,7 +3192,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2956,7 +3227,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -2991,7 +3262,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3026,7 +3297,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3061,7 +3332,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3096,7 +3367,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3131,7 +3402,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3166,7 +3437,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3201,7 +3472,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3236,7 +3507,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3271,7 +3542,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3306,7 +3577,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3341,7 +3612,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3376,7 +3647,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3411,7 +3682,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3446,7 +3717,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3481,7 +3752,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3516,7 +3787,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3551,7 +3822,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3586,7 +3857,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3621,7 +3892,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3656,7 +3927,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3691,7 +3962,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3726,7 +3997,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3761,7 +4032,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3796,7 +4067,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3831,7 +4102,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3866,7 +4137,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3901,7 +4172,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3936,7 +4207,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -3971,7 +4242,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4006,7 +4277,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4041,7 +4312,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4076,7 +4347,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4111,7 +4382,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4146,7 +4417,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4181,7 +4452,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4216,7 +4487,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4251,7 +4522,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4286,7 +4557,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4321,7 +4592,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4356,7 +4627,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4391,7 +4662,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4426,7 +4697,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4461,7 +4732,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4496,7 +4767,7 @@
                             <td class="p-4 text-blue-600 font-bold">£0.0</td>
                             <td class="p-4">
                                 <div class="text-gray-700">5.0%</div>
-                                <div class="text-[0.6rem] text-neutral-500">£8711.0</div>
+                                <div class="text-[0.6rem] text-neutral-500">£8722.0</div>
                             </td>
                             <td class="p-4 text-emerald-600">+0.0%</td>
                             <td class="p-4 text-right">
@@ -4568,7 +4839,7 @@
         }
 
         // v30.6 DYNAMIC HEATMAP LOGIC
-        const rawMapData = [{"x": "BMY", "y": 7759.72, "val_pct": 0.0841, "company_name": "Bristol-Myers Squibb", "shares_held": "190.00", "formatted_value": "\u00a37,759.72", "formatted_pl_gbp": "+\u00a3602.59", "formatted_pl_pct": "(+8.42%)", "price_avg": "USD 50.57", "price_cur": "USD 55.91", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "DHR", "y": 4896.93, "val_pct": 0.0285, "company_name": "Danaher", "shares_held": "30.00", "formatted_value": "\u00a34,896.93", "formatted_pl_gbp": "+\u00a3135.96", "formatted_pl_pct": "(+2.86%)", "price_avg": "USD 218.2", "price_cur": "USD 223.46", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RIO", "y": 7137.01, "val_pct": 0.5233, "company_name": "Rio Tinto", "shares_held": "102.36", "formatted_value": "\u00a37,137.01", "formatted_pl_gbp": "+\u00a32,451.89", "formatted_pl_pct": "(+52.33%)", "price_avg": "GBX 45.76", "price_cur": "GBX 69.71", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "LGEN", "y": 2675.0, "val_pct": 0.0296, "company_name": "Legal & General", "shares_held": "1,000.00", "formatted_value": "\u00a32,675.00", "formatted_pl_gbp": "+\u00a377.00", "formatted_pl_pct": "(+2.96%)", "price_avg": "GBX 2.59", "price_cur": "GBX 2.67", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QELL", "y": 0.18, "val_pct": -0.9992, "company_name": "Lilium", "shares_held": "275.36", "formatted_value": "\u00a30.18", "formatted_pl_gbp": "\u00a3216.68", "formatted_pl_pct": "(-99.92%)", "price_avg": "USD 1.02", "price_cur": "USD 0.0", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "BATS", "y": 4449.8, "val_pct": 0.0587, "company_name": "British American Tobacco", "shares_held": "100.00", "formatted_value": "\u00a34,449.80", "formatted_pl_gbp": "+\u00a3247.08", "formatted_pl_pct": "(+5.88%)", "price_avg": "GBX 42.02", "price_cur": "GBX 44.49", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "VSNTV", "y": 2633.55, "val_pct": -0.0455, "company_name": "Versant Media Group", "shares_held": "111.00", "formatted_value": "\u00a32,633.55", "formatted_pl_gbp": "\u00a3125.32", "formatted_pl_pct": "(-4.54%)", "price_avg": "USD 33.25", "price_cur": "USD 32.47", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NUE", "y": 15755.22, "val_pct": 0.2531, "company_name": "Nucor", "shares_held": "119.15", "formatted_value": "\u00a315,755.22", "formatted_pl_gbp": "+\u00a33,182.35", "formatted_pl_pct": "(+25.31%)", "price_avg": "USD 142.75", "price_cur": "USD 181.02", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "SOLV", "y": 5618.05, "val_pct": -0.0602, "company_name": "Solventum", "shares_held": "100.00", "formatted_value": "\u00a35,618.05", "formatted_pl_gbp": "\u00a3359.79", "formatted_pl_pct": "(-6.02%)", "price_avg": "USD 80.44", "price_cur": "USD 76.91", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RE", "y": 16222.43, "val_pct": -0.0455, "company_name": "Everest Group", "shares_held": "66.95", "formatted_value": "\u00a316,222.43", "formatted_pl_gbp": "\u00a3771.74", "formatted_pl_pct": "(-4.54%)", "price_avg": "USD 333.79", "price_cur": "USD 331.7", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NFLX", "y": 11483.44, "val_pct": -0.125, "company_name": "Netflix", "shares_held": "190.00", "formatted_value": "\u00a311,483.44", "formatted_pl_gbp": "\u00a31,639.18", "formatted_pl_pct": "(-12.49%)", "price_avg": "USD 92.46", "price_cur": "USD 82.74", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CRM", "y": 14165.12, "val_pct": -0.1444, "company_name": "Salesforce", "shares_held": "92.00", "formatted_value": "\u00a314,165.12", "formatted_pl_gbp": "\u00a32,390.62", "formatted_pl_pct": "(-14.44%)", "price_avg": "USD 242.96", "price_cur": "USD 210.78", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QCOM", "y": 12037.96, "val_pct": -0.1085, "company_name": "Qualcomm", "shares_held": "108.00", "formatted_value": "\u00a312,037.96", "formatted_pl_gbp": "\u00a31,464.79", "formatted_pl_pct": "(-10.85%)", "price_avg": "USD 168.85", "price_cur": "USD 152.59", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "EOG", "y": 13287.4, "val_pct": -0.0687, "company_name": "EOG Resources", "shares_held": "167.83", "formatted_value": "\u00a313,287.40", "formatted_pl_gbp": "\u00a3979.77", "formatted_pl_pct": "(-6.87%)", "price_avg": "USD 114.0", "price_cur": "USD 108.38", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CTVA", "y": 12029.21, "val_pct": 0.03, "company_name": "Corteva", "shares_held": "225.00", "formatted_value": "\u00a312,029.21", "formatted_pl_gbp": "+\u00a3350.79", "formatted_pl_pct": "(+3.00%)", "price_avg": "USD 69.94", "price_cur": "USD 73.19", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "MSFT", "y": 9275.59, "val_pct": -0.0004, "company_name": "Microsoft", "shares_held": "30.00", "formatted_value": "\u00a39,275.59", "formatted_pl_gbp": "\u00a33.65", "formatted_pl_pct": "(-0.04%)", "price_avg": "USD 423.35", "price_cur": "USD 423.27", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CNNE", "y": 14852.77, "val_pct": -0.0998, "company_name": "Cannae", "shares_held": "1,406.16", "formatted_value": "\u00a314,852.77", "formatted_pl_gbp": "\u00a31,645.93", "formatted_pl_pct": "(-9.98%)", "price_avg": "USD 15.77", "price_cur": "USD 14.46", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}];
+        const rawMapData = [{"x": "BMY", "y": 7772.72, "val_pct": 0.086, "company_name": "Bristol-Myers Squibb", "shares_held": "190.00", "formatted_value": "\u00a37,772.72", "formatted_pl_gbp": "+\u00a3615.59", "formatted_pl_pct": "(+8.60%)", "price_avg": "USD 50.57", "price_cur": "USD 55.91", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "DHR", "y": 4905.14, "val_pct": 0.0302, "company_name": "Danaher", "shares_held": "30.00", "formatted_value": "\u00a34,905.14", "formatted_pl_gbp": "+\u00a3144.17", "formatted_pl_pct": "(+3.03%)", "price_avg": "USD 218.2", "price_cur": "USD 223.46", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RIO", "y": 7109.37, "val_pct": 0.5174, "company_name": "Rio Tinto", "shares_held": "102.36", "formatted_value": "\u00a37,109.37", "formatted_pl_gbp": "+\u00a32,424.25", "formatted_pl_pct": "(+51.74%)", "price_avg": "GBX 45.76", "price_cur": "GBX 69.44", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "LGEN", "y": 2677.0, "val_pct": 0.0304, "company_name": "Legal & General", "shares_held": "1,000.00", "formatted_value": "\u00a32,677.00", "formatted_pl_gbp": "+\u00a379.00", "formatted_pl_pct": "(+3.04%)", "price_avg": "GBX 2.59", "price_cur": "GBX 2.67", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QELL", "y": 0.18, "val_pct": -0.9992, "company_name": "Lilium", "shares_held": "275.36", "formatted_value": "\u00a30.18", "formatted_pl_gbp": "\u00a3216.68", "formatted_pl_pct": "(-99.92%)", "price_avg": "USD 1.02", "price_cur": "USD 0.0", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "BATS", "y": 4456.8, "val_pct": 0.0604, "company_name": "British American Tobacco", "shares_held": "100.00", "formatted_value": "\u00a34,456.80", "formatted_pl_gbp": "+\u00a3254.08", "formatted_pl_pct": "(+6.05%)", "price_avg": "GBX 42.02", "price_cur": "GBX 44.56", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "VSNTV", "y": 2637.96, "val_pct": -0.0439, "company_name": "Versant Media Group", "shares_held": "111.00", "formatted_value": "\u00a32,637.96", "formatted_pl_gbp": "\u00a3120.91", "formatted_pl_pct": "(-4.38%)", "price_avg": "USD 33.25", "price_cur": "USD 32.47", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NUE", "y": 15781.62, "val_pct": 0.2552, "company_name": "Nucor", "shares_held": "119.15", "formatted_value": "\u00a315,781.62", "formatted_pl_gbp": "+\u00a33,208.75", "formatted_pl_pct": "(+25.52%)", "price_avg": "USD 142.75", "price_cur": "USD 181.02", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "SOLV", "y": 5627.46, "val_pct": -0.0587, "company_name": "Solventum", "shares_held": "100.00", "formatted_value": "\u00a35,627.46", "formatted_pl_gbp": "\u00a3350.38", "formatted_pl_pct": "(-5.86%)", "price_avg": "USD 80.44", "price_cur": "USD 76.91", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RE", "y": 16249.61, "val_pct": -0.0439, "company_name": "Everest Group", "shares_held": "66.95", "formatted_value": "\u00a316,249.61", "formatted_pl_gbp": "\u00a3744.56", "formatted_pl_pct": "(-4.38%)", "price_avg": "USD 333.79", "price_cur": "USD 331.7", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NFLX", "y": 11502.68, "val_pct": -0.1235, "company_name": "Netflix", "shares_held": "190.00", "formatted_value": "\u00a311,502.68", "formatted_pl_gbp": "\u00a31,619.94", "formatted_pl_pct": "(-12.34%)", "price_avg": "USD 92.46", "price_cur": "USD 82.74", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CRM", "y": 14188.85, "val_pct": -0.143, "company_name": "Salesforce", "shares_held": "92.00", "formatted_value": "\u00a314,188.85", "formatted_pl_gbp": "\u00a32,366.89", "formatted_pl_pct": "(-14.30%)", "price_avg": "USD 242.96", "price_cur": "USD 210.78", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QCOM", "y": 12058.13, "val_pct": -0.107, "company_name": "Qualcomm", "shares_held": "108.00", "formatted_value": "\u00a312,058.13", "formatted_pl_gbp": "\u00a31,444.62", "formatted_pl_pct": "(-10.70%)", "price_avg": "USD 168.85", "price_cur": "USD 152.59", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "EOG", "y": 13309.66, "val_pct": -0.0672, "company_name": "EOG Resources", "shares_held": "167.83", "formatted_value": "\u00a313,309.66", "formatted_pl_gbp": "\u00a3957.51", "formatted_pl_pct": "(-6.71%)", "price_avg": "USD 114.0", "price_cur": "USD 108.38", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CTVA", "y": 12049.37, "val_pct": 0.0317, "company_name": "Corteva", "shares_held": "225.00", "formatted_value": "\u00a312,049.37", "formatted_pl_gbp": "+\u00a3370.95", "formatted_pl_pct": "(+3.18%)", "price_avg": "USD 69.94", "price_cur": "USD 73.19", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "MSFT", "y": 9291.12, "val_pct": 0.0012, "company_name": "Microsoft", "shares_held": "30.00", "formatted_value": "\u00a39,291.13", "formatted_pl_gbp": "+\u00a311.89", "formatted_pl_pct": "(+0.13%)", "price_avg": "USD 423.35", "price_cur": "USD 423.27", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CNNE", "y": 14877.65, "val_pct": -0.0983, "company_name": "Cannae", "shares_held": "1,406.16", "formatted_value": "\u00a314,877.65", "formatted_pl_gbp": "\u00a31,621.05", "formatted_pl_pct": "(-9.83%)", "price_avg": "USD 15.77", "price_cur": "USD 14.46", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}];
         const mapData = rawMapData.map(d => {
             const pct = d.val_pct || 0;
             // v30.6: Alpha = (pct*100 / 10) capped at 0.9
@@ -4772,6 +5043,22 @@
             legend: { position: 'bottom', labels: { colors: '#888' } }
         };
         new ApexCharts(document.querySelector("#allocation-chart"), allocOptions).render();
+        
+        // v32.15: See All Button Toggle
+        const seeAllBtn = document.getElementById('see-all-btn');
+        const fortressSection = document.getElementById('fortress-section');
+        
+        if (seeAllBtn && fortressSection) {
+            seeAllBtn.addEventListener('click', function() {
+                if (fortressSection.style.display === 'none') {
+                    fortressSection.style.display = 'block';
+                    this.textContent = 'See less';
+                } else {
+                    fortressSection.style.display = 'none';
+                    this.textContent = 'See all holdings';
+                }
+            });
+        }
     </script>
 </body>
 

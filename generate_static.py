@@ -250,60 +250,68 @@ def render():
     # 4. Fortress Table
     fortress_display = []
     for h in holdings:
-        val = safe_val(h.get('Value'))
-        pnl = safe_val(h.get('PL'))
-        weight = (val / total_wealth) if total_wealth > 0 else 0.0
+        val = safe_val(h.get('Value_GBP', h.get('Value', 0))) # Support both keys
+        pnl = safe_val(h.get('PL_GBP', h.get('PL', 0)))
+        invested = val - pnl
+        pct = (pnl / invested) * 100 if invested > 0 else 0.0
         
-        tier = h.get('Tier', '2')
+        tier = h.get('Tier', h.get('tier', '2'))
         target_weight = 0.08 if tier in ['1+', '1'] else 0.05
+        current_weight = (val / total_wealth) if total_wealth > 0 else 0.0
         
         fortress_display.append({
+            # New keys for my new section
             'ticker': h.get('Ticker', 'N/A'),
-            'company': h.get('Name', h.get('Ticker', 'N/A')), # v32.4 Key Fix
-            'book_cost': truncate_decimal(val - pnl, 2),
+            'company': h.get('Name', h.get('Ticker', 'N/A')),
+            'shares': truncate_decimal(safe_val(h.get('Shares')), 4),
+            'avg_price': truncate_decimal(safe_val(h.get('Avg_Price')), 2),
+            'current_price': truncate_decimal(safe_val(h.get('Price')), 2),
+            'value_gbp': truncate_decimal(val, 2),
+            'real_pl_gbp': truncate_decimal(pnl, 2),
+            'real_pl_pct': truncate_decimal(pct, 2),
             'tier': tier,
-            'weight_current': truncate_decimal(safe_val(h.get('Weight')) / 100.0, 4) if 'Weight' in h else truncate_decimal(weight, 4), # v32.5
+            # Legacy keys for existing Fortress loop (line 694)
+            'book_cost': truncate_decimal(val - pnl, 2),
+            'weight_current': truncate_decimal(safe_val(h.get('Weight')) / 100.0, 4) if 'Weight' in h else truncate_decimal(current_weight, 4),
             'weight_target': truncate_decimal(target_weight, 4),
             'real_pl': truncate_decimal(pnl, 2),
-            'action': 'HOLD', 
             'fx_impact': truncate_decimal(safe_val(h.get('FX_Impact')), 2),
-            'qell_rating': 'PASS',
-            'qell_score': 5,
-            'shares': truncate_decimal(safe_val(h.get('Shares')), 4),
-            'limit_price': truncate_decimal(safe_val(h.get('Price')), 2),
-            'reason': 'Holding'
+            'qell_rating': 'PASS', # Default or calc if needed
+            'qell_score': 5,        # Default or calc if needed
+            'action': 'HOLD'       # Default
         })
+    
+    # Sort by Real P/L (Best to Worst)
+    fortress_display.sort(key=lambda x: x['real_pl_gbp'], reverse=True)
 
     # 5. Sniper List
     sniper_display = []
     for s in sniper_raw:
         dist = safe_val(s.get('distance_pct'))
-        # v32.5: Ensure Intel Fields are passed
         snippet = s.get('hypothesis', s.get('default_thesis', 'No intelligence available.'))
         src = s.get('source', 'System Default')
+        
+        # Calculate target params for template compatibility
+        tier = s.get('tier', '2')
+        t_weight = 0.08 if tier in ['1+', '1'] else 0.05
+        t_gbp = total_wealth * t_weight
+        l_price = safe_val(s.get('target_price'))
         
         sniper_display.append({
             'ticker': s.get('t212_ticker', s.get('ticker', 'N/A')),
             'name': s.get('name', 'N/A'),
-            'target_price': truncate_decimal(safe_val(s.get('target_price')), 2),
-            'current_price': truncate_decimal(safe_val(s.get('live_price')), 2),
-            'distance_pct': truncate_decimal(dist, 2),
-            'expected_growth_pct': truncate_decimal(safe_val(s.get('expected_growth')), 2),
-            'sector': 'Technology',
-            'industry': 'Software',
-            'priority_score': 15 if dist < 5 else 5,
-            'status': s.get('status', 'WATCH'),
-            'last_updated': datetime.now().strftime('%H:%M'),
-            'is_buy_signal': s.get('status') == 'BUY NOW',
+            'tier': tier,
             'hypothesis': snippet,
             'source': src,
-            # For sniper_architect block
-            'tier': s.get('tier', '2'),
-            'limit_price': truncate_decimal(safe_val(s.get('target_price')), 2),
-            'target_weight': truncate_decimal(0.05, 4),
-            'target_gbp': truncate_decimal(total_wealth * 0.05, 2),
-            'expected_growth': truncate_decimal(safe_val(s.get('expected_growth')) / 100.0, 4),
-            'shares': int((total_wealth * 0.05) / safe_val(s.get('target_price'))) if safe_val(s.get('target_price')) > 0 else 0
+            'limit_price': l_price,
+            'target_weight': t_weight,
+            'target_gbp': t_gbp,
+            'expected_growth': safe_val(s.get('expected_growth')),
+            'shares': int(t_gbp / l_price) if l_price > 0 else 0,
+            # Additional keys
+            'current_price': truncate_decimal(safe_val(s.get('live_price')), 2),
+            'distance_pct': truncate_decimal(dist, 2),
+            'status': s.get('status', 'WATCH')
         })
 
     # 6. Final Template Context
