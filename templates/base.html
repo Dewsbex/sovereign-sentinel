@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | v0.15</title>
+    <title>SOVEREIGN SENTINEL | {{ version }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -428,86 +428,229 @@
             </div>
         </div>
 
-        <!-- 🎯 TACTICAL MONITOR & ORB STRATEGY (v0.15) -->
-        <div class="col-span-12 sentinel-card border-t-4 border-indigo-600">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                <div class="flex items-center gap-4">
+        <!-- 🎯 OPERATIONAL INTELLIGENCE (v0.13) -->
+        {% if orb_intel.briefing %}
+        <div class="col-span-12 sentinel-card border-l-4 border-indigo-500 bg-indigo-50/30">
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- AI Briefing Section -->
+                <div class="md:w-1/2">
+                    <h2 class="text-xs mono text-indigo-600 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <i class="fas fa-brain text-indigo-500"></i> AI OPERATIONAL BRIEF
+                    </h2>
+                    <div class="text-sm text-gray-800 leading-relaxed font-medium">
+                        {{ orb_intel.briefing | safe }}
+                    </div>
+                </div>
+
+                <!-- Live Target Tracker Section -->
+                <div class="md:w-1/2 border-l border-indigo-100 md:pl-8">
+                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <i class="fas fa-crosshairs text-rose-500"></i> ACTIVE TARGET TRACKER
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+                        {% for target in orb_intel.targets %}
+                        <div class="bg-white border border-indigo-100/50 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-center mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                                    <span class="text-sm font-bold text-gray-900">{{ target.ticker }}</span>
+                                </div>
+                                <span class="text-[0.6rem] mono font-bold text-indigo-400 bg-indigo-50 px-2 py-0.5 rounded">RVOL: {{ target.rvol | round(2) }}x</span>
+                            </div>
+                            
+                            <!-- Price Grid -->
+                            <div class="grid grid-cols-3 gap-3 text-center mb-4">
+                                <div class="flex flex-col gap-1 p-2 rounded-lg bg-orange-50 border border-orange-100">
+                                    <span class="text-[0.55rem] font-bold text-orange-600 uppercase tracking-tight">Alert</span>
+                                    <span class="text-xs font-bold text-orange-700 mono">${{ target.alert | round(2) }}</span>
+                                </div>
+                                <div class="flex flex-col gap-1 p-2 rounded-lg bg-indigo-600 shadow-sm">
+                                    <span class="text-[0.55rem] font-bold text-indigo-50 uppercase tracking-tight">Buy Limit</span>
+                                    <span class="text-xs font-bold text-white mono">${{ target.trigger | round(2) }}</span>
+                                </div>
+                                <div class="flex flex-col gap-1 p-2 rounded-lg bg-rose-50 border border-rose-100">
+                                    <span class="text-[0.55rem] font-bold text-rose-600 uppercase tracking-tight">Stop/Sell</span>
+                                    <span class="text-xs font-bold text-rose-700 mono">${{ target.stop | round(2) }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Proximity / Gap Tracking -->
+                            {% set proximity = (1 - (target.gap_to_fill / target.trigger)) * 100 %}
+                            <div class="space-y-1.5">
+                                <div class="flex justify-between text-[0.6rem] font-bold mono">
+                                    <span class="text-gray-400 uppercase">Proximity</span>
+                                    <span class="text-indigo-600">{{ proximity | round(1) }}%</span>
+                                </div>
+                                <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div class="h-full bg-indigo-500 transition-all duration-700 ease-out" style="width: {{ (proximity if proximity < 100 else 100) if proximity > 0 else 0 }}%"></div>
+                                </div>
+                                <div class="flex justify-between text-[0.55rem] font-bold mono uppercase">
+                                    <span class="text-gray-400">Current Gap</span>
+                                    <span class="{% if target.gap_to_fill < 1 %}text-rose-500 animate-pulse{% else %}text-gray-500{% endif %}">
+                                        -${{ target.gap_to_fill | round(2) }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- 🏛️ SENTINEL ORB DASHBOARD (Strategy Monitor) - v32.16 -->
+        <div class="col-span-12 sentinel-card" style="border-top: 3px solid #6366f1;">
+            <div class="flex justify-between items-start mb-6">
+                <!-- Status Badge & Controls -->
+                <div class="flex gap-2 items-center">
                     <button id="run-orb-btn" onclick="triggerOrbWorkflow()" 
-                        class="px-4 py-2 rounded text-[0.7rem] font-bold bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95 transition-all uppercase tracking-widest shadow-lg shadow-indigo-500/20 flex items-center gap-2 border border-indigo-400/30">
+                        class="px-3 py-1.5 rounded text-[0.65rem] font-bold bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95 transition-all uppercase tracking-widest shadow-lg shadow-indigo-500/20 flex items-center gap-2 border border-indigo-400/30">
                         <span id="btn-icon">⚡</span> LAUNCH SESSION
                     </button>
                     <div id="orb-status" class="px-3 py-1.5 rounded text-[0.65rem] font-bold bg-gray-100 text-gray-500 border border-gray-200 uppercase tracking-wider">
                         OFFLINE
                     </div>
                 </div>
-                <div class="text-right">
-                    <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2 uppercase">Strategy Sync:</span>
-                    <span id="orb-last-sync" class="text-xs font-bold text-indigo-500 mono bg-indigo-50 px-2 py-1 rounded">{{ sync_time }}</span>
+            </div>
+
+            <script>
+                async function triggerOrbWorkflow() {
+                    const OWNER = "Dewsbex";
+                    const REPO = "sovereign-sentinel";
+                    const WORKFLOW_ID = "orb_bot.yml"; 
+                    
+                    let token = localStorage.getItem('GH_SENTINEL_TOKEN');
+                    if (!token) {
+                        token = prompt("🔐 SENTINEL SECURITY: Enter GitHub PAT (repo scope) to authorize remote trigger:");
+                        if (token) {
+                            localStorage.setItem('GH_SENTINEL_TOKEN', token);
+                        } else {
+                            return;
+                        }
+                    }
+
+                    const btn = document.getElementById('run-orb-btn');
+                    const icon = document.getElementById('btn-icon');
+                    const originalText = btn.innerHTML;
+                    
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    btn.innerHTML = `⏳ DISPATCHING...`;
+
+                    try {
+                        const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/${WORKFLOW_ID}/dispatches`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `token ${token}`,
+                                'Accept': 'application/vnd.github.v3+json',
+                            },
+                            body: JSON.stringify({ ref: 'main' }) // Assuming 'main' branch
+                        });
+
+                        if (response.status === 204) {
+                            btn.innerHTML = `✅ SESSION DISPATCHED`;
+                            btn.classList.replace('bg-indigo-600', 'bg-emerald-600');
+                            setTimeout(() => {
+                                btn.innerHTML = originalText;
+                                btn.classList.replace('bg-emerald-600', 'bg-indigo-600');
+                                btn.disabled = false;
+                                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                            }, 5000);
+                        } else {
+                            const err = await response.json().catch(() => ({ message: "Unknown Error" }));
+                            if (response.status === 401) {
+                                localStorage.removeItem('GH_SENTINEL_TOKEN');
+                                alert("❌ AUTH FAILED: Token cleared. Please try again.");
+                            } else {
+                                alert(`❌ ERROR: ${err.message}`);
+                            }
+                            resetBtn(btn, originalText);
+                        }
+                    } catch (e) {
+                        alert(`❌ NETWORK ERROR: ${e.message}`);
+                        resetBtn(btn, originalText);
+                    }
+                }
+
+                function resetBtn(btn, text) {
+                    btn.innerHTML = text;
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            </script>
+
+            <!-- 1. The Strategy Monitor -->
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-[0.6rem] mono uppercase text-gray-400">Active Targets</h3>
+                    <div class="text-[0.6rem] mono text-gray-400">LAST SYNC: <span id="orb-last-sync" class="text-indigo-500 font-bold">NEVER</span></div>
+                </div>
+                <div id="orb-targets" class="flex flex-wrap gap-2">
+                    <span class="text-xs text-gray-400 italic">Waiting for 14:30 GMT Scan...</span>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- 1. AI Operational Briefing -->
-                <div class="lg:col-span-1 border-r border-gray-100 pr-6">
-                    <h2 class="text-[0.6rem] mono text-indigo-600 uppercase tracking-widest mb-3 flex items-center gap-2">
-                        <i class="fas fa-brain"></i> AI OPERATIONAL BRIEF
-                    </h2>
-                    {% if orb_intel.briefing %}
-                    <div class="text-[0.7rem] text-gray-700 leading-relaxed font-medium">
-                        {{ orb_intel.briefing | safe }}
-                    </div>
-                    {% else %}
-                    <div class="text-[0.65rem] text-gray-400 italic">No briefing recorded for this session.</div>
-                    {% endif %}
-                </div>
+            <!-- 2. The Live Logic Feed (Needle) - v32.14 Spec -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                 <!-- Needle Component -->
+                 <div class="orb-needle-container">
+                     <div class="flex justify-between mb-2">
+                        <div class="range-boundary high">Limit: <span id="r-high">--</span></div>
+                        <div class="range-boundary low">Limit: <span id="r-low">--</span></div>
+                     </div>
+                     <div class="needle-track relative">
+                         <!-- Range Ends -->
+                         <div class="absolute left-0 top-0 bottom-0 w-px bg-rose-500 opacity-50"></div>
+                         <div class="absolute right-0 top-0 bottom-0 w-px bg-emerald-500 opacity-50"></div>
+                         <!-- The Needle -->
+                         <div id="price-needle" class="absolute w-0.5 h-6 bg-emerald-500 transition-all duration-300 ease-out" 
+                              style="left: 50%; top: -8px; box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);">
+                         </div>
+                     </div>
+                     <div class="text-center mt-2">
+                        <span id="needle-price" class="text-[0.6rem] font-bold text-white mono">WAITING FOR ORB</span>
+                     </div>
+                     
+                     <div class="ticker-grid mt-4" id="orb-grid">
+                        <!-- Filled by JS -->
+                        <span class="legend-chip">...</span>
+                     </div>
+                 </div>
+                 
+                 <!-- 3. The Outcome Ledger -->
+                 <div class="border border-gray-100 rounded-lg overflow-hidden bg-white">
+                     <table class="w-full text-left text-[0.6rem] mono">
+                         <thead class="bg-gray-50 text-gray-500 uppercase font-bold text-xs tracking-wider border-b border-gray-200">
+                             <tr>
+                                 <th class="p-3">Ticker</th>
+                                 <th class="p-3">Trigger</th>
+                                 <th class="p-3">Fill</th>
+                                 <th class="p-3">Slippage</th>
+                                 <th class="p-3 text-right">Status</th>
+                             </tr>
+                         </thead>
+                         <tbody id="orb-ledger" class="divide-y divide-gray-50">
+                             <tr><td colspan="5" class="p-4 text-center text-gray-400">No Executions Today</td></tr>
+                         </tbody>
+                     </table>
+                 </div>
+            </div>
+            
+            <style>
+                /* v32.14 Needle Spec CSS */
+                .orb-needle-container { background: #111827; padding: 20px; border-radius: 12px; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); }
+                .needle-track { height: 4px; background: #374151; width: 100%; border-radius: 2px; margin: 15px 0; }
+                .range-boundary { font-size: 10px; color: #9ca3af; font-family: 'JetBrains Mono', monospace; font-weight: bold; }
+                .ticker-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+                .legend-chip { cursor: default; border: 1px solid #374151; text-align: center; padding: 4px; font-size: 10px; color: #d1d5db; border-radius: 4px; font-family: 'JetBrains Mono'; transition:all 0.2s;}
+                .legend-chip.active { border-color: #10b981; background: rgba(16, 185, 129, 0.15); color: #10b981; font-weight: bold; }
+            </style>
 
-                <!-- 2. Target Execution Table (High Density) -->
-                <div class="lg:col-span-2">
-                    <h2 class="text-[0.6rem] mono text-neutral-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-                        <i class="fas fa-crosshairs text-rose-500"></i> ACTIVE TARGET TRACKER
-                    </h2>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-[0.7rem] mono border-collapse">
-                            <thead>
-                                <tr class="text-gray-400 border-b border-gray-100 text-[0.6rem] uppercase tracking-tighter">
-                                    <th class="pb-2 font-bold">Company</th>
-                                    <th class="pb-2 font-bold">Ticker</th>
-                                    <th class="pb-2 font-bold text-orange-600">Alert $</th>
-                                    <th class="pb-2 font-bold text-indigo-600">Trigger $</th>
-                                    <th class="pb-2 font-bold text-indigo-800">Buy Limit $</th>
-                                    <th class="pb-2 font-bold text-rose-600 text-right">Stop/Sell £</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-50">
-                                {% for target in orb_intel.targets %}
-                                <tr class="hover:bg-indigo-50/30 transition-colors">
-                                    <td class="py-2.5 font-bold text-gray-900">{{ target.company }}</td>
-                                    <td class="py-2.5">
-                                        <span class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded text-[0.6rem]">{{ target.ticker }}</span>
-                                    </td>
-                                    <td class="py-2.5 font-bold text-orange-600">
-                                        ${{ target.alert | round(2) if target.alert else '---' }}
-                                    </td>
-                                    <td class="py-2.5 font-bold text-indigo-600">
-                                        ${{ target.trigger | round(2) if target.trigger else '---' }}
-                                    </td>
-                                    <td class="py-2.5">
-                                        <span class="bg-indigo-600 text-white px-2 py-1 rounded text-[0.65rem] font-bold">
-                                            ${{ target.limit | round(2) if target.limit else '---' }}
-                                        </span>
-                                    </td>
-                                    <td class="py-2.5 font-bold text-rose-600 text-right">
-                                        {{ target.stop | round(2) if target.stop else '---' }}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="text-[0.5rem] text-right text-gray-300 mono mt-2">
+                Refreshes automatically via State Contract (trade_state.json)
             </div>
         </div>
-
 
         <script>
             // ORB Dashboard Logic v32.14
@@ -535,9 +678,55 @@
                     document.getElementById('orb-last-sync').innerText = state.updated;
                 }
 
-                // Last Sync Timestamp
-                if (state.updated) {
-                    document.getElementById('orb-last-sync').innerText = state.updated;
+                // Targets & Needle Logic
+                const targetsEl = document.getElementById('orb-targets'); // Keep this for backup list?
+                // Actually v32.14 moves targets to the "Needle" grid mostly.
+                // Let's keep the Active Targets top bar simple
+                if (state.targets && state.targets.length > 0) {
+                     targetsEl.innerHTML = state.targets.map(t => `<span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-[0.6rem] font-bold border border-gray-200">${t.ticker}</span>`).join('');
+                
+                    // Select primary target for Needle (First one for now)
+                    const t = state.targets[0];
+                    document.getElementById('r-high').innerText = t.high.toFixed(2);
+                    document.getElementById('r-low').innerText = t.low.toFixed(2);
+                    document.getElementById('needle-price').innerText = `${t.ticker}: $${t.last_poll_price.toFixed(2)}`;
+                    
+                    // Needle Pos
+                    const range = t.high - t.low;
+                    const pct = (t.last_poll_price - t.low) / range;
+                    let leftPct = Math.max(0, Math.min(100, pct * 100)); // Clamp
+                    
+                    const needle = document.getElementById('price-needle');
+                    needle.style.left = `${leftPct}%`;
+                    
+                    // Grid Render
+                    const gridEl = document.getElementById('orb-grid');
+                    gridEl.innerHTML = state.targets.map((tgt, idx) => `
+                        <span class="legend-chip ${idx === 0 ? 'active' : ''}">${tgt.ticker}</span>
+                    `).join('');
+                } else {
+                    targetsEl.innerHTML = '<span class="text-xs text-gray-400 italic">No Active Targets</span>';
+                    document.getElementById('orb-grid').innerHTML = '<span class="legend-chip">...</span>';
+                }
+
+                // Ledger (Outcome)
+                const ledgerEl = document.getElementById('orb-ledger');
+                if (state.audit_log && state.audit_log.length > 0) {
+                    ledgerEl.innerHTML = state.audit_log.map(l => `
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="p-3 font-bold text-gray-800">${l.ticker}</td>
+                            <td class="p-3 text-gray-500">$${(l.entry / (1+l.slippage_pct)).toFixed(2)}</td> <!-- Approx Trigger -->
+                            <td class="p-3 font-bold text-gray-800">$${l.entry.toFixed(2)}</td>
+                            <td class="p-3 ${l.slippage_pct > 0.002 ? 'text-rose-600 font-bold' : 'text-emerald-600'}">
+                                ${ (l.slippage_pct > 0 ? '+' : '')}${(l.slippage_pct * 100).toFixed(2)}%
+                            </td>
+                             <td class="p-3 text-right">
+                                <span class="px-2 py-1 rounded text-[0.55rem] font-bold uppercase ${l.slippage_pct > 0.003 ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
+                                    ${l.slippage_pct > 0.003 ? 'KILL SWITCH' : 'CLEAN'}
+                                </span>
+                            </td>
+                        </tr>
+                    `).join('');
                 }
             }
 
@@ -645,8 +834,8 @@
             </div>
         </div>
 
-        <!-- 🎯 THE SNIPER LIST (Capital Deployment) - v0.15.2 Refined -->
-        <div class="col-span-12 sentinel-card border-t-4 border-yellow-400">
+        <!-- 🎯 THE SNIPER LIST (Capital Deployment) - v27.0 -->
+        <div class="col-span-12 sentinel-card" style="border-top: 3px solid #FFD700;">
             <div class="flex justify-between items-start mb-6">
                 <div>
                     <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest">🎯 THE SNIPER LIST</h2>
@@ -1041,21 +1230,6 @@
                 }
             });
         }
-
-        // v0.14: Pulse Auto-Refresh
-        const currentTimestamp = "{{ meta.timestamp }}";
-        setInterval(async () => {
-            try {
-                const response = await fetch('live_state.json', { cache: 'no-store' });
-                const state = await response.json();
-                if (state.meta && state.meta.timestamp !== currentTimestamp) {
-                    console.log("🔄 New data detected. Pulsing...");
-                    window.location.reload();
-                }
-            } catch (e) {
-                console.debug("Pulse check failed:", e);
-            }
-        }, 30000); // Check every 30 seconds
     </script>
 </body>
 

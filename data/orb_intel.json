@@ -1,5 +1,51 @@
 {
-    "timestamp": "2026-02-03 19:25:05",
-    "briefing": "No active ORB setups identified for this session. Capital preserved.",
-    "targets": []
+    "timestamp": "2026-02-03 16:50:52",
+    "briefing": "Set alerts for these exact prices today. Based on the High of the Day established in the first 15 minutes of 03/02/2026. Buy when price breaks above these levels.\n\n**Priority**: Watch **ServiceNow (NOW)** first. As has the highest volume (8.89x) and is closest to the trigger. \n\n**Operational Tip**: In the Trading 212 app, set the alert slightly below these numbers (e.g., set NVDA at $185.80) so you have time to unlock your phone and check the spread.",
+    "targets": [
+        {
+            "ticker": "NOW",
+            "company": "NOW",
+            "trigger": 112.17,
+            "alert": 112.05783,
+            "stop": 109.55,
+            "rvol": 8.89,
+            "gap_to_fill": 1.5400000000000063
+        },
+        {
+            "ticker": "NVDA",
+            "company": "NVDA",
+            "trigger": 185.95,
+            "alert": 185.76405,
+            "stop": 182.78,
+            "rvol": 1.91,
+            "gap_to_fill": 4.6299999999999955
+        },
+        {
+            "ticker": "COIN",
+            "company": "COIN",
+            "trigger": 187.24,
+            "alert": 187.05276,
+            "stop": 182.6,
+            "rvol": 2.59,
+            "gap_to_fill": 3.719999999999999
+        },
+        {
+            "ticker": "MSTR",
+            "company": "MSTR",
+            "trigger": 139.62,
+            "alert": 139.48038,
+            "stop": 136.25,
+            "rvol": 1.62,
+            "gap_to_fill": 1.6899999999999977
+        },
+        {
+            "ticker": "APP",
+            "company": "APP",
+            "trigger": 483.3,
+            "alert": 482.8167,
+            "stop": 459.91,
+            "rvol": 3.11,
+            "gap_to_fill": 26.560000000000002
+        }
+    ]
 }
