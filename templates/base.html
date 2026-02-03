@@ -462,24 +462,24 @@
                             <div class="grid grid-cols-3 gap-3 text-center mb-4">
                                 <div class="flex flex-col gap-1 p-2 rounded-lg bg-orange-50 border border-orange-100">
                                     <span class="text-[0.55rem] font-bold text-orange-600 uppercase tracking-tight">Alert</span>
-                                    <span class="text-xs font-bold text-orange-700 mono">${{ target.alert | round(2) }}</span>
+                                    <span class="text-xs font-bold text-orange-700 mono">${{ target.alert | round(2) if target.alert else '---' }}</span>
                                 </div>
                                 <div class="flex flex-col gap-1 p-2 rounded-lg bg-indigo-600 shadow-sm">
                                     <span class="text-[0.55rem] font-bold text-indigo-50 uppercase tracking-tight">Buy Limit</span>
-                                    <span class="text-xs font-bold text-white mono">${{ target.trigger | round(2) }}</span>
+                                    <span class="text-xs font-bold text-white mono">${{ target.trigger | round(2) if target.trigger else '---' }}</span>
                                 </div>
                                 <div class="flex flex-col gap-1 p-2 rounded-lg bg-rose-50 border border-rose-100">
                                     <span class="text-[0.55rem] font-bold text-rose-600 uppercase tracking-tight">Stop/Sell</span>
-                                    <span class="text-xs font-bold text-rose-700 mono">${{ target.stop | round(2) }}</span>
+                                    <span class="text-xs font-bold text-rose-700 mono">${{ target.stop | round(2) if target.stop else '---' }}</span>
                                 </div>
                             </div>
 
                             <!-- Proximity / Gap Tracking -->
-                            {% set proximity = (1 - (target.gap_to_fill / target.trigger)) * 100 %}
+                            {% set proximity = (1 - (target.gap_to_fill / target.trigger)) * 100 if target.trigger and target.trigger > 0 else 0 %}
                             <div class="space-y-1.5">
                                 <div class="flex justify-between text-[0.6rem] font-bold mono">
                                     <span class="text-gray-400 uppercase">Proximity</span>
-                                    <span class="text-indigo-600">{{ proximity | round(1) }}%</span>
+                                    <span class="text-indigo-600">{{ proximity | round(1) if proximity else '0.0' }}%</span>
                                 </div>
                                 <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
                                     <div class="h-full bg-indigo-500 transition-all duration-700 ease-out" style="width: {{ (proximity if proximity < 100 else 100) if proximity > 0 else 0 }}%"></div>
@@ -487,7 +487,7 @@
                                 <div class="flex justify-between text-[0.55rem] font-bold mono uppercase">
                                     <span class="text-gray-400">Current Gap</span>
                                     <span class="{% if target.gap_to_fill < 1 %}text-rose-500 animate-pulse{% else %}text-gray-500{% endif %}">
-                                        -${{ target.gap_to_fill | round(2) }}
+                                        -${{ target.gap_to_fill | round(2) if target.gap_to_fill else '0.00' }}
                                     </span>
                                 </div>
                             </div>
