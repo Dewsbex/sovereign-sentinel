@@ -361,10 +361,10 @@
 
         <!-- STATUS / CONTROLS -->
         <div class="flex gap-4 items-center">
-            <span class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200">LIVE</span>
+            <span id="market-status-badge" class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200 uppercase tracking-wide">LIVE</span>
             <div class="text-right hidden sm:block">
                 <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
-                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">03/02 22:22</span>
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">03/02 23:14</span>
             </div>
         </div>
     </nav>
@@ -1144,7 +1144,7 @@
                     <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                         <i class="fas fa-crosshairs text-rose-500"></i> ACTIVE TARGET TRACKER
                     </h2>
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-indigo-200 scrollbar-track-transparent">
                         <table class="w-full text-left text-[0.65rem] mono border-collapse">
                             <thead class="text-gray-400 uppercase font-bold tracking-tight border-b border-gray-100">
                                 <tr>
@@ -1240,6 +1240,63 @@
     </div>
 
     <script>
+        // v0.15.13: Dynamic Market Status Logic
+        function updateMarketStatus() {
+            const now = new Date();
+            const hours = now.getUTCHours();
+            const mins = now.getUTCMinutes();
+            const time = hours * 60 + mins;
+
+            // 1. Header Logic
+            const headerBadge = document.getElementById('market-status-badge');
+            if (headerBadge) {
+                // Default: Closed
+                let text = "CLOSED";
+                let bgClass = "bg-rose-100";
+                let textClass = "text-rose-600";
+                
+                // 09:30 (570) - 14:30 (870): Europe Live
+                if (time >= 570 && time < 870) {
+                    text = "EUROPE LIVE";
+                    bgClass = "bg-emerald-100";
+                    textClass = "text-emerald-600";
+                }
+                // 14:30 (870) - 16:30 (990): Live (US Open / Overlap)
+                else if (time >= 870 && time < 990) {
+                    text = "LIVE";
+                    bgClass = "bg-emerald-100";
+                    textClass = "text-emerald-600";
+                }
+                // 16:30 (990) - 21:30 (1290): US Live
+                else if (time >= 990 && time < 1290) {
+                    text = "US LIVE";
+                    bgClass = "bg-emerald-100";
+                    textClass = "text-emerald-600";
+                }
+
+                headerBadge.innerText = text;
+                // Reset classes and apply new ones
+                headerBadge.className = `px-3 py-1 rounded-full text-xs font-bold border border-gray-200 uppercase tracking-wide ${bgClass} ${textClass}`;
+            }
+
+            // 2. AI Brief Logic (Offline Label)
+            const briefStatus = document.getElementById('orb-status');
+            if (briefStatus) {
+                // 14:30 (870) - 21:30 (1290): Online
+                if (time >= 870 && time < 1290) {
+                    briefStatus.innerText = "ONLINE";
+                    briefStatus.className = "px-2 py-0.5 rounded text-[0.55rem] font-bold bg-emerald-100 text-emerald-600 border border-emerald-200 uppercase tracking-wider";
+                } else {
+                    briefStatus.innerText = "OFFLINE";
+                    briefStatus.className = "px-2 py-0.5 rounded text-[0.55rem] font-bold bg-white text-gray-400 border border-indigo-100 uppercase tracking-wider";
+                }
+            }
+        }
+
+        // Run on load and every minute
+        updateMarketStatus();
+        setInterval(updateMarketStatus, 60000);
+
         // v32.13 Sovereign Finality - Artist interaction
         function showTT(name, weight, color) {
             const tt = document.getElementById('donut-tooltip');
