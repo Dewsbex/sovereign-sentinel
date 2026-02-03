@@ -494,7 +494,8 @@
                                     <th class="pb-2">Alert $</th>
                                     <th class="pb-2">Trigger $</th>
                                     <th class="pb-2">Buy Limit $</th>
-                                    <th class="pb-2 text-right">Stop/Sell £</th>
+                                    <th class="pb-2 text-right text-rose-500">Stop Loss</th>
+                                    <th class="pb-2 text-right text-emerald-500">Take Profit</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-50">
@@ -510,6 +511,7 @@
                                         <span class="bg-indigo-600 text-white px-2 py-1 rounded text-[0.65rem] font-black">${{ (target.trigger * 1.001) | round(2) }}</span>
                                     </td>
                                     <td class="py-3 text-right text-rose-600 font-bold">${{ target.stop | round(2) }}</td>
+                                    <td class="py-3 text-right text-emerald-600 font-bold">${{ (target.trigger * (1 + (target.gap_to_fill / 100))) | round(2) }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -618,7 +620,7 @@
                 style: {
                     fontSize: '10px',
                     colors: mapData.map(d => d.textColor),
-                    fontWeight: 400
+                    fontWeight: 800
                 },
                 formatter: function (text, op) {
                     let p = op.w.config.series[0].data[op.dataPointIndex];
