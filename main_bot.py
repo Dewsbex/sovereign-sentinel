@@ -210,9 +210,9 @@ class Strategy_ORB:
             logger.debug(f"Local popup failed: {e}")
 
     def generate_intelligence_briefing(self):
-        """Generates an AI-style briefing based on current ORB targets."""
+        """Generates an AI-style briefing based on current ORB targets (v0.13)."""
         if not self.orb_levels:
-            return "No active ORB setups identified. Market monitoring continues for high-probability gaps."
+            return "No active ORB setups identified for this session. Capital preserved."
         
         # Sort by RVOL to find priority
         sorted_targets = sorted(
@@ -222,12 +222,12 @@ class Strategy_ORB:
         )
         
         top = sorted_targets[0]
-        ticker_list = ", ".join([x['ticker'] for x in sorted_targets])
+        company_name = self.watchlist_lookup.get(top['ticker'], top['ticker'])
+        today_date = datetime.datetime.now().strftime("%d/%m/%Y")
         
-        brief = f"Based on the ORB Target Locked logs, here are the target levels for today's session. "
-        brief += f"We have **{len(sorted_targets)} active targets**: {ticker_list}. "
-        brief += f"**Priority**: Watch **{top['ticker']}** first. It has the highest volume relative to its average ({top['rvol']:.2f}x) and is currently the strongest candidate for a momentum breakout. "
-        brief += "\n\n**Operational Tip**: Set your Trading 212 alerts slightly below the trigger prices to allow time to verify the bid-ask spread before the candle crosses."
+        brief = f"Set alerts for these exact prices today. Based on the High of the Day established in the first 15 minutes of {today_date}. Buy when price breaks above these levels.\n\n"
+        brief += f"**Priority**: Watch **{company_name} ({top['ticker']})** first. It has the highest volume ({top['rvol']:.2f}x) and is closest to the trigger. "
+        brief += "\n\n**Operational Tip**: In the Trading 212 app, set the alert slightly below these numbers (e.g., set NVDA at $181.20) so you have time to unlock your phone and check the spread."
         
         return brief
 
@@ -241,6 +241,8 @@ class Strategy_ORB:
                     "ticker": t,
                     "company": self.watchlist_lookup.get(t, t),
                     "trigger": levels['high'],
+                    "alert": levels['high'] * 0.999,
+                    "stop": levels['low'],
                     "rvol": levels['rvol'],
                     "gap_to_fill": abs(levels['last_price'] - levels['high'])
                 } for t, levels in self.orb_levels.items()

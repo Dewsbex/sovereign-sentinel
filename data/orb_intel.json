@@ -1,11 +1,41 @@
 {
-    "timestamp": "2026-02-03 15:37:19",
-    "briefing": "Based on the ORB Target Locked logs, here are the exact prices you need to set your alerts for in Trading 212. These numbers represent the High of the Day established in the first 15 minutes. We only buy if the price crosses above these levels.<br><br>**Priority**: Watch **NOW** first. It has the highest volume (8.89x) and is closest to the trigger. **Operational Tip**: In the Trading 212 app, set the alert slightly below these numbers (e.g., set NVDA at $185.80) so you have time to unlock your phone and check the spread.",
+    "timestamp": "2026-02-03 16:54:46",
+    "briefing": "Based on the ORB Target Locked logs, here are the target levels for today's session. We have **5 active targets**: PLTR, MSFT, COIN, NVDA, MSTR. **Priority**: Watch **PLTR** first. It has the highest volume relative to its average (9.62x) and is currently the strongest candidate for a momentum breakout. \n\n**Operational Tip**: Set your Trading 212 alerts slightly below the trigger prices to allow time to verify the bid-ask spread before the candle crosses.",
     "targets": [
-        {"ticker": "NOW", "company": "ServiceNow", "trigger": 112.17, "rvol": 8.89, "gap_to_fill": 1.54},
-        {"ticker": "NVDA", "company": "NVIDIA", "trigger": 185.95, "rvol": 1.91, "gap_to_fill": 4.63},
-        {"ticker": "COIN", "company": "Coinbase", "trigger": 187.24, "rvol": 2.59, "gap_to_fill": 3.72},
-        {"ticker": "MSTR", "company": "MicroStrategy", "trigger": 139.62, "rvol": 1.62, "gap_to_fill": 1.69},
-        {"ticker": "APP", "company": "AppLovin", "trigger": 483.3, "rvol": 3.11, "gap_to_fill": 26.56}
+        {
+            "ticker": "PLTR",
+            "company": "Palantir",
+            "trigger": 163.625,
+            "rvol": 9.616145245630536,
+            "gap_to_fill": 8.05499267578125
+        },
+        {
+            "ticker": "MSFT",
+            "company": "Microsoft",
+            "trigger": 418.6619873046875,
+            "rvol": 3.963427915309251,
+            "gap_to_fill": 6.251983642578125
+        },
+        {
+            "ticker": "COIN",
+            "company": "Coinbase",
+            "trigger": 187.22999572753906,
+            "rvol": 2.586589643194542,
+            "gap_to_fill": 6.2599945068359375
+        },
+        {
+            "ticker": "NVDA",
+            "company": "NVIDIA",
+            "trigger": 185.94000244140625,
+            "rvol": 1.9134327370654969,
+            "gap_to_fill": 5.56500244140625
+        },
+        {
+            "ticker": "MSTR",
+            "company": "MicroStrategy",
+            "trigger": 139.61000061035156,
+            "rvol": 1.6247465246275807,
+            "gap_to_fill": 3.464996337890625
+        }
     ]
 }
