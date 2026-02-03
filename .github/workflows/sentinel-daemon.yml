@@ -20,7 +20,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install Dependencies
-        run: pip install pandas requests yfinance lxml jinja2
+        run: pip install pandas requests yfinance lxml jinja2 python-dotenv
 
       - name: Run Auditor (Fetch)
         env:
