@@ -1,5 +1,5 @@
 """
-The Artist (Job B) - v0.15.10 Sovereign Finality
+The Artist (Job B) - v0.15.11 Sovereign Finality
 The Renderer for Sovereign Sentinel.
 STRICT RULE: NO NETWORK CALLS.
 Reads live_state.json and generates index.html.
@@ -148,7 +148,7 @@ def generate_oracle_ring(holdings, total_invested):
     """
 
 def render():
-    print(f"Starting The Artist (Job B) [v0.15.10 Sovereign Finality]... ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"Starting The Artist (Job B) [v0.15.11 Sovereign Finality]... ({datetime.now().strftime('%H:%M:%S')})")
     
     # 1. Load Data
     state = load_state()
@@ -370,9 +370,9 @@ def render():
     legend_html += "</div>"
 
     context = {
-        'version': "v0.15.10 Sovereign Finality",
+        'version': "v0.15.11 Sovereign Finality",
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.15.10 Sovereign Finality"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.15.11 Sovereign Finality"},
         'sync_time': datetime.now().strftime('%d/%m %H:%M'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
