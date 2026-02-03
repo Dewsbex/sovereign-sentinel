@@ -198,12 +198,23 @@ def run_audit():
     except Exception as e:
         print(f"[ERROR] Sniper Logic Failed: {e}")
 
+    # 5. Ingest ORB Intelligence (v0.12)
+    orb_intel = {}
+    try:
+        if os.path.exists('data/orb_intel.json'):
+            with open('data/orb_intel.json', 'r') as f:
+                orb_intel = json.load(f)
+            print(f"[>] Ingested ORB Intelligence Briefing.")
+    except Exception as e:
+        print(f"[WARN] ORB Intel Ingest Failed: {e}")
+
     state = {
         "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.12 Sovereign Finality"},
         "account": acc_summary,
         "holdings": holdings,
         "total_gbp": total_value_gbp,
-        "sniper": sniper_data
+        "sniper": sniper_data,
+        "orb_intel": orb_intel
     }
 
     # Save to live_state.json
