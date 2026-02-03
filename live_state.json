@@ -1,7 +1,7 @@
 {
     "meta": {
         "timestamp": "2026-02-03 14:27",
-        "version": "v0.10 Sovereign Finality"
+        "version": "v0.12 Sovereign Finality"
     },
     "account": {
         "id": 31785628,
@@ -296,16 +296,64 @@
     "total_gbp": 154495.33000000002,
     "sniper": [
         {
+            "ticker": "NOW",
+            "name": "ServiceNow",
+            "t212_ticker": "NOW_US_EQ",
+            "target_price": 112.17,
+            "live_price": 110.63,
+            "distance_pct": 0.0,
+            "expected_growth": 0,
+            "tier": "1",
+            "status": "ACTIVE ORB",
+            "source": "Titan ORB"
+        },
+        {
+            "ticker": "APP",
+            "name": "AppLovin",
+            "t212_ticker": "APP_US_EQ",
+            "target_price": 483.30,
+            "live_price": 456.74,
+            "distance_pct": 0.0,
+            "expected_growth": 0,
+            "tier": "1",
+            "status": "ACTIVE ORB",
+            "source": "Titan ORB"
+        },
+        {
+            "ticker": "COIN",
+            "name": "Coinbase",
+            "t212_ticker": "COIN_US_EQ",
+            "target_price": 187.24,
+            "live_price": 183.52,
+            "distance_pct": 0.0,
+            "expected_growth": 0,
+            "tier": "1",
+            "status": "ACTIVE ORB",
+            "source": "Titan ORB"
+        },
+        {
             "ticker": "NVDA",
             "name": "NVIDIA",
             "t212_ticker": "NVDA_US_EQ",
-            "target_price": 0.0,
-            "live_price": 185.61000061035156,
+            "target_price": 185.95,
+            "live_price": 181.32,
             "distance_pct": 0.0,
             "expected_growth": 0,
-            "tier": "2",
-            "status": "BUY ZONE",
-            "source": "Manual Watchlist"
+            "tier": "1",
+            "status": "ACTIVE ORB",
+            "source": "Titan ORB"
+        },
+        {
+            "ticker": "MSTR",
+            "name": "MicroStrategy",
+            "t212_ticker": "MSTR_US_EQ",
+            "target_price": 139.62,
+            "live_price": 135.93,
+            "distance_pct": 0.0,
+            "expected_growth": 0,
+            "tier": "1",
+            "status": "ACTIVE ORB",
+            "source": "Titan ORB"
         },
         {
             "ticker": "TSLA",
