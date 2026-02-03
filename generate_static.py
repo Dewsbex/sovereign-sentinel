@@ -1,5 +1,5 @@
 """
-The Artist (Job B) -# SOVEREIGN SENTINEL | generate_static.py v0.15.12
+The Artist (Job B) -# SOVEREIGN SENTINEL | generate_static.py v0.15.13
 # Static Site Generator for Sovereign Sentinel Dashboard
 STRICT RULE: NO NETWORK CALLS.
 Reads live_state.json and generates index.html.
@@ -10,6 +10,7 @@ import os
 import sys
 import math
 from datetime import datetime
+import re
 from jinja2 import Template
 from utils import truncate_decimal, format_gbp_truncate, format_pct_truncate
 
@@ -160,6 +161,21 @@ def render():
     sniper_raw = state.get('sniper', [])
     account = state.get('account', {})
     orb_intel = state.get('orb_intel', {})
+    
+    # v32.14: HOT RELOAD of Intelligence (Fixes Stale Data)
+    orb_path = os.path.join(os.path.dirname(__file__), "data", "orb_intel.json")
+    if os.path.exists(orb_path):
+        try:
+            with open(orb_path, 'r') as f:
+                orb_intel = json.load(f)
+                print(f"      [DATA] Hot-loaded orb_intel.json (Fresh Intelligence)")
+        except:
+            print("      [WARN] Failed to hot-load orb_intel.json, using state snapshot.")
+
+    # v0.15.13: Fix Markdown Bolding in Briefing
+    if 'briefing' in orb_intel:
+        # Replace **bold** with <b>bold</b>
+        orb_intel['briefing'] = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', orb_intel['briefing'])
     
     print(f"      [DATA] Snapshot Timestamp: {meta.get('timestamp', 'N/A')}")
     print(f"      [DATA] Processing {len(holdings)} holdings.")
@@ -370,9 +386,9 @@ def render():
     legend_html += "</div>"
 
     context = {
-        'version': 'v0.15.12',
+        'version': 'v0.15.13',
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.15.11 Sovereign Finality"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.15.13 Sovereign Finality"},
         'sync_time': datetime.now().strftime('%d/%m %H:%M'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
