@@ -41,7 +41,7 @@ jobs:
         run: |
           git config --global user.name "Sentinel Bot"
           git config --global user.email "bot@sentinel.com"
-          # We commit the HTML, the JSON state snapshot, the CSV ledger, and the ORB state
-          git add index.html data/live_state.json data/trade_state.json ISA_PORTFOLIO.csv
-          git commit -m "Sentinel Auto-Update [v0.04]" || exit 0
-          git push
+          # Only add files that exist
+          git add -A
+          git diff --quiet && git diff --staged --quiet || git commit -m "Sentinel Auto-Update [v0.10]"
+          git push || true
