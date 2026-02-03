@@ -236,7 +236,7 @@ class Strategy_ORB:
         intel = {
             "timestamp": datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
             "briefing": self.generate_intelligence_briefing(),
-            "targets": [
+            "targets": sorted([
                 {
                     "ticker": t,
                     "company": self.watchlist_lookup.get(t, t),
@@ -246,7 +246,7 @@ class Strategy_ORB:
                     "rvol": levels['rvol'],
                     "gap_to_fill": abs(levels['last_price'] - levels['high'])
                 } for t, levels in self.orb_levels.items()
-            ]
+            ], key=lambda x: x['gap_to_fill']) # Sort by closest to trigger (Dynamic Ranking)
         }
         try:
             os.makedirs("data", exist_ok=True)
@@ -452,7 +452,7 @@ class Strategy_ORB:
         if not candidates and IS_LIVE: # In strict live, we might want empty. For now strict.
              pass 
 
-        self.watchlist = candidates[:5] # Max 5
+        self.watchlist = candidates[:20] # Max 20 (Expanded Net)
         
         if not self.watchlist:
             self.status = "IDLE - NO CANDIDATES"
@@ -518,9 +518,9 @@ class Strategy_ORB:
         
         # Rank by RVOL and select top 5
         rvol_candidates.sort(key=lambda x: x['rvol'], reverse=True)
-        top_5 = rvol_candidates[:5]
+        top_5 = rvol_candidates[:20] # Max 20 (Expanded Net)
         
-        logger.info(f"🏆 Top 5 RVOL Candidates:")
+        logger.info(f"🏆 Top {len(top_5)} RVOL Candidates:")
         for candidate in top_5:
             t = candidate['ticker']
             self.orb_levels[t] = {
@@ -756,6 +756,7 @@ class Strategy_ORB:
             
             if datetime.datetime.now().second % 60 == 0:
                  self.save_state(push=True) # Heartbeat updates every minute
+                 self.save_intel()          # v0.15.13: Update Intel JSON for dynamic UI reordering
 
             time.sleep(0.1)  # 100ms polling for rapid execution
 
