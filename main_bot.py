@@ -174,17 +174,17 @@ class Strategy_ORB:
 
     def broadcast_notification(self, title, message):
         """Send notifications to Telegram (primary) and Discord (optional)."""
+        # Convert markdown bold to HTML for all channels (v0.15.5)
+        import re
+        html_message = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', message)
+        
         # 1. Telegram (PRIMARY - Phone/Laptop)
         if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
             try:
-                # Convert markdown bold to HTML for Telegram
-                import re
-                telegram_message = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', message)
-                
                 url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
                 payload = {
                     'chat_id': TELEGRAM_CHAT_ID,
-                    'text': f"🔔 <b>{title}</b>\n\n{telegram_message}",
+                    'text': f"🔔 <b>{title}</b>\n\n{html_message}",
                     'parse_mode': 'HTML'
                 }
                 response = requests.post(url, json=payload, timeout=5)
@@ -198,7 +198,7 @@ class Strategy_ORB:
             logger.warning("⚠️ Telegram not configured - notifications disabled")
         
         # 2. Discord (OPTIONAL - Phone/Laptop)
-        self.discord_alert(f"🔔 <b>{title}</b>\n{message}")
+        self.discord_alert(f"🔔 <b>{title}</b>\n{html_message}")
         
         # 3. Windows Toast (Laptop Popup)
         try:
@@ -210,7 +210,7 @@ class Strategy_ORB:
             logger.debug(f"Local popup failed: {e}")
 
     def generate_intelligence_briefing(self):
-        """Generates an AI-style briefing based on current ORB targets (v0.13)."""
+        """Generates an AI-style briefing based on current ORB targets (v0.15.5)."""
         if not self.orb_levels:
             return "No active ORB setups identified for this session. Capital preserved."
         
