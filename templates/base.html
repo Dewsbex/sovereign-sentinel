@@ -508,24 +508,6 @@
             </div>
         </div>
 
-            <!-- 2. The Outcome Ledger (v0.15) -->
-            <div class="mt-8 border border-gray-100 rounded-lg overflow-hidden bg-white shadow-sm">
-                <table class="w-full text-left text-[0.7rem] mono border-collapse">
-                    <thead class="bg-gray-50 text-gray-500 uppercase font-bold text-[0.6rem] tracking-wider border-b border-gray-200">
-                        <tr>
-                            <th class="p-3">Ticker</th>
-                            <th class="p-3">Trigger</th>
-                            <th class="p-3">Fill</th>
-                            <th class="p-3">Slippage</th>
-                            <th class="p-3 text-right">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="orb-ledger" class="divide-y divide-gray-50">
-                        <tr><td colspan="5" class="p-4 text-center text-gray-400 italic">Waiting for market executions...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
         <script>
             // ORB Dashboard Logic v32.14
@@ -553,24 +535,9 @@
                     document.getElementById('orb-last-sync').innerText = state.updated;
                 }
 
-                // Ledger (Outcome)
-                const ledgerEl = document.getElementById('orb-ledger');
-                if (state.audit_log && state.audit_log.length > 0) {
-                    ledgerEl.innerHTML = state.audit_log.map(l => `
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="p-3 font-bold text-gray-800">${l.ticker}</td>
-                            <td class="p-3 text-gray-500">$${(l.entry / (1+l.slippage_pct)).toFixed(2)}</td> <!-- Approx Trigger -->
-                            <td class="p-3 font-bold text-gray-800">$${l.entry.toFixed(2)}</td>
-                            <td class="p-3 ${l.slippage_pct > 0.002 ? 'text-rose-600 font-bold' : 'text-emerald-600'}">
-                                ${ (l.slippage_pct > 0 ? '+' : '')}${(l.slippage_pct * 100).toFixed(2)}%
-                            </td>
-                             <td class="p-3 text-right">
-                                <span class="px-2 py-1 rounded text-[0.55rem] font-bold uppercase ${l.slippage_pct > 0.003 ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
-                                    ${l.slippage_pct > 0.003 ? 'KILL SWITCH' : 'CLEAN'}
-                                </span>
-                            </td>
-                        </tr>
-                    `).join('');
+                // Last Sync Timestamp
+                if (state.updated) {
+                    document.getElementById('orb-last-sync').innerText = state.updated;
                 }
             }
 
@@ -678,8 +645,8 @@
             </div>
         </div>
 
-        <!-- 🎯 THE SNIPER LIST (Capital Deployment) - v27.0 -->
-        <div class="col-span-12 sentinel-card" style="border-top: 3px solid #FFD700;">
+        <!-- 🎯 THE SNIPER LIST (Capital Deployment) - v0.15.2 Refined -->
+        <div class="col-span-12 sentinel-card border-t-4 border-yellow-400">
             <div class="flex justify-between items-start mb-6">
                 <div>
                     <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest">🎯 THE SNIPER LIST</h2>
