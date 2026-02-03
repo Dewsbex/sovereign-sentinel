@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | {{ version }}</title>
+    <title>SOVEREIGN SENTINEL | v0.14</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -428,7 +428,7 @@
             </div>
         </div>
 
-        <!-- 🎯 OPERATIONAL INTELLIGENCE (v0.13) -->
+        <!-- 🎯 OPERATIONAL INTELLIGENCE (v0.14) -->
         {% if orb_intel.briefing %}
         <div class="col-span-12 sentinel-card border-l-4 border-indigo-500 bg-indigo-50/30">
             <div class="flex flex-col md:flex-row gap-8">
@@ -1230,6 +1230,21 @@
                 }
             });
         }
+
+        // v0.14: Pulse Auto-Refresh
+        const currentTimestamp = "{{ meta.timestamp }}";
+        setInterval(async () => {
+            try {
+                const response = await fetch('live_state.json', { cache: 'no-store' });
+                const state = await response.json();
+                if (state.meta && state.meta.timestamp !== currentTimestamp) {
+                    console.log("🔄 New data detected. Pulsing...");
+                    window.location.reload();
+                }
+            } catch (e) {
+                console.debug("Pulse check failed:", e);
+            }
+        }, 30000); // Check every 30 seconds
     </script>
 </body>
 

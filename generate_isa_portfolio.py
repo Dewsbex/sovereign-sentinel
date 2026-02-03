@@ -209,7 +209,7 @@ def run_audit():
         print(f"[WARN] ORB Intel Ingest Failed: {e}")
 
     state = {
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.13 Sovereign Finality"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.14 Sovereign Finality"},
         "account": acc_summary,
         "holdings": holdings,
         "total_gbp": total_value_gbp,
