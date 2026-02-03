@@ -12,7 +12,7 @@ BASE_URL = "https://live.trading212.com/api/v0/equity"
 
 
 def run_audit():
-    print("[>] Sentinel v32.15: Sovereign Finality...")
+    print("[>] Sentinel v0.12: Sovereign Finality...")
     if not API_KEY or not API_SECRET:
         print("[ERROR] Credentials (Key or Secret) Missing!")
         return
@@ -119,6 +119,36 @@ def run_audit():
 
     # 4. Sniper / Watchlist Logic (v32.14)
     sniper_data = []
+    
+    # [A] Titan ORB Targets (High Priority)
+    try:
+        if os.path.exists('data/trade_state.json'):
+            with open('data/trade_state.json', 'r') as f:
+                orb_state = json.load(f)
+                orb_targets = orb_state.get('targets', [])
+                
+            print(f"[>] Processing {len(orb_targets)} Active ORB Targets...")
+            
+            for t in orb_targets:
+                ticker = t.get('ticker')
+                # Avoid duplicates if watchlist also has it (we'll flag it)
+                
+                sniper_data.append({
+                    "ticker": ticker,
+                    "name": ticker, # Name might not be in state, acceptable fallback
+                    "t212_ticker": f"{ticker}_US_EQ",
+                    "target_price": float(t.get('high', 0)), # Breakout Level
+                    "live_price": float(t.get('last_poll_price', 0)),
+                    "distance_pct": 0.0, # It's active, so distance is effectively 0 or relevant to breakout
+                    "expected_growth": 0,
+                    "tier": "1", # ORB targets are Tier 1 by definition of activity
+                    "status": "ACTIVE ORB",
+                    "source": "Titan ORB"
+                })
+    except Exception as e:
+        print(f"[WARN] ORB State Ingest Failed: {e}")
+
+    # [B] Standard Watchlist
     try:
         if os.path.exists('watchlist.json'):
             with open('watchlist.json', 'r') as f:
@@ -169,7 +199,7 @@ def run_audit():
         print(f"[ERROR] Sniper Logic Failed: {e}")
 
     state = {
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.10 Sovereign Finality"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.12 Sovereign Finality"},
         "account": acc_summary,
         "holdings": holdings,
         "total_gbp": total_value_gbp,
