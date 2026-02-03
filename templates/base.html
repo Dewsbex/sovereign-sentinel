@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | v0.15.7</title>
+    <title>SOVEREIGN SENTINEL | v0.15.8</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -995,22 +995,26 @@
         const rawMapData = {{ heatmap_dataset | default ('[]') | safe }};
         const mapData = rawMapData.map(d => {
             const pct = d.val_pct || 0;
-            const absPctVal = Math.abs(pct * 100); // v0.15.7: Scaled for comparison
             const pctScaled = pct * 100;
+            const absPctScaled = Math.abs(pctScaled);
             
             let bgColor = '#F3F4F6'; // Neutral
-            let txtColor = '#000000'; // v0.15.7: Sharp Black
+            let txtColor = '#000000'; // Pure Black
 
             if (pct > 0) {
-                // Tiered Mint (Gains)
-                if (pctScaled > 5) bgColor = '#C6F6D5';        // Base Mint (Strong)
-                else if (pctScaled > 2) bgColor = '#DCFCE7';   // Lighter Mint
-                else bgColor = '#F0FDF4';                     // Paling Mint
+                // Tiered Mint (Gains) - v0.15.8: More Pronounced
+                if (pctScaled > 15) bgColor = '#86EFAC';        // Vibrant Mint (High Gain)
+                else if (pctScaled > 7) bgColor = '#BBF7D0';   // Soft Mint
+                else if (pctScaled > 3) bgColor = '#C6F6D5';   // Base Mint
+                else if (pctScaled > 1) bgColor = '#DCFCE7';   // Lighter Mint
+                else bgColor = '#F0FDF4';                      // Paling Mint
             } else if (pct < 0) {
-                // Tiered Salmon (Losses)
-                if (pctScaled < -5) bgColor = '#FED7D7';       // Base Salmon (Strong)
-                else if (pctScaled < -2) bgColor = '#FEE2E2';  // Lighter Salmon
-                else bgColor = '#FEF2F2';                     // Paling Salmon
+                // Tiered Salmon (Losses) - v0.15.8: More Pronounced
+                if (pctScaled < -15) bgColor = '#FCA5A5';      // Vibrant Salmon (Heavy Loss)
+                else if (pctScaled < -7) bgColor = '#FECACA';  // Soft Salmon
+                else if (pctScaled < -3) bgColor = '#FED7D7';  // Base Salmon
+                else if (pctScaled < -1) bgColor = '#FEE2E2';  // Lighter Salmon
+                else bgColor = '#FEF2F2';                      // Paling Salmon
             }
 
             d.textColor = txtColor;
