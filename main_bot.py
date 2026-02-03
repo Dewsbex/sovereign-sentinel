@@ -198,7 +198,7 @@ class Strategy_ORB:
             logger.warning("⚠️ Telegram not configured - notifications disabled")
         
         # 2. Discord (OPTIONAL - Phone/Laptop)
-        self.discord_alert(f"🔔 **{title}**\n{message}")
+        self.discord_alert(f"🔔 <b>{title}</b>\n{message}")
         
         # 3. Windows Toast (Laptop Popup)
         try:
@@ -226,8 +226,8 @@ class Strategy_ORB:
         today_date = datetime.datetime.now().strftime("%d/%m/%Y")
         
         brief = f"Set alerts for these exact prices today. Based on the High of the Day established in the first 15 minutes of {today_date}. Buy when price breaks above these levels.\n\n"
-        brief += f"**Priority**: Watch **{company_name} ({top['ticker']})** first. As has the highest volume ({top['rvol']:.2f}x) and is closest to the trigger. "
-        brief += "\n\n**Operational Tip**: In the Trading 212 app, set the alert slightly below these numbers (e.g., set NVDA at $181.20) so you have time to unlock your phone and check the spread."
+        brief += f"<b>Priority</b>: Watch <b>{company_name} ({top['ticker']})</b> first. As has the highest volume ({top['rvol']:.2f}x) and is closest to the trigger. "
+        brief += "\n\n<b>Operational Tip</b>: In the Trading 212 app, set the alert slightly below these numbers (e.g., set NVDA at $181.20) so you have time to unlock your phone and check the spread."
         
         return brief
 
@@ -543,12 +543,12 @@ class Strategy_ORB:
             # Notification of new target locked
             self.broadcast_notification(
                 "🎯 ORB TARGET LOCKED",
-                f"**Company**: {company_name}\n"
-                f"**Ticker**: {t}\n"
-                f"**RVOL**: {candidate['rvol']:.2f}x\n"
-                f"**Trigger Price**: ${self.orb_levels[t]['trigger_long']:.2f} (BUY above this)\n"
-                f"**Current Price**: ${curr_price:.2f}\n"
-                f"**Range**: ${candidate['low']:.2f} - ${candidate['high']:.2f}"
+                f"<b>Company</b>: {company_name}\n"
+                f"<b>Ticker</b>: {t}\n"
+                f"<b>RVOL</b>: {candidate['rvol']:.2f}x\n"
+                f"<b>Trigger Price</b>: ${self.orb_levels[t]['trigger_long']:.2f} (BUY above this)\n"
+                f"<b>Current Price</b>: ${curr_price:.2f}\n"
+                f"<b>Range</b>: ${candidate['low']:.2f} - ${candidate['high']:.2f}"
             )
 
         self.status = "WATCHING_RANGE"
@@ -571,11 +571,11 @@ class Strategy_ORB:
             target_list = "\n".join([f"  • {t} (RVOL: {self.orb_levels[t]['rvol']:.2f}x)" for t in self.orb_levels.keys()])
             self.broadcast_notification(
                 "✅ ORB SCAN COMPLETE",
-                f"**Candidates Scanned**: {candidates_scanned}\n"
-                f"**Targets Locked**: {targets_locked}\n\n"
-                f"**Active Targets**:\n{target_list}\n\n"
-                f"**Status**: Monitoring for breakouts until 20:55 GMT\n"
-                f"**Next Alert**: Flash Amber when price approaches trigger"
+                f"<b>Candidates Scanned</b>: {candidates_scanned}\n"
+                f"<b>Targets Locked</b>: {targets_locked}\n\n"
+                f"<b>Active Targets</b>:\n{target_list}\n\n"
+                f"<b>Status</b>: Monitoring for breakouts until 20:55 GMT\n"
+                f"<b>Next Alert</b>: Flash Amber when price approaches trigger"
             )
         else:
             self.broadcast_notification(
