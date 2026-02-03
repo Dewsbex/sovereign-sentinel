@@ -1,41 +1,5 @@
 {
-    "timestamp": "2026-02-03 16:54:46",
-    "briefing": "Based on the ORB Target Locked logs, here are the target levels for today's session. We have **5 active targets**: PLTR, MSFT, COIN, NVDA, MSTR. **Priority**: Watch **PLTR** first. It has the highest volume relative to its average (9.62x) and is currently the strongest candidate for a momentum breakout. \n\n**Operational Tip**: Set your Trading 212 alerts slightly below the trigger prices to allow time to verify the bid-ask spread before the candle crosses.",
-    "targets": [
-        {
-            "ticker": "PLTR",
-            "company": "Palantir",
-            "trigger": 163.625,
-            "rvol": 9.616145245630536,
-            "gap_to_fill": 8.05499267578125
-        },
-        {
-            "ticker": "MSFT",
-            "company": "Microsoft",
-            "trigger": 418.6619873046875,
-            "rvol": 3.963427915309251,
-            "gap_to_fill": 6.251983642578125
-        },
-        {
-            "ticker": "COIN",
-            "company": "Coinbase",
-            "trigger": 187.22999572753906,
-            "rvol": 2.586589643194542,
-            "gap_to_fill": 6.2599945068359375
-        },
-        {
-            "ticker": "NVDA",
-            "company": "NVIDIA",
-            "trigger": 185.94000244140625,
-            "rvol": 1.9134327370654969,
-            "gap_to_fill": 5.56500244140625
-        },
-        {
-            "ticker": "MSTR",
-            "company": "MicroStrategy",
-            "trigger": 139.61000061035156,
-            "rvol": 1.6247465246275807,
-            "gap_to_fill": 3.464996337890625
-        }
-    ]
+    "timestamp": "2026-02-03 19:25:05",
+    "briefing": "No active ORB setups identified for this session. Capital preserved.",
+    "targets": []
 }
