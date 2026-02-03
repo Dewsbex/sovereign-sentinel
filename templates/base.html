@@ -431,8 +431,12 @@
                 <div class="flex flex-col p-4">
                     <div class="asset-allocation-container" id="donut-container">
                         {{ allocation_donut | safe }}
+                        
+                        <!-- v0.15.13: Center Crest (Default View) -->
+                        <img id="donut-crest" src="static/sentinel_crest.png" 
+                             class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-auto opacity-100 transition-opacity duration-300 pointer-events-none z-0">
 
-                        <!-- Fixed Center Tooltip -->
+                        <!-- Fixed Center Tooltip (Hidden by default, shows on hover) -->
                         <div id="donut-tooltip">
                             <span
                                 class="text-[0.6rem] text-gray-400 uppercase tracking-widest leading-tight">Allocation</span>
@@ -595,6 +599,8 @@
         function showTT(name, weight, color) {
             const tt = document.getElementById('donut-tooltip');
             const hmap = document.getElementById('heatmap-chart');
+            const crest = document.getElementById('donut-crest'); // v0.15.13
+
             if (tt) {
                 tt.innerHTML = `
                     <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest leading-tight overflow-hidden text-ellipsis whitespace-nowrap w-full px-1">${name}</span>
@@ -602,8 +608,11 @@
                     <div class="w-8 h-1 mt-2 rounded-full" style="background-color: ${color}"></div>
                 `;
                 tt.style.visibility = 'visible';
-                tt.style.opacity = 1;
+                tt.style.opacity = '1';
             }
+            // Fade Crest to 10% so text is visible
+            if (crest) crest.style.opacity = '0.1';
+            
             // Interaction Guard: Fade heatmap
             if (hmap) hmap.style.opacity = '0.2';
         }
@@ -611,13 +620,16 @@
         function hideTT() {
             const tt = document.getElementById('donut-tooltip');
             const hmap = document.getElementById('heatmap-chart');
+            const crest = document.getElementById('donut-crest'); // v0.15.13
+
             if (tt) {
-                tt.innerHTML = `
-                    <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest leading-tight">Allocation</span>
-                    <span class="text-xl font-black text-gray-900 leading-none">TOTAL</span>
-                    <span class="text-xs font-mono text-emerald-500 mt-1">100.0%</span>
-                `;
+                // Hide tooltip so Crest shows
+                tt.style.opacity = '0';
+                tt.style.visibility = 'hidden';
             }
+            // Restore Crest to 100%
+            if (crest) crest.style.opacity = '1';
+
             // Reset interaction guard
             if (hmap) hmap.style.opacity = '1';
         }
