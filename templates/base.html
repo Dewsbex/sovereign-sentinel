@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN SENTINEL | v0.15.6</title>
+    <title>SOVEREIGN SENTINEL | v0.15.7</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -995,23 +995,22 @@
         const rawMapData = {{ heatmap_dataset | default ('[]') | safe }};
         const mapData = rawMapData.map(d => {
             const pct = d.val_pct || 0;
-            const absPctVal = Math.abs(pct);
+            const absPctVal = Math.abs(pct * 100); // v0.15.7: Scaled for comparison
+            const pctScaled = pct * 100;
             
             let bgColor = '#F3F4F6'; // Neutral
-            let txtColor = '#4A5568'; // Dark Slate
+            let txtColor = '#000000'; // v0.15.7: Sharp Black
 
             if (pct > 0) {
                 // Tiered Mint (Gains)
-                if (pct > 5) bgColor = '#C6F6D5';        // Base Mint (Strong)
-                else if (pct > 2) bgColor = '#DCFCE7';   // Lighter Mint
-                else bgColor = '#F0FDF4';                // Paling Mint
-                txtColor = '#22543D'; // Dark Green
+                if (pctScaled > 5) bgColor = '#C6F6D5';        // Base Mint (Strong)
+                else if (pctScaled > 2) bgColor = '#DCFCE7';   // Lighter Mint
+                else bgColor = '#F0FDF4';                     // Paling Mint
             } else if (pct < 0) {
                 // Tiered Salmon (Losses)
-                if (pct < -5) bgColor = '#FED7D7';       // Base Salmon (Strong)
-                else if (pct < -2) bgColor = '#FEE2E2';  // Lighter Salmon
-                else bgColor = '#FEF2F2';                // Paling Salmon
-                txtColor = '#822727'; // Dark Red
+                if (pctScaled < -5) bgColor = '#FED7D7';       // Base Salmon (Strong)
+                else if (pctScaled < -2) bgColor = '#FEE2E2';  // Lighter Salmon
+                else bgColor = '#FEF2F2';                     // Paling Salmon
             }
 
             d.textColor = txtColor;
@@ -1035,7 +1034,7 @@
                 style: {
                     fontSize: '10px',
                     colors: mapData.map(d => d.textColor),
-                    fontWeight: 500
+                    fontWeight: 400
                 },
                 formatter: function (text, op) {
                     let p = op.w.config.series[0].data[op.dataPointIndex];
@@ -1066,7 +1065,7 @@
                 }
             },
             theme: { mode: 'light' },
-            stroke: { show: true, width: 0.5, colors: ['#FFFFFF'] },
+            stroke: { show: true, width: 1, colors: ['rgba(255,255,255,0.8)'] },
             grid: { padding: { top: 0, bottom: 0, left: 0, right: 0 } },
             legend: { show: false }
         };
