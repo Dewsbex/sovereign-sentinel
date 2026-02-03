@@ -1013,33 +1013,35 @@
         const rawMapData = {{ heatmap_dataset | default ('[]') | safe }};
         const mapData = rawMapData.map(d => {
             const pct = d.val_pct || 0;
-            // v30.6: Alpha = (pct*100 / 10) capped at 0.9
             const pctVal = pct * 100;
             const absPctVal = Math.abs(pctVal);
 
-            let alpha = Math.min(0.9, absPctVal / 10);
-            // Ensure minimum visibility for non-zero moves
-            if (absPctVal > 0 && alpha < 0.1) alpha = 0.1;
+            // v30.6: Alpha logic - keep subtle for pastels
+            let alpha = Math.min(0.8, 0.2 + (absPctVal / 20));
+            if (absPctVal === 0) alpha = 0.05;
 
-            let color = '#374151'; // Default Dark Gray (Neutral)
+            let bgColor = '#F3F4F6'; // Neutral
+            let txtColor = '#4A5568'; // Dark Slate
+
             if (pct > 0) {
-                // Emerald
-                color = `rgba(16, 185, 129, ${alpha})`;
+                // Soft Mint
+                bgColor = '#C6F6D5';
+                txtColor = '#22543D'; // Dark Green
             } else if (pct < 0) {
-                // Rose
-                color = `rgba(239, 68, 68, ${alpha})`;
+                // Soft Salmon
+                bgColor = '#FED7D7';
+                txtColor = '#822727'; // Dark Red
             }
 
-            // v31.5: Force all text to White so the black outline/shadow makes it pop
-            d.textColor = '#FFFFFF';
-            d.fillColor = color;
+            d.textColor = txtColor;
+            d.fillColor = bgColor;
             return d;
         });
 
         var options = {
             series: [{ data: mapData }],
             chart: { height: 400, type: 'treemap', toolbar: { show: false }, fontFamily: 'JetBrains Mono', background: 'transparent' },
-            colors: ['#10b981', '#f472b6'],  // v32.15: Softer emerald green & rose pink
+            colors: ['#37E6B0'],  // Fallback
             plotOptions: {
                 treemap: {
                     distributed: true,
@@ -1051,7 +1053,8 @@
                 enabled: true,
                 style: {
                     fontSize: '10px',
-                    colors: mapData.map(d => d.textColor)
+                    colors: mapData.map(d => d.textColor),
+                    fontWeight: 'bold'
                 },
                 formatter: function (text, op) {
                     let p = op.w.config.series[0].data[op.dataPointIndex];
@@ -1081,8 +1084,8 @@
                     `;
                 }
             },
-            theme: { mode: 'dark' },
-            stroke: { show: true, width: 2, colors: ['#0A0A0A'] },
+            theme: { mode: 'light' },
+            stroke: { show: true, width: 2, colors: ['#FFFFFF'] },
             grid: { padding: { top: 0, bottom: 0, left: 0, right: 0 } },
             legend: { show: false }
         };
