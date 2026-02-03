@@ -1,9 +1,45 @@
 {
-    "status": "WATCHING_CANDIDATES",
-    "updated": "15:06:14 GMT",
+    "status": "WATCHING_RANGE",
+    "updated": "15:06:20 GMT",
     "titan_cap": 500.0,
     "cash_balance": 884.89,
-    "targets": [],
+    "targets": [
+        {
+            "ticker": "NVDA",
+            "rvol": 1.9134327370654969,
+            "high": 185.94000244140625,
+            "low": 182.77999877929688,
+            "last_poll_price": 181.31500244140625
+        },
+        {
+            "ticker": "MSTR",
+            "rvol": 1.6247465246275807,
+            "high": 139.61000061035156,
+            "low": 136.25,
+            "last_poll_price": 135.92999267578125
+        },
+        {
+            "ticker": "COIN",
+            "rvol": 2.586589643194542,
+            "high": 187.22999572753906,
+            "low": 182.60000610351562,
+            "last_poll_price": 183.52000427246094
+        },
+        {
+            "ticker": "APP",
+            "rvol": 3.1142549208542434,
+            "high": 483.2900085449219,
+            "low": 459.9100036621094,
+            "last_poll_price": 456.739990234375
+        },
+        {
+            "ticker": "NOW",
+            "rvol": 8.887411599526772,
+            "high": 112.16000366210938,
+            "low": 109.55000305175781,
+            "last_poll_price": 110.62999725341797
+        }
+    ],
     "active_positions": {},
     "audit_log": []
 }
