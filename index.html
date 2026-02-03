@@ -340,7 +340,7 @@
             <span class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200">LIVE</span>
             <div class="text-right hidden sm:block">
                 <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
-                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">03/02 18:30</span>
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">03/02 18:34</span>
             </div>
         </div>
     </nav>
@@ -1101,7 +1101,7 @@
                 </div>
                 <div class="text-right">
                     <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2 uppercase">Strategy Sync:</span>
-                    <span id="orb-last-sync" class="text-xs font-bold text-indigo-500 mono bg-indigo-50 px-2 py-1 rounded">03/02 18:30</span>
+                    <span id="orb-last-sync" class="text-xs font-bold text-indigo-500 mono bg-indigo-50 px-2 py-1 rounded">03/02 18:34</span>
                 </div>
             </div>
 
@@ -1251,64 +1251,22 @@
             </div>
         </div>
 
-            <!-- 2. The Live Logic Feed (Needle) - v32.14 Spec -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                 <!-- Needle Component -->
-                 <div class="orb-needle-container">
-                     <div class="flex justify-between mb-2">
-                        <div class="range-boundary high">Limit: <span id="r-high">--</span></div>
-                        <div class="range-boundary low">Limit: <span id="r-low">--</span></div>
-                     </div>
-                     <div class="needle-track relative">
-                         <!-- Range Ends -->
-                         <div class="absolute left-0 top-0 bottom-0 w-px bg-rose-500 opacity-50"></div>
-                         <div class="absolute right-0 top-0 bottom-0 w-px bg-emerald-500 opacity-50"></div>
-                         <!-- The Needle -->
-                         <div id="price-needle" class="absolute w-0.5 h-6 bg-emerald-500 transition-all duration-300 ease-out" 
-                              style="left: 50%; top: -8px; box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);">
-                         </div>
-                     </div>
-                     <div class="text-center mt-2">
-                        <span id="needle-price" class="text-[0.6rem] font-bold text-white mono">WAITING FOR ORB</span>
-                     </div>
-                     
-                     <div class="ticker-grid mt-4" id="orb-grid">
-                        <!-- Filled by JS -->
-                        <span class="legend-chip">...</span>
-                     </div>
-                 </div>
-                 
-                 <!-- 3. The Outcome Ledger -->
-                 <div class="border border-gray-100 rounded-lg overflow-hidden bg-white">
-                     <table class="w-full text-left text-[0.6rem] mono">
-                         <thead class="bg-gray-50 text-gray-500 uppercase font-bold text-xs tracking-wider border-b border-gray-200">
-                             <tr>
-                                 <th class="p-3">Ticker</th>
-                                 <th class="p-3">Trigger</th>
-                                 <th class="p-3">Fill</th>
-                                 <th class="p-3">Slippage</th>
-                                 <th class="p-3 text-right">Status</th>
-                             </tr>
-                         </thead>
-                         <tbody id="orb-ledger" class="divide-y divide-gray-50">
-                             <tr><td colspan="5" class="p-4 text-center text-gray-400">No Executions Today</td></tr>
-                         </tbody>
-                     </table>
-                 </div>
-            </div>
-            
-            <style>
-                /* v32.14 Needle Spec CSS */
-                .orb-needle-container { background: #111827; padding: 20px; border-radius: 12px; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); }
-                .needle-track { height: 4px; background: #374151; width: 100%; border-radius: 2px; margin: 15px 0; }
-                .range-boundary { font-size: 10px; color: #9ca3af; font-family: 'JetBrains Mono', monospace; font-weight: bold; }
-                .ticker-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-                .legend-chip { cursor: default; border: 1px solid #374151; text-align: center; padding: 4px; font-size: 10px; color: #d1d5db; border-radius: 4px; font-family: 'JetBrains Mono'; transition:all 0.2s;}
-                .legend-chip.active { border-color: #10b981; background: rgba(16, 185, 129, 0.15); color: #10b981; font-weight: bold; }
-            </style>
-
-            <div class="text-[0.5rem] text-right text-gray-300 mono mt-2">
-                Refreshes automatically via State Contract (trade_state.json)
+            <!-- 2. The Outcome Ledger (v0.15) -->
+            <div class="mt-8 border border-gray-100 rounded-lg overflow-hidden bg-white shadow-sm">
+                <table class="w-full text-left text-[0.7rem] mono border-collapse">
+                    <thead class="bg-gray-50 text-gray-500 uppercase font-bold text-[0.6rem] tracking-wider border-b border-gray-200">
+                        <tr>
+                            <th class="p-3">Ticker</th>
+                            <th class="p-3">Trigger</th>
+                            <th class="p-3">Fill</th>
+                            <th class="p-3">Slippage</th>
+                            <th class="p-3 text-right">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orb-ledger" class="divide-y divide-gray-50">
+                        <tr><td colspan="5" class="p-4 text-center text-gray-400 italic">Waiting for market executions...</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -1336,37 +1294,6 @@
                 // Last Sync Timestamp
                 if (state.updated) {
                     document.getElementById('orb-last-sync').innerText = state.updated;
-                }
-
-                // Targets & Needle Logic
-                const targetsEl = document.getElementById('orb-targets'); // Keep this for backup list?
-                // Actually v32.14 moves targets to the "Needle" grid mostly.
-                // Let's keep the Active Targets top bar simple
-                if (state.targets && state.targets.length > 0) {
-                     targetsEl.innerHTML = state.targets.map(t => `<span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-[0.6rem] font-bold border border-gray-200">${t.ticker}</span>`).join('');
-                
-                    // Select primary target for Needle (First one for now)
-                    const t = state.targets[0];
-                    document.getElementById('r-high').innerText = t.high.toFixed(2);
-                    document.getElementById('r-low').innerText = t.low.toFixed(2);
-                    document.getElementById('needle-price').innerText = `${t.ticker}: $${t.last_poll_price.toFixed(2)}`;
-                    
-                    // Needle Pos
-                    const range = t.high - t.low;
-                    const pct = (t.last_poll_price - t.low) / range;
-                    let leftPct = Math.max(0, Math.min(100, pct * 100)); // Clamp
-                    
-                    const needle = document.getElementById('price-needle');
-                    needle.style.left = `${leftPct}%`;
-                    
-                    // Grid Render
-                    const gridEl = document.getElementById('orb-grid');
-                    gridEl.innerHTML = state.targets.map((tgt, idx) => `
-                        <span class="legend-chip ${idx === 0 ? 'active' : ''}">${tgt.ticker}</span>
-                    `).join('');
-                } else {
-                    targetsEl.innerHTML = '<span class="text-xs text-gray-400 italic">No Active Targets</span>';
-                    document.getElementById('orb-grid').innerHTML = '<span class="legend-chip">...</span>';
                 }
 
                 // Ledger (Outcome)
@@ -5313,7 +5240,7 @@
         }
 
         // v0.14: Pulse Auto-Refresh
-        const currentTimestamp = "2026-02-03 18:30";
+        const currentTimestamp = "2026-02-03 18:34";
         setInterval(async () => {
             try {
                 const response = await fetch('live_state.json', { cache: 'no-store' });
