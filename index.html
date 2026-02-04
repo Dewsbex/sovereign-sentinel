@@ -33,11 +33,16 @@
             background: var(--panel-white);
             border: 1px solid var(--border-subtle);
             border-radius: 20px; /* T212 Rounded Look */
-            padding: 16px;
-            /* Compact Padding */
+            padding: 12px; /* Compact Padding Mobile */
             position: relative;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             transition: all 0.2s ease;
+        }
+
+        @media (min-width: 768px) {
+            .sentinel-card {
+                padding: 16px; /* Desktop Padding */
+            }
         }
 
         .brief-control-btn {
@@ -75,15 +80,17 @@
         .main-grid {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
-            gap: 24px;
+            gap: 12px; /* Tighter Mobile Gap */
             max-width: 1600px;
-            margin: 20px auto;
-            padding: 0 16px; /* Mobile Default */
+            margin: 12px auto; /* Tighter Mobile Margin */
+            padding: 0 12px; /* Mobile Default */
         }
         
         @media (min-width: 768px) {
             .main-grid {
+                gap: 24px;
                 padding: 0 40px; /* Desktop */
+                margin: 20px auto;
             }
         }
 
@@ -429,7 +436,7 @@
 <body>
 
     <nav
-        class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm px-6 py-3 flex justify-between items-center transition-all duration-300">
+        class="hidden md:flex fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm px-6 py-3 justify-between items-center transition-all duration-300">
         <!-- BRAND -->
         <!-- BRAND -->
         <div class="flex items-center gap-3">
@@ -473,7 +480,7 @@
             <span id="market-status-badge" class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200 uppercase tracking-wide">LIVE</span>
             <div class="text-right hidden sm:block">
                 <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
-                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">04/02 14:11</span>
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">04/02 14:44</span>
             </div>
         </div>
     </nav>
@@ -530,7 +537,7 @@
         <div class="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- HEATMAP (2/3 Width) -->
             <div class="md:col-span-2 sentinel-card">
-                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1 md:mb-2 flex items-center gap-2">
                     <span>🔥 MARKET HEATMAP</span>
                     <span class="ml-auto text-[0.6rem] text-indigo-400 cursor-pointer hover:text-indigo-600 transition-colors" onclick="openPortfolioModal()">See All</span>
                 </h2>
@@ -784,7 +791,7 @@
 
             <!-- ASSET ALLOCATION (1/3 Width) -->
             <div class="sentinel-card">
-                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-2">📊 ASSET ALLOCATION</h2>
+                <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1 md:mb-2">📊 ASSET ALLOCATION</h2>
                 <div class="flex flex-col p-4">
                     <div class="asset-allocation-container" id="donut-container">
                         
