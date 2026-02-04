@@ -210,25 +210,30 @@ class Strategy_ORB:
             logger.debug(f"Local popup failed: {e}")
 
     def generate_intelligence_briefing(self):
-        """Generates an AI-style briefing based on current ORB targets (v0.15.11)."""
+        """Generates an AI-style briefing based on current ORB targets (v0.17)."""
         if not self.orb_levels:
             return "No active ORB setups identified for this session. Capital preserved."
         
-        # Sort by RVOL to find priority
+        # Sort by RVOL to find priority (Quality)
         sorted_targets = sorted(
             [{'ticker': t, **levels} for t, levels in self.orb_levels.items()],
             key=lambda x: x['rvol'], 
             reverse=True
         )
         
-        top = sorted_targets[0]
-        company_name = self.watchlist_lookup.get(top['ticker'], top['ticker'])
         today_date = datetime.datetime.now().strftime("%d/%m/%Y")
         
-        brief = f"Set alerts for these exact prices today. Based on the High of the Day established in the first 15 minutes of {today_date}. Buy when price breaks above these levels.\n\n"
-        brief += f"<b>Priority</b>: Watch <b>{company_name} ({top['ticker']})</b> first. As has the highest volume ({top['rvol']:.2f}x) and is closest to the trigger. "
-        brief += "\n\n<b>Operational Tip</b>: In the Trading 212 app, set the alert slightly below these numbers (e.g., set NVDA at $181.20) so you have time to unlock your phone and check the spread."
+        brief = f"Set alerts based on the High of the Day ({today_date}). <b>Top 5 Priority Targets</b> (Ranked by Institutional Volume):\n\n"
         
+        # List Top 5
+        for i, t in enumerate(sorted_targets[:5]):
+            company_name = self.watchlist_lookup.get(t['ticker'], t['ticker'])
+            trigger = t['high']
+            rvol = t['rvol']
+            rank = i + 1
+            brief += f"{rank}. <b>{t['ticker']}</b> ({company_name}): RVOL <b>{rvol:.2f}x</b>. Buy > <b>${trigger:.2f}</b>.\n"
+            
+        brief += "\n(Target List below auto-sorts by proximity to trigger)"
         return brief
 
     def save_intel(self):
