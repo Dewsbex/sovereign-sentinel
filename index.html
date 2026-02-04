@@ -32,7 +32,7 @@
         .sentinel-card {
             background: var(--panel-white);
             border: 1px solid var(--border-subtle);
-            border-radius: 12px;
+            border-radius: 20px; /* T212 Rounded Look */
             padding: 16px;
             /* Compact Padding */
             position: relative;
@@ -78,7 +78,13 @@
             gap: 24px;
             max-width: 1600px;
             margin: 20px auto;
-            padding: 0 40px;
+            padding: 0 16px; /* Mobile Default */
+        }
+        
+        @media (min-width: 768px) {
+            .main-grid {
+                padding: 0 40px; /* Desktop */
+            }
         }
 
         .control-room-pill {
@@ -467,12 +473,55 @@
             <span id="market-status-badge" class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200 uppercase tracking-wide">LIVE</span>
             <div class="text-right hidden sm:block">
                 <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
-                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">04/02 13:55</span>
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">04/02 14:11</span>
             </div>
         </div>
     </nav>
 
-    <div class="main-grid mt-24"> <!-- Added margin-top for fixed header -->
+    <!-- MOBILE HEADER (T212 Style) - Visible < md -->
+    <div class="md:hidden bg-white pb-4 pt-12 px-6 border-b border-gray-100">
+        <div class="flex justify-between items-start mb-1">
+             <div class="text-[0.65rem] text-gray-500 font-bold tracking-widest uppercase">Account Value</div>
+             <i class="fas fa-cog text-gray-400"></i>
+        </div>
+        <div class="text-[2.5rem] font-bold tracking-tight text-gray-900 leading-none mb-4">
+            £172,763.66
+        </div>
+        
+        <div class="flex gap-8 mb-6">
+            <div>
+                 <div class="text-[0.6rem] text-gray-400 font-bold tracking-widest uppercase mb-0.5">Total Return</div>
+                 <div class="font-bold text-sm text-rose-500">
+                    £3985.33
+                 </div>
+            </div>
+            <div>
+                 <div class="text-[0.6rem] text-gray-400 font-bold tracking-widest uppercase mb-0.5">Rate of Return</div>
+                 <div class="font-bold text-sm text-rose-500">
+                    -2.5%
+                 </div>
+            </div>
+        </div>
+
+        <!-- Mini Area Chart Placeholder (Visual Match) -->
+        <div id="mobile-area-chart" style="height: 120px; width: 100%; mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);"></div>
+        
+        <!-- Action Buttons -->
+        <div class="mt-6 flex gap-3">
+             <button class="flex-1 bg-white border border-gray-200 text-gray-700 py-3 rounded-xl font-bold text-sm shadow-sm">Withdraw</button>
+             <button class="flex-1 bg-sky-500 text-white py-3 rounded-xl font-bold text-sm shadow-sm">Deposit</button>
+        </div>
+    </div>
+
+    <!-- TABS / PILLS NAVIGATION (Sticky) -->
+    <div class="md:hidden sticky top-0 bg-white z-20 border-b border-gray-100 py-3 pl-4 overflow-x-auto whitespace-nowrap scrollbar-hide">
+        <button class="px-4 py-1.5 rounded-full bg-gray-900 text-white text-xs font-bold mr-1 shadow-sm">Watch List</button>
+        <button class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold mr-1">Dividend Kings</button>
+        <button class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold mr-1">Own the Market</button>
+        <button class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold mr-1">Speculative</button>
+    </div>
+
+    <div class="main-grid mt-4 md:mt-24"> <!-- Added margin-top for fixed header -->
 
 
 
@@ -1245,10 +1294,12 @@
 
                 <!-- Live Target Tracker Section (High-Density Table) -->
                 <div class="md:w-3/5 border-l border-indigo-100 md:pl-8">
-                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest flex items-center gap-2">
-                    <i class="fas fa-crosshairs text-rose-500"></i> ACTIVE TARGET TRACKER
-                </h2>
-                    <div class="overflow-x-auto max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-indigo-200 scrollbar-track-transparent">
+                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest flex items-center gap-2 mb-4 md:mb-0">
+                        <i class="fas fa-crosshairs text-rose-500"></i> ACTIVE TARGET TRACKER
+                    </h2>
+                    
+                    <!-- Desktop Table (Hidden on Mobile) -->
+                    <div class="hidden md:block overflow-x-auto max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-indigo-200 scrollbar-track-transparent">
                         <table class="w-full text-left text-[0.65rem] mono border-collapse min-w-[600px]">
                             <thead class="text-gray-400 uppercase font-bold tracking-tight border-b border-gray-100">
                                 <tr>
@@ -1335,6 +1386,151 @@
                                 
                             </tbody>
                         </table>
+                    </div>
+
+                    <!-- Mobile List View (T212 Style) -->
+                    <div class="md:hidden flex flex-col mt-4">
+                        
+                        <div class="flex items-center justify-between py-4 border-b border-gray-50 last:border-0 pl-2">
+                            <!-- Left: Icon + Ticker -->
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[0.65rem] font-bold text-gray-500 shadow-sm border border-gray-200">
+                                    NO
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-900 text-sm leading-tight">NOW</div>
+                                    <div class="text-[0.65rem] text-gray-500 font-medium truncate max-w-[100px]">ServiceNow</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Middle: Sparkline (SVG) -->
+                            <div class="flex-1 px-4 h-8 flex items-center justify-center opacity-50">
+                                <svg width="60" height="20" viewBox="0 0 60 20" class="overflow-visible">
+                                    <path d="M0,10 Q15,18 30,10 T60,10" fill="none" class="stroke-rose-400" stroke-width="1.5" />
+                                </svg>
+                            </div>
+
+                            <!-- Right: Price + Change -->
+                            <div class="text-right">
+                                <div class="font-bold text-gray-900 text-sm leading-tight">$1112.17</div>
+                                <div class="text-[0.65rem] font-bold mt-0.5 text-rose-500 flex items-center justify-end gap-1">
+                                    <i class="fas fa-arrow-down text-[0.5rem]"></i> 1.2%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-4 border-b border-gray-50 last:border-0 pl-2">
+                            <!-- Left: Icon + Ticker -->
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[0.65rem] font-bold text-gray-500 shadow-sm border border-gray-200">
+                                    NV
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-900 text-sm leading-tight">NVDA</div>
+                                    <div class="text-[0.65rem] text-gray-500 font-medium truncate max-w-[100px]">NVIDIA</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Middle: Sparkline (SVG) -->
+                            <div class="flex-1 px-4 h-8 flex items-center justify-center opacity-50">
+                                <svg width="60" height="20" viewBox="0 0 60 20" class="overflow-visible">
+                                    <path d="M0,10 Q15,18 30,10 T60,10" fill="none" class="stroke-rose-400" stroke-width="1.5" />
+                                </svg>
+                            </div>
+
+                            <!-- Right: Price + Change -->
+                            <div class="text-right">
+                                <div class="font-bold text-gray-900 text-sm leading-tight">$1185.95</div>
+                                <div class="text-[0.65rem] font-bold mt-0.5 text-rose-500 flex items-center justify-end gap-1">
+                                    <i class="fas fa-arrow-down text-[0.5rem]"></i> 1.2%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-4 border-b border-gray-50 last:border-0 pl-2">
+                            <!-- Left: Icon + Ticker -->
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[0.65rem] font-bold text-gray-500 shadow-sm border border-gray-200">
+                                    CO
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-900 text-sm leading-tight">COIN</div>
+                                    <div class="text-[0.65rem] text-gray-500 font-medium truncate max-w-[100px]">Coinbase</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Middle: Sparkline (SVG) -->
+                            <div class="flex-1 px-4 h-8 flex items-center justify-center opacity-50">
+                                <svg width="60" height="20" viewBox="0 0 60 20" class="overflow-visible">
+                                    <path d="M0,10 Q15,18 30,10 T60,10" fill="none" class="stroke-rose-400" stroke-width="1.5" />
+                                </svg>
+                            </div>
+
+                            <!-- Right: Price + Change -->
+                            <div class="text-right">
+                                <div class="font-bold text-gray-900 text-sm leading-tight">$1187.24</div>
+                                <div class="text-[0.65rem] font-bold mt-0.5 text-rose-500 flex items-center justify-end gap-1">
+                                    <i class="fas fa-arrow-down text-[0.5rem]"></i> 1.2%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-4 border-b border-gray-50 last:border-0 pl-2">
+                            <!-- Left: Icon + Ticker -->
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[0.65rem] font-bold text-gray-500 shadow-sm border border-gray-200">
+                                    MS
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-900 text-sm leading-tight">MSTR</div>
+                                    <div class="text-[0.65rem] text-gray-500 font-medium truncate max-w-[100px]">MicroStrategy</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Middle: Sparkline (SVG) -->
+                            <div class="flex-1 px-4 h-8 flex items-center justify-center opacity-50">
+                                <svg width="60" height="20" viewBox="0 0 60 20" class="overflow-visible">
+                                    <path d="M0,10 Q15,18 30,10 T60,10" fill="none" class="stroke-rose-400" stroke-width="1.5" />
+                                </svg>
+                            </div>
+
+                            <!-- Right: Price + Change -->
+                            <div class="text-right">
+                                <div class="font-bold text-gray-900 text-sm leading-tight">$1139.62</div>
+                                <div class="text-[0.65rem] font-bold mt-0.5 text-rose-500 flex items-center justify-end gap-1">
+                                    <i class="fas fa-arrow-down text-[0.5rem]"></i> 1.2%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-4 border-b border-gray-50 last:border-0 pl-2">
+                            <!-- Left: Icon + Ticker -->
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[0.65rem] font-bold text-gray-500 shadow-sm border border-gray-200">
+                                    AP
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-900 text-sm leading-tight">APP</div>
+                                    <div class="text-[0.65rem] text-gray-500 font-medium truncate max-w-[100px]">AppLovin</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Middle: Sparkline (SVG) -->
+                            <div class="flex-1 px-4 h-8 flex items-center justify-center opacity-50">
+                                <svg width="60" height="20" viewBox="0 0 60 20" class="overflow-visible">
+                                    <path d="M0,10 Q15,18 30,10 T60,10" fill="none" class="stroke-rose-400" stroke-width="1.5" />
+                                </svg>
+                            </div>
+
+                            <!-- Right: Price + Change -->
+                            <div class="text-right">
+                                <div class="font-bold text-gray-900 text-sm leading-tight">$483.3</div>
+                                <div class="text-[0.65rem] font-bold mt-0.5 text-rose-500 flex items-center justify-end gap-1">
+                                    <i class="fas fa-arrow-down text-[0.5rem]"></i> 1.2%
+                                </div>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -2502,6 +2698,40 @@
                     closePortfolioModal();
                 }
             });
+        }
+
+        // v32.17 Mobile Area Chart Logic
+        function renderMobileChart(data) {
+            const el = document.getElementById('mobile-area-chart');
+            if(!el || !data || data.length === 0) return;
+
+            const options = {
+                series: [{ name: 'Value', data: data }],
+                chart: {
+                    type: 'area',
+                    height: 120,
+                    sparkline: { enabled: true }, // Minimalist mode
+                    animations: { enabled: true }
+                },
+                stroke: { curve: 'smooth', width: 2 },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.3,
+                        opacityTo: 0.1,
+                        stops: [0, 100]
+                    }
+                },
+                colors: ['#0ea5e9'], // Sky blue
+                tooltip: { fixed: { enabled: false }, x: { show: false }, y: { title: { formatter: () => '' } }, marker: { show: false } }
+            };
+            new ApexCharts(el, options).render();
+        }
+
+        // Render mobile chart with same history data
+        if (typeof historyData !== 'undefined' && historyData.length > 0) {
+             renderMobileChart(historyData);
         }
 
         // v32.14: ORB Workflow Trigger
