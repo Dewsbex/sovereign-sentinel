@@ -634,7 +634,7 @@
                     <div class="text-[0.7rem] text-gray-800 leading-relaxed font-medium bg-white/50 p-4 rounded-lg border border-indigo-50 relative">
                         {{ orb_intel.briefing | safe }}
                         <div class="absolute bottom-2 right-2 text-[0.5rem] mono text-indigo-300 font-bold uppercase tracking-widest">
-                            Sync: <span id="orb-last-sync">NEVER</span>
+                            Sync: <span id="orb-last-sync">{{ orb_intel.timestamp if orb_intel.timestamp else 'WAITING...' }}</span>
                         </div>
                     </div>
                 </div>
