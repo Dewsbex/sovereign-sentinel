@@ -640,8 +640,8 @@ class Strategy_ORB:
     def monitor_breakout(self):
         logger.info("⚔️ Execution Engine Engaged (100ms Polling)...")
         
-        # End time: 20:55 GMT (Just before US Close)
-        end_time = datetime.datetime.utcnow().replace(hour=20, minute=55, second=0)
+        # End time: 21:30 GMT (Covering US Close + Buffer)
+        end_time = datetime.datetime.utcnow().replace(hour=21, minute=30, second=0)
         
         last_sync = datetime.datetime.utcnow()
         
@@ -907,7 +907,7 @@ class Strategy_ORB:
                 f"**P&L**: ${total_pnl:.2f}\n\n"
                 f"**Trade Summary**:\n{trade_summary}\n\n"
                 f"**Status**: Session closed successfully\n"
-                f"**Next Run**: Tomorrow 14:15 GMT"
+                f"**Next Run**: Tomorrow 09:30 GMT"
             )
         else:
             self.broadcast_notification(
@@ -916,7 +916,7 @@ class Strategy_ORB:
                 f"**Targets Monitored**: {len(self.orb_levels) if hasattr(self, 'orb_levels') else 0}\n\n"
                 f"**Outcome**: No breakouts triggered today\n"
                 f"**Status**: Capital preserved\n"
-                f"**Next Run**: Tomorrow 14:15 GMT"
+                f"**Next Run**: Tomorrow 09:30 GMT"
             )
             
         # Discord Summary (keep for legacy)
