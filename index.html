@@ -269,9 +269,15 @@
         /* v32.13: Compact Legend Grid */
         .ticker-legend {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr); /* Mobile default */
             gap: 6px;
             margin-top: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .ticker-legend {
+                grid-template-columns: repeat(4, 1fr); /* Desktop override */
+            }
         }
 
         .legend-ticker {
@@ -461,7 +467,7 @@
             <span id="market-status-badge" class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200 uppercase tracking-wide">LIVE</span>
             <div class="text-right hidden sm:block">
                 <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
-                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">04/02 13:43</span>
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">04/02 13:56</span>
             </div>
         </div>
     </nav>
@@ -1243,7 +1249,7 @@
                     <i class="fas fa-crosshairs text-rose-500"></i> ACTIVE TARGET TRACKER
                 </h2>
                     <div class="overflow-x-auto max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-indigo-200 scrollbar-track-transparent">
-                        <table class="w-full text-left text-[0.65rem] mono border-collapse">
+                        <table class="w-full text-left text-[0.65rem] mono border-collapse min-w-[600px]">
                             <thead class="text-gray-400 uppercase font-bold tracking-tight border-b border-gray-100">
                                 <tr>
                                     <th class="pb-2">Company</th>
@@ -1532,8 +1538,16 @@
                 },
                 formatter: function (text, op) {
                     let p = op.w.config.series[0].data[op.dataPointIndex];
-                    // v31.3: Show ticker, company name, and P/L per share
-                    // v32.10: Use Python Pre-Formatted Strings (No JS Math)
+                    
+                    // v32.16: Responsive Labels (Mobile vs Desktop)
+                    if (window.innerWidth < 768) {
+                        return [
+                            text,
+                            p.formatted_pl_pct
+                        ];
+                    }
+                    
+                    // Desktop Full Details
                     return [
                         text,                    // Line 1: Ticker
                         p.company_name,          // Line 2: Company name
