@@ -408,7 +408,10 @@ def render():
         'portfolio_metrics': {
             'cash_balance': cash_dry,
             'total_wealth': total_wealth,
-            'cash_hurdle': 0.038
+            'cash_hurdle': 0.038,
+            'total_cost': total_cost,
+            'unrealized_pl': unrealized_pl,
+            'unrealized_pl_pct': (unrealized_pl / total_cost * 100) if total_cost > 0 else 0.0
         },
         'orb_intel': orb_intel,
         'solar': {
