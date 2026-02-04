@@ -469,6 +469,17 @@ class Strategy_ORB:
         logger.info("🔭 Observation Phase: Tracking 15m High/Low (1m Candle Clean Data)...")
         self.save_state(push=False) # Local update
         
+        # WAIT UNTIL 14:46 GMT (Ensure full 15m candle data is available)
+        # 14:30 Open + 15 mins = 14:45.00. We wait to 14:46:00 to be safe.
+        now = datetime.datetime.utcnow()
+        target_time = now.replace(hour=14, minute=46, second=0, microsecond=0)
+        
+        if now < target_time:
+            wait_seconds = (target_time - now).total_seconds()
+            logger.info(f"⏳ Waiting {wait_seconds:.0f}s for 15m candle completion (14:46 GMT)...")
+            time.sleep(wait_seconds)
+            logger.info("🟢 Resuming Observation Analysis...")
+        
         # RVOL ranking for top-5 selection
         rvol_candidates = []
         
