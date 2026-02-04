@@ -323,10 +323,11 @@
     <nav
         class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm px-6 py-3 flex justify-between items-center transition-all duration-300">
         <!-- BRAND -->
+        <!-- BRAND -->
         <div class="flex items-center gap-3">
-            <div id="market-status-dot" class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse mr-2"></div>
-            <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">Vibe-folio Sentinel <span
-                    class="text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v0.15.13</span>
+            <div id="market-status-dot" class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse mr-2 cursor-pointer transition-transform hover:scale-125" onclick="toggleVersion()"></div>
+            <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">Vibe-folio Sentinel <span id="version-badge"
+                    class="hidden text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v0.15.14</span>
             </h1>
         </div>
 
@@ -364,7 +365,7 @@
             <span id="market-status-badge" class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200 uppercase tracking-wide">LIVE</span>
             <div class="text-right hidden sm:block">
                 <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
-                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">04/02 00:12</span>
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">04/02 00:27</span>
             </div>
         </div>
     </nav>
@@ -1312,6 +1313,18 @@
         // Run on load and every minute
         updateMarketStatus();
         setInterval(updateMarketStatus, 60000);
+
+        // v0.15.14: Version Toggle Logic
+        function toggleVersion() {
+            const badge = document.getElementById('version-badge');
+            if (badge) {
+                if (badge.classList.contains('hidden')) {
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        }
 
         // v32.13 Sovereign Finality - Artist interaction
         function showTT(name, weight, color) {
