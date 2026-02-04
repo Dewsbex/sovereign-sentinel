@@ -1,8 +1,8 @@
 {
-    "status": "WATCHING_RANGE",
-    "updated": "20:33:32 GMT",
+    "status": "WATCHING_CANDIDATES",
+    "updated": "15:04:11 GMT",
     "titan_cap": 500.0,
-    "cash_balance": 5000.0,
+    "cash_balance": 15159.84,
     "targets": [],
     "active_positions": {},
     "audit_log": []
