@@ -643,7 +643,17 @@ class Strategy_ORB:
         # End time: 20:55 GMT (Just before US Close)
         end_time = datetime.datetime.utcnow().replace(hour=20, minute=55, second=0)
         
+        last_sync = datetime.datetime.utcnow()
+        
         while datetime.datetime.utcnow() < end_time:
+            # 1. HEARTBEAT SYNC (Every 10 Minutes)
+            # Updates JSON with latest prices, re-sorts list, and pushes to git
+            if (datetime.datetime.utcnow() - last_sync).total_seconds() > 600: # 10 mins
+                logger.info("💓 HEARTBEAT: Syncing live data to dashboard...")
+                self.save_intel()  # Updates JSON (Re-sorts by gap_to_fill)
+                self.git_sync()    # Pushes to Repo (Triggers Sync Timestamp update)
+                last_sync = datetime.datetime.utcnow()
+                
             # Check for news blackout window
             if self.is_news_blackout():
                 time.sleep(60)  # Wait 1 minute during blackout
