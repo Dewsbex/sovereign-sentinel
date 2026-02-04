@@ -10,6 +10,7 @@ permissions:
 jobs:
   trade:
     runs-on: ubuntu-latest
+    timeout-minutes: 420 # 7 Hours (Covers 14:15 to 21:15 GMT)
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
