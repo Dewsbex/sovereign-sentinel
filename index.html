@@ -442,7 +442,7 @@
         <div class="flex items-center gap-3">
             <div id="market-status-dot" class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse mr-2 cursor-pointer transition-transform hover:scale-125" onclick="toggleVersion()"></div>
             <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">Vibe-folio Sentinel <span id="version-badge"
-                    class="hidden text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v0.18</span>
+                    class="hidden text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v0.19</span>
             </h1>
         </div>
 
@@ -480,13 +480,13 @@
             <span id="market-status-badge" class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200 uppercase tracking-wide">LIVE</span>
             <div class="text-right hidden sm:block">
                 <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
-                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">04/02 19:03</span>
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">04/02 19:08</span>
             </div>
         </div>
     </nav>
 
     <!-- MOBILE HEADER (T212 Style) - Visible < md -->
-    <div class="md:hidden bg-white pb-4 pt-12 px-6 border-b border-gray-100">
+    <div class="md:hidden bg-white pb-2 pt-12 px-6 border-b border-gray-100">
         <div class="flex justify-between items-start mb-1">
              <div class="text-[0.65rem] text-gray-500 font-bold tracking-widest uppercase">Account Value</div>
              <i class="fas fa-cog text-gray-400"></i>
@@ -495,7 +495,7 @@
             £175,288.24
         </div>
         
-        <div class="flex gap-8 mb-6">
+        <div class="flex gap-8 mb-2">
             <div>
                  <div class="text-[0.6rem] text-gray-400 font-bold tracking-widest uppercase mb-0.5">Total Return</div>
                  <div class="font-bold text-sm text-rose-500">
@@ -514,11 +514,10 @@
     </div>
 
     <!-- TABS / PILLS NAVIGATION (Sticky) -->
-    <div class="md:hidden sticky top-0 bg-white z-20 border-b border-gray-100 py-3 pl-4 overflow-x-auto whitespace-nowrap scrollbar-hide">
-        <button class="px-4 py-1.5 rounded-full bg-gray-900 text-white text-xs font-bold mr-1 shadow-sm">Watch List</button>
-        <button class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold mr-1">Dividend Kings</button>
-        <button class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold mr-1">Own the Market</button>
-        <button class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold mr-1">Speculative</button>
+    <div class="md:hidden sticky top-0 bg-white z-20 border-b border-gray-100 py-2 pl-4 overflow-x-auto whitespace-nowrap scrollbar-hide">
+        <button onclick="document.getElementById('heatmap-section').scrollIntoView({behavior: 'smooth'})" class="px-4 py-1.5 rounded-full bg-gray-900 text-white text-xs font-bold mr-1 shadow-sm">Heatmap</button>
+        <button onclick="document.getElementById('allocation-section').scrollIntoView({behavior: 'smooth'})" class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold mr-1">Allocation</button>
+        <button onclick="document.getElementById('intel-section').scrollIntoView({behavior: 'smooth'})" class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold mr-1">Targets</button>
     </div>
 
     <div class="main-grid mt-4 md:mt-24"> <!-- Added margin-top for fixed header -->
@@ -529,9 +528,9 @@
         <!-- NEW ROW: HEATMAP + ASSET ALLOCATION -->
         <div class="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- HEATMAP (2/3 Width) -->
-            <div class="md:col-span-2 sentinel-card">
+            <div id="heatmap-section" class="md:col-span-2 sentinel-card">
                 <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1 md:mb-2 flex items-center gap-2">
-                    <span>🔥 MARKET HEATMAP</span>
+                    <span>🔥 HEATMAP</span>
                     <span class="ml-auto text-[0.6rem] text-indigo-400 cursor-pointer hover:text-indigo-600 transition-colors" onclick="openPortfolioModal()">See All</span>
                 </h2>
                 <div id="heatmap-chart" style="min-height: 400px;"></div>
@@ -783,7 +782,7 @@
             </div>
 
             <!-- ASSET ALLOCATION (1/3 Width) -->
-            <div class="sentinel-card">
+            <div id="allocation-section" class="sentinel-card">
                 <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1 md:mb-2">📊 ASSET ALLOCATION</h2>
                 <div class="flex flex-col p-4">
                     <div class="asset-allocation-container" id="donut-container">
@@ -1266,7 +1265,7 @@
 
         <!-- 🎯 OPERATIONAL INTELLIGENCE (v0.15.12 Consolidated) -->
         
-        <div class="col-span-12 sentinel-card border-l-4 border-indigo-500 bg-indigo-50/20">
+        <div id="intel-section" class="col-span-12 sentinel-card border-l-4 border-indigo-500 bg-indigo-50/20">
             <div class="flex flex-col md:flex-row gap-8 mt-4">
                 <!-- AI Briefing Section -->
                 <div class="md:w-1/3">
