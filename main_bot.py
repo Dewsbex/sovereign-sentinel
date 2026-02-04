@@ -133,26 +133,29 @@ class Strategy_ORB:
             logger.error(f"State Save Failed: {e}")
 
     def git_sync(self):
-        """Commits and pushes trade_state.json to repo."""
+        """Commits and pushes trade_state.json and orb_intel.json to repo."""
         if not IS_LIVE: return
         try:
-            # Explicitly set identity in case runner environment is fresh
+            # Explicitly set identity
             subprocess.run(["git", "config", "user.name", "Sentinel Bot"], check=False)
             subprocess.run(["git", "config", "user.email", "bot@sentinel.com"], check=False)
 
-            # Only commit if there are changes
-            diff = subprocess.run(["git", "status", "--porcelain", "data/trade_state.json"], capture_output=True, text=True).stdout
-            if not diff:
-                logger.info("📡 No changes to trade_state.json, skipping sync.")
+            # Check for changes in both critical data files
+            diff_state = subprocess.run(["git", "status", "--porcelain", "data/trade_state.json"], capture_output=True, text=True).stdout
+            diff_intel = subprocess.run(["git", "status", "--porcelain", "data/orb_intel.json"], capture_output=True, text=True).stdout
+            
+            if not diff_state and not diff_intel:
+                logger.info("📡 No data changes, skipping sync.")
                 return
 
             # Pull first to avoid conflicts
             subprocess.run(["git", "pull", "--rebase"], check=False)
             
-            subprocess.run(["git", "add", "data/trade_state.json"], check=False)
-            subprocess.run(["git", "commit", "-m", "🤖 ORB State Update"], check=False)
+            # Add both
+            subprocess.run(["git", "add", "data/trade_state.json", "data/orb_intel.json"], check=False)
+            subprocess.run(["git", "commit", "-m", "🤖 Sentinel Data Sync (Pulse)"], check=False)
             subprocess.run(["git", "push"], check=False)
-            logger.info("📡 State Synced to GitHub.")
+            logger.info("📡 Data Synced to GitHub.")
             
             # v0.12: Force Dashboard Regeneration if on a local-ish or dev environment
             # In GitHub Actions, Job A usually follows Job B. 
@@ -645,10 +648,14 @@ class Strategy_ORB:
         
         last_sync = datetime.datetime.utcnow()
         
+        # v0.20: Immediate Startup Sync
+        self.save_intel()
+        self.git_sync()
+        
         while datetime.datetime.utcnow() < end_time:
-            # 1. HEARTBEAT SYNC (Every 10 Minutes)
+            # 1. HEARTBEAT SYNC (Every 2 Minutes)
             # Updates JSON with latest prices, re-sorts list, and pushes to git
-            if (datetime.datetime.utcnow() - last_sync).total_seconds() > 600: # 10 mins
+            if (datetime.datetime.utcnow() - last_sync).total_seconds() > 120: # 2 mins
                 logger.info("💓 HEARTBEAT: Syncing live data to dashboard...")
                 self.save_intel()  # Updates JSON (Re-sorts by gap_to_fill)
                 self.git_sync()    # Pushes to Repo (Triggers Sync Timestamp update)
