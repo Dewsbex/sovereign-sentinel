@@ -1,0 +1,41 @@
+name: Remote System Verification
+
+on:
+  push:
+    paths:
+      - 'run_full_system_test.py'
+
+jobs:
+  verify-system:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: pip install requests jinja2 pandas
+
+      - name: Run Test Script (Notification + Data)
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python run_full_system_test.py
+
+      - name: Render Dashboard
+        run: python generate_static.py
+
+      - name: Push Updates
+        run: |
+          git config --global user.name "Sovereign Sentinel Bot"
+          git config --global user.email "bot@sentinel.com"
+          git add data/orb_intel.json index.html
+          git commit -m "🧪 Cloud Verification: Dashboard & Comms Check"
+          git push
