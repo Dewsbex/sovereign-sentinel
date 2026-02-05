@@ -653,10 +653,13 @@ class Strategy_ORB:
         self.git_sync()
         
         while datetime.datetime.utcnow() < end_time:
-            # 1. HEARTBEAT SYNC (Every 2 Minutes)
-            # Updates JSON with latest prices, re-sorts list, and pushes to git
-            if (datetime.datetime.utcnow() - last_sync).total_seconds() > 120: # 2 mins
-                logger.info("💓 HEARTBEAT: Syncing live data to dashboard...")
+            # 1. HEARTBEAT SYNC (Every 5 Minutes)
+            # Updates JSON with latest watchlist prices, re-sorts list, and pushes to git
+            if (datetime.datetime.utcnow() - last_sync).total_seconds() > 300: # 5 mins
+                logger.info("💓 HEARTBEAT: Checking watchlist prices and syncing...")
+                self.get_cash_balance()
+                # Refresh watchlist prices to trigger alerts if needed
+                self.scan_candidates(self.watchlist)
                 self.save_intel()  # Updates JSON (Re-sorts by gap_to_fill)
                 self.git_sync()    # Pushes to Repo (Triggers Sync Timestamp update)
                 last_sync = datetime.datetime.utcnow()
@@ -958,9 +961,9 @@ def run():
             bot.save_intel()
             bot.git_sync() # 14:15 Pulse Start
             
-            # Wait 2 mins or until 14:45
+            # Wait 5 mins or until 14:45
             wait_remaining = (ready_time - datetime.datetime.utcnow()).total_seconds()
-            sleep_time = min(120, wait_remaining)
+            sleep_time = min(300, wait_remaining)
             if sleep_time > 0:
                 time.sleep(sleep_time)
     
