@@ -33,21 +33,24 @@ if __name__ == "__main__":
         print("❌ ERROR: Missing T212_API_KEY or T212_API_SECRET")
         exit(1)
         
-    print(f"🔑 Credentials Loaded (Key len: {len(t212_key)})")
+    print(f"🔑 Credentials Loaded (Key: {t212_key[:4]}***)")
     
-    # 2. Construct Payload
+    # 2. Construct Payload (Using LIMIT order for safety/queuing)
     ticker = "C" # Citigroup
     qty = 0.1
+    price = 50.0 # Way below market ($65+), so it wont fill, just Pending.
     
     payload = {
         "instrumentCode": f"{ticker}_US_EQ",
-        "quantity": qty
+        "quantity": qty,
+        "limitPrice": price,
+        "timeValidity": "DAY"
     }
     
     print(f"📦 Payload: {json.dumps(payload, indent=2)}")
     
     # 3. Send Request
-    url = "https://live.trading212.com/api/v0/equity/orders/market"
+    url = "https://live.trading212.com/api/v0/equity/orders/limit"
     print(f"📡 Sending POST to {url}...")
     
     try:
@@ -56,9 +59,10 @@ if __name__ == "__main__":
         
         print(f"📥 Response Code: {resp.status_code}")
         print(f"📄 Response Body: {resp.text}")
+        print(f"📄 Response Headers: {dict(resp.headers)}")
         
         if resp.status_code == 200:
-            print("✅ SUCCESS! Order Placed.")
+            print("✅ SUCCESS! Limit Order Placed (Pending).")
         else:
             print("❌ FAILURE! API rejected order.")
             
