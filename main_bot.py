@@ -951,10 +951,18 @@ def run():
     ready_time = now.replace(hour=14, minute=45, second=0, microsecond=0)
     
     if now < ready_time:
-        wait_secs = (ready_time - now).total_seconds()
-        logger.info(f"⏳ Market not open or candle incomplete. Waiting {wait_secs/60:.1f} minutes...")
-        # For long waits, we could sleep in chunks, but for simple Actions run, sleep is fine.
-        time.sleep(wait_secs)
+        logger.info(f"⏳ STANDBY MODE: Heartbeat Active (5m sync) until 14:45 GMT...")
+        while datetime.datetime.utcnow() < ready_time:
+            # Refresh data for Dashboard Heartbeat
+            bot.get_cash_balance()
+            bot.save_intel()
+            bot.git_sync() # Updates Sync timestamp on UI
+            
+            # Wait 5 mins or until US Open
+            wait_remaining = (ready_time - datetime.datetime.utcnow()).total_seconds()
+            sleep_time = min(300, wait_remaining)
+            if sleep_time > 0:
+                time.sleep(sleep_time)
     
     bot.monitor_observation_window()
     bot.monitor_breakout()
