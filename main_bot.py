@@ -1,11 +1,13 @@
 import os
 import sys
+print("DEBUG: main_bot module loading...")
 import time
 import json
 import logging
 import datetime
 import requests
 import subprocess
+print("DEBUG: importing yfinance...")
 import yfinance as yf
 from requests.auth import HTTPBasicAuth
 
@@ -16,6 +18,7 @@ try:
 except ImportError:
     pass  # Will use system environment variables
 
+print("DEBUG: Configuring Logging...")
 # --- Configuration & Setup ---
 logging.basicConfig(
     level=logging.INFO,
@@ -26,6 +29,7 @@ logger = logging.getLogger("ORB_Bot")
 sys.stdout.reconfigure(encoding='utf-8')
 
 # Titan Shield Integration
+print("DEBUG: Importing orb_sidecar...")
 try:
     import orb_sidecar
 except ImportError:
@@ -41,6 +45,7 @@ TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '')
 ALPHA_VANTAGE_API_KEY = os.getenv('ALPHA_VANTAGE_API_KEY', '')
 
 # Alpha Vantage Client (Fallback for market data)
+print("DEBUG: Configuring Alpha Vantage...")
 try:
     from alpha_vantage.timeseries import TimeSeries
     if ALPHA_VANTAGE_API_KEY:
@@ -57,9 +62,11 @@ IS_LIVE = bool(T212_API_KEY and T212_API_SECRET) # Set False to simulate T212 ca
 
 # Watchlist for Gatekeeper (Focusing on Liquid Names)
 UNIVERSE = ["TSLA", "NVDA", "AAPL", "AMD", "MSFT", "AMZN", "META", "GOOGL", "NFLX", "QQQ"]
+print("DEBUG: Module Level Init Complete.")
 
 class Strategy_ORB:
     def __init__(self):
+        print("DEBUG: Entering Strategy_ORB.__init__")
         self.watchlist = []
         self.orb_levels = {} # {ticker: {'high': X, 'low': Y, 'rvol': Z}}
         self.positions = {} # {ticker: {'size': X, 'entry': Y, 'stop': Z, 'target': A}}
@@ -69,16 +76,20 @@ class Strategy_ORB:
         self.status = "INITIALIZING"
         self.avg_vol_lookup = {} # Store 10d avg vol for RVOL calc
 
+        print("DEBUG: Loading Titan Shield Config...")
         # Load Titan Shield Cap
         cfg = orb_sidecar.load_config()
         self.titan_cap = float(cfg.get("STRATEGY_CAP_GBP", 500.0))
         logger.info(f"🛡️ Titan Shield Active. Hard Deck: £{self.titan_cap:.2f}")
 
+        print("DEBUG: Loading Watchlist...")
         # Load Watchlist from JSON
         self.load_watchlist() 
         
+        print("DEBUG: Loading State...")
         # Load Persistence State (Resume capability)
         self.load_state()
+        print("DEBUG: Strategy_ORB Initialized Successfully")
 
     def load_state(self):
         """Restores bot state (levels, positions) from disk/repo."""
@@ -843,64 +854,88 @@ class Strategy_ORB:
             time.sleep(0.1)  # 100ms polling for rapid execution
 
     def execute_trade(self, ticker, side, qty, price, stop):
-        logger.info(f"🚀 EXECUTING {side} {qty} {ticker}...")
-        self.discord_alert(f"🚀 **ORB TRIGGER**: {side} {ticker} @ {price:.2f}")
+        logger.info(f"🚀 SHADOW EXECUTION {side} {qty} {ticker}...")
+        
+        # 1. Payload Construction (T212 Spec: POST /api/v0/equity/orders/market)
+        # Note: 'quantity' is positive for Buy, negative for Sell.
+        target_qty = qty
+        if side.lower() == 'sell':
+             target_qty = -abs(qty)
+        else:
+             target_qty = abs(qty)
+             
+        payload = {
+            "instrumentCode": f"{ticker}_US_EQ", # Standard T212 Suffix for US stocks
+            "quantity": target_qty
+        }
+        
+        # 2. Shadow Routing (To Telegram instead of API)
+        # Formatting as code block for clarity
+        payload_str = json.dumps(payload, indent=4)
+        
+        self.broadcast_notification(
+            f"🛠️ SHADOW EXECUTION: {ticker}",
+            f"<b>Endpoint</b>: POST /api/v0/equity/orders/market\n"
+            f"<b>Action</b>: {side.upper()} {qty} shares\n"
+            f"<b>Trigger Price</b>: ${price:.2f}\n\n"
+            f"<b>API PAYLOAD (Ready for T212)</b>:\n"
+            f"<pre>{payload_str}</pre>\n\n"
+            f"<i>(This is a verification step. No funds moved.)</i>"
+        )
         
         if not IS_LIVE:
-            logger.info(f"[SIMULATION] Order Placed. Audit Passing.")
-            return True, price  # Return success and simulated fill price
+            logger.info(f"[SIMULATION] Shadow Payload Constructed: {payload}")
+            
+        # 3. Panic Protocol (Slippage Protection)
+        # SIMULATION: Assessing Slippage
+        # Let's assume we got filled at the trigger price (Ideal) for this test
+        fill_price = price 
+        
+        # Calculate Slippage
+        # For BUY: (Fill - Trigger) / Trigger
+        if ticker in self.orb_levels:
+             trigger_price = self.orb_levels[ticker].get('trigger_long', price) 
+        else:
+             trigger_price = price
 
-        # 1. Place Order
-        payload = {
-            "instrumentCode": f"{ticker}_US_EQ", # Assumption on suffix
-            "quantity": qty,
-            "orderType": "MARKET",
-            "timeValidity": "DAY"
+        slippage_pct = (fill_price - trigger_price) / trigger_price if trigger_price else 0
+        
+        if slippage_pct > 0.002: # 0.2% Hard Limit
+            logger.warning(f"🚨 PANIC: Slippage {slippage_pct:.2%} exceeds 0.2% limit!")
+            
+            # Construct Panic Close Payload (Reverse quantity)
+            close_payload = {
+                "instrumentCode": f"{ticker}_US_EQ",
+                "quantity": -target_qty # Reverse the trade
+            }
+            
+            self.broadcast_notification(
+                f"🚨 PANIC PROTOCOL TRIGGERED",
+                f"<b>Reason</b>: Excessive Slippage ({slippage_pct:.2%})\n"
+                f"<b>Action</b>: IMMEDIATE CLOSE (Market Sell)\n\n"
+                f"<b>Recovery Payload</b>:\n"
+                f"<pre>{json.dumps(close_payload, indent=4)}</pre>"
+            )
+            return False, 0.0 # Trade Aborted/Closed
+            
+        # If safe, record the trade in local state
+        self.positions[ticker] = {
+            'size': qty,
+            'entry': fill_price,
+            'stop': stop,
+            'target': price * 1.05 # 5% Target for now
         }
-        res = self.t212_request("POST", "/orders", payload) # Standard V0 Endpoint
-        # Note: Official API path is /equity/orders/market?
-        # Using simplified path based on user instruction "POST /orders/place_market" -> likely conceptual.
-        # Official T212 Public API v0: POST /api/v0/equity/orders/limit or market.
-        # Let's use the provided `t212_request` base.
-        # Adjusting payload to standard T212 API if needed, but sticking to user instruction names where possible.
         
-        if not res: return False, 0.0
+        self.audit_log.append({
+            'timestamp': datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+            'ticker': ticker,
+            'action': side,
+            'qty': qty,
+            'entry': fill_price
+        })
         
-        order_id = res.get('id')
-        fill_price = float(res.get('fillPrice', price))  # Get actual fill price
-        logger.info(f"   ✅ Order Sent (ID: {order_id})")
-        self.status = "AUDITING_SLIPPAGE"
-        # 2. Wait 5s for Fill
-        time.sleep(5)
-        
-        # 3. Slippage Audit
-        slippage = 0.0
-        fill_price = price
-        fill_data = self.t212_request("GET", f"/orders/{order_id}")
-        if fill_data:
-            fill_price = float(fill_data.get('filledPrice', price)) # Fallback to Trigger if pending
-            if fill_price == 0: fill_price = price 
-            
-            slippage = (fill_price - price) / price
-            logger.info(f"   ⚖️ Slippage: {slippage:.2%}")
-            
-            # Log Outcome
-            self.audit_log.append({
-                "ticker": ticker,
-                "action": side,
-                "entry": fill_price,
-                "slippage_pct": slippage,
-                "time": datetime.datetime.utcnow().strftime("%H:%M:%S")
-            })
-
-            if slippage > 0.003: # 0.3%
-                logger.critical(f"   🛑 KILL SWITCH: Slippage > 0.3%. Closing immediately.")
-                self.discord_alert(f"🛑 **SLIPPAGE KILL**: {ticker} {slippage:.2%}")
-                # self.close_position(ticker, qty) # Implement Close
-                return False
-                
-        self.status = "WATCHING_RANGE"
-        return True
+        self.save_state(push=True)
+        return True, fill_price
 
     def close_all_positions(self):
         """Hard Time Stop: Closes all active positions at 20:55 GMT."""
