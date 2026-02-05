@@ -1,28 +1,10 @@
 import os
 import requests
 import json
-import base64
 from requests.auth import HTTPBasicAuth
 
-# V32.19 - EXHAUSTIVE FORENSIC TEST (v0, v1, v2 + Multi-Auth)
-print("🚀 STARTING EXHAUSTIVE FORENSIC TEST...")
-
-def test_config(name, url, headers=None, auth=None):
-    print(f"📡 Testing {name}...")
-    try:
-        resp = requests.get(url, headers=headers, auth=auth, timeout=10)
-        print(f"📥 Response: {resp.status_code}")
-        if resp.status_code == 200:
-            print(f"✅ SUCCESS on {name}!")
-            print(f"📄 Data: {resp.json()}")
-            return True
-        elif resp.status_code == 401:
-            print(f"❌ 401 Unauthorized")
-        else:
-            print(f"🔹 {resp.status_code}: {resp.text}")
-    except Exception as e:
-        print(f"⚠️ Exception: {e}")
-    return False
+# V32.20 - THE AUTO-LINKER (Detection + Execution)
+print("🚀 STARTING AUTO-LINKER TEST...")
 
 if __name__ == "__main__":
     t212_key = os.getenv('T212_API_KEY', '').strip()
@@ -32,35 +14,58 @@ if __name__ == "__main__":
         print("❌ ERROR: T212_API_KEY is empty.")
         exit(1)
 
-    print(f"🔍 DEBUG: Key Length: {len(t212_key)}")
-    print(f"🔍 DEBUG: Secret Length: {len(t212_secret)}")
+    configs = [
+        {"name": "LIVE v0 (Basic)", "url": "https://live.trading212.com/api/v0/equity", "auth": HTTPBasicAuth(t212_key, t212_secret), "headers": {}},
+        {"name": "LIVE v1 (Header)", "url": "https://live.trading212.com/api/v1/equity", "auth": None, "headers": {"Authorization": t212_key}},
+        {"name": "DEMO v0 (Basic)", "url": "https://demo.trading212.com/api/v0/equity", "auth": HTTPBasicAuth(t212_key, t212_secret), "headers": {}},
+        {"name": "DEMO v1 (Header)", "url": "https://demo.trading212.com/api/v1/equity", "auth": None, "headers": {"Authorization": t212_key}}
+    ]
 
-    # 1. THE BASIC AUTH TEST (Standard v0)
-    # Most likely for older keys
-    if t212_secret:
-        test_config("LIVE v0 (Basic)", "https://live.trading212.com/api/v0/equity/account/cash", auth=HTTPBasicAuth(t212_key, t212_secret))
-        test_config("DEMO v0 (Basic)", "https://demo.trading212.com/api/v0/equity/account/cash", auth=HTTPBasicAuth(t212_key, t212_secret))
+    working_config = None
+    for cfg in configs:
+        print(f"📡 Checking {cfg['name']}...")
+        try:
+            r = requests.get(f"{cfg['url']}/account/cash", auth=cfg['auth'], headers=cfg['headers'], timeout=10)
+            if r.status_code == 200:
+                print(f"✅ FOUND WORKING CONFIG: {cfg['name']}")
+                working_config = cfg
+                break
+        except:
+            pass
 
-    # 2. THE MODERN HEADER TEST (Standard v1)
-    # T212 V1 uses the legacy key in the 'Authorization' header directly.
-    headers_raw = {"Authorization": t212_key}
-    test_config("LIVE v1 (Raw Header)", "https://live.trading212.com/api/v1/equity/account/cash", headers=headers_raw)
-    test_config("DEMO v1 (Raw Header)", "https://demo.trading212.com/api/v1/equity/account/cash", headers=headers_raw)
+    if not working_config:
+        print("\n❌ VERDICT: All connection attempts failed with 401.")
+        print("Please check your T212 API settings for IP Restriction (must be empty).")
+        exit(1)
 
-    # 3. THE BEARER TEST (Some Beta keys use this)
-    headers_bearer = {"Authorization": f"Bearer {t212_key}"}
-    test_config("LIVE v1 (Bearer)", "https://live.trading212.com/api/v1/equity/account/cash", headers=headers_bearer)
-
-    # 4. THE METADATA TEST (Check if we can even talk to the server)
-    print("\n🌐 Step 2: Checking Server Reachability...")
-    try:
-        r = requests.get("https://live.trading212.com/api/v0/equity/metadata/exchanges", timeout=5)
-        print(f"🌍 Live Metadata Status: {r.status_code} (Should be 200)")
-    except:
-        print("🌍 Live Server UNREACHABLE")
-
-    print("\n--- FINAL VERDICT ---")
-    print("If all 401s above:")
-    print("1. REGENERATE NEW KEYS in T212 (Settings -> API).")
-    print("2. DISBALE 'IP Restriction' (This is the #1 cause of 401s on GitHub).")
-    print("3. Ensure you are copying the FULL strings with no extra spaces.")
+    # PLACE THE ORDER
+    print(f"\n🚀 PROCEEDING TO PLACE ORDER ON {working_config['name']}...")
+    trade_url = f"{working_config['url']}/orders/limit"
+    
+    ticker = "C" # Citigroup
+    qty = 1.0
+    price = 50.0 # Way below market, stays pending.
+    
+    payload = {
+        "instrumentCode": f"{ticker}_US_EQ",
+        "quantity": qty,
+        "limitPrice": price,
+        "timeValidity": "DAY"
+    }
+    
+    print(f"📡 Sending 1.0 {ticker} @ ${price} Limit...")
+    trade_resp = requests.post(trade_url, json=payload, auth=working_config['auth'], headers=working_config['headers'], timeout=10)
+    
+    print(f"📥 Trade Response Code: {trade_resp.status_code}")
+    print(f"📄 Trade Response Body: {trade_resp.text}")
+    
+    if trade_resp.status_code == 200:
+        print(f"\n✅ SUCCESS! Order is now PENDING in your {working_config['name']} account.")
+        # Telegram Ping
+        token = os.getenv('TELEGRAM_TOKEN')
+        chat_id = os.getenv('TELEGRAM_CHAT_ID')
+        if token and chat_id:
+            msg = f"🛰️ **V32.20 AUTO-LINK SUCCESS**\n\nVerified Link: {working_config['name']}\nPlaced 1.0 share of Citigroup (C) @ $50.00 Limit (Pending)."
+            requests.post(f"https://api.telegram.org/bot{token}/sendMessage", data={"chat_id": chat_id, "text": msg})
+    else:
+        print("\n❌ ORDER FAILED but connection is working. Check instrument permissions.")
