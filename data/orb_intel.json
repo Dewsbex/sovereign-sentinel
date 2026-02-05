@@ -1,6 +1,168 @@
 {
-    "briefing": "",
-    "targets": [],
-    "last_updated": "RESET",
-    "timestamp": "2026-02-04 22:50:56"
+    "timestamp": "2026-02-05 15:05:39",
+    "briefing": "Set alerts based on the High of the Day (05/02/2026). <b>Top 5 Priority Targets</b> (Ranked by Institutional Volume):\n\n1. <b>QCOM</b> (Qualcomm): RVOL <b>11.75x</b>. Buy > <b>$137.37</b>.\n2. <b>SMCI</b> (Super Micro): RVOL <b>7.61x</b>. Buy > <b>$33.30</b>.\n3. <b>COIN</b> (Coinbase): RVOL <b>5.61x</b>. Buy > <b>$164.08</b>.\n4. <b>CRM</b> (Salesforce): RVOL <b>5.43x</b>. Buy > <b>$199.01</b>.\n5. <b>MSTR</b> (MicroStrategy): RVOL <b>5.25x</b>. Buy > <b>$121.89</b>.\n\n(Target List below auto-sorts by proximity to trigger)",
+    "targets": [
+        {
+            "ticker": "SOFI",
+            "company": "SoFi",
+            "trigger": 20.19930076599121,
+            "alert": 20.17910146522522,
+            "stop": 19.84000015258789,
+            "rvol": 3.2048169659891923,
+            "gap_to_fill": 0.5442008972167969
+        },
+        {
+            "ticker": "ROKU",
+            "company": "Roku",
+            "trigger": 89.05000305175781,
+            "alert": 88.96095304870606,
+            "stop": 87.26000213623047,
+            "rvol": 2.769733384645306,
+            "gap_to_fill": 2.160003662109375
+        },
+        {
+            "ticker": "SMCI",
+            "company": "Super Micro",
+            "trigger": 33.29999923706055,
+            "alert": 33.26669923782349,
+            "stop": 31.579999923706055,
+            "rvol": 7.608076168411444,
+            "gap_to_fill": 2.8599987030029297
+        },
+        {
+            "ticker": "QCOM",
+            "company": "Qualcomm",
+            "trigger": 137.3699951171875,
+            "alert": 137.23262512207032,
+            "stop": 132.72999572753906,
+            "rvol": 11.75425227115697,
+            "gap_to_fill": 3.2050018310546875
+        },
+        {
+            "ticker": "AMZN",
+            "company": "Amazon",
+            "trigger": 225.31100463867188,
+            "alert": 225.0856936340332,
+            "stop": 221.5500030517578,
+            "rvol": 5.115224587378676,
+            "gap_to_fill": 3.21099853515625
+        },
+        {
+            "ticker": "HOOD",
+            "company": "Robinhood",
+            "trigger": 79.30000305175781,
+            "alert": 79.22070304870606,
+            "stop": 77.51000213623047,
+            "rvol": 4.5128619101515115,
+            "gap_to_fill": 3.7580032348632812
+        },
+        {
+            "ticker": "TEAM",
+            "company": "Atlassian",
+            "trigger": 106.52999877929688,
+            "alert": 106.42346878051758,
+            "stop": 103.88999938964844,
+            "rvol": 1.60345369935865,
+            "gap_to_fill": 3.8249969482421875
+        },
+        {
+            "ticker": "LRCX",
+            "company": "Lam Research",
+            "trigger": 213.57000732421875,
+            "alert": 213.35643731689453,
+            "stop": 204.57000732421875,
+            "rvol": 2.0137228415569903,
+            "gap_to_fill": 4.160003662109375
+        },
+        {
+            "ticker": "PLTR",
+            "company": "Palantir",
+            "trigger": 137.17999267578125,
+            "alert": 137.04281268310547,
+            "stop": 134.60499572753906,
+            "rvol": 3.85643587124179,
+            "gap_to_fill": 5.089996337890625
+        },
+        {
+            "ticker": "DDOG",
+            "company": "Datadog",
+            "trigger": 114.16999816894531,
+            "alert": 114.05582817077637,
+            "stop": 112.01000213623047,
+            "rvol": 2.6774681864015215,
+            "gap_to_fill": 5.18499755859375
+        },
+        {
+            "ticker": "ORCL",
+            "company": "Oracle",
+            "trigger": 146.3000030517578,
+            "alert": 146.15370304870606,
+            "stop": 143.7899932861328,
+            "rvol": 3.020360764158462,
+            "gap_to_fill": 5.3800048828125
+        },
+        {
+            "ticker": "CRM",
+            "company": "Salesforce",
+            "trigger": 199.00999450683594,
+            "alert": 198.8109845123291,
+            "stop": 193.25,
+            "rvol": 5.433473582614009,
+            "gap_to_fill": 6.30999755859375
+        },
+        {
+            "ticker": "ADBE",
+            "company": "Adobe",
+            "trigger": 281.3949890136719,
+            "alert": 281.1135940246582,
+            "stop": 277.05010986328125,
+            "rvol": 2.824328481645572,
+            "gap_to_fill": 6.410003662109375
+        },
+        {
+            "ticker": "MSTR",
+            "company": "MicroStrategy",
+            "trigger": 121.88999938964844,
+            "alert": 121.76810939025879,
+            "stop": 119.11009979248047,
+            "rvol": 5.254337936161141,
+            "gap_to_fill": 6.599998474121094
+        },
+        {
+            "ticker": "COIN",
+            "company": "Coinbase",
+            "trigger": 164.0800018310547,
+            "alert": 163.91592182922363,
+            "stop": 160.39999389648438,
+            "rvol": 5.606806499715861,
+            "gap_to_fill": 7.12030029296875
+        },
+        {
+            "ticker": "APP",
+            "company": "AppLovin",
+            "trigger": 386.760009765625,
+            "alert": 386.3732497558594,
+            "stop": 376.1499938964844,
+            "rvol": 3.4731210885212622,
+            "gap_to_fill": 8.8900146484375
+        },
+        {
+            "ticker": "TSLA",
+            "company": "Tesla",
+            "trigger": 400.6434020996094,
+            "alert": 400.24275869750977,
+            "stop": 392.8399963378906,
+            "rvol": 2.125350810117563,
+            "gap_to_fill": 8.953399658203125
+        },
+        {
+            "ticker": "AVGO",
+            "company": "Broadcom",
+            "trigger": 325.0,
+            "alert": 324.675,
+            "stop": 309.04998779296875,
+            "rvol": 4.119843110393817,
+            "gap_to_fill": 9.5
+        }
+    ]
 }
