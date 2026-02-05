@@ -70,10 +70,42 @@ if __name__ == "__main__":
 
     if not success:
         print("\n❌ FINAL VERDICT: Both LIVE and DEMO rejected these credentials.")
-        print("POSSIBLE CAUSES:")
-        print("1. Secrets not exactly named 'T212_API_Trade_Key' and 'T212_API_Trade_Secret' in GitHub.")
-        print("2. API Key does not have 'Read' or 'Trade' permissions in Trading 212 settings.")
-        print("3. IP restriction enabled on the API key (GitHub Runners use dynamic IPs, so disable IP restriction).")
     else:
-        print("\n🚀 VERDICT: Credentials are WORKING. We can now proceed with automated trading.")
+        print("\n🚀 VERDICT: Credentials are WORKING. Proceeding to place Test Order...")
+        
+        # Determine which endpoint worked
+        target = "live" if "live" in url else "demo"
+        trade_url = f"https://{target}.trading212.com/api/v0/equity/orders/limit"
+        
+        # Place the safe limit order
+        ticker = "C"
+        qty = 0.1
+        price = 50.0 # Secure price, well below market
+        
+        payload = {
+            "instrumentCode": f"{ticker}_US_EQ",
+            "quantity": qty,
+            "limitPrice": price,
+            "timeValidity": "DAY"
+        }
+        
+        print(f"📡 Sending LIMIT order to {trade_url}...")
+        auth = HTTPBasicAuth(t212_key, t212_secret)
+        trade_resp = requests.post(trade_url, json=payload, auth=auth, timeout=10)
+        
+        print(f"📥 Trade Response Code: {trade_resp.status_code}")
+        print(f"📄 Trade Response Body: {trade_resp.text}")
+        
+        if trade_resp.status_code == 200:
+            print(f"✅ SUCCESS! 0.1 shares of {ticker} queued at ${price}.")
+            
+            # Send Telegram Ping
+            token = os.getenv('TELEGRAM_TOKEN')
+            chat_id = os.getenv('TELEGRAM_CHAT_ID')
+            if token and chat_id:
+                msg = f"🚀 **V32.16 LIVE TEST SUCCESS**\n\nTriggered 0.1 shares of Citigroup (C) @ $50.00 Limit.\nEndpoint: {target.upper()}"
+                requests.post(f"https://api.telegram.org/bot{token}/sendMessage", data={"chat_id": chat_id, "text": msg, "parse_mode": "Markdown"})
+        else:
+            print("❌ TRADE REJECTED by API logic (Expected if market closed/min qty issues).")
+
 
