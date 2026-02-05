@@ -1,5 +1,5 @@
 {
-    "timestamp": "2026-02-05 15:08:01",
+    "timestamp": "2026-02-05 15:09:00",
     "briefing": "Set alerts based on the High of the Day (05/02/2026). <b>Top 5 Priority Targets</b> (Ranked by Institutional Volume):\n\n1. <b>QCOM</b> (Qualcomm): RVOL <b>11.75x</b>. Buy > <b>$137.37</b>.\n2. <b>SMCI</b> (Super Micro): RVOL <b>7.61x</b>. Buy > <b>$33.30</b>.\n3. <b>COIN</b> (Coinbase): RVOL <b>5.61x</b>. Buy > <b>$164.08</b>.\n4. <b>CRM</b> (Salesforce): RVOL <b>5.43x</b>. Buy > <b>$199.01</b>.\n5. <b>MSTR</b> (MicroStrategy): RVOL <b>5.25x</b>. Buy > <b>$121.89</b>.\n\n(Target List below auto-sorts by proximity to trigger)",
     "targets": [
         {
