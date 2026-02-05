@@ -1,56 +1,56 @@
 {
     "meta": {
-        "timestamp": "2026-02-04 21:55",
+        "timestamp": "2026-02-05 07:53",
         "version": "v0.13 Sovereign Finality"
     },
     "account": {
         "id": 31785628,
         "currency": "GBP",
-        "totalValue": 175380.87,
+        "totalValue": 175624.23,
         "cash": {
-            "availableToTrade": 15159.84,
+            "availableToTrade": 15161.39,
             "reservedForOrders": 0,
             "inPies": 0
         },
         "investments": {
-            "currentValue": 160221.03,
+            "currentValue": 160462.84,
             "totalCost": 161589.15,
             "realizedProfitLoss": 26122.63,
-            "unrealizedProfitLoss": -1368.12
+            "unrealizedProfitLoss": -1126.31
         }
     },
     "holdings": [
         {
             "Ticker": "BMY",
             "Name": "Bristol-Myers Squibb",
-            "Value_GBP": 8020.64,
-            "Value": 8020.64,
-            "Price_GBP": 42.21389473684211,
+            "Value_GBP": 8034.06,
+            "Value": 8034.06,
+            "Price_GBP": 42.28452631578948,
             "Price": 57.63,
             "Avg_Price": 50.57,
-            "PL_GBP": 863.51,
-            "PL": 863.51,
+            "PL_GBP": 876.93,
+            "PL": 876.93,
             "Shares": 190.0,
             "Currency": "USD",
-            "FX_Impact": -119.06,
-            "Weight_Pct": 5.004823778429046,
-            "Weight": 5.004823778429046
+            "FX_Impact": -107.29,
+            "Weight_Pct": 5.005575623813803,
+            "Weight": 5.005575623813803
         },
         {
             "Ticker": "DHR",
             "Name": "Danaher",
-            "Value_GBP": 9643.93,
-            "Value": 9643.93,
-            "Price_GBP": 160.73216666666667,
+            "Value_GBP": 9660.07,
+            "Value": 9660.07,
+            "Price_GBP": 161.00116666666665,
             "Price": 219.43,
             "Avg_Price": 217.701,
-            "PL_GBP": 123.0,
-            "PL": 123.0,
+            "PL_GBP": 139.14,
+            "PL": 139.14,
             "Shares": 60.0,
             "Currency": "USD",
-            "FX_Impact": 47.01,
-            "Weight_Pct": 6.017745489325694,
-            "Weight": 6.017745489325694
+            "FX_Impact": 63.02,
+            "Weight_Pct": 6.018651953848365,
+            "Weight": 6.018651953848365
         },
         {
             "Ticker": "RIO",
@@ -65,8 +65,8 @@
             "Shares": 102.36965673,
             "Currency": "GBX",
             "FX_Impact": null,
-            "Weight_Pct": 4.4746480663484345,
-            "Weight": 4.4746480663484345
+            "Weight_Pct": 4.467844743829712,
+            "Weight": 4.467844743829712
         },
         {
             "Ticker": "LGEN",
@@ -81,8 +81,8 @@
             "Shares": 1000.0,
             "Currency": "GBX",
             "FX_Impact": null,
-            "Weight_Pct": 1.69663715782638,
-            "Weight": 1.69663715782638
+            "Weight_Pct": 1.6940575650604712,
+            "Weight": 1.6940575650604712
         },
         {
             "Ticker": "QELL",
@@ -90,15 +90,15 @@
             "Value_GBP": 0.2,
             "Value": 0.2,
             "Price_GBP": 0.0007263137026597354,
-            "Price": 0.00098,
+            "Price": 0.001,
             "Avg_Price": 1.02294022,
             "PL_GBP": -216.66,
             "PL": -216.66,
             "Shares": 275.36311,
             "Currency": "USD",
-            "FX_Impact": -10.53,
-            "Weight_Pct": 0.00012479861403651195,
-            "Weight": 0.00012479861403651195
+            "FX_Impact": -10.19,
+            "Weight_Pct": 0.00012460886833839434,
+            "Weight": 0.00012460886833839434
         },
         {
             "Ticker": "BATS",
@@ -113,187 +113,187 @@
             "Shares": 100.0,
             "Currency": "GBX",
             "FX_Impact": null,
-            "Weight_Pct": 2.8042248574004236,
-            "Weight": 2.8042248574004236
+            "Weight_Pct": 2.799961271563721,
+            "Weight": 2.799961271563721
         },
         {
             "Ticker": "VSNTV",
             "Name": "Versant Media Group",
-            "Value_GBP": 2476.62,
-            "Value": 2476.62,
-            "Price_GBP": 22.31189189189189,
+            "Value_GBP": 2480.77,
+            "Value": 2480.77,
+            "Price_GBP": 22.34927927927928,
             "Price": 30.46,
             "Avg_Price": 33.25963964,
-            "PL_GBP": -282.25,
-            "PL": -282.25,
+            "PL_GBP": -278.1,
+            "PL": -278.1,
             "Shares": 111.0,
             "Currency": "USD",
-            "FX_Impact": -54.62,
-            "Weight_Pct": 1.5453937174755312,
-            "Weight": 1.5453937174755312
+            "FX_Impact": -50.09,
+            "Weight_Pct": 1.5456297115391926,
+            "Weight": 1.5456297115391926
         },
         {
             "Ticker": "NUE",
             "Name": "Nucor",
-            "Value_GBP": 16573.99,
-            "Value": 16573.99,
-            "Price_GBP": 139.1015445622755,
+            "Value_GBP": 16601.71,
+            "Value": 16601.71,
+            "Price_GBP": 139.3341919100334,
             "Price": 189.9,
             "Avg_Price": 142.75373864,
-            "PL_GBP": 4001.12,
-            "PL": 4001.12,
+            "PL_GBP": 4028.84,
+            "PL": 4028.84,
             "Shares": 119.1502945,
             "Currency": "USD",
-            "FX_Impact": -113.69,
-            "Weight_Pct": 10.342054905275045,
-            "Weight": 10.342054905275045
+            "FX_Impact": -92.85,
+            "Weight_Pct": 10.343601477911022,
+            "Weight": 10.343601477911022
         },
         {
             "Ticker": "SOLV",
             "Name": "Solventum",
-            "Value_GBP": 5602.15,
-            "Value": 5602.15,
-            "Price_GBP": 56.021499999999996,
+            "Value_GBP": 5611.52,
+            "Value": 5611.52,
+            "Price_GBP": 56.1152,
             "Price": 76.48,
             "Avg_Price": 80.4473,
-            "PL_GBP": -375.69,
-            "PL": -375.69,
+            "PL_GBP": -366.32,
+            "PL": -366.32,
             "Shares": 100.0,
             "Currency": "USD",
-            "FX_Impact": -85.09,
-            "Weight_Pct": 3.495702778123227,
-            "Weight": 3.495702778123227
+            "FX_Impact": -75.23,
+            "Weight_Pct": 3.496225784291333,
+            "Weight": 3.496225784291333
         },
         {
             "Ticker": "RE",
             "Name": "Everest Group",
-            "Value_GBP": 16348.87,
-            "Value": 16348.87,
-            "Price_GBP": 244.1857225650082,
+            "Value_GBP": 16376.22,
+            "Value": 16376.22,
+            "Price_GBP": 244.59422049251955,
             "Price": 333.36,
             "Avg_Price": 333.79806975,
-            "PL_GBP": -645.3,
-            "PL": -645.3,
+            "PL_GBP": -617.95,
+            "PL": -617.95,
             "Shares": 66.95260406,
             "Currency": "USD",
-            "FX_Impact": -623.82,
-            "Weight_Pct": 10.201581585315546,
-            "Weight": 10.201581585315546
+            "FX_Impact": -596.43,
+            "Weight_Pct": 10.2031112093029,
+            "Weight": 10.2031112093029
         },
         {
             "Ticker": "NFLX",
             "Name": "Netflix",
-            "Value_GBP": 11160.42,
-            "Value": 11160.42,
-            "Price_GBP": 58.73905263157895,
+            "Value_GBP": 11179.09,
+            "Value": 11179.09,
+            "Price_GBP": 58.837315789473685,
             "Price": 80.19,
             "Avg_Price": 92.46947368,
-            "PL_GBP": -1962.2,
-            "PL": -1962.2,
+            "PL_GBP": -1943.53,
+            "PL": -1943.53,
             "Shares": 190.0,
             "Currency": "USD",
-            "FX_Impact": -253.21,
-            "Weight_Pct": 6.964024740326844,
-            "Weight": 6.964024740326844
+            "FX_Impact": -231.68,
+            "Weight_Pct": 6.965068769765305,
+            "Weight": 6.965068769765305
         },
         {
             "Ticker": "CRM",
             "Name": "Salesforce",
-            "Value_GBP": 13438.22,
-            "Value": 13438.22,
-            "Price_GBP": 146.06760869565215,
+            "Value_GBP": 13460.7,
+            "Value": 13460.7,
+            "Price_GBP": 146.31195652173915,
             "Price": 199.41,
             "Avg_Price": 242.96684783,
-            "PL_GBP": -3117.52,
-            "PL": -3117.52,
+            "PL_GBP": -3095.04,
+            "PL": -3095.04,
             "Shares": 92.0,
             "Currency": "USD",
-            "FX_Impact": -182.23,
-            "Weight_Pct": 8.385356155588678,
-            "Weight": 8.385356155588678
+            "FX_Impact": -154.84,
+            "Weight_Pct": 8.386612970213124,
+            "Weight": 8.386612970213124
         },
         {
             "Ticker": "QCOM",
             "Name": "Qualcomm",
-            "Value_GBP": 11781.83,
-            "Value": 11781.83,
-            "Price_GBP": 109.09101851851852,
+            "Value_GBP": 11801.54,
+            "Value": 11801.54,
+            "Price_GBP": 109.27351851851853,
             "Price": 148.93,
             "Avg_Price": 168.85388889,
-            "PL_GBP": -1720.92,
-            "PL": -1720.92,
+            "PL_GBP": -1701.21,
+            "PL": -1701.21,
             "Shares": 108.0,
             "Currency": "USD",
-            "FX_Impact": -144.74,
-            "Weight_Pct": 7.351780274068988,
-            "Weight": 7.351780274068988
+            "FX_Impact": -122.4,
+            "Weight_Pct": 7.352882720251472,
+            "Weight": 7.352882720251472
         },
         {
             "Ticker": "EOG",
             "Name": "EOG Resources",
-            "Value_GBP": 14101.27,
-            "Value": 14101.27,
-            "Price_GBP": 84.0176201072205,
+            "Value_GBP": 14124.86,
+            "Value": 14124.86,
+            "Price_GBP": 84.15817309701,
             "Price": 114.7,
             "Avg_Price": 114.00211891,
-            "PL_GBP": -165.9,
-            "PL": -165.9,
+            "PL_GBP": -142.31,
+            "PL": -142.31,
             "Shares": 167.83705587,
             "Currency": "USD",
-            "FX_Impact": -251.7,
-            "Weight_Pct": 8.799094760773226,
-            "Weight": 8.799094760773226
+            "FX_Impact": -228.25,
+            "Weight_Pct": 8.800414100191265,
+            "Weight": 8.800414100191265
         },
         {
             "Ticker": "CTVA",
             "Name": "Corteva",
-            "Value_GBP": 12377.4,
-            "Value": 12377.4,
-            "Price_GBP": 55.010666666666665,
+            "Value_GBP": 12398.1,
+            "Value": 12398.1,
+            "Price_GBP": 55.10266666666667,
             "Price": 75.1,
             "Avg_Price": 69.9412,
-            "PL_GBP": 698.98,
-            "PL": 698.98,
+            "PL_GBP": 719.68,
+            "PL": 719.68,
             "Shares": 225.0,
             "Currency": "USD",
-            "FX_Impact": -151.25,
-            "Weight_Pct": 7.723411826877615,
-            "Weight": 7.723411826877615
+            "FX_Impact": -131.98,
+            "Weight_Pct": 7.724566052731236,
+            "Weight": 7.724566052731236
         },
         {
             "Ticker": "MSFT",
             "Name": "Microsoft",
-            "Value_GBP": 9104.45,
-            "Value": 9104.45,
-            "Price_GBP": 303.4816666666667,
+            "Value_GBP": 9119.68,
+            "Value": 9119.68,
+            "Price_GBP": 303.9893333333333,
             "Price": 414.31,
             "Avg_Price": 423.35,
-            "PL_GBP": -174.79,
-            "PL": -174.79,
+            "PL_GBP": -159.56,
+            "PL": -159.56,
             "Shares": 30.0,
             "Currency": "USD",
-            "FX_Impact": 23.86,
-            "Weight_Pct": 5.681113707823607,
-            "Weight": 5.681113707823607
+            "FX_Impact": 39.43,
+            "Weight_Pct": 5.681965022041441,
+            "Weight": 5.681965022041441
         },
         {
             "Ticker": "CNNE",
             "Name": "Cannae",
-            "Value_GBP": 15244.21,
-            "Value": 15244.21,
-            "Price_GBP": 10.840985192794005,
+            "Value_GBP": 15269.71,
+            "Value": 15269.71,
+            "Price_GBP": 10.859119626944167,
             "Price": 14.8,
             "Avg_Price": 15.77239921,
-            "PL_GBP": -1254.49,
-            "PL": -1254.49,
+            "PL_GBP": -1228.99,
+            "PL": -1228.99,
             "Shares": 1406.16463623,
             "Currency": "USD",
-            "FX_Impact": -252.91,
-            "Weight_Pct": 9.51228140040768,
-            "Weight": 9.51228140040768
+            "FX_Impact": -225.73,
+            "Weight_Pct": 9.513706414777317,
+            "Weight": 9.513706414777317
         }
     ],
-    "total_gbp": 160258.19,
+    "total_gbp": 160502.21999999997,
     "sniper": [
         {
             "ticker": "AAPL",
@@ -1377,171 +1377,9 @@
         }
     ],
     "orb_intel": {
-        "timestamp": "2026-02-04 15:04:30",
-        "briefing": "Set alerts for these exact prices today. Based on the High of the Day established in the first 15 minutes of 04/02/2026. Buy when price breaks above these levels.\n\n<b>Priority</b>: Watch <b>Super Micro (SMCI)</b> first. As has the highest volume (17.25x) and is closest to the trigger. \n\n<b>Operational Tip</b>: In the Trading 212 app, set the alert slightly below these numbers (e.g., set NVDA at $181.20) so you have time to unlock your phone and check the spread.",
-        "targets": [
-            {
-                "ticker": "ADBE",
-                "company": "Adobe",
-                "trigger": 266.8399963378906,
-                "alert": 266.57315634155276,
-                "stop": 264.0400085449219,
-                "rvol": 4.580825879856155,
-                "gap_to_fill": 0.260009765625
-            },
-            {
-                "ticker": "NFLX",
-                "company": "Netflix",
-                "trigger": 80.12999725341797,
-                "alert": 80.04986725616455,
-                "stop": 79.4800033569336,
-                "rvol": 1.9913058909858774,
-                "gap_to_fill": 0.3249969482421875
-            },
-            {
-                "ticker": "AAPL",
-                "company": "Apple",
-                "trigger": 276.8500061035156,
-                "alert": 276.5731560974121,
-                "stop": 272.2850036621094,
-                "rvol": 2.9754427024410393,
-                "gap_to_fill": 0.529998779296875
-            },
-            {
-                "ticker": "SMCI",
-                "company": "Super Micro",
-                "trigger": 34.8109016418457,
-                "alert": 34.776090740203855,
-                "stop": 31.700000762939453,
-                "rvol": 17.253309712830507,
-                "gap_to_fill": 1.1709022521972656
-            },
-            {
-                "ticker": "NOW",
-                "company": "ServiceNow",
-                "trigger": 107.76000213623047,
-                "alert": 107.65224213409424,
-                "stop": 105.27999877929688,
-                "rvol": 8.268816191680138,
-                "gap_to_fill": 1.6700057983398438
-            },
-            {
-                "ticker": "CRM",
-                "company": "Salesforce",
-                "trigger": 192.10499572753906,
-                "alert": 191.91289073181153,
-                "stop": 189.44000244140625,
-                "rvol": 5.800845507501743,
-                "gap_to_fill": 2.0800018310546875
-            },
-            {
-                "ticker": "ORCL",
-                "company": "Oracle",
-                "trigger": 150.71749877929688,
-                "alert": 150.56678128051757,
-                "stop": 147.91000366210938,
-                "rvol": 4.659217530818872,
-                "gap_to_fill": 3.12249755859375
-            },
-            {
-                "ticker": "MSFT",
-                "company": "Microsoft",
-                "trigger": 415.093994140625,
-                "alert": 414.67890014648435,
-                "stop": 410.1000061035156,
-                "rvol": 2.722663625501534,
-                "gap_to_fill": 3.79400634765625
-            },
-            {
-                "ticker": "DDOG",
-                "company": "Datadog",
-                "trigger": 117.77999877929688,
-                "alert": 117.66221878051758,
-                "stop": 115.83999633789062,
-                "rvol": 1.7344899060166385,
-                "gap_to_fill": 4.05999755859375
-            },
-            {
-                "ticker": "MSTR",
-                "company": "MicroStrategy",
-                "trigger": 130.33999633789062,
-                "alert": 130.20965634155274,
-                "stop": 127.63999938964844,
-                "rvol": 1.6762455817272621,
-                "gap_to_fill": 4.509895324707031
-            },
-            {
-                "ticker": "TEAM",
-                "company": "Atlassian",
-                "trigger": 104.56500244140625,
-                "alert": 104.46043743896485,
-                "stop": 101.5999984741211,
-                "rvol": 3.8069448645479373,
-                "gap_to_fill": 4.595001220703125
-            },
-            {
-                "ticker": "INTU",
-                "company": "Intuit",
-                "trigger": 421.8500061035156,
-                "alert": 421.4281560974121,
-                "stop": 416.67010498046875,
-                "rvol": 5.5462151280660175,
-                "gap_to_fill": 5.02001953125
-            },
-            {
-                "ticker": "ZS",
-                "company": "Zscaler",
-                "trigger": 183.85000610351562,
-                "alert": 183.6661560974121,
-                "stop": 181.5,
-                "rvol": 2.3258293430433192,
-                "gap_to_fill": 5.2501068115234375
-            },
-            {
-                "ticker": "COIN",
-                "company": "Coinbase",
-                "trigger": 175.8249969482422,
-                "alert": 175.64917195129394,
-                "stop": 173.8000030517578,
-                "rvol": 2.565613226202619,
-                "gap_to_fill": 5.9550018310546875
-            },
-            {
-                "ticker": "AMD",
-                "company": "AMD",
-                "trigger": 215.38999938964844,
-                "alert": 215.17460939025878,
-                "stop": 209.7899932861328,
-                "rvol": 8.785767056396027,
-                "gap_to_fill": 8.779998779296875
-            },
-            {
-                "ticker": "APP",
-                "company": "AppLovin",
-                "trigger": 402.1400146484375,
-                "alert": 401.7378746337891,
-                "stop": 392.1700134277344,
-                "rvol": 9.856006191326223,
-                "gap_to_fill": 10.1400146484375
-            },
-            {
-                "ticker": "PLTR",
-                "company": "Palantir",
-                "trigger": 154.0800018310547,
-                "alert": 153.92592182922363,
-                "stop": 148.63999938964844,
-                "rvol": 3.8763840314549776,
-                "gap_to_fill": 11.874908447265625
-            },
-            {
-                "ticker": "META",
-                "company": "Meta Platforms",
-                "trigger": 684.5050048828125,
-                "alert": 683.8204998779297,
-                "stop": 678.52001953125,
-                "rvol": 1.507912641052767,
-                "gap_to_fill": 15.7750244140625
-            }
-        ]
+        "briefing": "",
+        "targets": [],
+        "last_updated": "RESET",
+        "timestamp": "2026-02-04 22:50:56"
     }
 }
