@@ -1,7 +1,7 @@
 name: ORB Trading Bot
 on:
   schedule:
-    - cron: '30 09 * * 1-5' # 09:30 GMT, Monday-Friday (UK Open / US Pre-Market)
+    - cron: '15 14 * * 1-5' # 14:15 GMT, Monday-Friday (Pre-US Open)
   workflow_dispatch:      # Allow manual trigger
 
 permissions:
@@ -10,7 +10,7 @@ permissions:
 jobs:
   trade:
     runs-on: ubuntu-latest
-    timeout-minutes: 720 # 12 Hours (09:30 to 21:30 GMT)
+    timeout-minutes: 480 # 8 Hours (14:15 to 22:15 GMT window)
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python

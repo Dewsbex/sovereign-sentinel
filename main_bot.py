@@ -914,7 +914,7 @@ class Strategy_ORB:
                 f"**P&L**: ${total_pnl:.2f}\n\n"
                 f"**Trade Summary**:\n{trade_summary}\n\n"
                 f"**Status**: Session closed successfully\n"
-                f"**Next Run**: Tomorrow 09:30 GMT"
+                f"**Next Run**: Tomorrow 14:15 GMT"
             )
         else:
             self.broadcast_notification(
@@ -923,7 +923,7 @@ class Strategy_ORB:
                 f"**Targets Monitored**: {len(self.orb_levels) if hasattr(self, 'orb_levels') else 0}\n\n"
                 f"**Outcome**: No breakouts triggered today\n"
                 f"**Status**: Capital preserved\n"
-                f"**Next Run**: Tomorrow 09:30 GMT"
+                f"**Next Run**: Tomorrow 14:15 GMT"
             )
             
         # Discord Summary (keep for legacy)
@@ -945,27 +945,18 @@ def run():
     bot.get_cash_balance()
     bot.scan_candidates(bot.watchlist)
     
-    # 2. Observation (Wait until 14:45 GMT for the 15m candle)
+    # Startup - 14:15 GMT logic
     now = datetime.datetime.utcnow()
     # US Market opens at 14:30 GMT. 15m Candle completes at 14:45 GMT.
     ready_time = now.replace(hour=14, minute=45, second=0, microsecond=0)
     
-    # Silent Standby until 14:30 GMT
-    us_open = now.replace(hour=14, minute=30, second=0, microsecond=0)
-    if now < us_open:
-        wait_secs = (us_open - now).total_seconds()
-        logger.info(f"💤 Silent Standby until US Open (14:30 GMT)... Waiting {wait_secs/360.0:.1f} hours.")
-        time.sleep(wait_secs)
-        now = datetime.datetime.utcnow()
-
-    # Pre-Strategy Pulse (14:30 - 14:45 GMT)
     if now < ready_time:
-        logger.info(f"⏳ US SESSION PULSE: Active (2m sync) until strategy lock at 14:45 GMT...")
+        logger.info(f"⏳ US PRE-MARKET: Active (2m sync) until strategy lock at 14:45 GMT...")
         while datetime.datetime.utcnow() < ready_time:
             # Refresh data for Dashboard Heartbeat
             bot.get_cash_balance()
             bot.save_intel()
-            bot.git_sync() # 14:30 Pulse Start
+            bot.git_sync() # 14:15 Pulse Start
             
             # Wait 2 mins or until 14:45
             wait_remaining = (ready_time - datetime.datetime.utcnow()).total_seconds()
