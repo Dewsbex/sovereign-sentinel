@@ -1,104 +1,66 @@
 import os
 import requests
 import json
+import base64
 from requests.auth import HTTPBasicAuth
 
-# V32.18 - FORENSIC AUTH & TRADE TEST
-print("🚀 STARTING FORENSIC TEST...")
+# V32.19 - EXHAUSTIVE FORENSIC TEST (v0, v1, v2 + Multi-Auth)
+print("🚀 STARTING EXHAUSTIVE FORENSIC TEST...")
+
+def test_config(name, url, headers=None, auth=None):
+    print(f"📡 Testing {name}...")
+    try:
+        resp = requests.get(url, headers=headers, auth=auth, timeout=10)
+        print(f"📥 Response: {resp.status_code}")
+        if resp.status_code == 200:
+            print(f"✅ SUCCESS on {name}!")
+            print(f"📄 Data: {resp.json()}")
+            return True
+        elif resp.status_code == 401:
+            print(f"❌ 401 Unauthorized")
+        else:
+            print(f"🔹 {resp.status_code}: {resp.text}")
+    except Exception as e:
+        print(f"⚠️ Exception: {e}")
+    return False
 
 if __name__ == "__main__":
-    t212_key = os.getenv('T212_API_KEY')
-    t212_secret = os.getenv('T212_API_SECRET')
+    t212_key = os.getenv('T212_API_KEY', '').strip()
+    t212_secret = os.getenv('T212_API_SECRET', '').strip()
     
     if not t212_key:
-        print("❌ ERROR: Missing T212_API_KEY")
-        exit(1)
-        
-    print(f"🔍 DEBUG: Key starts with: {t212_key[:5]}...")
-    print(f"🔍 DEBUG: Secret present: {bool(t212_secret)}")
-    
-    # We will test 4 combinations:
-    # 1. LIVE + Basic Auth (v0)
-    # 2. DEMO + Basic Auth (v0)
-    # 3. LIVE + Header Auth (v1 style)
-    # 4. DEMO + Header Auth (v1 style)
-    
-    accounts = ["live", "demo"]
-    auth_methods = ["BASIC", "HEADER"]
-    
-    success_config = None
-    
-    for acc in accounts:
-        for method in auth_methods:
-            url = f"https://{acc}.trading212.com/api/v0/equity/account/cash"
-            print(f"\n📡 Testing {acc.upper()} with {method}...")
-            
-            headers = {}
-            auth = None
-            
-            if method == "BASIC":
-                if not t212_secret:
-                    print("⏩ Skipping BASIC (Missing Secret)")
-                    continue
-                auth = HTTPBasicAuth(t212_key, t212_secret)
-            else:
-                # T212 v1 / Header only style
-                headers = {"Authorization": t212_key}
-            
-            try:
-                resp = requests.get(url, auth=auth, headers=headers, timeout=10)
-                print(f"📥 Response: {resp.status_code}")
-                if resp.status_code == 200:
-                    print(f"✅ SUCCESS! Found working config: {acc}/{method}")
-                    print(f"📄 Account Data: {resp.json()}")
-                    success_config = (acc, method, url.replace("/account/cash", ""))
-                    break
-                else:
-                    print(f"📄 Message: {resp.text}")
-            except Exception as e:
-                print(f"❌ Exception: {e}")
-        
-        if success_config:
-            break
-
-    if not success_config:
-        print("\n❌ ALL AUTH COMBINATIONS FAILED.")
-        print("ACTION: Please double check your T212 API settings.")
-        print("1. Did you enable 'Read' and 'Trade' permissions?")
-        print("2. Did you disable 'IP restrictions'?")
-        print("3. Are you using a 'Trading 212 Beta' API Key?")
+        print("❌ ERROR: T212_API_KEY is empty.")
         exit(1)
 
-    # If we found a working config, attempt the 1 share buy.
-    acc_type, auth_type, base_url = success_config
-    print(f"\n🚀 Proceeding with TRADE test using {acc_type}/{auth_type}...")
-    
-    trade_url = f"{base_url}/orders/market"
-    payload = {
-        "instrumentCode": "C_US_EQ",
-        "quantity": 1.0
-    }
-    
-    headers = {}
-    auth = None
-    if auth_type == "BASIC":
-        auth = HTTPBasicAuth(t212_key, t212_secret)
-    else:
-        headers = {"Authorization": t212_key}
+    print(f"🔍 DEBUG: Key Length: {len(t212_key)}")
+    print(f"🔍 DEBUG: Secret Length: {len(t212_secret)}")
 
-    print(f"📡 Sending MARKET Order to {trade_url}...")
-    trade_resp = requests.post(trade_url, json=payload, auth=auth, headers=headers, timeout=10)
-    
-    print(f"📥 Trade Response Code: {trade_resp.status_code}")
-    print(f"📄 Trade Response Body: {trade_resp.text}")
-    
-    if trade_resp.status_code == 200:
-        print("✅ SUCCESS! 1 share of Citigroup ordered.")
-        # Telegram notification
-        token = os.getenv('TELEGRAM_TOKEN')
-        chat_id = os.getenv('TELEGRAM_CHAT_ID')
-        if token and chat_id:
-            msg = f"🚀 **V32.18 AUTH FIXED**\nFound working config: {acc_type}/{auth_type}\nTrade Placed: 1.0 Citigroup (C)"
-            requests.post(f"https://api.telegram.org/bot{token}/sendMessage", data={"chat_id": chat_id, "text": msg})
-    else:
-        print("ℹ️ Order failed but Auth is GOOD. Check T212 for instrument or market hours.")
+    # 1. THE BASIC AUTH TEST (Standard v0)
+    # Most likely for older keys
+    if t212_secret:
+        test_config("LIVE v0 (Basic)", "https://live.trading212.com/api/v0/equity/account/cash", auth=HTTPBasicAuth(t212_key, t212_secret))
+        test_config("DEMO v0 (Basic)", "https://demo.trading212.com/api/v0/equity/account/cash", auth=HTTPBasicAuth(t212_key, t212_secret))
+
+    # 2. THE MODERN HEADER TEST (Standard v1)
+    # T212 V1 uses the legacy key in the 'Authorization' header directly.
+    headers_raw = {"Authorization": t212_key}
+    test_config("LIVE v1 (Raw Header)", "https://live.trading212.com/api/v1/equity/account/cash", headers=headers_raw)
+    test_config("DEMO v1 (Raw Header)", "https://demo.trading212.com/api/v1/equity/account/cash", headers=headers_raw)
+
+    # 3. THE BEARER TEST (Some Beta keys use this)
+    headers_bearer = {"Authorization": f"Bearer {t212_key}"}
+    test_config("LIVE v1 (Bearer)", "https://live.trading212.com/api/v1/equity/account/cash", headers=headers_bearer)
+
+    # 4. THE METADATA TEST (Check if we can even talk to the server)
+    print("\n🌐 Step 2: Checking Server Reachability...")
+    try:
+        r = requests.get("https://live.trading212.com/api/v0/equity/metadata/exchanges", timeout=5)
+        print(f"🌍 Live Metadata Status: {r.status_code} (Should be 200)")
+    except:
+        print("🌍 Live Server UNREACHABLE")
+
+    print("\n--- FINAL VERDICT ---")
+    print("If all 401s above:")
+    print("1. REGENERATE NEW KEYS in T212 (Settings -> API).")
+    print("2. DISBALE 'IP Restriction' (This is the #1 cause of 401s on GitHub).")
+    print("3. Ensure you are copying the FULL strings with no extra spaces.")
