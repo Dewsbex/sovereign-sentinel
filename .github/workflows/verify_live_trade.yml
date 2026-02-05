@@ -1,0 +1,19 @@
+name: Verify Live Trading
+on:
+  workflow_dispatch:
+
+jobs:
+  test-live-trade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - name: Run Live Trade Test
+        env:
+          # Use the NEW Secret names mapped to the script's expected Env Vars
+          T212_API_KEY: ${{ secrets.T212_API_Trade_Key }}
+          T212_API_SECRET: ${{ secrets.T212_API_Trade_Secret }}
+        run: python verify_live_trade.py
