@@ -184,18 +184,19 @@ class Strategy_ORB:
             # Pull first to avoid conflicts
             subprocess.run(["git", "pull", "--rebase"], check=False)
             
-            # Add both
-            subprocess.run(["git", "add", "data/trade_state.json", "data/orb_intel.json"], check=False)
-            subprocess.run(["git", "commit", "-m", "🤖 Sentinel Data Sync (Pulse)"], check=False)
-            subprocess.run(["git", "push"], check=False)
-            logger.info("📡 Data Synced to GitHub.")
-            
-            # v0.12: Force Dashboard Regeneration if on a local-ish or dev environment
-            # In GitHub Actions, Job A usually follows Job B. 
-            # We add a trigger if specific env var is set or just call the scripts.
+            # v0.12: Force Dashboard Regeneration (BEFORE Commit)
+            # This ensures index.html is updated and included in the push.
             if os.path.exists("generate_static.py") and os.environ.get("SENTINEL_AUTO_RENDER"):
                 logger.info("🎨 Auto-Rendering Dashboard...")
                 subprocess.run(["python", "generate_static.py"], check=False)
+            
+            # Add ALL relevant files (Data + Visuals)
+            subprocess.run(["git", "add", "data/trade_state.json", "data/orb_intel.json", "index.html"], check=False)
+            
+            # Commit and Push
+            subprocess.run(["git", "commit", "-m", "🤖 Sentinel Data + Dashboard Sync"], check=False)
+            subprocess.run(["git", "push"], check=False)
+            logger.info("📡 Cloud Sync Complete.")
         except Exception as e:
             logger.error(f"Git Sync Failed: {e}")
 
