@@ -75,7 +75,39 @@ class Strategy_ORB:
         logger.info(f"🛡️ Titan Shield Active. Hard Deck: £{self.titan_cap:.2f}")
 
         # Load Watchlist from JSON
-        self.load_watchlist() # Call to load and set instance variables
+        self.load_watchlist() 
+        
+        # Load Persistence State (Resume capability)
+        self.load_state()
+
+    def load_state(self):
+        """Restores bot state (levels, positions) from disk/repo."""
+        try:
+            if os.path.exists("data/trade_state.json"):
+                with open("data/trade_state.json", "r") as f:
+                    state = json.load(f)
+                    
+                # Restore Levels (The targets)
+                if 'targets' in state:
+                    for t_data in state['targets']:
+                        tkr = t_data['ticker']
+                        self.orb_levels[tkr] = {
+                            'high': t_data['high'],
+                            'low': t_data['low'],
+                            'rvol': t_data.get('rvol', 0.0),
+                            'trigger_long': t_data['high'] + 0.01,
+                            'trigger_short': t_data['low'] - 0.01,
+                            'last_price': t_data.get('last_poll_price', 0.0)
+                        }
+                
+                # Restore Positions
+                self.positions = state.get('active_positions', {})
+                self.audit_log = state.get('audit_log', [])
+                self.cash_balance = state.get('cash_balance', 0.0)
+                
+                logger.info(f"💾 State Restored: {len(self.orb_levels)} Targets, {len(self.positions)} Positions")
+        except Exception as e:
+            logger.warning(f"⚠️ Failed to load state: {e}. Starting fresh.")
 
     def load_watchlist(self):
         """Loads tickers and company names from watchlist.json"""
