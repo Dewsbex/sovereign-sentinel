@@ -500,17 +500,23 @@ class Strategy_ORB:
                 if df_1m.empty: continue
                 
                 # Filter for 14:30-14:45 GMT window
-                df_1m.index = df_1m.index.tz_localize(None) if df_1m.index.tz is None else df_1m.index.tz_convert('UTC').tz_localize(None)
-                start_window = datetime.datetime.utcnow().replace(hour=14, minute=30, second=0, microsecond=0)
-                end_window = datetime.datetime.utcnow().replace(hour=14, minute=45, second=0, microsecond=0)
+                if df_1m.index.tz is None:
+                    df_1m.index = df_1m.index.tz_localize('UTC')
+                else:
+                    df_1m.index = df_1m.index.tz_convert('UTC')
+
+                now_utc = datetime.datetime.now(datetime.timezone.utc)
+                start_window = now_utc.replace(hour=14, minute=30, second=0, microsecond=0)
+                end_window = now_utc.replace(hour=14, minute=45, second=0, microsecond=0)
                 
                 window_data = df_1m[(df_1m.index >= start_window) & (df_1m.index < end_window)]
                 
-                if len(window_data) < 5:  # Need at least 5 minutes of data
+                if len(window_data) < 5:
+                    logger.warning(f"   ⚠️ {t}: Only {len(window_data)} mins of data found in ORB window. Skipping.")
                     continue
                 
                 # "Clean High" Rule: Use highest 1m close (filters bad prints)
-                high_15 = float(window_data['Close'].max())
+                high_15 = float(window_data['High'].max()) # Switching to High for trigger logic
                 low_15 = float(window_data['Low'].min())
                 vol_15 = float(window_data['Volume'].sum())
                 
