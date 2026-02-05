@@ -16,4 +16,6 @@ jobs:
           # Use the NEW Secret names mapped to the script's expected Env Vars
           T212_API_KEY: ${{ secrets.T212_API_Trade_Key }}
           T212_API_SECRET: ${{ secrets.T212_API_Trade_Secret }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python verify_live_trade.py
