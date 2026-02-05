@@ -1,13 +1,11 @@
 import os
 import sys
-print("DEBUG: main_bot module loading...")
 import time
 import json
 import logging
 import datetime
 import requests
 import subprocess
-print("DEBUG: importing yfinance...")
 import yfinance as yf
 from requests.auth import HTTPBasicAuth
 
@@ -18,7 +16,6 @@ try:
 except ImportError:
     pass  # Will use system environment variables
 
-print("DEBUG: Configuring Logging...")
 # --- Configuration & Setup ---
 logging.basicConfig(
     level=logging.INFO,
@@ -29,7 +26,6 @@ logger = logging.getLogger("ORB_Bot")
 sys.stdout.reconfigure(encoding='utf-8')
 
 # Titan Shield Integration
-print("DEBUG: Importing orb_sidecar...")
 try:
     import orb_sidecar
 except ImportError:
@@ -45,7 +41,6 @@ TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '')
 ALPHA_VANTAGE_API_KEY = os.getenv('ALPHA_VANTAGE_API_KEY', '')
 
 # Alpha Vantage Client (Fallback for market data)
-print("DEBUG: Configuring Alpha Vantage...")
 try:
     from alpha_vantage.timeseries import TimeSeries
     if ALPHA_VANTAGE_API_KEY:
@@ -62,11 +57,9 @@ IS_LIVE = bool(T212_API_KEY and T212_API_SECRET) # Set False to simulate T212 ca
 
 # Watchlist for Gatekeeper (Focusing on Liquid Names)
 UNIVERSE = ["TSLA", "NVDA", "AAPL", "AMD", "MSFT", "AMZN", "META", "GOOGL", "NFLX", "QQQ"]
-print("DEBUG: Module Level Init Complete.")
 
 class Strategy_ORB:
     def __init__(self):
-        print("DEBUG: Entering Strategy_ORB.__init__")
         self.watchlist = []
         self.orb_levels = {} # {ticker: {'high': X, 'low': Y, 'rvol': Z}}
         self.positions = {} # {ticker: {'size': X, 'entry': Y, 'stop': Z, 'target': A}}
@@ -76,20 +69,16 @@ class Strategy_ORB:
         self.status = "INITIALIZING"
         self.avg_vol_lookup = {} # Store 10d avg vol for RVOL calc
 
-        print("DEBUG: Loading Titan Shield Config...")
         # Load Titan Shield Cap
         cfg = orb_sidecar.load_config()
         self.titan_cap = float(cfg.get("STRATEGY_CAP_GBP", 500.0))
         logger.info(f"🛡️ Titan Shield Active. Hard Deck: £{self.titan_cap:.2f}")
 
-        print("DEBUG: Loading Watchlist...")
         # Load Watchlist from JSON
         self.load_watchlist() 
         
-        print("DEBUG: Loading State...")
         # Load Persistence State (Resume capability)
         self.load_state()
-        print("DEBUG: Strategy_ORB Initialized Successfully")
 
     def load_state(self):
         """Restores bot state (levels, positions) from disk/repo."""
