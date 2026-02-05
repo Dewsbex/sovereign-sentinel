@@ -83,14 +83,66 @@ def main():
             now = datetime.now(timezone.utc)
             hour = now.hour
             
-            if hour == 0 and ledger_run_today:
-                ledger_run_today = False
-                log("[RESET] Daily flags reset.")
+            # --- ORB BOT AUTOMATION (14:15 - 21:30 GMT) ---
+            # Launch the trading bot automatically
+            ORB_START = 14
+            ORB_MINUTE = 15
+            ORB_END = 21
+            ORB_END_MINUTE = 30
+            
+            # Simple check: Is it trading time?
+            orb_active_window = False
+            if hour > ORB_START or (hour == ORB_START and now.minute >= ORB_MINUTE):
+                if hour < ORB_END or (hour == ORB_END and now.minute < ORB_END_MINUTE):
+                    orb_active_window = True
+            
+            if orb_active_window:
+                # Check if running
+                # Note: This is a simple check. In production, we might use PID files.
+                # Here we just rely on Popen not blocking. 
+                # Ideally we check if process is alive, but for now let's just launch it if we haven't tracked it?
+                # A robust way is to check tasklist.
+                
+                # We will use a flag 'bot_launched_today' relative to the window.
+                # But if the daemon restarts, it loses the flag.
+                # Let's check process list using tasklist for 'main_bot.py' (this is tricky in python since it shows as python.exe)
+                # For this user environment, let's trust a simple logic:
+                # If we are in the window and haven't launched it "in this daemon session", try to launch?
+                # Better: Check if a specific lock file or just assume the user runs this daemon once.
+                
+                # Let's use a specialized function to check if main_bot is running
+                pass # Logic implemented below
 
             # --- MARKET HOURS LOGIC ---
             is_market_open = START_HOUR <= hour < END_HOUR
             
             if is_market_open:
+                # 0. ORB BOT CHECK (Process Manager)
+                if orb_active_window:
+                    # Check if main_bot.py is running
+                    try:
+                        # tasklist /FI "IMAGENAME eq python.exe" /V
+                        # checking command line args is harder in pure windows cmd without wmic
+                        # Let's use a marker file? Or just launch it?
+                        # Let's just launch it and let main_bot handle single-instance locking if possible?
+                        # main_bot doesn't have locking.
+                        
+                        # Let's use wmic to check command line
+                        check_cmd = 'wmic process where "name=\'python.exe\'" get commandline'
+                        proc_list = subprocess.run(check_cmd, capture_output=True, text=True, shell=True).stdout
+                        
+                        if "main_bot.py" not in proc_list:
+                            log("[ORB] Bot not running. Launching main_bot.py...")
+                            # Launch detached
+                            subprocess.Popen([sys.executable, "main_bot.py"], 
+                                             creationflags=subprocess.CREATE_NEW_CONSOLE)
+                            log("[ORB] Bot launched in new window.")
+                        else:
+                            # log("   [ORB] Bot is running.")
+                            pass
+                    except Exception as e:
+                        log(f"   [WARN] Could not check/launch bot: {e}")
+
                 # Calculate time since last update
                 time_since = time.time() - last_dashboard_update
                 
@@ -132,8 +184,9 @@ def main():
             # But simple sleep is fine for now.
             time.sleep(30)
             
-            # Run every 5 minutes
-            time.sleep(300)
+            # Run every 5 minutes (CHECK REMOVED - we need faster loop for ORB check)
+            # The loop is controlled by time.sleep(30) at the bottom.
+            # We removed the extra sleep(300) to allow responsive process checking.
             
         except KeyboardInterrupt:
             print("\n[STOP] Sentinel Daemon Stopped by User.")

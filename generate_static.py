@@ -176,6 +176,8 @@ def render():
     if 'briefing' in orb_intel:
         # Replace **bold** with <b>bold</b>
         orb_intel['briefing'] = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', orb_intel['briefing'])
+        # Replace newlines with <br> for HTML rendering
+        orb_intel['briefing'] = orb_intel['briefing'].replace('\n', '<br>')
     
     print(f"      [DATA] Snapshot Timestamp: {meta.get('timestamp', 'N/A')}")
     print(f"      [DATA] Processing {len(holdings)} holdings.")
