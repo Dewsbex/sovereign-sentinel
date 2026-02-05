@@ -76,12 +76,31 @@ def main():
     
     last_dashboard_update = 0
     ledger_run_today = False
+    backup_run_today = False
     
     # Main Loop
     while True:
         try:
             now = datetime.now(timezone.utc)
             hour = now.hour
+            minute = now.minute
+            
+            # --- RESET DAILY FLAGS AT MIDNIGHT ---
+            if hour == 0:
+                ledger_run_today = False
+                backup_run_today = False
+
+            # --- 15:00 GMT BACKUP SAFETY CHECK ---
+            # If bot isn't running at 3:00 PM, trigger it as a backup
+            if hour == 15 and minute == 0 and not backup_run_today:
+                log("[SAFETY] 15:00 GMT Check: Verifying ORB Bot status...")
+                check_cmd = 'wmic process where "name=\'python.exe\'" get commandline'
+                proc_list = subprocess.run(check_cmd, capture_output=True, text=True, shell=True).stdout
+                if "main_bot.py" not in proc_list:
+                    log("[SAFETY] Bot not found at 15:00. Launching Backup Job...")
+                    subprocess.Popen([sys.executable, "main_bot.py"], 
+                                     creationflags=subprocess.CREATE_NEW_CONSOLE)
+                backup_run_today = True
             
             # --- ORB BOT AUTOMATION (14:15 - 21:30 GMT) ---
             # Launch the trading bot automatically

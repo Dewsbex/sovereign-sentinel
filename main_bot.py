@@ -67,6 +67,7 @@ class Strategy_ORB:
         self.titan_cap = 500.0 # Default
         self.audit_log = [] # List of closed trades for history
         self.status = "INITIALIZING"
+        self.avg_vol_lookup = {} # Store 10d avg vol for RVOL calc
 
         # Load Titan Shield Cap
         cfg = orb_sidecar.load_config()
@@ -437,9 +438,10 @@ class Strategy_ORB:
                 
                 # 3. Price Filter (Min $10 to avoid penny stocks)
                 try:
-                    current_price = hist['Close'].iloc[-1]
+                    # Use TODAY'S OPEN for gap calculation to stay consistent even if run later in the day
+                    current_price = hist['Open'].iloc[-1]
                 except:
-                    current_price = dat.info.get('regularMarketPrice', hist['Close'].iloc[-1])
+                    current_price = dat.info.get('regularMarketOpen', dat.info.get('regularMarketPrice', hist['Close'].iloc[-1]))
                 
                 if current_price < 10.0:
                     continue
@@ -447,11 +449,12 @@ class Strategy_ORB:
                 prev_close = yesterday['Close']
                 gap_pct = abs((current_price - prev_close) / prev_close)
                 
-                logger.info(f"   🔎 {t}: Gap {gap_pct:.2%} | NR7: {is_nr7} | Vol: {avg_vol/1e6:.1f}M | Price: ${current_price:.2f}")
+                logger.info(f"   🔎 {t}: Gap {gap_pct:.2%} (Open ${current_price:.2f} vs PrevClose ${prev_close:.2f}) | NR7: {is_nr7} | Vol: {avg_vol/1e6:.1f}M")
                 
                 if gap_pct >= 0.02 or is_nr7: # Strict Gap: ≥2%
                     logger.info(f"   ✨ {t} QUALIFIED")
                     candidates.append(t)
+                    self.avg_vol_lookup[t] = avg_vol
                     
             except Exception as e:
                 logger.error(f"Scan error {t}: {e}")
@@ -509,24 +512,28 @@ class Strategy_ORB:
                 start_window = now_utc.replace(hour=14, minute=30, second=0, microsecond=0)
                 end_window = now_utc.replace(hour=14, minute=45, second=0, microsecond=0)
                 
+                print(f"DEBUG: {t} | Start: {start_window} | 1st Bar: {df_1m.index[0]}")
+                
                 window_data = df_1m[(df_1m.index >= start_window) & (df_1m.index < end_window)]
                 
                 if len(window_data) < 5:
+                    print(f"DEBUG: {t} | Found {len(window_data)} rows. Skipping.")
                     logger.warning(f"   ⚠️ {t}: Only {len(window_data)} mins of data found in ORB window. Skipping.")
                     continue
                 
-                # "Clean High" Rule: Use highest 1m close (filters bad prints)
-                high_15 = float(window_data['High'].max()) # Switching to High for trigger logic
+                # "Clean High" Rule: Use highest 1m High (filters bad prints)
+                # Important: Some platforms use 'Close', but ORB trigger is strictly the 15m Price High.
+                high_15 = float(window_data['High'].max())
                 low_15 = float(window_data['Low'].min())
                 vol_15 = float(window_data['Volume'].sum())
                 
-                # RVOL Check
-                avg_vol_day = dat.info.get('averageVolume', 10000000)
+                # RVOL Check (using 10d historical average)
+                avg_vol_day = self.avg_vol_lookup.get(t, 1000000)
                 avg_vol_15_est = avg_vol_day / 26.0
                 rvol = vol_15 / avg_vol_15_est
                 
-                if rvol < 1.5: # Strict RVOL: ≥1.5
-                    logger.info(f"   🗑️ {t} Dropped: Low Energy (RVOL {rvol:.2f} < 1.5)")
+                if rvol < 1.0: # Moderate RVOL: ≥1.0 (Adjusted for better capture)
+                    logger.info(f"   🗑️ {t} Dropped: Low Energy (RVOL {rvol:.2f} < 1.0)")
                     continue
                 
                 # Store for ranking
