@@ -442,7 +442,7 @@
         <div class="flex items-center gap-3">
             <div id="market-status-dot" class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse mr-2 cursor-pointer transition-transform hover:scale-125" onclick="toggleVersion()"></div>
             <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">Vibe-folio Sentinel <span id="version-badge"
-                    class="hidden text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v0.20</span>
+                    class="hidden text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v0.21</span>
             </h1>
         </div>
 
@@ -480,7 +480,7 @@
             <span id="market-status-badge" class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200 uppercase tracking-wide">LIVE</span>
             <div class="text-right hidden sm:block">
                 <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
-                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">04/02 23:02</span>
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">05/02 00:47</span>
             </div>
         </div>
     </nav>
@@ -1264,7 +1264,77 @@
         </div>
 
         <!-- 🎯 OPERATIONAL INTELLIGENCE (v0.15.12 Consolidated) -->
-        
+        <div id="intel-section" class="col-span-12 sentinel-card border-l-4 border-indigo-500 bg-indigo-50/20">
+            <div class="flex flex-col md:flex-row gap-8 mt-4">
+                <!-- AI Briefing Section -->
+                <div class="md:w-1/3">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xs mono text-indigo-600 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-brain text-indigo-500"></i> AI BRIEF
+                        </h2>
+                        <div class="flex items-center gap-2">
+                             <button id="run-orb-btn" onclick="triggerOrbWorkflow()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-0.5 rounded text-[0.6rem] font-bold transition-all shadow-sm flex items-center gap-1">
+                                <span id="btn-icon">⚡</span> LAUNCH
+                            </button>
+                            <div id="orb-status" class="px-2 py-0.5 rounded text-[0.55rem] font-bold bg-white text-gray-400 border border-indigo-100 uppercase tracking-wider">
+                                STANDBY
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-[0.7rem] text-gray-800 leading-relaxed font-medium bg-white/50 p-4 rounded-lg border border-indigo-50 relative min-h-[100px] flex items-center justify-center">
+                        
+                            <div class="text-center py-4">
+                                <div class="text-lg mb-1">🌙</div>
+                                <div class="text-gray-400 mono uppercase tracking-tighter text-[0.6rem]">Market Closed • Waiting for Tomorrow</div>
+                            </div>
+                        
+                        <div class="absolute bottom-2 right-2 text-[0.5rem] mono text-indigo-300 font-bold uppercase tracking-widest">
+                            Sync: <span id="orb-last-sync">2026-02-04 22:50:56</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Target Tracker Section (High-Density Table) -->
+                <div class="md:w-3/5 border-l border-indigo-100 md:pl-8">
+                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest flex items-center gap-2 mb-4 md:mb-0">
+                        <i class="fas fa-crosshairs text-rose-500"></i> ACTIVE TARGET TRACKER
+                    </h2>
+                    
+                    <!-- Desktop Table (Hidden on Mobile) -->
+                    <div class="hidden md:block overflow-x-auto max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-indigo-200 scrollbar-track-transparent">
+                        <table class="w-full text-left text-[0.65rem] mono border-collapse min-w-[600px]">
+                            <thead class="text-gray-400 uppercase font-bold tracking-tight border-b border-gray-100">
+                                <tr>
+                                    <th class="pb-2">Company</th>
+                                    <th class="pb-2">Ticker</th>
+                                    <th class="pb-2">Alert $</th>
+                                    <th class="pb-2">Trigger $</th>
+                                    <th class="pb-2">Buy Limit $</th>
+                                    <th class="pb-2 text-right text-rose-500">Stop Loss</th>
+                                    <th class="pb-2 text-right text-emerald-500">Take Profit</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-0">
+                                
+                                <tr>
+                                    <td colspan="7" class="py-12 text-center text-gray-300 mono uppercase tracking-tight text-[0.6rem]">
+                                        No active targets • Standby Mode
+                                    </td>
+                                </tr>
+                                
+                                
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Mobile List View (T212 Style) -->
+                    <div class="md:hidden flex flex-col mt-4">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 
