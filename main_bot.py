@@ -858,21 +858,62 @@ class Strategy_ORB:
             "quantity": target_qty
         }
         
-        # 2. Shadow Routing (To Telegram instead of API)
-        # Formatting as code block for clarity
-        payload_str = json.dumps(payload, indent=4)
-        
-        self.broadcast_notification(
-            f"🛠️ SHADOW EXECUTION: {ticker}",
-            f"<b>Endpoint</b>: POST /api/v0/equity/orders/market\n"
-            f"<b>Action</b>: {side.upper()} {qty} shares\n"
-            f"<b>Trigger Price</b>: ${price:.2f}\n\n"
-            f"<b>API PAYLOAD (Ready for T212)</b>:\n"
-            f"<pre>{payload_str}</pre>\n\n"
-            f"<i>(This is a verification step. No funds moved.)</i>"
-        )
-        
-        if not IS_LIVE:
+        if IS_LIVE:
+            # --- REAL EXECUTION ---
+            logger.info(f"⚡ LIVE EXECUTION: Sending {side} {qty} {ticker} to T212...")
+            try:
+                # T212 API Call
+                auth = HTTPBasicAuth(T212_API_KEY, T212_API_SECRET)
+                resp = requests.post(
+                    f"{BASE_URL}/orders/market",
+                    json=payload,
+                    headers={"Content-Type": "application/json"},
+                    auth=auth,
+                    timeout=5
+                )
+                
+                if resp.status_code == 200:
+                    order_data = resp.json()
+                    order_id = order_data.get('orderId', 'UNKNOWN')
+                    logger.info(f"✅ Trade Sent! ID: {order_id}")
+                    
+                    self.broadcast_notification(
+                        f"⚡ LIVE TRADE EXECUTED: {ticker}",
+                        f"<b>Action</b>: {side.upper()} {qty} shares\n"
+                        f"<b>Price</b>: ${price:.2f} (Trigger)\n"
+                        f"<b>Order ID</b>: {order_id}\n"
+                        f"<b>Status</b>: SUBMITTED (200 OK)"
+                    )
+                    fill_price = price # Using trigger as approx fill until order confirmation
+                else:
+                    logger.error(f"❌ Trade Failed: {resp.status_code} {resp.text}")
+                    self.broadcast_notification(
+                        f"❌ LIVE TRADE FAILED: {ticker}",
+                        f"<b>Error</b>: {resp.status_code}\n"
+                        f"<pre>{resp.text}</pre>"
+                    )
+                    return False, 0.0
+
+            except Exception as e:
+                logger.error(f"❌ Exception during execution: {e}")
+                self.broadcast_notification(f"❌ EXCEPTION: {ticker}", str(e))
+                return False, 0.0
+
+        else:
+            # --- SHADOW EXECUTION (Verification/Simulation) ---
+            # 2. Shadow Routing (To Telegram instead of API)
+            payload_str = json.dumps(payload, indent=4)
+            
+            self.broadcast_notification(
+                f"🛠️ SHADOW EXECUTION: {ticker}",
+                f"<b>Endpoint</b>: POST /api/v0/equity/orders/market\n"
+                f"<b>Action</b>: {side.upper()} {qty} shares\n"
+                f"<b>Trigger Price</b>: ${price:.2f}\n\n"
+                f"<b>API PAYLOAD (Ready for T212)</b>:\n"
+                f"<pre>{payload_str}</pre>\n\n"
+                f"<i>(This is a verification step. No funds moved.)</i>"
+            )
+            
             logger.info(f"[SIMULATION] Shadow Payload Constructed: {payload}")
             
         # 3. Panic Protocol (Slippage Protection)
