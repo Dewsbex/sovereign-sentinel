@@ -643,7 +643,7 @@ class Strategy_ORB:
     def monitor_breakout(self):
         logger.info("⚔️ Execution Engine Engaged (100ms Polling)...")
         
-        # End time: 21:30 GMT (Covering US Close + Buffer)
+        # End time: 21:30 GMT (9:30 PM as requested)
         end_time = datetime.datetime.utcnow().replace(hour=21, minute=30, second=0)
         
         last_sync = datetime.datetime.utcnow()
@@ -950,17 +950,26 @@ def run():
     # US Market opens at 14:30 GMT. 15m Candle completes at 14:45 GMT.
     ready_time = now.replace(hour=14, minute=45, second=0, microsecond=0)
     
+    # Silent Standby until 14:30 GMT
+    us_open = now.replace(hour=14, minute=30, second=0, microsecond=0)
+    if now < us_open:
+        wait_secs = (us_open - now).total_seconds()
+        logger.info(f"💤 Silent Standby until US Open (14:30 GMT)... Waiting {wait_secs/360.0:.1f} hours.")
+        time.sleep(wait_secs)
+        now = datetime.datetime.utcnow()
+
+    # Pre-Strategy Pulse (14:30 - 14:45 GMT)
     if now < ready_time:
-        logger.info(f"⏳ STANDBY MODE: Heartbeat Active (5m sync) until 14:45 GMT...")
+        logger.info(f"⏳ US SESSION PULSE: Active (2m sync) until strategy lock at 14:45 GMT...")
         while datetime.datetime.utcnow() < ready_time:
             # Refresh data for Dashboard Heartbeat
             bot.get_cash_balance()
             bot.save_intel()
-            bot.git_sync() # Updates Sync timestamp on UI
+            bot.git_sync() # 14:30 Pulse Start
             
-            # Wait 5 mins or until US Open
+            # Wait 2 mins or until 14:45
             wait_remaining = (ready_time - datetime.datetime.utcnow()).total_seconds()
-            sleep_time = min(300, wait_remaining)
+            sleep_time = min(120, wait_remaining)
             if sleep_time > 0:
                 time.sleep(sleep_time)
     
