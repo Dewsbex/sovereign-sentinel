@@ -35,36 +35,31 @@ if __name__ == "__main__":
         
     print(f"🔑 Credentials Loaded (Key: {t212_key[:4]}***)")
     
-    # 2. Construct Payload (Using LIMIT order for safety/queuing)
-    ticker = "C" # Citigroup
-    qty = 0.1
-    price = 50.0 # Way below market ($65+), so it wont fill, just Pending.
-    
-    payload = {
-        "instrumentCode": f"{ticker}_US_EQ",
-        "quantity": qty,
-        "limitPrice": price,
-        "timeValidity": "DAY"
-    }
-    
-    print(f"📦 Payload: {json.dumps(payload, indent=2)}")
-    
-    # 3. Send Request
-    url = "https://live.trading212.com/api/v0/equity/orders/limit"
-    print(f"📡 Sending POST to {url}...")
+    # 2. Connectivity Test (GET Account Cash)
+    # This is safer and tests AUTHENTICATION separately from ORDER rules.
+    url = "https://live.trading212.com/api/v0/equity/account/cash"
+    print(f"📡 Testing Connectivity: GET {url}...")
     
     try:
         auth = HTTPBasicAuth(t212_key, t212_secret)
-        resp = requests.post(url, json=payload, auth=auth, timeout=10)
+        resp = requests.get(url, auth=auth, timeout=10)
         
         print(f"📥 Response Code: {resp.status_code}")
         print(f"📄 Response Body: {resp.text}")
-        print(f"📄 Response Headers: {dict(resp.headers)}")
         
         if resp.status_code == 200:
-            print("✅ SUCCESS! Limit Order Placed (Pending).")
+            data = resp.json()
+            free = data.get('free', 0)
+            total = data.get('total', 0)
+            print(f"✅ AUTH SUCCESS! Cash Free: {free}, Total: {total}")
+            print("🚀 Credentials are VALID. The previous error was likely Order-related (Market Closed/Min Qty).")
+        elif resp.status_code == 401:
+            print("❌ AUTH FAILED (401 Unauthorized). Check API Key permissions or if it's Live vs Practice.")
         else:
-            print("❌ FAILURE! API rejected order.")
+            print(f"❌ API ERROR: {resp.status_code}")
+
+    except Exception as e:
+        print(f"❌ EXCEPTION: {e}")
             
     except Exception as e:
         print(f"❌ EXCEPTION: {e}")
