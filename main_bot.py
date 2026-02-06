@@ -17,8 +17,9 @@ logger = logging.getLogger("MainBot")
 
 def main():
     # Initialize Messenger
+    os.environ['ENV'] = 'LIVE' # FORCE LIVE MODE v32.61
     msg = ORBMessenger()
-    logger.info("🚀 STARTING SOVEREIGN FINALITY (v32.60)...")
+    logger.info("🚀 STARTING SOVEREIGN FINALITY (v32.61)...")
     
     # 1. Initialize State & Config
     try:
