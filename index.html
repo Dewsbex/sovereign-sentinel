@@ -12,14 +12,235 @@
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap');
 
         :root {
-            --bg-light: #F3F4F6;
-            /* Light Grey Vibe */
+            /* v32.61 Sovereign Styling */
+            --bg-light: #F3F4F6; /* Fallback */
+            --bg-dark: #0a0a0a;
             --panel-white: #FFFFFF;
             --text-dark: #1F2937;
+            --pos-green: #00ff88;
+            --neg-red: #ff4d4d;
+            --dim-gray: #666;
             --border-subtle: rgba(0, 0, 0, 0.05);
             --t212-teal: #37E6B0;
             --t212-red: #FF4B4B;
         }
+
+        .sovereign-header {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: var(--bg-dark);
+            border-bottom: 2px solid #333;
+            z-index: 1000;
+            padding: 10px 20px;
+            font-family: 'Inter', sans-serif;
+            color: white; /* Force white text on dark header */
+        }
+
+        .header-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 100vw;
+        }
+
+        .sitrep-data {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .metric-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .label {
+            font-size: 10px;
+            color: var(--dim-gray);
+            letter-spacing: 1px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .wealth-value {
+            font-size: 16pt; /* Slightly smaller for mobile safety, or keep 20pt if requested */
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+        }
+        
+        @media (min-width: 768px) {
+            .wealth-value { font-size: 20pt; }
+        }
+
+        .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+        }
+
+        .pos { color: var(--pos-green); }
+        .neg { color: var(--neg-red); }
+        .dim { color: #888; }
+        .active { color: #fff; }
+
+        .header-ops {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .status-live { background: rgba(0, 255, 136, 0.2); color: var(--pos-green); border: 1px solid var(--pos-green); }
+        .status-closed { background: rgba(255, 77, 77, 0.2); color: var(--neg-red); border: 1px solid var(--neg-red); }
+
+        .sync-timestamp {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65em;
+            color: var(--dim-gray);
+        }
+
+        .cog-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            display: flex; /* Fix alignment */
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cog-btn:hover { transform: rotate(90deg); }
+        
+        /* Utility to hide on mobile if needed */
+        .desktop-only { display: none; }
+        @media (min-width: 768px) {
+            .desktop-only { display: flex; }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: opacity 0.2s;
+        }
+        
+        .modal-overlay.hidden { 
+            display: none; 
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            width: 90%;
+            max-width: 400px;
+            color: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-content h3 {
+            margin-top: 0;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            font-size: 1.1em;
+            color: #ccc;
+        }
+        
+        .modal-content hr {
+            border-color: #333;
+            margin: 15px 0;
+        }
+
+        .api-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .api-actions button {
+            background: #333;
+            border: 1px solid #555;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .api-actions button:hover {
+            background: #444;
+        }
+
+        .panic-btn {
+            background: var(--neg-red) !important;
+            color: white;
+            font-weight: bold;
+            border: none !important;
+        }
+        
+        .panic-btn:hover {
+             background: #cc0000 !important;
+        }
+        
+        .panic-module {
+            background: rgba(255, 77, 77, 0.1);
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .panic-module label {
+            display: block;
+            font-size: 0.7em;
+            color: var(--neg-red);
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-family: 'JetBrains Mono';
+        }
+        
+        .panic-module input {
+            width: 100%;
+            background: #222;
+            border: 1px solid #444;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono';
+            text-transform: uppercase;
+        }
+        
+        .close-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid #444;
+            color: #888;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .close-btn:hover { color: white; border-color: #666; }
 
         body {
             background-color: var(--bg-light);
@@ -435,86 +656,64 @@
 
 <body>
 
-    <nav
-        class="hidden md:flex fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm px-6 py-3 justify-between items-center transition-all duration-300">
-        <!-- BRAND -->
-        <!-- BRAND -->
-        <div class="flex items-center gap-3">
-            <div id="market-status-dot" class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse mr-2 cursor-pointer transition-transform hover:scale-125" onclick="toggleVersion()"></div>
-            <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">Vibe-folio Sentinel <span id="version-badge"
-                    class="hidden text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v0.27</span>
-            </h1>
-        </div>
-
-        <!-- KEY DATA (FIXED HEADER TICKER) -->
-        <div class="hidden md:flex items-center gap-8">
-            <div class="flex flex-col text-right">
-                <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Total
-                    Wealth</span>
-                <span class="text-lg font-bold text-gray-800 mono leading-none">£172,163.72</span>
-            </div>
-            <div class="h-6 w-px bg-gray-200"></div>
-            <div class="flex flex-col text-right">
-                <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Total
-                    Return</span>
-                <div class="flex items-baseline justify-end gap-2">
-                    <span
-                        class="text-lg font-bold text-emerald-500 mono leading-none">+£23,337.02 <span class="text-xs">(+14.44%)</span></span>
+    <!-- v32.61 SOVEREIGN SITREP HEADER -->
+    <header class="sovereign-header">
+        <div class="header-main">
+            <div class="sitrep-data">
+                <div class="metric-group">
+                    <span class="label">TOTAL WEALTH</span>
+                    <!-- Using total_wealth_str from generate_static.py -->
+                    <span class="value wealth-value">£171,999.12</span>
+                </div>
+                <div class="metric-group">
+                    <span class="label">RETURN</span>
+                    <!-- Convert python string check to basic logic. Adjusting var names to match python output. -->
+                    <span class="value pos">
+                        +£21,369.66 (+13.22%)
+                    </span>
+                </div>
+                <div class="metric-group desktop-only">
+                    <span class="label">CASH</span>
+                    <span class="value">£15,162.94</span>
+                </div>
+                <div class="metric-group desktop-only">
+                    <span class="label">PENDING</span>
+                    <span class="value dim">
+                        £0.00
+                    </span>
                 </div>
             </div>
-            <div class="h-6 w-px bg-gray-200"></div>
-            <div class="flex flex-col text-right">
-                <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Cash
-                    (Dry)</span>
-                <span class="text-lg font-bold text-gray-800 mono leading-none">£15,162.94</span>
-            </div>
-            <div class="h-6 w-px bg-gray-200"></div>
-            <div class="flex flex-col text-right">
-                <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Pending</span>
-                <span class="text-lg font-bold text-gray-400 mono leading-none">£0.00</span>
-            </div>
-        </div>
 
-        <!-- STATUS / CONTROLS -->
-        <div class="flex gap-4 items-center">
-            <span id="market-status-badge" class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200 uppercase tracking-wide">LIVE</span>
-            <div class="text-right hidden sm:block">
-                <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
-                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">06/02 13:43</span>
+            <div class="header-ops">
+                <div id="status-badge-el" class="status-badge status-closed">
+                    OFFLINE
+                </div>
+                <div class="sync-timestamp hidden sm:block">
+                    SYNC: 06/02 15:22
+                </div>
+                <button id="settings-toggle" class="cog-btn" onclick="toggleSettingsModal()">
+                    ⚙️
+                </button>
             </div>
-            <!-- v32.60 Manual API Hub Trigger -->
-            <button onclick="openSettingsModal()" class="text-gray-400 hover:text-indigo-600 transition-colors">
-                <i class="fas fa-cog text-xl"></i>
-            </button>
         </div>
-    </nav>
+    </header>
 
-    <!-- MOBILE HEADER (T212 Style) - Visible < md -->
-    <div class="md:hidden bg-white pb-2 pt-12 px-6 border-b border-gray-100">
-        <div class="flex justify-between items-start mb-1">
-             <div class="text-[0.65rem] text-gray-500 font-bold tracking-widest uppercase">Account Value</div>
-             <i class="fas fa-cog text-gray-400"></i>
-        </div>
-        <div class="text-[2.5rem] font-bold tracking-tight text-gray-900 leading-none mb-4">
-            £172,163.72
-        </div>
-        
-        <div class="flex gap-8 mb-2">
-            <div>
-                 <div class="text-[0.6rem] text-gray-400 font-bold tracking-widest uppercase mb-0.5">Total Return</div>
-                 <div class="font-bold text-sm text-rose-500">
-                    £4588.37
-                 </div>
+    <!-- SETTINGS MODAL (v32.61) -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3>Sovereign Settings (LIVE)</h3>
+            <hr>
+            <div class="api-actions">
+                <button onclick="triggerAPICall('sync_metadata')">Sync T212 Metadata</button>
+                <button class="panic-btn" onclick="triggerAPICall('cancel_all')">CANCEL ALL ORDERS</button>
             </div>
-            <div>
-                 <div class="text-[0.6rem] text-gray-400 font-bold tracking-widest uppercase mb-0.5">Rate of Return</div>
-                 <div class="font-bold text-sm text-rose-500">
-                    -2.8%
-                 </div>
+            <div class="panic-module">
+                <label>PANIC SELL TICKER:</label>
+                <input type="text" id="panic-ticker" placeholder="e.g. NVDA_US_EQ">
+                <button class="panic-btn" onclick="executePanicSell()">EXECUTE 100% EXIT</button>
             </div>
+            <button class="close-btn" onclick="toggleSettingsModal()">Close</button>
         </div>
-
-        <!-- Mini Area Chart & Buttons REMOVED per user request -->
     </div>
 
     <!-- TABS / PILLS NAVIGATION (Sticky) -->
@@ -564,10 +763,10 @@
                                     <td class="p-2 text-right">119.1502</td>
                                     <td class="p-2 text-right">£142.75</td>
                                     <td class="p-2 text-right">£186.44</td>
-                                    <td class="p-2 text-right font-semibold">£16364.18</td>
+                                    <td class="p-2 text-right font-semibold">£16341.31</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£3791.31
-                                        <span class="text-[0.55rem] ml-1">(+30.1%)</span>
+                                        +£3768.44
+                                        <span class="text-[0.55rem] ml-1">(+30.0%)</span>
                                     </td>
                                 </tr>
                                 
@@ -576,11 +775,11 @@
                                     <td class="p-2 text-gray-700">Rio Tinto</td>
                                     <td class="p-2 text-right">102.3696</td>
                                     <td class="p-2 text-right">£45.76</td>
-                                    <td class="p-2 text-right">£68.01</td>
-                                    <td class="p-2 text-right font-semibold">£6962.26</td>
+                                    <td class="p-2 text-right">£68.66</td>
+                                    <td class="p-2 text-right font-semibold">£7029.01</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£2277.14
-                                        <span class="text-[0.55rem] ml-1">(+48.6%)</span>
+                                        +£2343.89
+                                        <span class="text-[0.55rem] ml-1">(+50.0%)</span>
                                     </td>
                                 </tr>
                                 
@@ -590,10 +789,10 @@
                                     <td class="p-2 text-right">190.0</td>
                                     <td class="p-2 text-right">£50.57</td>
                                     <td class="p-2 text-right">£59.51</td>
-                                    <td class="p-2 text-right font-semibold">£8329.2</td>
+                                    <td class="p-2 text-right font-semibold">£8317.57</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£1172.08
-                                        <span class="text-[0.55rem] ml-1">(+16.4%)</span>
+                                        +£1160.44
+                                        <span class="text-[0.55rem] ml-1">(+16.2%)</span>
                                     </td>
                                 </tr>
                                 
@@ -602,11 +801,11 @@
                                     <td class="p-2 text-gray-700">British American Tobacco</td>
                                     <td class="p-2 text-right">100.0</td>
                                     <td class="p-2 text-right">£42.02</td>
-                                    <td class="p-2 text-right">£45.98</td>
-                                    <td class="p-2 text-right font-semibold">£4598.7</td>
+                                    <td class="p-2 text-right">£45.76</td>
+                                    <td class="p-2 text-right font-semibold">£4576.8</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£395.98
-                                        <span class="text-[0.55rem] ml-1">(+9.4%)</span>
+                                        +£374.08
+                                        <span class="text-[0.55rem] ml-1">(+8.9%)</span>
                                     </td>
                                 </tr>
                                 
@@ -616,10 +815,10 @@
                                     <td class="p-2 text-right">225.0</td>
                                     <td class="p-2 text-right">£69.94</td>
                                     <td class="p-2 text-right">£72.45</td>
-                                    <td class="p-2 text-right font-semibold">£12009.94</td>
+                                    <td class="p-2 text-right font-semibold">£11993.16</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£331.52
-                                        <span class="text-[0.55rem] ml-1">(+2.8%)</span>
+                                        +£314.74
+                                        <span class="text-[0.55rem] ml-1">(+2.7%)</span>
                                     </td>
                                 </tr>
                                 
@@ -628,11 +827,11 @@
                                     <td class="p-2 text-gray-700">Legal & General</td>
                                     <td class="p-2 text-right">1000.0</td>
                                     <td class="p-2 text-right">£2.59</td>
-                                    <td class="p-2 text-right">£2.68</td>
-                                    <td class="p-2 text-right font-semibold">£2682.0</td>
+                                    <td class="p-2 text-right">£2.67</td>
+                                    <td class="p-2 text-right font-semibold">£2670.0</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£84.0
-                                        <span class="text-[0.55rem] ml-1">(+3.2%)</span>
+                                        +£72.0
+                                        <span class="text-[0.55rem] ml-1">(+2.8%)</span>
                                     </td>
                                 </tr>
                                 
@@ -642,10 +841,10 @@
                                     <td class="p-2 text-right">60.0</td>
                                     <td class="p-2 text-right">£217.7</td>
                                     <td class="p-2 text-right">£215.72</td>
-                                    <td class="p-2 text-right font-semibold">£9534.59</td>
+                                    <td class="p-2 text-right font-semibold">£9521.26</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£13.66
-                                        <span class="text-[0.55rem] ml-1">(+0.1%)</span>
+                                        +£0.33
+                                        <span class="text-[0.55rem] ml-1">(+0.0%)</span>
                                     </td>
                                 </tr>
                                 
@@ -668,10 +867,10 @@
                                     <td class="p-2 text-right">100.0</td>
                                     <td class="p-2 text-right">£80.44</td>
                                     <td class="p-2 text-right">£77.01</td>
-                                    <td class="p-2 text-right font-semibold">£5672.93</td>
+                                    <td class="p-2 text-right font-semibold">£5665.0</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-304.92
-                                        <span class="text-[0.55rem] ml-1">(-5.1%)</span>
+                                        £-312.84
+                                        <span class="text-[0.55rem] ml-1">(-5.2%)</span>
                                     </td>
                                 </tr>
                                 
@@ -681,10 +880,10 @@
                                     <td class="p-2 text-right">111.0</td>
                                     <td class="p-2 text-right">£33.25</td>
                                     <td class="p-2 text-right">£29.76</td>
-                                    <td class="p-2 text-right font-semibold">£2433.41</td>
+                                    <td class="p-2 text-right font-semibold">£2430.01</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-325.46
-                                        <span class="text-[0.55rem] ml-1">(-11.8%)</span>
+                                        £-328.86
+                                        <span class="text-[0.55rem] ml-1">(-11.9%)</span>
                                     </td>
                                 </tr>
                                 
@@ -694,10 +893,10 @@
                                     <td class="p-2 text-right">167.837</td>
                                     <td class="p-2 text-right">£114.0</td>
                                     <td class="p-2 text-right">£112.53</td>
-                                    <td class="p-2 text-right font-semibold">£13912.86</td>
+                                    <td class="p-2 text-right font-semibold">£13893.41</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-354.31
-                                        <span class="text-[0.55rem] ml-1">(-2.5%)</span>
+                                        £-373.76
+                                        <span class="text-[0.55rem] ml-1">(-2.6%)</span>
                                     </td>
                                 </tr>
                                 
@@ -707,10 +906,10 @@
                                     <td class="p-2 text-right">30.0</td>
                                     <td class="p-2 text-right">£423.35</td>
                                     <td class="p-2 text-right">£393.74</td>
-                                    <td class="p-2 text-right font-semibold">£8701.44</td>
+                                    <td class="p-2 text-right font-semibold">£8689.27</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-577.8
-                                        <span class="text-[0.55rem] ml-1">(-6.2%)</span>
+                                        £-589.97
+                                        <span class="text-[0.55rem] ml-1">(-6.4%)</span>
                                     </td>
                                 </tr>
                                 
@@ -720,10 +919,10 @@
                                     <td class="p-2 text-right">66.9526</td>
                                     <td class="p-2 text-right">£333.79</td>
                                     <td class="p-2 text-right">£326.14</td>
-                                    <td class="p-2 text-right font-semibold">£16085.39</td>
+                                    <td class="p-2 text-right font-semibold">£16062.91</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-908.78
-                                        <span class="text-[0.55rem] ml-1">(-5.3%)</span>
+                                        £-931.26
+                                        <span class="text-[0.55rem] ml-1">(-5.5%)</span>
                                     </td>
                                 </tr>
                                 
@@ -733,10 +932,10 @@
                                     <td class="p-2 text-right">1406.1646</td>
                                     <td class="p-2 text-right">£15.77</td>
                                     <td class="p-2 text-right">£14.19</td>
-                                    <td class="p-2 text-right font-semibold">£14698.69</td>
+                                    <td class="p-2 text-right font-semibold">£14678.15</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-1800.01
-                                        <span class="text-[0.55rem] ml-1">(-10.9%)</span>
+                                        £-1820.55
+                                        <span class="text-[0.55rem] ml-1">(-11.0%)</span>
                                     </td>
                                 </tr>
                                 
@@ -746,10 +945,10 @@
                                     <td class="p-2 text-right">190.0</td>
                                     <td class="p-2 text-right">£92.46</td>
                                     <td class="p-2 text-right">£80.81</td>
-                                    <td class="p-2 text-right font-semibold">£11311.82</td>
+                                    <td class="p-2 text-right font-semibold">£11296.01</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-1810.8
-                                        <span class="text-[0.55rem] ml-1">(-13.8%)</span>
+                                        £-1826.61
+                                        <span class="text-[0.55rem] ml-1">(-13.9%)</span>
                                     </td>
                                 </tr>
                                 
@@ -759,10 +958,10 @@
                                     <td class="p-2 text-right">108.0</td>
                                     <td class="p-2 text-right">£168.85</td>
                                     <td class="p-2 text-right">£136.35</td>
-                                    <td class="p-2 text-right font-semibold">£10847.73</td>
+                                    <td class="p-2 text-right font-semibold">£10832.57</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-2655.02
-                                        <span class="text-[0.55rem] ml-1">(-19.7%)</span>
+                                        £-2670.18
+                                        <span class="text-[0.55rem] ml-1">(-19.8%)</span>
                                     </td>
                                 </tr>
                                 
@@ -772,10 +971,10 @@
                                     <td class="p-2 text-right">92.0</td>
                                     <td class="p-2 text-right">£242.96</td>
                                     <td class="p-2 text-right">£189.96</td>
-                                    <td class="p-2 text-right font-semibold">£12873.9</td>
+                                    <td class="p-2 text-right font-semibold">£12855.91</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-3681.84
-                                        <span class="text-[0.55rem] ml-1">(-22.2%)</span>
+                                        £-3699.83
+                                        <span class="text-[0.55rem] ml-1">(-22.4%)</span>
                                     </td>
                                 </tr>
                                 
@@ -797,8 +996,8 @@
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#4f46e5" stroke-width="25"
-                stroke-dasharray="58.94063571278935 565.4866776461628"
+                stroke="#4f46e5" stroke-width="30"
+                stroke-dasharray="58.92003426942697 565.4866776461628"
                 stroke-dashoffset="-0" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-NUE"
@@ -808,19 +1007,19 @@
                 onclick="highlightSegment('NUE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="178.94648878844015" y1="64.78203952909512" x2="188.59531838458688" y2="36.376052705460154" stroke="#4f46e5" stroke-width="2" opacity="0.5" />
-            <circle cx="188.59531838458688" cy="36.376052705460154" r="2" fill="#4f46e5" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M178.9367351933928,64.77872709031233 L195.0126991897221,17.43357547381919 L215.0126991897221,17.43357547381919" fill="none" stroke="#4f46e5" stroke-width="1.5" opacity="0.6" />
+            <circle cx="178.9367351933928" cy="64.77872709031233" r="2" fill="#4f46e5" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="198.59531838458688" y="36.376052705460154" dy="0.3em" text-anchor="start" 
+            <text x="220.0126991897221" y="17.43357547381919" dy="0.3em" text-anchor="start" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">NUE 10.4%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#10b981" stroke-width="25"
-                stroke-dasharray="57.93648763874173 565.4866776461628"
-                stroke-dashoffset="-58.94063571278935" 
+                stroke="#10b981" stroke-width="30"
+                stroke-dasharray="57.91623851862066 565.4866776461628"
+                stroke-dashoffset="-58.92003426942697" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-RE"
                 data-ticker="RE"
@@ -829,19 +1028,19 @@
                 onclick="highlightSegment('RE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="224.582211931946" y1="99.62645869766264" x2="249.4429492425947" y2="82.83527826355018" stroke="#10b981" stroke-width="2" opacity="0.5" />
-            <circle cx="249.4429492425947" cy="82.83527826355018" r="2" fill="#10b981" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M224.56501005693667,99.60099926378564 L265.9900156441237,71.60155441033322 L285.9900156441237,71.60155441033322" fill="none" stroke="#10b981" stroke-width="1.5" opacity="0.6" />
+            <circle cx="224.56501005693667" cy="99.60099926378564" r="2" fill="#10b981" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="259.4429492425947" y="82.83527826355018" dy="0.3em" text-anchor="start" 
+            <text x="290.9900156441237" y="71.60155441033322" dy="0.3em" text-anchor="start" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">RE 10.2%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#ef4444" stroke-width="25"
-                stroke-dasharray="52.94186037706868 565.4866776461628"
-                stroke-dashoffset="-116.87712335153108" 
+                stroke="#ef4444" stroke-width="30"
+                stroke-dasharray="52.923364223051244 565.4866776461628"
+                stroke-dashoffset="-116.83627278804764" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-CNNE"
                 data-ticker="CNNE"
@@ -850,19 +1049,19 @@
                 onclick="highlightSegment('CNNE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="239.97830034858276" y1="151.97622528579862" x2="269.9710671314437" y2="152.6349670477315" stroke="#ef4444" stroke-width="2" opacity="0.5" />
-            <circle cx="269.9710671314437" cy="152.6349670477315" r="2" fill="#ef4444" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M239.97938647703532,151.92613842086038 L289.96793451983274,152.99621532133838 L309.96793451983274,152.99621532133838" fill="none" stroke="#ef4444" stroke-width="1.5" opacity="0.6" />
+            <circle cx="239.97938647703532" cy="151.92613842086038" r="2" fill="#ef4444" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="279.9710671314437" y="152.6349670477315" dy="0.3em" text-anchor="start" 
+            <text x="314.96793451983274" y="152.99621532133838" dy="0.3em" text-anchor="start" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">CNNE 9.4%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#f59e0b" stroke-width="25"
-                stroke-dasharray="50.11145153518468 565.4866776461628"
-                stroke-dashoffset="-169.81898372859976" 
+                stroke="#f59e0b" stroke-width="30"
+                stroke-dasharray="50.09391495046599 565.4866776461628"
+                stroke-dashoffset="-169.75963701109887" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-EOG"
                 data-ticker="EOG"
@@ -871,19 +1070,19 @@
                 onclick="highlightSegment('EOG')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="224.55967619213828" y1="200.4068912562904" x2="249.41290158951773" y2="217.20918834172053" stroke="#f59e0b" stroke-width="2" opacity="0.5" />
-            <circle cx="249.41290158951773" cy="217.20918834172053" r="2" fill="#f59e0b" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M224.59780445577806,200.3504475687903 L266.04102915343253,228.32291844034043 L286.04102915343253,228.32291844034043" fill="none" stroke="#f59e0b" stroke-width="1.5" opacity="0.6" />
+            <circle cx="224.59780445577806" cy="200.3504475687903" r="2" fill="#f59e0b" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="259.41290158951773" y="217.20918834172053" dy="0.3em" text-anchor="start" 
+            <text x="291.04102915343253" y="228.32291844034043" dy="0.3em" text-anchor="start" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">EOG 8.9%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#8b5cf6" stroke-width="25"
-                stroke-dasharray="46.36931701453289 565.4866776461628"
-                stroke-dashoffset="-219.93043526378443" 
+                stroke="#8b5cf6" stroke-width="30"
+                stroke-dasharray="46.35311720814725 565.4866776461628"
+                stroke-dashoffset="-219.85355196156485" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-CRM"
                 data-ticker="CRM"
@@ -892,19 +1091,19 @@
                 onclick="highlightSegment('CRM')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="188.3601047255048" y1="231.41561499766678" x2="201.14680630067306" y2="258.5541533302224" stroke="#8b5cf6" stroke-width="2" opacity="0.5" />
-            <circle cx="201.14680630067306" cy="258.5541533302224" r="2" fill="#8b5cf6" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M188.43696494529883,231.37935687748995 L209.79083435935374,276.5901106983177 L229.79083435935374,276.5901106983177" fill="none" stroke="#8b5cf6" stroke-width="1.5" opacity="0.6" />
+            <circle cx="188.43696494529883" cy="231.37935687748995" r="2" fill="#8b5cf6" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="211.14680630067306" y="258.5541533302224" dy="0.3em" text-anchor="start" 
+            <text x="234.79083435935374" y="276.5901106983177" dy="0.3em" text-anchor="start" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">CRM 8.2%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#ec4899" stroke-width="25"
-                stroke-dasharray="43.257498907519796 565.4866776461628"
-                stroke-dashoffset="-266.2997522783173" 
+                stroke="#ec4899" stroke-width="30"
+                stroke-dasharray="43.242396001221486 565.4866776461628"
+                stroke-dashoffset="-266.2066691697121" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-CTVA"
                 data-ticker="CTVA"
@@ -913,19 +1112,19 @@
                 onclick="highlightSegment('CTVA')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="144.8177050891821" y1="239.85067511965235" x2="143.09027345224283" y2="269.80090015953647" stroke="#ec4899" stroke-width="2" opacity="0.5" />
-            <circle cx="143.09027345224283" cy="269.80090015953647" r="2" fill="#ec4899" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M144.91817590029893,239.85641359313033 L142.0949402893539,289.77664336709165 L122.0949402893539,289.77664336709165" fill="none" stroke="#ec4899" stroke-width="1.5" opacity="0.6" />
+            <circle cx="144.91817590029893" cy="239.85641359313033" r="2" fill="#ec4899" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="133.09027345224283" y="269.80090015953647" dy="0.3em" text-anchor="end" 
+            <text x="117.0949402893539" y="289.77664336709165" dy="0.3em" text-anchor="end" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">CTVA 7.6%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#06b6d4" stroke-width="25"
-                stroke-dasharray="40.74300465215151 565.4866776461628"
-                stroke-dashoffset="-309.5572511858371" 
+                stroke="#06b6d4" stroke-width="30"
+                stroke-dasharray="40.72876019779257 565.4866776461628"
+                stroke-dashoffset="-309.4490651709336" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-NFLX"
                 data-ticker="NFLX"
@@ -934,19 +1133,19 @@
                 onclick="highlightSegment('NFLX')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="104.9467284055421" y1="227.9115056884156" x2="89.92897120738948" y2="253.88200758455412" stroke="#06b6d4" stroke-width="2" opacity="0.5" />
-            <circle cx="89.92897120738948" cy="253.88200758455412" r="2" fill="#06b6d4" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M105.04658578591304,227.96916410028211 L80.07246677808693,271.2853663782166 L60.072466778086934,271.2853663782166" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.6" />
+            <circle cx="105.04658578591304" cy="227.96916410028211" r="2" fill="#06b6d4" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="79.92897120738948" y="253.88200758455412" dy="0.3em" text-anchor="end" 
+            <text x="55.072466778086934" y="271.2853663782166" dy="0.3em" text-anchor="end" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">NFLX 7.2%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#3b82f6" stroke-width="25"
-                stroke-dasharray="39.071441541262466 565.4866776461628"
-                stroke-dashoffset="-350.30025583798863" 
+                stroke="#3b82f6" stroke-width="30"
+                stroke-dasharray="39.05778640916588 565.4866776461628"
+                stroke-dashoffset="-350.17782536872613" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-QCOM"
                 data-ticker="QCOM"
@@ -955,19 +1154,19 @@
                 onclick="highlightSegment('QCOM')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="75.87770451020737" y1="201.04787274043713" x2="51.17027268027648" y2="218.06383032058284" stroke="#3b82f6" stroke-width="2" opacity="0.5" />
-            <circle cx="51.17027268027648" cy="218.06383032058284" r="2" fill="#3b82f6" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M75.95109590482383,201.15427452621532 L34.81281585194817,229.57331592966827 L14.812815851948173,229.57331592966827" fill="none" stroke="#3b82f6" stroke-width="1.5" opacity="0.6" />
+            <circle cx="75.95109590482383" cy="201.15427452621532" r="2" fill="#3b82f6" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="41.17027268027648" y="218.06383032058284" dy="0.3em" text-anchor="end" 
+            <text x="9.812815851948173" y="229.57331592966827" dy="0.3em" text-anchor="end" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">QCOM 6.9%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#f43f5e" stroke-width="25"
-                stroke-dasharray="34.34176328180234 565.4866776461628"
-                stroke-dashoffset="-389.3716973792511" 
+                stroke="#f43f5e" stroke-width="30"
+                stroke-dasharray="34.32974256581169 565.4866776461628"
+                stroke-dashoffset="-389.235611777892" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-DHR"
                 data-ticker="DHR"
@@ -976,19 +1175,19 @@
                 onclick="highlightSegment('DHR')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="61.710058513525695" y1="167.46099173343094" x2="32.28007801803426" y2="173.28132231124124" stroke="#f43f5e" stroke-width="2" opacity="0.5" />
-            <circle cx="32.28007801803426" cy="173.28132231124124" r="2" fill="#f43f5e" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M61.73773672625967,167.60036595633593 L12.703146018626143,177.37834704318925 L-7.296853981373857,177.37834704318925" fill="none" stroke="#f43f5e" stroke-width="1.5" opacity="0.6" />
+            <circle cx="61.73773672625967" cy="167.60036595633593" r="2" fill="#f43f5e" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="22.28007801803426" y="173.28132231124124" dy="0.3em" text-anchor="end" 
+            <text x="-12.296853981373857" y="177.37834704318925" dy="0.3em" text-anchor="end" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">DHR 6.1%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#10b981" stroke-width="25"
-                stroke-dasharray="31.340916881670438 565.4866776461628"
-                stroke-dashoffset="-423.71346066105343" 
+                stroke="#10b981" stroke-width="30"
+                stroke-dasharray="31.329929251467828 565.4866776461628"
+                stroke-dashoffset="-423.5653543437037" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-MSFT"
                 data-ticker="MSFT"
@@ -997,19 +1196,19 @@
                 onclick="highlightSegment('MSFT')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="61.29211653796757" y1="134.8042304674468" x2="31.72282205062342" y2="129.73897395659574" stroke="#10b981" stroke-width="2" opacity="0.5" />
-            <circle cx="31.72282205062342" cy="129.73897395659574" r="2" fill="#10b981" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M61.266311605268854,134.95564744275265 L11.969818052640449,126.59767379983744 L-8.030181947359551,126.59767379983744" fill="none" stroke="#10b981" stroke-width="1.5" opacity="0.6" />
+            <circle cx="61.266311605268854" cy="134.95564744275265" r="2" fill="#10b981" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="21.72282205062342" y="129.73897395659574" dy="0.3em" text-anchor="end" 
+            <text x="-13.030181947359551" y="126.59767379983744" dy="0.3em" text-anchor="end" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">MSFT 5.5%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#4f46e5" stroke-width="25"
-                stroke-dasharray="30.000215860820532 565.4866776461628"
-                stroke-dashoffset="-455.05437754272384" 
+                stroke="#4f46e5" stroke-width="30"
+                stroke-dasharray="29.98973212296674 565.4866776461628"
+                stroke-dashoffset="-454.8952835951715" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-BMY"
                 data-ticker="BMY"
@@ -1018,40 +1217,40 @@
                 onclick="highlightSegment('BMY')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="71.47227375715747" y1="106.02959846522685" x2="45.296365009543294" y2="91.37279795363581" stroke="#4f46e5" stroke-width="2" opacity="0.5" />
-            <circle cx="45.296365009543294" cy="91.37279795363581" r="2" fill="#4f46e5" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M71.39211680232552,106.17305966439403 L27.721070581395253,81.82475947794626 L7.721070581395253,81.82475947794626" fill="none" stroke="#4f46e5" stroke-width="1.5" opacity="0.6" />
+            <circle cx="71.39211680232552" cy="106.17305966439403" r="2" fill="#4f46e5" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="35.296365009543294" y="91.37279795363581" dy="0.3em" text-anchor="end" 
+            <text x="2.721070581395253" y="81.82475947794626" dy="0.3em" text-anchor="end" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">BMY 5.3%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#10b981" stroke-width="25"
-                stroke-dasharray="25.076724308686707 565.4866776461628"
-                stroke-dashoffset="-485.05459340354435" 
+                stroke="#10b981" stroke-width="30"
+                stroke-dasharray="25.343715410829663 565.4866776461628"
+                stroke-dashoffset="-484.8850157181383" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-RIO"
                 data-ticker="RIO"
-                onmouseover="showTT('Rio Tinto', '4.4%', '#10b981')"
+                onmouseover="showTT('Rio Tinto', '4.5%', '#10b981')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('RIO')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="88.3650174778243" y1="84.41700731522619" x2="67.82002330376574" y2="62.55600975363491" stroke="#10b981" stroke-width="2" opacity="0.5" />
-            <circle cx="67.82002330376574" cy="62.55600975363491" r="2" fill="#10b981" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M88.33872938349529,84.4417228264945 L54.08246792988156,48.02045773010255 L34.08246792988156,48.02045773010255" fill="none" stroke="#10b981" stroke-width="1.5" opacity="0.6" />
+            <circle cx="88.33872938349529" cy="84.4417228264945" r="2" fill="#10b981" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="57.82002330376574" y="62.55600975363491" dy="0.3em" text-anchor="end" 
-                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">RIO 4.4%</text>
+            <text x="29.08246792988156" y="48.02045773010255" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">RIO 4.5%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#ef4444" stroke-width="25"
-                stroke-dasharray="20.432805099562223 565.4866776461628"
-                stroke-dashoffset="-510.13131771223107" 
+                stroke="#ef4444" stroke-width="30"
+                stroke-dasharray="20.425657070106606 565.4866776461628"
+                stroke-dashoffset="-510.2287311289679" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-SOLV"
                 data-ticker="SOLV"
@@ -1060,19 +1259,19 @@
                 onclick="highlightSegment('SOLV')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="106.7298064263401" y1="71.08428326310404" x2="92.30640856845348" y2="44.77904435080538" stroke="#ef4444" stroke-width="2" opacity="0.5" />
-            <circle cx="92.30640856845348" cy="44.77904435080538" r="2" fill="#ef4444" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M106.81211219478115,71.03921006649041 L82.81884119188179,27.17210454787397 L62.81884119188179,27.17210454787397" fill="none" stroke="#ef4444" stroke-width="1.5" opacity="0.6" />
+            <circle cx="106.81211219478115" cy="71.03921006649041" r="2" fill="#ef4444" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="82.30640856845348" y="44.77904435080538" dy="0.3em" text-anchor="end" 
+            <text x="57.81884119188179" y="27.17210454787397" dy="0.3em" text-anchor="end" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">SOLV 3.6%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#f59e0b" stroke-width="25"
-                stroke-dasharray="16.563634808001645 565.4866776461628"
-                stroke-dashoffset="-530.5641228117933" 
+                stroke="#f59e0b" stroke-width="30"
+                stroke-dasharray="16.502056006789747 565.4866776461628"
+                stroke-dashoffset="-530.6543881990746" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-BATS"
                 data-ticker="BATS"
@@ -1081,19 +1280,19 @@
                 onclick="highlightSegment('BATS')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="123.74660903438524" y1="63.91423193810385" x2="114.99547871251366" y2="35.21897591747181" stroke="#f59e0b" stroke-width="2" opacity="0.5" />
-            <circle cx="114.99547871251366" cy="35.21897591747181" r="2" fill="#f59e0b" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M123.80350405169582,63.8969013331664 L109.24989519152685,16.061846518258847 L89.24989519152685,16.061846518258847" fill="none" stroke="#f59e0b" stroke-width="1.5" opacity="0.6" />
+            <circle cx="123.80350405169582" cy="63.8969013331664" r="2" fill="#f59e0b" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="104.99547871251366" y="35.21897591747181" dy="0.3em" text-anchor="end" 
+            <text x="84.24989519152685" y="16.061846518258847" dy="0.3em" text-anchor="end" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">BATS 2.9%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#8b5cf6" stroke-width="25"
-                stroke-dasharray="9.660049265022815 565.4866776461628"
-                stroke-dashoffset="-547.1277576197949" 
+                stroke="#8b5cf6" stroke-width="30"
+                stroke-dasharray="9.626920454931092 565.4866776461628"
+                stroke-dashoffset="-547.1564442058643" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-LGEN"
                 data-ticker="LGEN"
@@ -1102,19 +1301,19 @@
                 onclick="highlightSegment('LGEN')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="136.52199784131633" y1="61.014925645867336" x2="132.02933045508846" y2="31.353234194489772" stroke="#8b5cf6" stroke-width="2" opacity="0.5" />
-            <circle cx="132.02933045508846" cy="31.353234194489772" r="2" fill="#8b5cf6" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M136.53398344331114,61.01311108879588 L129.05286313403957,11.57595058257138 L109.05286313403957,11.57595058257138" fill="none" stroke="#8b5cf6" stroke-width="1.5" opacity="0.6" />
+            <circle cx="136.53398344331114" cy="61.01311108879588" r="2" fill="#8b5cf6" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="122.02933045508846" y="31.353234194489772" dy="0.3em" text-anchor="end" 
+            <text x="104.05286313403957" y="11.57595058257138" dy="0.3em" text-anchor="end" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">LGEN 1.7%</text>
         
             <!-- Slice -->
             <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#ec4899" stroke-width="25"
-                stroke-dasharray="8.764675794928847 565.4866776461628"
-                stroke-dashoffset="-556.7878068848178" 
+                stroke="#ec4899" stroke-width="30"
+                stroke-dasharray="8.76161534632476 565.4866776461628"
+                stroke-dashoffset="-556.7833646607954" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-VSNTV"
                 data-ticker="VSNTV"
@@ -1123,12 +1322,12 @@
                 onclick="highlightSegment('VSNTV')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="145.68512183485643" y1="60.103493803040564" x2="144.2468291131419" y2="30.137991737387424" stroke="#ec4899" stroke-width="2" opacity="0.5" />
-            <circle cx="144.2468291131419" cy="30.137991737387424" r="2" fill="#ec4899" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M145.6791562639415,60.103780338611756 L143.2786875216868,10.161436082284979 L123.2786875216868,10.161436082284979" fill="none" stroke="#ec4899" stroke-width="1.5" opacity="0.6" />
+            <circle cx="145.6791562639415" cy="60.103780338611756" r="2" fill="#ec4899" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="134.2468291131419" y="30.137991737387424" dy="0.3em" text-anchor="end" 
+            <text x="118.2786875216868" y="10.161436082284979" dy="0.3em" text-anchor="end" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">VSNTV 1.5%</text>
         
     </svg>
@@ -1240,7 +1439,7 @@
         
         <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('RIO')"
-             onmouseover="showTT('Rio Tinto', '4.4%', '#10b981')"
+             onmouseover="showTT('Rio Tinto', '4.5%', '#10b981')"
              onmouseout="hideTT()"
              style="border-left: 3px solid #10b981;">
             RIO
@@ -1569,7 +1768,7 @@
         }
 
         // v30.6 DYNAMIC HEATMAP LOGIC
-        const rawMapData = [{"x": "BMY", "y": 8329.2, "val_pct": 0.1637, "company_name": "", "shares_held": "190.00", "formatted_value": "\u00a38,329.21", "formatted_pl_gbp": "+\u00a31,172.08", "formatted_pl_pct": "(+16.38%)", "price_avg": "USD 50.57", "price_cur": "USD 59.51", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "DHR", "y": 9534.59, "val_pct": 0.0014, "company_name": "", "shares_held": "60.00", "formatted_value": "\u00a39,534.59", "formatted_pl_gbp": "+\u00a313.66", "formatted_pl_pct": "(+0.14%)", "price_avg": "USD 217.7", "price_cur": "USD 215.72", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RIO", "y": 6962.26, "val_pct": 0.486, "company_name": "", "shares_held": "102.36", "formatted_value": "\u00a36,962.26", "formatted_pl_gbp": "+\u00a32,277.14", "formatted_pl_pct": "(+48.60%)", "price_avg": "GBX 45.76", "price_cur": "GBX 68.01", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "LGEN", "y": 2682.0, "val_pct": 0.0323, "company_name": "", "shares_held": "1,000.00", "formatted_value": "\u00a32,682.00", "formatted_pl_gbp": "+\u00a384.00", "formatted_pl_pct": "(+3.23%)", "price_avg": "GBX 2.59", "price_cur": "GBX 2.68", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QELL", "y": 0.22, "val_pct": -0.999, "company_name": "", "shares_held": "275.36", "formatted_value": "\u00a30.22", "formatted_pl_gbp": "\u00a3216.64", "formatted_pl_pct": "(-99.90%)", "price_avg": "USD 1.02", "price_cur": "USD 0.0", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "BATS", "y": 4598.7, "val_pct": 0.0942, "company_name": "", "shares_held": "100.00", "formatted_value": "\u00a34,598.70", "formatted_pl_gbp": "+\u00a3395.98", "formatted_pl_pct": "(+9.42%)", "price_avg": "GBX 42.02", "price_cur": "GBX 45.98", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "VSNTV", "y": 2433.41, "val_pct": -0.118, "company_name": "", "shares_held": "111.00", "formatted_value": "\u00a32,433.41", "formatted_pl_gbp": "\u00a3325.46", "formatted_pl_pct": "(-11.80%)", "price_avg": "USD 33.25", "price_cur": "USD 29.76", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NUE", "y": 16364.18, "val_pct": 0.3015, "company_name": "", "shares_held": "119.15", "formatted_value": "\u00a316,364.18", "formatted_pl_gbp": "+\u00a33,791.31", "formatted_pl_pct": "(+30.15%)", "price_avg": "USD 142.75", "price_cur": "USD 186.44", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "SOLV", "y": 5672.93, "val_pct": -0.0511, "company_name": "", "shares_held": "100.00", "formatted_value": "\u00a35,672.93", "formatted_pl_gbp": "\u00a3304.91", "formatted_pl_pct": "(-5.10%)", "price_avg": "USD 80.44", "price_cur": "USD 77.01", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RE", "y": 16085.39, "val_pct": -0.0535, "company_name": "", "shares_held": "66.95", "formatted_value": "\u00a316,085.39", "formatted_pl_gbp": "\u00a3908.78", "formatted_pl_pct": "(-5.35%)", "price_avg": "USD 333.79", "price_cur": "USD 326.14", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NFLX", "y": 11311.82, "val_pct": -0.138, "company_name": "", "shares_held": "190.00", "formatted_value": "\u00a311,311.82", "formatted_pl_gbp": "\u00a31,810.80", "formatted_pl_pct": "(-13.80%)", "price_avg": "USD 92.46", "price_cur": "USD 80.81", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CRM", "y": 12873.9, "val_pct": -0.2224, "company_name": "", "shares_held": "92.00", "formatted_value": "\u00a312,873.90", "formatted_pl_gbp": "\u00a33,681.84", "formatted_pl_pct": "(-22.24%)", "price_avg": "USD 242.96", "price_cur": "USD 189.96", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QCOM", "y": 10847.73, "val_pct": -0.1967, "company_name": "", "shares_held": "108.00", "formatted_value": "\u00a310,847.73", "formatted_pl_gbp": "\u00a32,655.02", "formatted_pl_pct": "(-19.66%)", "price_avg": "USD 168.85", "price_cur": "USD 136.35", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "EOG", "y": 13912.86, "val_pct": -0.0249, "company_name": "", "shares_held": "167.83", "formatted_value": "\u00a313,912.86", "formatted_pl_gbp": "\u00a3354.31", "formatted_pl_pct": "(-2.48%)", "price_avg": "USD 114.0", "price_cur": "USD 112.53", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CTVA", "y": 12009.94, "val_pct": 0.0283, "company_name": "", "shares_held": "225.00", "formatted_value": "\u00a312,009.94", "formatted_pl_gbp": "+\u00a3331.52", "formatted_pl_pct": "(+2.84%)", "price_avg": "USD 69.94", "price_cur": "USD 72.45", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "MSFT", "y": 8701.44, "val_pct": -0.0623, "company_name": "", "shares_held": "30.00", "formatted_value": "\u00a38,701.44", "formatted_pl_gbp": "\u00a3577.80", "formatted_pl_pct": "(-6.23%)", "price_avg": "USD 423.35", "price_cur": "USD 393.74", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CNNE", "y": 14698.69, "val_pct": -0.1092, "company_name": "", "shares_held": "1,406.16", "formatted_value": "\u00a314,698.69", "formatted_pl_gbp": "\u00a31,800.01", "formatted_pl_pct": "(-10.91%)", "price_avg": "USD 15.77", "price_cur": "USD 14.19", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}];
+        const rawMapData = [{"x": "BMY", "y": 8317.57, "val_pct": 0.1621, "company_name": "", "shares_held": "190.00", "formatted_value": "\u00a38,317.57", "formatted_pl_gbp": "+\u00a31,160.44", "formatted_pl_pct": "(+16.21%)", "price_avg": "USD 50.57", "price_cur": "USD 59.51", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "DHR", "y": 9521.26, "val_pct": 0.0, "company_name": "", "shares_held": "60.00", "formatted_value": "\u00a39,521.26", "formatted_pl_gbp": "+\u00a30.33", "formatted_pl_pct": "(+0.00%)", "price_avg": "USD 217.7", "price_cur": "USD 215.72", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RIO", "y": 7029.01, "val_pct": 0.5002, "company_name": "", "shares_held": "102.36", "formatted_value": "\u00a37,029.01", "formatted_pl_gbp": "+\u00a32,343.89", "formatted_pl_pct": "(+50.03%)", "price_avg": "GBX 45.76", "price_cur": "GBX 68.66", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "LGEN", "y": 2670.0, "val_pct": 0.0277, "company_name": "", "shares_held": "1,000.00", "formatted_value": "\u00a32,670.00", "formatted_pl_gbp": "+\u00a372.00", "formatted_pl_pct": "(+2.77%)", "price_avg": "GBX 2.59", "price_cur": "GBX 2.67", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QELL", "y": 0.22, "val_pct": -0.999, "company_name": "", "shares_held": "275.36", "formatted_value": "\u00a30.22", "formatted_pl_gbp": "\u00a3216.64", "formatted_pl_pct": "(-99.90%)", "price_avg": "USD 1.02", "price_cur": "USD 0.0", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "BATS", "y": 4576.8, "val_pct": 0.089, "company_name": "", "shares_held": "100.00", "formatted_value": "\u00a34,576.80", "formatted_pl_gbp": "+\u00a3374.08", "formatted_pl_pct": "(+8.90%)", "price_avg": "GBX 42.02", "price_cur": "GBX 45.76", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "VSNTV", "y": 2430.01, "val_pct": -0.1193, "company_name": "", "shares_held": "111.00", "formatted_value": "\u00a32,430.01", "formatted_pl_gbp": "\u00a3328.86", "formatted_pl_pct": "(-11.92%)", "price_avg": "USD 33.25", "price_cur": "USD 29.76", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NUE", "y": 16341.31, "val_pct": 0.2997, "company_name": "", "shares_held": "119.15", "formatted_value": "\u00a316,341.31", "formatted_pl_gbp": "+\u00a33,768.44", "formatted_pl_pct": "(+29.97%)", "price_avg": "USD 142.75", "price_cur": "USD 186.44", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "SOLV", "y": 5665.0, "val_pct": -0.0524, "company_name": "", "shares_held": "100.00", "formatted_value": "\u00a35,665.00", "formatted_pl_gbp": "\u00a3312.84", "formatted_pl_pct": "(-5.23%)", "price_avg": "USD 80.44", "price_cur": "USD 77.01", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RE", "y": 16062.91, "val_pct": -0.0548, "company_name": "", "shares_held": "66.95", "formatted_value": "\u00a316,062.91", "formatted_pl_gbp": "\u00a3931.26", "formatted_pl_pct": "(-5.48%)", "price_avg": "USD 333.79", "price_cur": "USD 326.14", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NFLX", "y": 11296.01, "val_pct": -0.1392, "company_name": "", "shares_held": "190.00", "formatted_value": "\u00a311,296.01", "formatted_pl_gbp": "\u00a31,826.61", "formatted_pl_pct": "(-13.92%)", "price_avg": "USD 92.46", "price_cur": "USD 80.81", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CRM", "y": 12855.91, "val_pct": -0.2235, "company_name": "", "shares_held": "92.00", "formatted_value": "\u00a312,855.91", "formatted_pl_gbp": "\u00a33,699.83", "formatted_pl_pct": "(-22.35%)", "price_avg": "USD 242.96", "price_cur": "USD 189.96", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QCOM", "y": 10832.57, "val_pct": -0.1978, "company_name": "", "shares_held": "108.00", "formatted_value": "\u00a310,832.57", "formatted_pl_gbp": "\u00a32,670.18", "formatted_pl_pct": "(-19.78%)", "price_avg": "USD 168.85", "price_cur": "USD 136.35", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "EOG", "y": 13893.41, "val_pct": -0.0262, "company_name": "", "shares_held": "167.83", "formatted_value": "\u00a313,893.41", "formatted_pl_gbp": "\u00a3373.76", "formatted_pl_pct": "(-2.62%)", "price_avg": "USD 114.0", "price_cur": "USD 112.53", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CTVA", "y": 11993.16, "val_pct": 0.0269, "company_name": "", "shares_held": "225.00", "formatted_value": "\u00a311,993.16", "formatted_pl_gbp": "+\u00a3314.74", "formatted_pl_pct": "(+2.70%)", "price_avg": "USD 69.94", "price_cur": "USD 72.45", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "MSFT", "y": 8689.27, "val_pct": -0.0636, "company_name": "", "shares_held": "30.00", "formatted_value": "\u00a38,689.27", "formatted_pl_gbp": "\u00a3589.97", "formatted_pl_pct": "(-6.36%)", "price_avg": "USD 423.35", "price_cur": "USD 393.74", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CNNE", "y": 14678.15, "val_pct": -0.1104, "company_name": "", "shares_held": "1,406.16", "formatted_value": "\u00a314,678.15", "formatted_pl_gbp": "\u00a31,820.55", "formatted_pl_pct": "(-11.03%)", "price_avg": "USD 15.77", "price_cur": "USD 14.19", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}];
         const mapData = rawMapData.map(d => {
             const pct = d.val_pct || 0;
             const pctScaled = pct * 100;
@@ -1806,758 +2005,58 @@
     <!-- FULL PORTFOLIO MODAL STRUCTURE -->
     <div id="portfolio-backdrop" class="modal-backdrop">
         <div class="portfolio-modal">
-            <!-- Modal Header -->
-            <div class="px-6 py-5 border-b border-gray-100 bg-white z-10">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest font-bold">Investments Value</span>
-                        <div class="text-3xl font-bold text-gray-900 mono tracking-tight">£172,163.72</div>
-                    </div>
-                    <button onclick="closePortfolioModal()" class="p-2 -mr-2 text-gray-400 hover:text-gray-600 transition-colors">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
-                </div>
-                
-                <div class="flex justify-between items-center text-sm">
-                    <div>
-                        <span class="text-[0.65rem] text-gray-400 uppercase tracking-wide block mb-0.5">Unrealised Result</span>
-                        <span class="font-bold mono text-rose-500">
-                            -£4588.37 
-                            <span class="text-xs opacity-80">(-2.84%)</span>
-                        </span>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-[0.65rem] text-gray-400 uppercase tracking-wide block mb-0.5">Cost Basis</span>
-                        <span class="font-bold mono text-gray-700">£161589.15</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Asset List (Scrollable) -->
-            <div class="flex-1 overflow-y-auto bg-white scrollbar-thin">
-                <div class="divide-y divide-gray-50">
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-blue-500" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="249.76617048005235"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">NU</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Nucor</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">NUE</span> · <span class="text-blue-500">9.51%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£16364.18</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-emerald-500">
-                                +£3791.31
-                                <span class="opacity-75">(30.154690217905696%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-blue-500" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="250.2131057577055"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">RE</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Everest Group</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">RE</span> · <span class="text-blue-500">9.34%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£16085.39</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £908.78
-                                <span class="opacity-75">(-5.34759861764358%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-blue-500" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="252.4361594881895"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">CN</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Cannae</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">CNNE</span> · <span class="text-blue-500">8.54%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£14698.69</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £1800.01
-                                <span class="opacity-75">(-10.910011091782987%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-blue-500" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="253.6959433729708"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">EO</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">EOG Resources</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">EOG</span> · <span class="text-blue-500">8.08%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£13912.86</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £354.31
-                                <span class="opacity-75">(-2.483393693353342%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-blue-500" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="255.36152634248378"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">CR</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Salesforce</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">CRM</span> · <span class="text-blue-500">7.48%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£12873.9</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £3681.84
-                                <span class="opacity-75">(-22.23905424946273%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-blue-500" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="256.74656240002247"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">CT</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Corteva</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">CTVA</span> · <span class="text-blue-500">6.98%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£12009.94</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-emerald-500">
-                                +£331.52
-                                <span class="opacity-75">(2.838740172043821%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-blue-500" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="257.8657361725223"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">NF</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Netflix</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">NFLX</span> · <span class="text-blue-500">6.57%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£11311.82</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £1810.8
-                                <span class="opacity-75">(-13.799073660595218%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-blue-500" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="258.6097305518259"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">QC</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Qualcomm</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">QCOM</span> · <span class="text-blue-500">6.3%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£10847.73</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £2655.02
-                                <span class="opacity-75">(-19.66280942770917%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-blue-500" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="260.714858391768"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">DH</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Danaher</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">DHR</span> · <span class="text-blue-500">5.54%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£9534.59</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-emerald-500">
-                                +£13.66
-                                <span class="opacity-75">(0.1434733791761939%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-blue-500" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="262.0505021615472"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">MS</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Microsoft</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">MSFT</span> · <span class="text-blue-500">5.05%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£8701.44</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £577.8
-                                <span class="opacity-75">(-6.226803057146921%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-blue-500" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="262.6472334589425"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">BM</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Bristol-Myers Squibb</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">BMY</span> · <span class="text-blue-500">4.84%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£8329.21</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-emerald-500">
-                                +£1172.08
-                                <span class="opacity-75">(16.376396684145742%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-indigo-400" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="264.83862546650363"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">RI</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Rio Tinto</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">RIO</span> · <span class="text-blue-500">4.04%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£6962.26</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-emerald-500">
-                                +£2277.14
-                                <span class="opacity-75">(48.603664367188024%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-indigo-400" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="266.90558289516514"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">SO</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Solventum</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">SOLV</span> · <span class="text-blue-500">3.3%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£5672.93</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £304.91
-                                <span class="opacity-75">(-5.100671814568473%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-indigo-400" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="268.62770809088"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">BA</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">British American Tobacco</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">BATS</span> · <span class="text-blue-500">2.67%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£4598.7</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-emerald-500">
-                                +£395.98
-                                <span class="opacity-75">(9.421993375718586%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-indigo-400" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="271.7004181833432"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">LG</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Legal & General</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">LGEN</span> · <span class="text-blue-500">1.56%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£2682.0</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-emerald-500">
-                                +£84.0
-                                <span class="opacity-75">(3.233256351039261%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-indigo-400" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="272.0989390796156"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">VS</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Versant Media Group</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">VSNTV</span> · <span class="text-blue-500">1.41%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£2433.41</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £325.46
-                                <span class="opacity-75">(-11.796858858880627%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="asset-row">
-                        <div class="flex items-center">
-                            <!-- Icon with Ring -->
-                            <div class="asset-icon-wrapper">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle class="text-gray-100" stroke-width="6" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50" />
-                                    <!-- Progress Ring: 2 * PI * 44 = ~276 -->
-                                    <circle class="text-indigo-400" 
-                                            stroke-width="6" 
-                                            stroke-dasharray="276"
-                                            stroke-dashoffset="275.99964731245353"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">QE</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">Lilium</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">QELL</span> · <span class="text-blue-500">0.0%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£0.22</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £216.64
-                                <span class="opacity-75">(-99.89855206123767%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-                <!-- Bottom Padding for mobile safe area -->
-                <div class="h-8"></div>
-            </div>
-        </div>
-    </div>
+            <!-- v32.61 JS Logic -->
+            <script>
+                // Modal Logic
+                function toggleSettingsModal() {
+                    const el = document.getElementById('settings-modal');
+                    el.classList.toggle('hidden');
+                }
 
+                function triggerAPICall(action) {
+                    // Logic to hit python endpoint or log
+                    console.log("[API TRIGGER] " + action);
+                    alert("COMMAND SENT: " + action + "\n(This is a static mock. In live, this hits the API.)");
+                }
+
+                function executePanicSell() {
+                    const ticker = document.getElementById('panic-ticker').value;
+                    if (!ticker) {
+                        alert("ENTER TICKER");
+                        return;
+                    }
+                    if (confirm("CONFIRM TOTAL LIQUIDATION: " + ticker)) {
+                        triggerAPICall('PANIC_SELL_' + ticker);
+                    }
+                }
+                
+                // Keep Market Status Logic for the new badge
+                function updateStatusBadge() {
+                    const now = new Date();
+                    const hours = now.getUTCHours();
+                    const mins = now.getUTCMinutes();
+                    const time = hours * 60 + mins;
+                    const el = document.getElementById('status-badge-el');
+                    if(el) {
+                        let text = "CLOSED";
+                        let cls = "status-closed";
+                        
+                        // 14:30 - 21:00 LIVE
+                         if (time >= 870 && time < 1260) {
+                            text = "US LIVE";
+                            cls = "status-live";
+                         } else if (time >= 570 && time < 870) {
+                             text = "EU LIVE";
+                             cls = "status-live"; // Maybe yellow?
+                         }
+                         
+                         el.innerText = text;
+                         el.className = "status-badge " + cls;
+                    }
+                }
+                setInterval(updateStatusBadge, 60000);
+                updateStatusBadge();
+            </script>
     <script>
         // --- PORTFOLIO MODAL LOGIC ---
         function openPortfolioModal() {

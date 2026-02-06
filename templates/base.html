@@ -12,14 +12,235 @@
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap');
 
         :root {
-            --bg-light: #F3F4F6;
-            /* Light Grey Vibe */
+            /* v32.61 Sovereign Styling */
+            --bg-light: #F3F4F6; /* Fallback */
+            --bg-dark: #0a0a0a;
             --panel-white: #FFFFFF;
             --text-dark: #1F2937;
+            --pos-green: #00ff88;
+            --neg-red: #ff4d4d;
+            --dim-gray: #666;
             --border-subtle: rgba(0, 0, 0, 0.05);
             --t212-teal: #37E6B0;
             --t212-red: #FF4B4B;
         }
+
+        .sovereign-header {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: var(--bg-dark);
+            border-bottom: 2px solid #333;
+            z-index: 1000;
+            padding: 10px 20px;
+            font-family: 'Inter', sans-serif;
+            color: white; /* Force white text on dark header */
+        }
+
+        .header-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 100vw;
+        }
+
+        .sitrep-data {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .metric-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .label {
+            font-size: 10px;
+            color: var(--dim-gray);
+            letter-spacing: 1px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .wealth-value {
+            font-size: 16pt; /* Slightly smaller for mobile safety, or keep 20pt if requested */
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+        }
+        
+        @media (min-width: 768px) {
+            .wealth-value { font-size: 20pt; }
+        }
+
+        .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+        }
+
+        .pos { color: var(--pos-green); }
+        .neg { color: var(--neg-red); }
+        .dim { color: #888; }
+        .active { color: #fff; }
+
+        .header-ops {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .status-live { background: rgba(0, 255, 136, 0.2); color: var(--pos-green); border: 1px solid var(--pos-green); }
+        .status-closed { background: rgba(255, 77, 77, 0.2); color: var(--neg-red); border: 1px solid var(--neg-red); }
+
+        .sync-timestamp {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65em;
+            color: var(--dim-gray);
+        }
+
+        .cog-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            display: flex; /* Fix alignment */
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cog-btn:hover { transform: rotate(90deg); }
+        
+        /* Utility to hide on mobile if needed */
+        .desktop-only { display: none; }
+        @media (min-width: 768px) {
+            .desktop-only { display: flex; }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: opacity 0.2s;
+        }
+        
+        .modal-overlay.hidden { 
+            display: none; 
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            width: 90%;
+            max-width: 400px;
+            color: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-content h3 {
+            margin-top: 0;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            font-size: 1.1em;
+            color: #ccc;
+        }
+        
+        .modal-content hr {
+            border-color: #333;
+            margin: 15px 0;
+        }
+
+        .api-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .api-actions button {
+            background: #333;
+            border: 1px solid #555;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .api-actions button:hover {
+            background: #444;
+        }
+
+        .panic-btn {
+            background: var(--neg-red) !important;
+            color: white;
+            font-weight: bold;
+            border: none !important;
+        }
+        
+        .panic-btn:hover {
+             background: #cc0000 !important;
+        }
+        
+        .panic-module {
+            background: rgba(255, 77, 77, 0.1);
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .panic-module label {
+            display: block;
+            font-size: 0.7em;
+            color: var(--neg-red);
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-family: 'JetBrains Mono';
+        }
+        
+        .panic-module input {
+            width: 100%;
+            background: #222;
+            border: 1px solid #444;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono';
+            text-transform: uppercase;
+        }
+        
+        .close-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid #444;
+            color: #888;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .close-btn:hover { color: white; border-color: #666; }
 
         body {
             background-color: var(--bg-light);
@@ -435,88 +656,64 @@
 
 <body>
 
-    <nav
-        class="hidden md:flex fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm px-6 py-3 justify-between items-center transition-all duration-300">
-        <!-- BRAND -->
-        <!-- BRAND -->
-        <div class="flex items-center gap-3">
-            <div id="market-status-dot" class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse mr-2 cursor-pointer transition-transform hover:scale-125" onclick="toggleVersion()"></div>
-            <h1 class="text-lg font-bold tracking-tight text-gray-900 mono">Vibe-folio Sentinel <span id="version-badge"
-                    class="hidden text-[0.6rem] bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 font-mono ml-2 border border-gray-200">v32.61</span>
-            </h1>
-        </div>
-
-        <!-- KEY DATA (FIXED HEADER TICKER) -->
-        <div class="hidden md:flex items-center gap-8">
-            <div class="flex flex-col text-right">
-                <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Total
-                    Wealth</span>
-                <span class="text-lg font-bold text-gray-800 mono leading-none">{{ total_wealth_str }}</span>
-            </div>
-            <div class="h-6 w-px bg-gray-200"></div>
-            <div class="flex flex-col text-right">
-                <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Total
-                    Return</span>
-                <div class="flex items-baseline justify-end gap-2">
-                    <span
-                        class="text-lg font-bold {{ 'text-emerald-500' if total_return_str.startswith('£-') == False else 'text-rose-500' }} mono leading-none">{{
-                        total_return_str }} <span class="text-xs">({{ return_pct_str }})</span></span>
+    <!-- v32.61 SOVEREIGN SITREP HEADER -->
+    <header class="sovereign-header">
+        <div class="header-main">
+            <div class="sitrep-data">
+                <div class="metric-group">
+                    <span class="label">TOTAL WEALTH</span>
+                    <!-- Using total_wealth_str from generate_static.py -->
+                    <span class="value wealth-value">{{ total_wealth_str }}</span>
+                </div>
+                <div class="metric-group">
+                    <span class="label">RETURN</span>
+                    <!-- Convert python string check to basic logic. Adjusting var names to match python output. -->
+                    <span class="value {{ 'pos' if '£-' not in total_return_str else 'neg' }}">
+                        {{ total_return_str }} ({{ return_pct_str }})
+                    </span>
+                </div>
+                <div class="metric-group desktop-only">
+                    <span class="label">CASH</span>
+                    <span class="value">{{ cash_dry_str }}</span>
+                </div>
+                <div class="metric-group desktop-only">
+                    <span class="label">PENDING</span>
+                    <span class="value {{ 'active' if pending_cash_str != '£0.00' else 'dim' }}">
+                        {{ pending_cash_str }}
+                    </span>
                 </div>
             </div>
-            <div class="h-6 w-px bg-gray-200"></div>
-            <div class="flex flex-col text-right">
-                <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Cash
-                    (Dry)</span>
-                <span class="text-lg font-bold text-gray-800 mono leading-none">{{ cash_dry_str }}</span>
-            </div>
-            <div class="h-6 w-px bg-gray-200"></div>
-            <div class="flex flex-col text-right">
-                <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Pending</span>
-                <span class="text-lg font-bold text-gray-400 mono leading-none">{{ pending_cash_str }}</span>
-            </div>
-        </div>
 
-        <!-- STATUS / CONTROLS -->
-        <div class="flex gap-4 items-center">
-            <span id="market-status-badge" class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200 uppercase tracking-wide">{{
-                env }}</span>
-            <div class="text-right hidden sm:block">
-                <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
-                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">{{ sync_time }}</span>
+            <div class="header-ops">
+                <div id="status-badge-el" class="status-badge status-closed">
+                    OFFLINE
+                </div>
+                <div class="sync-timestamp hidden sm:block">
+                    SYNC: {{ sync_time }}
+                </div>
+                <button id="settings-toggle" class="cog-btn" onclick="toggleSettingsModal()">
+                    ⚙️
+                </button>
             </div>
-            <!-- v32.60 Manual API Hub Trigger -->
-            <button onclick="openSettingsModal()" class="text-gray-400 hover:text-indigo-600 transition-colors">
-                <i class="fas fa-cog text-xl"></i>
-            </button>
         </div>
-    </nav>
+    </header>
 
-    <!-- MOBILE HEADER (T212 Style) - Visible < md -->
-    <div class="md:hidden bg-white pb-2 pt-12 px-6 border-b border-gray-100">
-        <div class="flex justify-between items-start mb-1">
-             <div class="text-[0.65rem] text-gray-500 font-bold tracking-widest uppercase">Account Value</div>
-             <i class="fas fa-cog text-gray-400"></i>
-        </div>
-        <div class="text-[2.5rem] font-bold tracking-tight text-gray-900 leading-none mb-4">
-            {{ total_wealth_str }}
-        </div>
-        
-        <div class="flex gap-8 mb-2">
-            <div>
-                 <div class="text-[0.6rem] text-gray-400 font-bold tracking-widest uppercase mb-0.5">Total Return</div>
-                 <div class="font-bold text-sm {{ 'text-emerald-500' if portfolio_metrics.unrealized_pl >= 0 else 'text-rose-500' }}">
-                    {{ '+' if portfolio_metrics.unrealized_pl >= 0 else '' }}£{{ portfolio_metrics.unrealized_pl | abs | round(2) }}
-                 </div>
+    <!-- SETTINGS MODAL (v32.61) -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3>Sovereign Settings ({{ env }})</h3>
+            <hr>
+            <div class="api-actions">
+                <button onclick="triggerAPICall('sync_metadata')">Sync T212 Metadata</button>
+                <button class="panic-btn" onclick="triggerAPICall('cancel_all')">CANCEL ALL ORDERS</button>
             </div>
-            <div>
-                 <div class="text-[0.6rem] text-gray-400 font-bold tracking-widest uppercase mb-0.5">Rate of Return</div>
-                 <div class="font-bold text-sm {{ 'text-emerald-500' if portfolio_metrics.unrealized_pl >= 0 else 'text-rose-500' }}">
-                    {{ '+' if portfolio_metrics.unrealized_pl_pct >= 0 else '' }}{{ portfolio_metrics.unrealized_pl_pct | round(1) }}%
-                 </div>
+            <div class="panic-module">
+                <label>PANIC SELL TICKER:</label>
+                <input type="text" id="panic-ticker" placeholder="e.g. NVDA_US_EQ">
+                <button class="panic-btn" onclick="executePanicSell()">EXECUTE 100% EXIT</button>
             </div>
+            <button class="close-btn" onclick="toggleSettingsModal()">Close</button>
         </div>
-
-        <!-- Mini Area Chart & Buttons REMOVED per user request -->
     </div>
 
     <!-- TABS / PILLS NAVIGATION (Sticky) -->
@@ -1175,100 +1372,58 @@
     <!-- FULL PORTFOLIO MODAL STRUCTURE -->
     <div id="portfolio-backdrop" class="modal-backdrop">
         <div class="portfolio-modal">
-            <!-- v32.61: Functional Settings Hub -->
-            <div class="px-6 py-5 border-b border-gray-100 bg-white z-10 flex justify-between items-center">
-                 <h2 class="text-lg font-bold mono uppercase tracking-tight text-gray-900">
-                    <i class="fas fa-cog text-indigo-500 mr-2"></i> COMMAND CENTER
-                </h2>
-                <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            
-            <div class="p-6 flex flex-col gap-6 overflow-y-auto">
-                <!-- Sync Metadata (Ledger Refresh) -->
-                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 flex justify-between items-center">
-                    <div>
-                        <div class="font-bold text-sm text-gray-800">Sync Metadata</div>
-                        <div class="text-[0.65rem] text-gray-500">Force refresh instrument definitions (ledger_sync.py)</div>
-                    </div>
-                    <!-- v32.61 Logic: We can't actually trigger python from client-side JS without a backend API active. 
-                         For "Static" site, this usually just logs. 
-                         But user asked for API triggers. We'll assume a 'fetch' to an endpoint if exists, or just visual feedback. -->
-                    <button onclick="triggerSync()" id="btn-sync" class="bg-indigo-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-indigo-700 transition shadow-sm">SYNC NOW</button>
-                </div>
+            <!-- v32.61 JS Logic -->
+            <script>
+                // Modal Logic
+                function toggleSettingsModal() {
+                    const el = document.getElementById('settings-modal');
+                    el.classList.toggle('hidden');
+                }
 
-                <!-- Global Kill Switch -->
-                <div class="p-4 bg-orange-50 rounded-lg border border-orange-100 flex justify-between items-center">
-                    <div>
-                        <div class="font-bold text-sm text-orange-800">Cancel All Pending</div>
-                        <div class="text-[0.65rem] text-orange-600">Delete all open limit/stop orders immediately.</div>
-                    </div>
-                    <button onclick="triggerCancelAll()" id="btn-cancel" class="bg-orange-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-orange-700 transition shadow-sm">EXECUTE</button>
-                </div>
+                function triggerAPICall(action) {
+                    // Logic to hit python endpoint or log
+                    console.log("[API TRIGGER] " + action);
+                    alert("COMMAND SENT: " + action + "\n(This is a static mock. In live, this hits the API.)");
+                }
 
-                <!-- Panic Sell Module -->
-                <div class="p-4 bg-rose-50 rounded-lg border border-rose-100">
-                    <div class="font-bold text-sm text-rose-700 mb-2 flex items-center gap-2">
-                        <i class="fas fa-exclamation-triangle"></i> PANIC PROTOCOL
-                    </div>
-                    <div class="text-[0.65rem] text-rose-600 mb-3">Emergency Liquidation for specific asset.</div>
-                    <div class="flex gap-2">
-                        <input type="text" id="panic-ticker" placeholder="TICKER (e.g. NVDA)" class="flex-1 border border-rose-200 rounded px-3 py-2 text-xs font-mono uppercase bg-white focus:outline-none focus:border-rose-400 text-rose-800 font-bold">
-                        <button onclick="triggerPanicSell()" id="btn-panic" class="bg-rose-600 text-white px-6 py-2 rounded text-xs font-bold hover:bg-rose-700 transition shadow-sm">LIQUIDATE 100%</button>
-                    </div>
-                </div>
+                function executePanicSell() {
+                    const ticker = document.getElementById('panic-ticker').value;
+                    if (!ticker) {
+                        alert("ENTER TICKER");
+                        return;
+                    }
+                    if (confirm("CONFIRM TOTAL LIQUIDATION: " + ticker)) {
+                        triggerAPICall('PANIC_SELL_' + ticker);
+                    }
+                }
                 
-                 <!-- Mode Switch -->
-                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <div class="font-bold text-sm text-gray-800">Environment Mode</div>
-                            <div class="text-[0.65rem] text-gray-500">Current Scope: <span class="font-bold text-emerald-600">{{ env }}</span></div>
-                        </div>
-                        <button class="border border-gray-300 text-gray-400 px-4 py-2 rounded text-xs font-bold bg-white cursor-not-allowed" disabled>LOCKED ({{ env }})</button>
-                    </div>
-                </div>
-            </div>               stroke-dasharray="276"
-                                            stroke-dashoffset="{{ 276 - (276 * (h.Value_GBP / portfolio_metrics.total_wealth * 100) / 100) }}"
-                                            stroke-linecap="round"
-                                            stroke="currentColor" 
-                                            fill="transparent" 
-                                            r="44" cx="50" cy="50" 
-                                            style="transition: stroke-dashoffset 1s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;" />
-                                </svg>
-                                <!-- Initials/Logo Placeholder -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-[0.65rem] font-bold text-gray-600">{{ h.Ticker[:2] }}</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Name & Allocation -->
-                            <div>
-                                <div class="font-bold text-gray-900 text-sm leading-tight">{{ h.Name }}</div>
-                                <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">{{ h.Ticker }}</span> · <span class="text-blue-500">{{ (h.Value_GBP / portfolio_metrics.total_wealth * 100) | round(2) }}%</span>
-                                </div>
-                            </div>
-                        </div>
+                // Keep Market Status Logic for the new badge
+                function updateStatusBadge() {
+                    const now = new Date();
+                    const hours = now.getUTCHours();
+                    const mins = now.getUTCMinutes();
+                    const time = hours * 60 + mins;
+                    const el = document.getElementById('status-badge-el');
+                    if(el) {
+                        let text = "CLOSED";
+                        let cls = "status-closed";
                         
-                        <!-- Value & Return -->
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£{{ h.Value_GBP | round(2) }}</div>
-                            <div class="text-xs mono font-bold mt-0.5 {{ 'text-emerald-500' if h.PL_GBP >= 0 else 'text-rose-500' }}">
-                                {{ '+' if h.PL_GBP >= 0 else '' }}£{{ h.PL_GBP | abs | round(2) }}
-                                <span class="opacity-75">({{ h.PL_GBP / (h.Value_GBP - h.PL_GBP) * 100 if (h.Value_GBP - h.PL_GBP) != 0 else 0 | round(2) }}%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                <!-- Bottom Padding for mobile safe area -->
-                <div class="h-8"></div>
-            </div>
-        </div>
-    </div>
-
+                        // 14:30 - 21:00 LIVE
+                         if (time >= 870 && time < 1260) {
+                            text = "US LIVE";
+                            cls = "status-live";
+                         } else if (time >= 570 && time < 870) {
+                             text = "EU LIVE";
+                             cls = "status-live"; // Maybe yellow?
+                         }
+                         
+                         el.innerText = text;
+                         el.className = "status-badge " + cls;
+                    }
+                }
+                setInterval(updateStatusBadge, 60000);
+                updateStatusBadge();
+            </script>
     <script>
         // --- PORTFOLIO MODAL LOGIC ---
         function openPortfolioModal() {
