@@ -81,8 +81,8 @@ def main():
     # 3. Loop.
     
     start_time = time.time()
-    # 5 Minute Loop for GitHub Action limits (keep it short for testing)
-    while time.time() - start_time < 300: 
+    # Run for 6.5 Hours (23400s) to cover 14:30 - 21:00 GMT
+    while time.time() - start_time < 23400: 
         # Ticker Loop
         for ticker in mgr.config['watchlist']:
             # Fetch Price
