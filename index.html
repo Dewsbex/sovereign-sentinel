@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe-folio Sentinel | v32.66</title>
+    <title>Vibe-folio Sentinel | v32.67</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,8 +17,8 @@
             --bg-dark: #0a0a0a;
             --panel-white: #FFFFFF;
             --text-dark: #1F2937;
-            --pos-green: #00ff88;
-            --neg-red: #ff4d4d;
+            --pos-green: #50C878;
+            --neg-red: #CC2630;
             --dim-gray: #666;
             --border-subtle: rgba(0, 0, 0, 0.05);
             --t212-teal: #37E6B0;
@@ -844,7 +844,7 @@
                     OFFLINE
                 </div>
                 <div class="sync-timestamp hidden sm:block">
-                    SYNC: 06/02 21:41
+                    SYNC: 06/02 22:21
                 </div>
                 <button id="settings-toggle" class="cog-btn" onclick="toggleSettingsModal()">
                     ⚙️
@@ -860,7 +860,7 @@
             <header>
                 <h2>COMMAND CENTER (LIVE)</h2>
                 <div style="text-align: right;">
-                     <p>SITREP SYNC: 21:41 06/02</p>
+                     <p>SITREP SYNC: 22:21 06/02</p>
                      <p style="color: #444; font-size: 0.6rem; cursor: pointer;" onclick="api.toggle()">[CLOSE]</p>
                 </div>
             </header>
@@ -1611,6 +1611,18 @@
             </div>
         </div>
 
+
+            <!-- AI BRIEF (v32.67) -->
+            <div id="ai-brief-container" class="mt-4 sentinel-card bg-neutral-50 border-indigo-50 p-4 w-full">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fas fa-moon text-indigo-400"></i>
+                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest">SITREP: MARKET STATUS & STRATEGY</h2>
+                </div>
+                <div class="text-sm text-neutral-800 leading-relaxed font-medium">
+                    Set alerts for these exact prices today. Based on the High of the Day established in the first 15 minutes of 06/02/2026. Buy when price breaks above these levels.<br><br><b>Priority</b>: Watch <b>ServiceNow (NOW)</b> first. As has the highest volume (8.89x) and is closest to the trigger. <br><br><b>Operational Tip</b>: In the Trading 212 app, set the alert slightly below these numbers (e.g., set NVDA at $185.80) so you have time to unlock your phone and check the spread.
+                </div>
+            </div>
+
             <!-- Target Tracker Container -->
             <div id="target-tracker-container" class="mt-4 sentinel-card p-4">
                 <div class="flex items-center justify-between mb-2">
@@ -1630,10 +1642,101 @@
                         </thead>
                         <tbody class="divide-y divide-gray-50">
                             
-                            
-                            <tr>
-                                <td colspan="4" class="py-8 text-center text-gray-400 italic">No active targets for current session.</td>
+                            <tr class="group hover:bg-gray-50 transition-colors" style="height: 48px;">
+                                <td class="py-2">
+                                    <div class="font-bold text-gray-900">NOW</div>
+                                    <div class="text-[0.6rem] text-gray-400">NOW</div>
+                                </td>
+                                <td class="py-2">
+                                    <span class="px-2 py-1 bg-amber-50 text-amber-600 rounded">112.17</span>
+                                </td>
+                                <td class="py-2">
+                                    <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded">0</span>
+                                </td>
+                                <td class="py-2 text-right">
+                                    <div class="flex items-center justify-end gap-1">
+                                        <button class="px-3 py-1 bg-emerald-500 text-white rounded font-bold text-[0.6rem] hover:bg-emerald-600">BUY</button>
+                                        <button class="px-3 py-1 bg-rose-500 text-white rounded font-bold text-[0.6rem] hover:bg-rose-600">CUT</button>
+                                    </div>
+                                </td>
                             </tr>
+                            
+                            <tr class="group hover:bg-gray-50 transition-colors" style="height: 48px;">
+                                <td class="py-2">
+                                    <div class="font-bold text-gray-900">NVDA</div>
+                                    <div class="text-[0.6rem] text-gray-400">NVDA</div>
+                                </td>
+                                <td class="py-2">
+                                    <span class="px-2 py-1 bg-amber-50 text-amber-600 rounded">185.95</span>
+                                </td>
+                                <td class="py-2">
+                                    <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded">0</span>
+                                </td>
+                                <td class="py-2 text-right">
+                                    <div class="flex items-center justify-end gap-1">
+                                        <button class="px-3 py-1 bg-emerald-500 text-white rounded font-bold text-[0.6rem] hover:bg-emerald-600">BUY</button>
+                                        <button class="px-3 py-1 bg-rose-500 text-white rounded font-bold text-[0.6rem] hover:bg-rose-600">CUT</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr class="group hover:bg-gray-50 transition-colors" style="height: 48px;">
+                                <td class="py-2">
+                                    <div class="font-bold text-gray-900">COIN</div>
+                                    <div class="text-[0.6rem] text-gray-400">COIN</div>
+                                </td>
+                                <td class="py-2">
+                                    <span class="px-2 py-1 bg-amber-50 text-amber-600 rounded">187.24</span>
+                                </td>
+                                <td class="py-2">
+                                    <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded">0</span>
+                                </td>
+                                <td class="py-2 text-right">
+                                    <div class="flex items-center justify-end gap-1">
+                                        <button class="px-3 py-1 bg-emerald-500 text-white rounded font-bold text-[0.6rem] hover:bg-emerald-600">BUY</button>
+                                        <button class="px-3 py-1 bg-rose-500 text-white rounded font-bold text-[0.6rem] hover:bg-rose-600">CUT</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr class="group hover:bg-gray-50 transition-colors" style="height: 48px;">
+                                <td class="py-2">
+                                    <div class="font-bold text-gray-900">MSTR</div>
+                                    <div class="text-[0.6rem] text-gray-400">MSTR</div>
+                                </td>
+                                <td class="py-2">
+                                    <span class="px-2 py-1 bg-amber-50 text-amber-600 rounded">139.62</span>
+                                </td>
+                                <td class="py-2">
+                                    <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded">0</span>
+                                </td>
+                                <td class="py-2 text-right">
+                                    <div class="flex items-center justify-end gap-1">
+                                        <button class="px-3 py-1 bg-emerald-500 text-white rounded font-bold text-[0.6rem] hover:bg-emerald-600">BUY</button>
+                                        <button class="px-3 py-1 bg-rose-500 text-white rounded font-bold text-[0.6rem] hover:bg-rose-600">CUT</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr class="group hover:bg-gray-50 transition-colors" style="height: 48px;">
+                                <td class="py-2">
+                                    <div class="font-bold text-gray-900">APP</div>
+                                    <div class="text-[0.6rem] text-gray-400">APP</div>
+                                </td>
+                                <td class="py-2">
+                                    <span class="px-2 py-1 bg-amber-50 text-amber-600 rounded">483.3</span>
+                                </td>
+                                <td class="py-2">
+                                    <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded">0</span>
+                                </td>
+                                <td class="py-2 text-right">
+                                    <div class="flex items-center justify-end gap-1">
+                                        <button class="px-3 py-1 bg-emerald-500 text-white rounded font-bold text-[0.6rem] hover:bg-emerald-600">BUY</button>
+                                        <button class="px-3 py-1 bg-rose-500 text-white rounded font-bold text-[0.6rem] hover:bg-rose-600">CUT</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
                             
                         </tbody>
                     </table>
@@ -1642,6 +1745,146 @@
 
                     <!-- Mobile List View (T212 Style) -->
                     <div class="md:hidden flex flex-col mt-4">
+                        
+                        <div class="flex items-center justify-between py-4 border-b border-gray-50 last:border-0 pl-2">
+                            <!-- Left: Icon + Ticker -->
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[0.65rem] font-bold text-gray-500 shadow-sm border border-gray-200">
+                                    NO
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-900 text-sm leading-tight">NOW</div>
+                                    <div class="text-[0.65rem] text-gray-500 font-medium truncate max-w-[100px]">NOW</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Middle: Sparkline (SVG) -->
+                            <div class="flex-1 px-4 h-8 flex items-center justify-center opacity-50">
+                                <svg width="60" height="20" viewBox="0 0 60 20" class="overflow-visible">
+                                    <path d="M0,10 Q15,18 30,10 T60,10" fill="none" class="stroke-rose-400" stroke-width="1.5" />
+                                </svg>
+                            </div>
+
+                            <!-- Right: Price + Change -->
+                            <div class="text-right">
+                                <div class="font-bold text-gray-900 text-sm leading-tight">$112.17</div>
+                                <div class="text-[0.65rem] font-bold mt-0.5 text-rose-500 flex items-center justify-end gap-1">
+                                    <i class="fas fa-arrow-down text-[0.5rem]"></i> 1.2%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-4 border-b border-gray-50 last:border-0 pl-2">
+                            <!-- Left: Icon + Ticker -->
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[0.65rem] font-bold text-gray-500 shadow-sm border border-gray-200">
+                                    NV
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-900 text-sm leading-tight">NVDA</div>
+                                    <div class="text-[0.65rem] text-gray-500 font-medium truncate max-w-[100px]">NVDA</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Middle: Sparkline (SVG) -->
+                            <div class="flex-1 px-4 h-8 flex items-center justify-center opacity-50">
+                                <svg width="60" height="20" viewBox="0 0 60 20" class="overflow-visible">
+                                    <path d="M0,10 Q15,18 30,10 T60,10" fill="none" class="stroke-rose-400" stroke-width="1.5" />
+                                </svg>
+                            </div>
+
+                            <!-- Right: Price + Change -->
+                            <div class="text-right">
+                                <div class="font-bold text-gray-900 text-sm leading-tight">$185.95</div>
+                                <div class="text-[0.65rem] font-bold mt-0.5 text-rose-500 flex items-center justify-end gap-1">
+                                    <i class="fas fa-arrow-down text-[0.5rem]"></i> 1.2%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-4 border-b border-gray-50 last:border-0 pl-2">
+                            <!-- Left: Icon + Ticker -->
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[0.65rem] font-bold text-gray-500 shadow-sm border border-gray-200">
+                                    CO
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-900 text-sm leading-tight">COIN</div>
+                                    <div class="text-[0.65rem] text-gray-500 font-medium truncate max-w-[100px]">COIN</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Middle: Sparkline (SVG) -->
+                            <div class="flex-1 px-4 h-8 flex items-center justify-center opacity-50">
+                                <svg width="60" height="20" viewBox="0 0 60 20" class="overflow-visible">
+                                    <path d="M0,10 Q15,18 30,10 T60,10" fill="none" class="stroke-rose-400" stroke-width="1.5" />
+                                </svg>
+                            </div>
+
+                            <!-- Right: Price + Change -->
+                            <div class="text-right">
+                                <div class="font-bold text-gray-900 text-sm leading-tight">$187.24</div>
+                                <div class="text-[0.65rem] font-bold mt-0.5 text-rose-500 flex items-center justify-end gap-1">
+                                    <i class="fas fa-arrow-down text-[0.5rem]"></i> 1.2%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-4 border-b border-gray-50 last:border-0 pl-2">
+                            <!-- Left: Icon + Ticker -->
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[0.65rem] font-bold text-gray-500 shadow-sm border border-gray-200">
+                                    MS
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-900 text-sm leading-tight">MSTR</div>
+                                    <div class="text-[0.65rem] text-gray-500 font-medium truncate max-w-[100px]">MSTR</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Middle: Sparkline (SVG) -->
+                            <div class="flex-1 px-4 h-8 flex items-center justify-center opacity-50">
+                                <svg width="60" height="20" viewBox="0 0 60 20" class="overflow-visible">
+                                    <path d="M0,10 Q15,18 30,10 T60,10" fill="none" class="stroke-rose-400" stroke-width="1.5" />
+                                </svg>
+                            </div>
+
+                            <!-- Right: Price + Change -->
+                            <div class="text-right">
+                                <div class="font-bold text-gray-900 text-sm leading-tight">$139.62</div>
+                                <div class="text-[0.65rem] font-bold mt-0.5 text-rose-500 flex items-center justify-end gap-1">
+                                    <i class="fas fa-arrow-down text-[0.5rem]"></i> 1.2%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-4 border-b border-gray-50 last:border-0 pl-2">
+                            <!-- Left: Icon + Ticker -->
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[0.65rem] font-bold text-gray-500 shadow-sm border border-gray-200">
+                                    AP
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-900 text-sm leading-tight">APP</div>
+                                    <div class="text-[0.65rem] text-gray-500 font-medium truncate max-w-[100px]">APP</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Middle: Sparkline (SVG) -->
+                            <div class="flex-1 px-4 h-8 flex items-center justify-center opacity-50">
+                                <svg width="60" height="20" viewBox="0 0 60 20" class="overflow-visible">
+                                    <path d="M0,10 Q15,18 30,10 T60,10" fill="none" class="stroke-rose-400" stroke-width="1.5" />
+                                </svg>
+                            </div>
+
+                            <!-- Right: Price + Change -->
+                            <div class="text-right">
+                                <div class="font-bold text-gray-900 text-sm leading-tight">$483.3</div>
+                                <div class="text-[0.65rem] font-bold mt-0.5 text-rose-500 flex items-center justify-end gap-1">
+                                    <i class="fas fa-arrow-down text-[0.5rem]"></i> 1.2%
+                                </div>
+                            </div>
+                        </div>
                         
                     </div>
                 </div>
@@ -1799,7 +2042,7 @@
         // v30.6 DYNAMIC HEATMAP LOGIC
         // v32.61 SOVEREIGN FINALITY: Data Encapsulation
         // Strictly inject data object here.
-        const LIVE_HEATMAP_DATA = [{"name": "DIVERSIFIED/FUNDS", "data": [{"x": "BMY", "y": 8639.03, "label_ticker": "BMY", "label_pl": "+\u00a31,481.90", "label_pct": "+20.71%", "is_profit": true, "fillColor": "#10b981", "name": "Bristol-Myers Squibb", "price": 61.93, "avg_price": 50.57, "shares": 190.0, "currency": "USD", "val_gbp": 8639.03, "pnl_gbp": 1481.9, "pnl_pct": 20.705226815776715}, {"x": "DHR", "y": 9538.49, "label_ticker": "DHR", "label_pl": "+\u00a317.56", "label_pct": "+0.18%", "is_profit": true, "fillColor": "#10b981", "name": "Danaher", "price": 216.53, "avg_price": 217.701, "shares": 60.0, "currency": "USD", "val_gbp": 9538.49, "pnl_gbp": 17.56, "pnl_pct": 0.18443576415329174}, {"x": "QELL", "y": 0.2, "label_ticker": "QELL", "label_pl": "\u00a3216.66", "label_pct": "-99.91%", "is_profit": false, "fillColor": "#ef4444", "name": "Lilium", "price": 0.00099, "avg_price": 1.02294022, "shares": 275.36311, "currency": "USD", "val_gbp": 0.2, "pnl_gbp": -216.66, "pnl_pct": -99.90777460112515}, {"x": "VSNTV", "y": 2400.04, "label_ticker": "VSNTV", "label_pl": "\u00a3358.83", "label_pct": "-13.01%", "is_profit": false, "fillColor": "#ef4444", "name": "Versant Media Group", "price": 29.45, "avg_price": 33.25963964, "shares": 111.0, "currency": "USD", "val_gbp": 2400.04, "pnl_gbp": -358.83, "pnl_pct": -13.006412045511388}, {"x": "NUE", "y": 16873.88, "label_ticker": "NUE", "label_pl": "+\u00a34,301.01", "label_pct": "+34.21%", "is_profit": true, "fillColor": "#10b981", "name": "Nucor", "price": 192.89, "avg_price": 142.75373864, "shares": 119.1502945, "currency": "USD", "val_gbp": 16873.88, "pnl_gbp": 4301.01, "pnl_pct": 34.208657211917405}, {"x": "SOLV", "y": 5733.31, "label_ticker": "SOLV", "label_pl": "\u00a3244.53", "label_pct": "-4.09%", "is_profit": false, "fillColor": "#ef4444", "name": "Solventum", "price": 78.09, "avg_price": 80.4473, "shares": 100.0, "currency": "USD", "val_gbp": 5733.31, "pnl_gbp": -244.53, "pnl_pct": -4.090607978801708}, {"x": "RE", "y": 16140.9, "label_ticker": "RE", "label_pl": "\u00a3853.27", "label_pct": "-5.02%", "is_profit": false, "fillColor": "#ef4444", "name": "Everest Group", "price": 328.36, "avg_price": 333.79806975, "shares": 66.95260406, "currency": "USD", "val_gbp": 16140.9, "pnl_gbp": -853.27, "pnl_pct": -5.020957187082394}, {"x": "NFLX", "y": 11465.23, "label_ticker": "NFLX", "label_pl": "\u00a31,657.39", "label_pct": "-12.63%", "is_profit": false, "fillColor": "#ef4444", "name": "Netflix", "price": 82.19, "avg_price": 92.46947368, "shares": 190.0, "currency": "USD", "val_gbp": 11465.23, "pnl_gbp": -1657.39, "pnl_pct": -12.630023577608743}, {"x": "CRM", "y": 12926.23, "label_ticker": "CRM", "label_pl": "\u00a33,629.51", "label_pct": "-21.92%", "is_profit": false, "fillColor": "#ef4444", "name": "Salesforce", "price": 191.37, "avg_price": 242.96684783, "shares": 92.0, "currency": "USD", "val_gbp": 12926.23, "pnl_gbp": -3629.51, "pnl_pct": -21.92297052261029}, {"x": "QCOM", "y": 10888.49, "label_ticker": "QCOM", "label_pl": "\u00a32,614.26", "label_pct": "-19.36%", "is_profit": false, "fillColor": "#ef4444", "name": "Qualcomm", "price": 137.32, "avg_price": 168.85388889, "shares": 108.0, "currency": "USD", "val_gbp": 10888.49, "pnl_gbp": -2614.26, "pnl_pct": -19.360944992686676}, {"x": "EOG", "y": 14013.12, "label_ticker": "EOG", "label_pl": "\u00a3254.05", "label_pct": "-1.78%", "is_profit": false, "fillColor": "#ef4444", "name": "EOG Resources", "price": 113.72, "avg_price": 114.00211891, "shares": 167.83705587, "currency": "USD", "val_gbp": 14013.12, "pnl_gbp": -254.05, "pnl_pct": -1.7806614766628561}, {"x": "CTVA", "y": 11988.08, "label_ticker": "CTVA", "label_pl": "+\u00a3309.66", "label_pct": "+2.65%", "is_profit": true, "fillColor": "#10b981", "name": "Corteva", "price": 72.57, "avg_price": 69.9412, "shares": 225.0, "currency": "USD", "val_gbp": 11988.08, "pnl_gbp": 309.66, "pnl_pct": 2.651557316828818}, {"x": "CNNE", "y": 14701.32, "label_ticker": "CNNE", "label_pl": "\u00a31,797.38", "label_pct": "-10.89%", "is_profit": false, "fillColor": "#ef4444", "name": "Cannae", "price": 14.24, "avg_price": 15.77239921, "shares": 1406.16463623, "currency": "USD", "val_gbp": 14701.32, "pnl_gbp": -1797.38, "pnl_pct": -10.894070441913605}]}, {"name": "MATERIALS", "data": [{"x": "RIO", "y": 7005.16, "label_ticker": "RIO", "label_pl": "+\u00a32,320.04", "label_pct": "+49.52%", "is_profit": true, "fillColor": "#10b981", "name": "Rio Tinto", "price": 68.43, "avg_price": 45.7667501255, "shares": 102.36965673, "currency": "GBX", "val_gbp": 7005.16, "pnl_gbp": 2320.04, "pnl_pct": 49.519329280786835}]}, {"name": "FINANCIALS", "data": [{"x": "LGEN", "y": 2672.0, "label_ticker": "LGEN", "label_pl": "+\u00a374.00", "label_pct": "+2.85%", "is_profit": true, "fillColor": "#10b981", "name": "Legal & General", "price": 2.6719999999999997, "avg_price": 2.5980000000000003, "shares": 1000.0, "currency": "GBX", "val_gbp": 2672.0, "pnl_gbp": 74.0, "pnl_pct": 2.848344880677444}]}, {"name": "CONSUMER STAPLES", "data": [{"x": "BATS", "y": 4609.0, "label_ticker": "BATS", "label_pl": "+\u00a3406.28", "label_pct": "+9.67%", "is_profit": true, "fillColor": "#10b981", "name": "British American Tobacco", "price": 46.09, "avg_price": 42.027249000000005, "shares": 100.0, "currency": "GBX", "val_gbp": 4609.0, "pnl_gbp": 406.28, "pnl_pct": 9.667072752883845}]}, {"name": "INFO TECH", "data": [{"x": "MSFT", "y": 8837.85, "label_ticker": "MSFT", "label_pl": "\u00a3441.39", "label_pct": "-4.76%", "is_profit": false, "fillColor": "#ef4444", "name": "Microsoft", "price": 401.25, "avg_price": 423.35, "shares": 30.0, "currency": "USD", "val_gbp": 8837.85, "pnl_gbp": -441.39, "pnl_pct": -4.7567473198236065}]}];
+        const LIVE_HEATMAP_DATA = [{"name": "DIVERSIFIED/FUNDS", "data": [{"x": "BMY", "y": 8639.03, "label_ticker": "BMY", "label_pl": "+\u00a31,481.90", "label_pct": "+20.71%", "is_profit": true, "fillColor": "rgba(80, 200, 120, 1.00)", "sector": "Diversified/Funds", "name": "Bristol-Myers Squibb", "price": 61.93, "avg_price": 50.57, "shares": 190.0, "currency": "USD", "val_gbp": 8639.03, "pnl_gbp": 1481.9, "pnl_pct": 20.705226815776715}, {"x": "DHR", "y": 9538.49, "label_ticker": "DHR", "label_pl": "+\u00a317.56", "label_pct": "+0.18%", "is_profit": true, "fillColor": "rgba(80, 200, 120, 0.40)", "sector": "Diversified/Funds", "name": "Danaher", "price": 216.53, "avg_price": 217.701, "shares": 60.0, "currency": "USD", "val_gbp": 9538.49, "pnl_gbp": 17.56, "pnl_pct": 0.18443576415329174}, {"x": "QELL", "y": 0.2, "label_ticker": "QELL", "label_pl": "\u00a3216.66", "label_pct": "-99.91%", "is_profit": false, "fillColor": "rgba(204, 38, 48, 1.00)", "sector": "Diversified/Funds", "name": "Lilium", "price": 0.00099, "avg_price": 1.02294022, "shares": 275.36311, "currency": "USD", "val_gbp": 0.2, "pnl_gbp": -216.66, "pnl_pct": -99.90777460112515}, {"x": "VSNTV", "y": 2400.04, "label_ticker": "VSNTV", "label_pl": "\u00a3358.83", "label_pct": "-13.01%", "is_profit": false, "fillColor": "rgba(204, 38, 48, 1.00)", "sector": "Diversified/Funds", "name": "Versant Media Group", "price": 29.45, "avg_price": 33.25963964, "shares": 111.0, "currency": "USD", "val_gbp": 2400.04, "pnl_gbp": -358.83, "pnl_pct": -13.006412045511388}, {"x": "NUE", "y": 16873.88, "label_ticker": "NUE", "label_pl": "+\u00a34,301.01", "label_pct": "+34.21%", "is_profit": true, "fillColor": "rgba(80, 200, 120, 1.00)", "sector": "Diversified/Funds", "name": "Nucor", "price": 192.89, "avg_price": 142.75373864, "shares": 119.1502945, "currency": "USD", "val_gbp": 16873.88, "pnl_gbp": 4301.01, "pnl_pct": 34.208657211917405}, {"x": "SOLV", "y": 5733.31, "label_ticker": "SOLV", "label_pl": "\u00a3244.53", "label_pct": "-4.09%", "is_profit": false, "fillColor": "rgba(204, 38, 48, 0.56)", "sector": "Diversified/Funds", "name": "Solventum", "price": 78.09, "avg_price": 80.4473, "shares": 100.0, "currency": "USD", "val_gbp": 5733.31, "pnl_gbp": -244.53, "pnl_pct": -4.090607978801708}, {"x": "RE", "y": 16140.9, "label_ticker": "RE", "label_pl": "\u00a3853.27", "label_pct": "-5.02%", "is_profit": false, "fillColor": "rgba(204, 38, 48, 0.63)", "sector": "Diversified/Funds", "name": "Everest Group", "price": 328.36, "avg_price": 333.79806975, "shares": 66.95260406, "currency": "USD", "val_gbp": 16140.9, "pnl_gbp": -853.27, "pnl_pct": -5.020957187082394}, {"x": "NFLX", "y": 11465.23, "label_ticker": "NFLX", "label_pl": "\u00a31,657.39", "label_pct": "-12.63%", "is_profit": false, "fillColor": "rgba(204, 38, 48, 1.00)", "sector": "Diversified/Funds", "name": "Netflix", "price": 82.19, "avg_price": 92.46947368, "shares": 190.0, "currency": "USD", "val_gbp": 11465.23, "pnl_gbp": -1657.39, "pnl_pct": -12.630023577608743}, {"x": "CRM", "y": 12926.23, "label_ticker": "CRM", "label_pl": "\u00a33,629.51", "label_pct": "-21.92%", "is_profit": false, "fillColor": "rgba(204, 38, 48, 1.00)", "sector": "Diversified/Funds", "name": "Salesforce", "price": 191.37, "avg_price": 242.96684783, "shares": 92.0, "currency": "USD", "val_gbp": 12926.23, "pnl_gbp": -3629.51, "pnl_pct": -21.92297052261029}, {"x": "QCOM", "y": 10888.49, "label_ticker": "QCOM", "label_pl": "\u00a32,614.26", "label_pct": "-19.36%", "is_profit": false, "fillColor": "rgba(204, 38, 48, 1.00)", "sector": "Diversified/Funds", "name": "Qualcomm", "price": 137.32, "avg_price": 168.85388889, "shares": 108.0, "currency": "USD", "val_gbp": 10888.49, "pnl_gbp": -2614.26, "pnl_pct": -19.360944992686676}, {"x": "EOG", "y": 14013.12, "label_ticker": "EOG", "label_pl": "\u00a3254.05", "label_pct": "-1.78%", "is_profit": false, "fillColor": "rgba(204, 38, 48, 0.40)", "sector": "Diversified/Funds", "name": "EOG Resources", "price": 113.72, "avg_price": 114.00211891, "shares": 167.83705587, "currency": "USD", "val_gbp": 14013.12, "pnl_gbp": -254.05, "pnl_pct": -1.7806614766628561}, {"x": "CTVA", "y": 11988.08, "label_ticker": "CTVA", "label_pl": "+\u00a3309.66", "label_pct": "+2.65%", "is_profit": true, "fillColor": "rgba(80, 200, 120, 0.45)", "sector": "Diversified/Funds", "name": "Corteva", "price": 72.57, "avg_price": 69.9412, "shares": 225.0, "currency": "USD", "val_gbp": 11988.08, "pnl_gbp": 309.66, "pnl_pct": 2.651557316828818}, {"x": "CNNE", "y": 14701.32, "label_ticker": "CNNE", "label_pl": "\u00a31,797.38", "label_pct": "-10.89%", "is_profit": false, "fillColor": "rgba(204, 38, 48, 1.00)", "sector": "Diversified/Funds", "name": "Cannae", "price": 14.24, "avg_price": 15.77239921, "shares": 1406.16463623, "currency": "USD", "val_gbp": 14701.32, "pnl_gbp": -1797.38, "pnl_pct": -10.894070441913605}]}, {"name": "MATERIALS", "data": [{"x": "RIO", "y": 7005.16, "label_ticker": "RIO", "label_pl": "+\u00a32,320.04", "label_pct": "+49.52%", "is_profit": true, "fillColor": "rgba(80, 200, 120, 1.00)", "sector": "Materials", "name": "Rio Tinto", "price": 68.43, "avg_price": 45.7667501255, "shares": 102.36965673, "currency": "GBX", "val_gbp": 7005.16, "pnl_gbp": 2320.04, "pnl_pct": 49.519329280786835}]}, {"name": "FINANCIALS", "data": [{"x": "LGEN", "y": 2672.0, "label_ticker": "LGEN", "label_pl": "+\u00a374.00", "label_pct": "+2.85%", "is_profit": true, "fillColor": "rgba(80, 200, 120, 0.46)", "sector": "Financials", "name": "Legal & General", "price": 2.6719999999999997, "avg_price": 2.5980000000000003, "shares": 1000.0, "currency": "GBX", "val_gbp": 2672.0, "pnl_gbp": 74.0, "pnl_pct": 2.848344880677444}]}, {"name": "CONSUMER STAPLES", "data": [{"x": "BATS", "y": 4609.0, "label_ticker": "BATS", "label_pl": "+\u00a3406.28", "label_pct": "+9.67%", "is_profit": true, "fillColor": "rgba(80, 200, 120, 0.98)", "sector": "Consumer Staples", "name": "British American Tobacco", "price": 46.09, "avg_price": 42.027249000000005, "shares": 100.0, "currency": "GBX", "val_gbp": 4609.0, "pnl_gbp": 406.28, "pnl_pct": 9.667072752883845}]}, {"name": "INFO TECH", "data": [{"x": "MSFT", "y": 8837.85, "label_ticker": "MSFT", "label_pl": "\u00a3441.39", "label_pct": "-4.76%", "is_profit": false, "fillColor": "rgba(204, 38, 48, 0.61)", "sector": "Info Tech", "name": "Microsoft", "price": 401.25, "avg_price": 423.35, "shares": 30.0, "currency": "USD", "val_gbp": 8837.85, "pnl_gbp": -441.39, "pnl_pct": -4.7567473198236065}]}];
         
         // Initialize Dashboard
         window.addEventListener('DOMContentLoaded', () => {
@@ -1841,10 +2084,11 @@
                 plotOptions: {
                     treemap: {
                         distributed: true, // v32.67 Performance Coloring Enabled
-                        enableShades: false // Keep colors distinct
+                        enableShades: true,
+                        shadeIntensity: 0.5
                     }
                 },
-                stroke: { width: 2, colors: ['#0f0f0f'] }, 
+                stroke: { width: 1, colors: ['#ffffff'] }, 
                 tooltip: {
                     theme: 'light',
                     custom: function({ seriesIndex, dataPointIndex, w }) {
