@@ -1,8 +1,8 @@
-# Sovereign Sentinel (ORB Engine) - Master System Specification (v32.44)
+# Sovereign Sentinel (ORB Engine) - Master System Specification (v32.45)
 
 ## 1. System Overview
 **Name**: Sovereign Sentinel (ORB Engine)
-**Version**: v32.44 (Production)
+**Version**: v32.45 (Production)
 **Objective**: Autonomous Opening Range Breakout (ORB) trading bot for Trading 212, integrated with a high-fidelity dashboard ("Vibe-folio").
 **Core Tech Stack**:
 - **Engine**: Python 3.10
@@ -14,142 +14,191 @@
 
 ---
 
-## 2. Process Architecture & Lifecycle
+## 2. Project Architecture
 
-### 2.1 The "Sovereign Finality" Loop
-The system operates on a strict daily lifecycle managed by `main_bot.py`.
+### 2.1 File Structure
+The application requires the following exact directory structure:
+
+```text
+Sovereign-Sentinel/
+├── .github/
+│   └── workflows/
+│       └── deployment.yml       # Cron Schedule & Secrets Injection (Job Runner)
+├── config/
+│   ├── orb_config.json          # Strategy Parameters (Risk, Watchlist)
+│   └── config.py                # Python Config Loader
+├── data/
+│   ├── ledger_state.json        # "Database" (Equity, Positions, P/L)
+│   ├── history_log.json         # (Optional) Historical performance log
+│   └── orb_intel.json           # AI Intelligence Data (Targets/Briefing)
+├── static/
+│   └── sentinel_crest.png       # Dashboard Asset (Center of Donut)
+├── templates/
+│   └── base.html                # Jinja2 Dashboard Template
+├── main_bot.py                  # Entry Point (Orchestrator)
+├── orb_observer.py              # Market Data Module (RVOL)
+├── orb_execution.py             # Trade Execution Module
+├── orb_shield.py                # Risk Management Module (OCO Bracket)
+├── orb_messenger.py             # Telegram Notification Module
+├── generate_static.py           # UI Generator (The "Artist")
+├── sovereign_state_manager.py   # Persistence Logic
+├── utils.py                     # Financial Formatting Helpers
+└── requirements.txt             # Python Dependencies
+```
+
+### 2.2 Dependencies (`requirements.txt`)
+Exact package list required for replication:
+```text
+requests
+jinja2
+feedparser
+yfinance
+python-dotenv
+pandas
+websocket-client
+alpha-vantage
+```
+
+---
+
+## 3. Configuration Schemas
+
+### 3.1 Strategy Config (`config/orb_config.json`)
+Controls the trading logic.
+```json
+{
+    "risk": {
+        "initial_capital": 1000.0,
+        "max_drawdown_percent": 10.0,
+        "trade_allocation_percent": 35.0,
+        "min_range_percent": 0.8,
+        "max_spread_to_range_ratio": 0.10
+    },
+    "filters": {
+        "min_rvol": 1.5,
+        "index_ticker": "SPY",
+        "index_correlation_threshold": 0.0
+    },
+    "time_window": {
+        "start_gmt": "14:30",
+        "end_observation_gmt": "14:45",
+        "hard_stop_gmt": "21:00"
+    },
+    "watchlist": [
+        "TSLA", "NVDA", "AMD", "PLTR", "COIN", "MARA", "MSTR", "NUE", "DHR"
+    ]
+}
+```
+
+### 3.2 Ledger State (`data/ledger_state.json`)
+Acts as the persistent database for the bot.
+```json
+{
+    "high_water_mark": 1000.0,
+    "current_equity": 1000.0,
+    "last_updated": "YYYY-MM-DDTHH:MM:SS.ssssss",
+    "daily_performance": {
+        "date": "YYYY-MM-DD",
+        "pnl": 0.0,
+        "trades_taken": 0
+    },
+    "active_positions": [],
+    "circuit_breaker_tripped": false
+}
+```
+
+---
+
+## 4. Process Lifecycle (The "Sovereign Loop")
+Managed by `main_bot.py` on a Daily Cron.
 
 1.  **Startup (14:25 GMT)**:
-    - Triggered by GitHub Actions (`deployment.yml`).
-    - Initializes `SovereignStateManager`.
-    - Checks `circuit_breaker_tripped` flag in `ledger_state.json`.
+    - Loads `ledger_state.json`. Checks `circuit_breaker_tripped`.
     - Sends Telegram Alert: "🚀 System Online".
 
-2.  **Observation Phase (14:25 - 14:30 GMT)**:
-    - Managed by `orb_observer.py`.
-    - Analyzes RVOL (Relative Volume) via YFinance to determine market heat.
-    - Sets initial "Opening Range" High/Low markers (Simulation Mode for v1).
+2.  **Observation (14:25 - 14:30 GMT)**:
+    - `orb_observer.py` fetches Live Price (T212) and 5-Day Avg Volume (YFinance).
+    - Calculates `RVOL`. Only tickers with `RVOL > 1.5` are eligible.
 
-3.  **Execution Phase (14:30 - 21:00 GMT)**:
-    - Managed by `orb_execution.py`.
-    - **Strategy**: 15-Minute Opening Range Breakout (ORB).
-    - **Trigger**: Price breaks above `Range High`.
-    - **Entry**: Market Order (Synthetic Limit).
-    - **Payload Logic**:
-        - **Ticker**: `{SYMBOL}_US_EQ` (e.g., `DHR_US_EQ`).
-        - **Quantity**: Signed Float (`+1.0` = BUY, `-1.0` = SELL).
-        - **TimeValidity**: `DAY`.
+3.  **Execution (14:30 - 21:00 GMT)**:
+    - `orb_execution.py` determines the 15-minute Opening Range (High/Low).
+    - **Trigger**: Price > Range High.
+    - **Action**: Places Market Order (Synthetic Limit).
 
-4.  **Shield Activation (Post-Trade)**:
-    - Managed by `orb_shield.py`.
-    - Immediately places an **OCO Bracket** (One-Cancels-Other):
-        - **Stop Loss**: Sell Order at `Range Low` (Risk).
-        - **Take Profit**: Limit Sell at `Range High + (Range * 2.0)` (Reward).
+4.  **Shielding (Immediate Post-Trade)**:
+    - `orb_shield.py` places protection orders.
+    - **Stop Loss**: Sell Order at `Range Low`.
+    - **Take Profit**: Limit Sell at `Range High + (2 * Range)`.
 
-5.  **Shutdown & Persistence**:
-    - Saves updated state to `ledger_state.json`.
-    - Commits state to GitHub repository ("State Update [Skip CI]").
-    - Sends Telegram Alert: "💤 System Shutdown (P/L Report)".
+5.  **Shutdown**:
+    - Saves state. Commits to Git. notifying Telegram with Daily P/L.
 
 ---
 
-## 3. Pixel-Perfect UI Specification ("The Vibe-folio")
+## 5. Pixel-Perfect UI Specification
 
-### 3.1 Dashboard Layout (`index.html`)
-The dashboard is a static HTML file generated by `generate_static.py` using `templates/base.html`.
+### 5.1 Dashboard Layout (`index.html`)
+Generated by `generate_static.py` -> `templates/base.html`.
 
-#### **Design Language**
-- **Framework**: Tailwind CSS (CDN).
-- **Fonts**: 'Inter' (Body), 'JetBrains Mono' (Data/Headers).
-- **Palette**:
-    - Background: `#F3F4F6` (Gray-100)
-    - Surface: `#FFFFFF` (White)
-    - Accents: `#4F46E5` (Indigo-600), `#10B981` (Emerald-500), `#F43F5E` (Rose-500).
+**Styling Rules**:
+- **Framework**: Tailwind CSS.
+- **Font**: Inter (UI), JetBrains Mono (Data).
+- **Colors**:
+    - Green: `#10B981` (Emerald-500)
+    - Red: `#F43F5E` (Rose-500)
+    - Indigo: `#4F46E5` (Indigo-600)
 
-#### **Core Components**
+**Key Components**:
+1.  **Market Status Dot**:
+    - CSS Class: `w-2.5 h-2.5 rounded-full animate-pulse`
+    - Logic: Green (Emerald-500) if 09:30-21:30 GMT, else Red (Rose-500).
+2.  **Interactive Legends**:
+    - JavaScript `highlightSegment(ticker)` acts on both Donut Slices and Grid items.
+3.  **Sparklines**:
+    - SVG Paths rendered inline for mobile targets list.
 
-1.  **Nav Bar (Fixed)**:
-    - **Left**: "Vibe-folio Sentinel" + Pulsing Dot (Green/Red based on market hours).
-    - **Center**: Key Metrics (Wealth, Total Return, Cash Dry, Pending).
-    - **Right**: Env Badge ("LIVE"), Last Sync Time.
-    - **Logic**: JS `updateMarketStatus()` runs every minute to toggle "LIVE"/"CLOSED" badges independently of Python.
+### 5.2 Helper Utils (`utils.py`)
+Critical for financial display accuracy. The system uses **Truncation** (Floor), NOT Rounding, for display.
 
-2.  **Heatmap Section (Top Left)**:
-    - **Chart**: ApexCharts Treemap.
-    - **Data**: Injected via `heatmap_dataset` JSON.
-    - **Interactivity**: Hover shows custom Tooltip; Click highlights Legend.
-    - **"See All"**: Toggles a full specific table view.
-
-3.  **Asset Allocation (Top Right)**:
-    - **Visual**: Custom SVG Donut Ring generated in Python (`generate_oracle_ring`).
-    - **Features**:
-        - "Leader Lines" pointing to slices.
-        - Center Crest (`sentinel_crest.png`).
-        - **Compact Legend**: Grid of tickers below the chart.
-
-4.  **Operational Intelligence (Bottom)**:
-    - **AI Brief**: HTML content injected from `orb_intel.json`.
-    - **Target Tracker**: Table/List of watched tickers with Trigger/Stop/Limit prices.
-    - **Sparklines**: SVG Path elements rendered inline for mobile list view.
-
-### 3.2 Generator Logic (`generate_static.py`)
-- **Input**: `live_state.json` (Portfolio Data), `orb_intel.json` (AI Brief/Targets).
-- **Processing**:
-    - Calculates Total Return (Realized + Unrealized + Divs + Interest - Fees).
-    - Generates SVG strings for the Donut Chart.
-    - Formats numbers (Money: `£1,234.56`, Pct: `+12.3%`).
-- **Output**: Renders Jinja2 template to `index.html`.
+```python
+def truncate_decimal(value, places=2):
+    # Multiplies by 10^places, floors, then divides.
+    # 12.3456 -> 12.34 (Not 12.35)
+```
 
 ---
 
-## 4. API Integration Reference (Trading 212 v0)
+## 6. API Integration Reference (Trading 212 v0)
 
 **Base URL**: `https://live.trading212.com/api/v0/equity`
-**Auth**: Basic Auth (`T212_API_KEY`, `T212_API_SECRET`)
 
-### 4.1 Endpoints Used
+### 6.1 Verified Endpoints & Payloads (v32.43 Audit)
 
-| Function | Endpoint | Method | Payload Key Keys | Verified Spec |
+| Function | Endpoint | Method | Payload Key Keys | Rules |
 | :--- | :--- | :--- | :--- | :--- |
-| **Market Order** | `/orders/market` | POST | `ticker`, `quantity` (+/-) | ✅ v32.43 |
-| **Limit Order** | `/orders/limit` | POST | `ticker`, `quantity` (+/-), `limitPrice`, `timeValidity` | ✅ v32.43 |
-| **Stop Order** | `/orders/stop` | POST | `ticker`, `quantity` (-), `stopPrice`, `timeValidity` | ✅ v32.43 |
-| **Positions** | `/positions` | GET | N/A | Returns List |
-| **History** | `/history/transactions` | GET | Params: `limit` | Items have `dateTime` |
-
-### 4.2 Critical Payload Rules (v32.43 Audit)
-1.  **Ticker Format**: Must include suffix (e.g., `_US_EQ`).
-2.  **Direction**: Determined by **SIGN** of `quantity`.
-    - `1.0` = Buy
-    - `-1.0` = Sell
-3.  **No Side Field**: The `side` parameter is deprecated/ignored.
-4.  **TimeValidity**: Must be `"DAY"` or `"GTC"`. "GOOD_TILL_CANCEL" is invalid.
+| **Market Order** | `/orders/market` | POST | `ticker`, `quantity` | `quantity` must be **Signed** (+/-). |
+| **Limit Order** | `/orders/limit` | POST | `ticker`, `quantity`, `limitPrice`, `timeValidity` | Use `GTC`, not `GOOD_TILL_CANCEL`. |
+| **Stop Order** | `/orders/stop` | POST | `ticker`, `quantity`, `stopPrice`, `timeValidity` | Quantity must be Negative for Sell. |
 
 ---
 
-## 5. Automation Triggers (GitHub Actions)
+## 7. Automation & Deployment
 
-### 5.1 Deployment Workflow (`deployment.yml`)
-- **Schedule**: `cron: '25 14 * * 1-5'` (Mon-Fri 14:25 UTC).
-- **Environment**: Ubuntu Latest, Python 3.10.
-- **Secrets Injection**:
+### 7.1 GitHub Actions (`.github/workflows/deployment.yml`)
+- **Schedule**: `cron: '25 14 * * 1-5'`
+- **Secrets Required**:
     - `T212_API_KEY`, `T212_API_SECRET`
     - `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`
-- **Permissions**: `contents: write` (for Git Push).
-
-### 5.2 Verification Workflows
-- **Live Trade Verification**: `verify_live_trade.yml` (Manual Trigger).
-    - Runs `activate_live.py` to place a confirmed safe limit order (Verification of Connectivity).
+- **Permissions**: `contents: write` (Required for State Persistence)
 
 ---
 
-## 6. Replication Guide
-
-To replicate this system:
-1.  **Clone Repo**.
-2.  **Set Secrets** in GitHub (API Keys, Telegram).
-3.  **Install Python Deps**: `requests`, `yfinance`, `jinja2`, `pandas`.
-4.  **Run Initialization**:
-    - Create `config/orb_config.json`.
-    - Create `data/ledger_state.json`.
-5.  **Enable Workflow**: Un-comment schedule in `.github/workflows/deployment.yml`.
+## 8. Replication Checklist
+To clone this system exactly:
+1.  [ ] Replicate **Directory Structure** from Section 2.1.
+2.  [ ] Install **Dependencies** from Section 2.2.
+3.  [ ] Create **JSON Config Files** using Schemas in Section 3.
+4.  [ ] Place `sentinel_crest.png` in `/static`.
+5.  [ ] Implement `utils.py` with **Truncation Logic**.
+6.  [ ] Deploy to GitHub and set **Secrets**.
+7.  [ ] Verify API Connectivity using `verify_live_trade.yml`.
