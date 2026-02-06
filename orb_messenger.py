@@ -18,7 +18,7 @@ class ORBMessenger:
             
         # Telemetry Prefix (v32.60)
         # Using ENV var to determine context
-        env = os.getenv('ENV', 'DEMO').upper()
+        env = os.getenv('ENV', 'LIVE').upper()
         self.prefix = f"({env})"
 
     def send(self, message):

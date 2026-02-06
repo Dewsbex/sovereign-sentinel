@@ -18,7 +18,7 @@ logger = logging.getLogger("MainBot")
 def main():
     # Initialize Messenger
     msg = ORBMessenger()
-    logger.info("🚀 STARTING SOVEREIGN FINALITY (v32.25)...")
+    logger.info("🚀 STARTING SOVEREIGN FINALITY (v32.60)...")
     
     # 1. Initialize State & Config
     try:
