@@ -3,8 +3,8 @@ import requests
 import json
 from requests.auth import HTTPBasicAuth
 
-# V32.27 - THE DEFINITIVE ACTIVATOR
-print("🚀 STARTING DEFINITIVE ACTIVATION...")
+# V32.28 - UK CURRENCY TEST (LLOY)
+print("🚀 STARTING UK CURRENCY TEST...")
 
 if __name__ == "__main__":
     t212_key = os.getenv('T212_API_KEY', '').strip()
@@ -13,15 +13,14 @@ if __name__ == "__main__":
     chat_id = os.getenv('TELEGRAM_CHAT_ID', '').strip()
     
     auth = HTTPBasicAuth(t212_key, t212_secret)
-    # The base path for metadata is /metadata/instruments
     base_url = "https://live.trading212.com/api/v0/equity"
     
-    target_ticker = "DHR"
+    # Testing with a UK Stock to match "Main Account Currency" (GBP)
+    target_ticker = "LLOY"
     print(f"📡 Step 1: Discovering exact ID for {target_ticker}...")
     
-    found_id = f"{target_ticker}_US_EQ"
+    found_id = "LLOY_L_EQ" # Standard T212 ID for Lloyds
     try:
-        # CORRECT METADATA ENDPOINT
         r = requests.get(f"{base_url}/metadata/instruments", auth=auth, timeout=30)
         if r.status_code == 200:
             instruments = r.json()
@@ -29,22 +28,19 @@ if __name__ == "__main__":
             if matches:
                 found_id = matches[0].get('id')
                 print(f"✅ Found ID: {found_id}")
-            else:
-                print(f"⚠️ {target_ticker} not in list. Using fallback {found_id}")
-        else:
-            print(f"❌ Metadata Error {r.status_code}: {r.text}")
     except Exception as e:
         print(f"⚠️ Search error: {e}")
 
-    # Step 2: Place Limit Order
+    # Step 2: Place Limit Order (GBP)
     print(f"\n🚀 Step 2: Placing Order for {found_id}...")
     trade_url = f"{base_url}/orders/limit"
     
-    # Try using full 'GOOD_TILL_CANCEL' string
+    # We include both 'ticker' and 'instrumentCode' for maximum compatibility
     payload = {
+        "ticker": found_id,
         "instrumentCode": found_id,
-        "quantity": 1.0,
-        "limitPrice": 200.0,
+        "quantity": 10.0, # 10 shares of Lloyds (~£5.00)
+        "limitPrice": 40.0, # 40p Limit (Current price ~53p)
         "timeValidity": "GOOD_TILL_CANCEL"
     }
     
@@ -56,20 +52,18 @@ if __name__ == "__main__":
 
     final_msg = ""
     if resp.status_code == 200:
-        print("\n✅ SUCCESS!")
-        final_msg = f"✅ **LIVE ACTIVATION SUCCESS**\n\nTicker: `{found_id}`\nOrder: 1.0 @ $200.00\nStatus: PENDING"
+        final_msg = f"✅ **UK ACTIVATION SUCCESS**\n\nTicker: `{found_id}`\nOrder: 10 shares @ 40p\nStatus: PENDING"
     else:
-        # Retry one last time with 'DAY' just in case
-        print("🔄 Retrying with DAY validity...")
-        payload["timeValidity"] = "DAY"
+        # Final retry with integer quantity
+        print("🔄 Trying integer quantity...")
+        payload["quantity"] = 10
         resp2 = requests.post(trade_url, json=payload, auth=auth, timeout=15)
         if resp2.status_code == 200:
-            final_msg = f"✅ **LIVE ACTIVATION SUCCESS (DAY)**\n\nTicker: `{found_id}`\nOrder: 1.0 @ $200.00"
+            final_msg = f"✅ **UK ACTIVATION SUCCESS (Int)**\n\nTicker: `{found_id}`"
         else:
-            final_msg = f"❌ **LIVE ACTIVATION FAILED**\n\nError: {resp2.status_code}\nBody: `{resp2.text}`"
+            final_msg = f"❌ **UK ACTIVATION FAILED**\n\nError: {resp2.status_code}\nBody: `{resp2.text}`"
 
-    # Step 3: Telegram Ping (Mandatory)
+    # Step 3: Telegram Ping
     if token and chat_id:
-        print("📡 Sending Telegram Pulse...")
         requests.post(f"https://api.telegram.org/bot{token}/sendMessage", 
                        data={"chat_id": chat_id, "text": final_msg, "parse_mode": "Markdown"})
