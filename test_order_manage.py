@@ -41,5 +41,22 @@ if __name__ == "__main__":
     
     # 2. Logic to cancel the most recent one (if requested for test)
     # For now, this script just lists them so you can see your DHR tests.
+    
+    # Telegram Notification Logic
+    token = os.getenv('TELEGRAM_TOKEN', '').strip()
+    chat_id = os.getenv('TELEGRAM_CHAT_ID', '').strip()
+    
+    if token and chat_id:
+        msg_lines = ["📡 **ACTIVE ORDERS REPORT**"]
+        if orders:
+            for o in orders:
+                msg_lines.append(f"🆔 `{o.get('id')}` | {o.get('ticker')} | {o.get('type')}")
+        else:
+            msg_lines.append("✅ No active orders found.")
+            
+        final_msg = "\n".join(msg_lines)
+        requests.post(f"https://api.telegram.org/bot{token}/sendMessage", 
+                       data={"chat_id": chat_id, "text": final_msg, "parse_mode": "Markdown"})
+
     if orders:
         print("\n💡 ACTION: To cancel an order, use: python test_order_manage.py --cancel ID")
