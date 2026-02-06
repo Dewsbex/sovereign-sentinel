@@ -1,38 +1,38 @@
 {
     "meta": {
-        "timestamp": "2026-02-06 13:36",
+        "timestamp": "2026-02-06 14:29",
         "version": "v0.13 Sovereign Finality"
     },
     "account": {
         "id": 31785628,
         "currency": "GBP",
-        "totalValue": 171978.3,
+        "totalValue": 171999.12,
         "cash": {
             "availableToTrade": 15162.94,
             "reservedForOrders": 0,
             "inPies": 0
         },
         "investments": {
-            "currentValue": 156815.36,
+            "currentValue": 156836.18,
             "totalCost": 161589.15,
             "realizedProfitLoss": 26122.63,
-            "unrealizedProfitLoss": -4773.79
+            "unrealizedProfitLoss": -4752.97
         }
     },
     "holdings": [
         {
             "Ticker": "BMY",
             "Name": "Bristol-Myers Squibb",
-            "Value_GBP": 8317.14,
-            "Value": 8317.14,
-            "Price_GBP": 43.774421052631574,
+            "Value_GBP": 8317.57,
+            "Value": 8317.57,
+            "Price_GBP": 43.77668421052631,
             "Price": 59.51,
             "Avg_Price": 50.57,
-            "PL_GBP": 1160.01,
-            "PL": 1160.01,
+            "PL_GBP": 1160.44,
+            "PL": 1160.44,
             "Shares": 190.0,
             "Currency": "USD",
-            "FX_Impact": -89.45,
+            "FX_Impact": -89.08,
             "Oracle_Verdict": "FAIL",
             "Oracle_Yield": 0.0,
             "Oracle_Gates": {
@@ -40,22 +40,22 @@
                 "g2": true,
                 "g4": false
             },
-            "Weight_Pct": 5.303224295895167,
-            "Weight": 5.303224295895167
+            "Weight_Pct": 5.302794847416272,
+            "Weight": 5.302794847416272
         },
         {
             "Ticker": "DHR",
             "Name": "Danaher",
-            "Value_GBP": 9520.77,
-            "Value": 9520.77,
-            "Price_GBP": 158.67950000000002,
+            "Value_GBP": 9521.26,
+            "Value": 9521.26,
+            "Price_GBP": 158.68766666666667,
             "Price": 215.72,
             "Avg_Price": 217.701,
-            "PL_GBP": -0.16,
-            "PL": -0.16,
+            "PL_GBP": 0.33,
+            "PL": 0.33,
             "Shares": 60.0,
             "Currency": "USD",
-            "FX_Impact": 87.27,
+            "FX_Impact": 87.77,
             "Oracle_Verdict": "PASS",
             "Oracle_Yield": 0.04206835871533456,
             "Oracle_Gates": {
@@ -63,19 +63,19 @@
                 "g2": true,
                 "g4": true
             },
-            "Weight_Pct": 6.070690018399334,
-            "Weight": 6.070690018399334
+            "Weight_Pct": 6.070197000916211,
+            "Weight": 6.070197000916211
         },
         {
             "Ticker": "RIO",
             "Name": "Rio Tinto",
-            "Value_GBP": 7012.22,
-            "Value": 7012.22,
-            "Price_GBP": 68.49900863196926,
-            "Price": 68.499,
+            "Value_GBP": 7029.01,
+            "Value": 7029.01,
+            "Price_GBP": 68.66302207634646,
+            "Price": 68.663,
             "Avg_Price": 45.7667501255,
-            "PL_GBP": 2327.1,
-            "PL": 2327.1,
+            "PL_GBP": 2343.89,
+            "PL": 2343.89,
             "Shares": 102.36965673,
             "Currency": "GBX",
             "FX_Impact": null,
@@ -86,19 +86,19 @@
                 "g2": true,
                 "g4": true
             },
-            "Weight_Pct": 4.471173440889778,
-            "Weight": 4.471173440889778
+            "Weight_Pct": 4.481284559124534,
+            "Weight": 4.481284559124534
         },
         {
             "Ticker": "LGEN",
             "Name": "Legal & General",
-            "Value_GBP": 2676.0,
-            "Value": 2676.0,
-            "Price_GBP": 2.676,
-            "Price": 2.676,
+            "Value_GBP": 2670.0,
+            "Value": 2670.0,
+            "Price_GBP": 2.67,
+            "Price": 2.67,
             "Avg_Price": 2.5980000000000003,
-            "PL_GBP": 78.0,
-            "PL": 78.0,
+            "PL_GBP": 72.0,
+            "PL": 72.0,
             "Shares": 1000.0,
             "Currency": "GBX",
             "FX_Impact": null,
@@ -109,8 +109,8 @@
                 "g2": true,
                 "g4": false
             },
-            "Weight_Pct": 1.7062870428795798,
-            "Weight": 1.7062870428795798
+            "Weight_Pct": 1.702235417628159,
+            "Weight": 1.702235417628159
         },
         {
             "Ticker": "QELL",
@@ -124,7 +124,7 @@
             "PL": -216.64,
             "Shares": 275.36311,
             "Currency": "USD",
-            "FX_Impact": -9.66,
+            "FX_Impact": -9.65,
             "Oracle_Verdict": "FAIL",
             "Oracle_Yield": 0.0,
             "Oracle_Gates": {
@@ -132,19 +132,19 @@
                 "g2": true,
                 "g4": false
             },
-            "Weight_Pct": 0.0001402777090558698,
-            "Weight": 0.0001402777090558698
+            "Weight_Pct": 0.00014025909808172097,
+            "Weight": 0.00014025909808172097
         },
         {
             "Ticker": "BATS",
             "Name": "British American Tobacco",
-            "Value_GBP": 4574.1,
-            "Value": 4574.1,
-            "Price_GBP": 45.74100000000001,
-            "Price": 45.74100000000001,
+            "Value_GBP": 4576.8,
+            "Value": 4576.8,
+            "Price_GBP": 45.768,
+            "Price": 45.768,
             "Avg_Price": 42.027249000000005,
-            "PL_GBP": 371.38,
-            "PL": 371.38,
+            "PL_GBP": 374.08,
+            "PL": 374.08,
             "Shares": 100.0,
             "Currency": "GBX",
             "FX_Impact": null,
@@ -155,22 +155,22 @@
                 "g2": true,
                 "g4": false
             },
-            "Weight_Pct": 2.9165648590566096,
-            "Weight": 2.9165648590566096
+            "Weight_Pct": 2.9178992731837297,
+            "Weight": 2.9178992731837297
         },
         {
             "Ticker": "VSNTV",
             "Name": "Versant Media Group",
-            "Value_GBP": 2429.89,
-            "Value": 2429.89,
-            "Price_GBP": 21.8909009009009,
+            "Value_GBP": 2430.01,
+            "Value": 2430.01,
+            "Price_GBP": 21.891981981981985,
             "Price": 29.76,
             "Avg_Price": 33.25963964,
-            "PL_GBP": -328.98,
-            "PL": -328.98,
+            "PL_GBP": -328.86,
+            "PL": -328.86,
             "Shares": 111.0,
             "Currency": "USD",
-            "FX_Impact": -43.24,
+            "FX_Impact": -43.1,
             "Oracle_Verdict": "FAIL",
             "Oracle_Yield": 0.0,
             "Oracle_Gates": {
@@ -178,22 +178,22 @@
                 "g2": true,
                 "g4": false
             },
-            "Weight_Pct": 1.5493609202625793,
-            "Weight": 1.5493609202625793
+            "Weight_Pct": 1.549231867861649,
+            "Weight": 1.549231867861649
         },
         {
             "Ticker": "NUE",
             "Name": "Nucor",
-            "Value_GBP": 16340.47,
-            "Value": 16340.47,
-            "Price_GBP": 137.14166690540574,
+            "Value_GBP": 16341.31,
+            "Value": 16341.31,
+            "Price_GBP": 137.1487168250348,
             "Price": 186.44,
             "Avg_Price": 142.75373864,
-            "PL_GBP": 3767.6,
-            "PL": 3767.6,
+            "PL_GBP": 3768.44,
+            "PL": 3768.44,
             "Shares": 119.1502945,
             "Currency": "USD",
-            "FX_Impact": -61.27,
+            "FX_Impact": -60.62,
             "Oracle_Verdict": "PASS",
             "Oracle_Yield": 0.07576939619847292,
             "Oracle_Gates": {
@@ -201,22 +201,22 @@
                 "g2": true,
                 "g4": true
             },
-            "Weight_Pct": 10.419107711346221,
-            "Weight": 10.419107711346221
+            "Weight_Pct": 10.418260918517307,
+            "Weight": 10.418260918517307
         },
         {
             "Ticker": "SOLV",
             "Name": "Solventum",
-            "Value_GBP": 5664.71,
-            "Value": 5664.71,
-            "Price_GBP": 56.6471,
+            "Value_GBP": 5665.0,
+            "Value": 5665.0,
+            "Price_GBP": 56.65,
             "Price": 77.01,
             "Avg_Price": 80.4473,
-            "PL_GBP": -313.13,
-            "PL": -313.13,
+            "PL_GBP": -312.84,
+            "PL": -312.84,
             "Shares": 100.0,
             "Currency": "USD",
-            "FX_Impact": -60.29,
+            "FX_Impact": -59.99,
             "Oracle_Verdict": "FAIL",
             "Oracle_Yield": 0.036923325776037776,
             "Oracle_Gates": {
@@ -224,22 +224,22 @@
                 "g2": true,
                 "g4": false
             },
-            "Weight_Pct": 3.6119660966630738,
-            "Weight": 3.6119660966630738
+            "Weight_Pct": 3.6116717756043153,
+            "Weight": 3.6116717756043153
         },
         {
             "Ticker": "RE",
             "Name": "Everest Group",
-            "Value_GBP": 16062.08,
-            "Value": 16062.08,
-            "Price_GBP": 239.90224466259542,
+            "Value_GBP": 16062.91,
+            "Value": 16062.91,
+            "Price_GBP": 239.91464149183983,
             "Price": 326.14,
             "Avg_Price": 333.79806975,
-            "PL_GBP": -932.09,
-            "PL": -932.09,
+            "PL_GBP": -931.26,
+            "PL": -931.26,
             "Shares": 66.95260406,
             "Currency": "USD",
-            "FX_Impact": -554.94,
+            "FX_Impact": -554.09,
             "Oracle_Verdict": "FAIL",
             "Oracle_Yield": 0.0,
             "Oracle_Gates": {
@@ -247,22 +247,22 @@
                 "g2": true,
                 "g4": false
             },
-            "Weight_Pct": 10.241599023055024,
-            "Weight": 10.241599023055024
+            "Weight_Pct": 10.240769405308438,
+            "Weight": 10.240769405308438
         },
         {
             "Ticker": "NFLX",
             "Name": "Netflix",
-            "Value_GBP": 11295.43,
-            "Value": 11295.43,
-            "Price_GBP": 59.44963157894737,
+            "Value_GBP": 11296.01,
+            "Value": 11296.01,
+            "Price_GBP": 59.452684210526314,
             "Price": 80.82,
             "Avg_Price": 92.46947368,
-            "PL_GBP": -1827.19,
-            "PL": -1827.19,
+            "PL_GBP": -1826.61,
+            "PL": -1826.61,
             "Shares": 190.0,
             "Currency": "USD",
-            "FX_Impact": -199.06,
+            "FX_Impact": -198.39,
             "Oracle_Verdict": "FAIL",
             "Oracle_Yield": 0.02958612719090318,
             "Oracle_Gates": {
@@ -270,22 +270,22 @@
                 "g2": true,
                 "g4": false
             },
-            "Weight_Pct": 7.202259287277016,
-            "Weight": 7.202259287277016
+            "Weight_Pct": 7.201673520555003,
+            "Weight": 7.201673520555003
         },
         {
             "Ticker": "CRM",
             "Name": "Salesforce",
-            "Value_GBP": 12855.25,
-            "Value": 12855.25,
-            "Price_GBP": 139.73097826086956,
+            "Value_GBP": 12855.91,
+            "Value": 12855.91,
+            "Price_GBP": 139.73815217391305,
             "Price": 189.96,
             "Avg_Price": 242.96684783,
-            "PL_GBP": -3700.49,
-            "PL": -3700.49,
+            "PL_GBP": -3699.83,
+            "PL": -3699.83,
             "Shares": 92.0,
             "Currency": "USD",
-            "FX_Impact": -113.33,
+            "FX_Impact": -112.49,
             "Oracle_Verdict": "PASS",
             "Oracle_Yield": 0.07465796237933826,
             "Oracle_Gates": {
@@ -293,22 +293,22 @@
                 "g2": true,
                 "g4": true
             },
-            "Weight_Pct": 8.196840997002138,
-            "Weight": 8.196840997002138
+            "Weight_Pct": 8.196174280089897,
+            "Weight": 8.196174280089897
         },
         {
             "Ticker": "QCOM",
             "Name": "Qualcomm",
-            "Value_GBP": 10832.02,
-            "Value": 10832.02,
-            "Price_GBP": 100.29648148148148,
+            "Value_GBP": 10832.57,
+            "Value": 10832.57,
+            "Price_GBP": 100.30157407407407,
             "Price": 136.35,
             "Avg_Price": 168.85388889,
-            "PL_GBP": -2670.73,
-            "PL": -2670.73,
+            "PL_GBP": -2670.18,
+            "PL": -2670.18,
             "Shares": 108.0,
             "Currency": "USD",
-            "FX_Impact": -88.53,
+            "FX_Impact": -87.85,
             "Oracle_Verdict": "PASS",
             "Oracle_Yield": 0.09884968665751433,
             "Oracle_Gates": {
@@ -316,22 +316,22 @@
                 "g2": true,
                 "g4": true
             },
-            "Weight_Pct": 6.9067770456698305,
-            "Weight": 6.9067770456698305
+            "Weight_Pct": 6.906211355032308,
+            "Weight": 6.906211355032308
         },
         {
             "Ticker": "EOG",
             "Name": "EOG Resources",
-            "Value_GBP": 13892.7,
-            "Value": 13892.7,
-            "Price_GBP": 82.77492671678381,
+            "Value_GBP": 13893.41,
+            "Value": 13893.41,
+            "Price_GBP": 82.77915701024504,
             "Price": 112.53,
             "Avg_Price": 114.00211891,
-            "PL_GBP": -374.47,
-            "PL": -374.47,
+            "PL_GBP": -373.76,
+            "PL": -373.76,
             "Shares": 167.83705587,
             "Currency": "USD",
-            "FX_Impact": -192.73,
+            "FX_Impact": -192.01,
             "Oracle_Verdict": "PASS",
             "Oracle_Yield": 0.1659915281433113,
             "Oracle_Gates": {
@@ -339,22 +339,22 @@
                 "g2": true,
                 "g4": true
             },
-            "Weight_Pct": 8.858346039093103,
-            "Weight": 8.858346039093103
+            "Weight_Pct": 8.857623435816194,
+            "Weight": 8.857623435816194
         },
         {
             "Ticker": "CTVA",
             "Name": "Corteva",
-            "Value_GBP": 11992.54,
-            "Value": 11992.54,
-            "Price_GBP": 53.30017777777778,
+            "Value_GBP": 11993.16,
+            "Value": 11993.16,
+            "Price_GBP": 53.302933333333335,
             "Price": 72.46,
             "Avg_Price": 69.9412,
-            "PL_GBP": 314.12,
-            "PL": 314.12,
+            "PL_GBP": 314.74,
+            "PL": 314.74,
             "Shares": 225.0,
             "Currency": "USD",
-            "FX_Impact": -102.76,
+            "FX_Impact": -102.16,
             "Oracle_Verdict": "PASS",
             "Oracle_Yield": 0.06955236771535173,
             "Oracle_Gates": {
@@ -362,22 +362,22 @@
                 "g2": true,
                 "g4": true
             },
-            "Weight_Pct": 7.64675471345855,
-            "Weight": 7.64675471345855
+            "Weight_Pct": 7.6461354761353295,
+            "Weight": 7.6461354761353295
         },
         {
             "Ticker": "MSFT",
             "Name": "Microsoft",
-            "Value_GBP": 8688.83,
-            "Value": 8688.83,
-            "Price_GBP": 289.62766666666664,
+            "Value_GBP": 8689.27,
+            "Value": 8689.27,
+            "Price_GBP": 289.64233333333334,
             "Price": 393.74,
             "Avg_Price": 423.35,
-            "PL_GBP": -590.41,
-            "PL": -590.41,
+            "PL_GBP": -589.97,
+            "PL": -589.97,
             "Shares": 30.0,
             "Currency": "USD",
-            "FX_Impact": 63.01,
+            "FX_Impact": 63.48,
             "Oracle_Verdict": "PASS",
             "Oracle_Yield": 0.05485688830087231,
             "Oracle_Gates": {
@@ -385,22 +385,22 @@
                 "g2": true,
                 "g4": true
             },
-            "Weight_Pct": 5.540223485345059,
-            "Weight": 5.540223485345059
+            "Weight_Pct": 5.53976896903889,
+            "Weight": 5.53976896903889
         },
         {
             "Ticker": "CNNE",
             "Name": "Cannae",
-            "Value_GBP": 14677.39,
-            "Value": 14677.39,
-            "Price_GBP": 10.437888723578514,
+            "Value_GBP": 14678.15,
+            "Value": 14678.15,
+            "Price_GBP": 10.438429200831616,
             "Price": 14.19,
             "Avg_Price": 15.77239921,
-            "PL_GBP": -1821.31,
-            "PL": -1821.31,
+            "PL_GBP": -1820.55,
+            "PL": -1820.55,
             "Shares": 1406.16463623,
             "Currency": "USD",
-            "FX_Impact": -184.56,
+            "FX_Impact": -183.71,
             "Oracle_Verdict": "FAIL",
             "Oracle_Yield": -0.06206824199904008,
             "Oracle_Gates": {
@@ -408,11 +408,11 @@
                 "g2": true,
                 "g4": false
             },
-            "Weight_Pct": 9.358684745997877,
-            "Weight": 9.358684745997877
+            "Weight_Pct": 9.357927638673694,
+            "Weight": 9.357927638673694
         }
     ],
-    "total_gbp": 156831.76,
+    "total_gbp": 156852.56999999998,
     "sniper": [
         {
             "ticker": "NVDA",

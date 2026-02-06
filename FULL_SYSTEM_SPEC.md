@@ -5,7 +5,7 @@
 
 ## 1. System Overview
 **Name**: Sovereign Sentinel (Hybrid Engine)
-**Version**: v32.50
+**Version**: v32.60
 **Architecture**: **Dual-Process**.
 1.  **The Investor (95%)**: Daily Fundamental/Metric checks (Job A).
 2.  **The Scalper (5%)**: Technical Breakout Simulation (Job C / Sentinel).
@@ -51,11 +51,11 @@
 
 | File | Role | Description |
 | :--- | :--- | :--- |
-| `sovereign_state_manager.py` | **State** | Manages persistent state (`data/ledger_state.json`) and configuration. |
+| `sovereign_state_manager.py` | **State** | Manages `ledger_state.json` and `eod_balance.json` (Scalper Ledger). |
 | `orb_observer.py` | **Eyes** | Analyzes market conditions (RVOL, Gap) during observation window. |
 | `orb_execution.py` | **Hands** | Handles order logic, entry triggers, and position management. |
 | `orb_shield.py` | **Defense** | Risk management wrapper (Max Drawdown, Circuit Breakers). |
-| `orb_messenger.py` | **Voice** | Handles Telegram/Discord notifications and alerts. |
+| `orb_messenger.py` | **Voice** | Handles Telegram/Discord notifications with **Environment Prefixing** `(DEMO)`/`(LIVE)`. |
 
 ### 2.3 🧪 VERIFICATION & TESTING
 *Files used for CI/CD and Logic Verification.*
@@ -97,16 +97,40 @@
     - *Checks*: Dividend Yield > Risk Free Rate? Management Buying?
 3.  **Applies Solar Cycle**: Checks `solar_cycle.phase_4b_tax_logic_fork()` (ISA vs GIA).
 4.  **Rebalancing**: Generates "TRIM" or "ADD" signals in `ledger_state.json` based on Fundamental Health.
-
 ### 3.2 Mandate B: The Scalper (5% Equity)
 **Process**: `main_bot.py` (Job C)
 **Frequency**: Cron Trigger (14:25 UTC).
 **Logic**:
-1.  **Budget Constraint**: `Allocated Capital = Total Net Equity * 0.05`.
-2.  **Strategy**: Technical ORB (Opening Range Breakout).
-3.  **Constraints**:
+1.  **Budget Constraint**: "The Seed Rule". Starts with **£1,000 Hard Cap**. 
+    - *Scaling*: Unlocks 5% of Total Equity ONLY after Scalper Profit > £1,000.
+2.  **Strategy**: Technical ORB (Opening Range Breakout) with **Trend Bias**.
+    - **VWAP Guard**: Longs only if Price > VWAP.
+    - **Candle Close**: Entries trigger on 5m Candle Close (No premature wicks).
+3.  **Safety**:
+    - **Slippage Audit**: Immediate Exit if Fill vs Trigger > 0.2%.
     - **Immune System**: Must check `immune.check_earnings_radar()` before trading.
-    - **Oracle Check**: Ideally only scalps tickers that pass a basic "Quality" filter (optional).
+    - **Circuit Breaker**: If `current_session_loss >= 1000.00`, set `Job_C_Status = DISABLED`.
+
+### 3.3 Mandate C: The Artist (UI & Reporting)
+**Process**: `generate_static.py` (Job B)
+**Desired State (v32.60)**:
+1.  **Layout**: "Sovereign Stack". Vertical Flex Column for Mobile-First focus.
+2.  **Asset Donut**:
+    - **Dimensions**: Enlarged (radius=90).
+    - **Labels**: SVG Leader Lines connecting segments to external labels (Ticker + %).
+3.  **Heatmap**: Full-width (100%) expansion, Ticker-only labels for density. 18pt font.
+4.  **Target Tracker**: Row height increased by 15%.
+5.  **Telemetry**:
+    - **Prefix**: All notifications must carry `(DEMO)` or `(LIVE)`.
+    - **EOD Report**: 21:00 GMT Summary of the independent £1k Seed Growth (`eod_balance.json`).
+    - **Normalization**: UK Equities hard-locked to divide by 100.
+
+### 3.4 Mandate D: The Commander (Manual API Hub)
+**Interface**: "Settings Cog" Modal in Dashboard.
+**Functions**:
+1.  **Sync Metadata**: Trigger `GET /api/v0/equity/metadata/instruments`.
+2.  **Panic Sell**: Ticker Input + "Sell All" Button -> Immediate Market Exit.
+3.  **Mode Switch**: Toggle `(DEMO)` / `(LIVE)` (Requires Token Validation).
 
 ---
 
@@ -115,7 +139,7 @@ To build the Hybrid System:
 
 1.  **Deploy Core**: All files in Section 2.1.
 2.  **Configure Split**:
-    - In `orb_config.json`: Set `"trade_allocation_percent": 5.0` (Scalper uses 5% of Total).
+    - In `orb_config.json`: Set `"seed_capital": 1000.0`.
     - In `config.py`: Ensure `RISK_FREE_RATE` and `TAX_VARS` are correct for Oracle.
 3.  **Run Pipeline**:
     - **Step 1 (Investor)**: `python generate_isa_portfolio.py` -> Runs Oracle, Updates Core DB.

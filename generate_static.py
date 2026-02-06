@@ -57,8 +57,12 @@ def generate_oracle_ring(holdings, total_invested):
     
     # v32.14: Sovereign Finality - Leader Lines
     # Parameters for layout
-    radius = 65
-    label_r = 90 # Radius for label placement
+    # v32.60: Sovereign Finality - Leader Lines & Expanded Donut
+    # Parameters for layout
+    radius = 90 # Enlarged by ~38% (65->90)
+    label_r = 120 # Radius for label placement endpoint
+    center_x = 150
+    center_y = 150
     circum = 2 * math.pi * radius
     cumulative_offset = 0
     svg_elements = []
@@ -70,59 +74,42 @@ def generate_oracle_ring(holdings, total_invested):
         val = h.get('Value_GBP', 0)
         weight = (val / total_invested * 100) if total_invested > 0 else 0
         
-        if weight < 1.0: continue # Filter strictly for chart cleanliness
+        if weight < 0.5: continue # Tighter clean up
         
         color = colors[i % len(colors)]
         dash_len = (weight / 100) * circum
         
-        # Angles for Slice Placement
-        # Note: SVG circle stroke starts at 3 o'clock (0 rad). We rotate -90 to start at 12 o'clock.
-        # accumulated length determines the start of this segment.
-        
-        # Angle of the generic start of this segment (in 0-1 percentage of circle)
+        # Leader Line Math
         segment_start_pct = (cumulative_offset / circum)
         segment_len_pct = (dash_len / circum)
         
-        # Midpoint of the segment in degrees (0 = top/12oclock due to rotate(-90))
-        # But 'cumulative_offset' is a stroke-dashoffset which goes COUNTER-clockwise or clockwise depending on impl.
-        # Standard logic: offset pushes the start back? 
-        # Easier Math: Just track cumulative degrees.
-        # Let's use pure angles for the Leader Lines math, unrelated to the stroke-dash trickery, 
-        # ensuring we map 1:1.
-        # Stroke Dash logic: dasharray="len gap", offset="-Start".
-        # This draws the segment starting at 'Start' around the circle.
-        
         mid_angle_turn = segment_start_pct + (segment_len_pct / 2)
-        # Convert turn (0-1) to Radians, adjusted for -90deg rotation.
-        # 0 turn = Top (12). 0.25 = Right (3). 
         mid_angle_rad = (mid_angle_turn * 2 * math.pi) - (math.pi / 2)
         
         # Points
-        # Surface Point (on ring)
-        sx = 100 + radius * math.cos(mid_angle_rad)
-        sy = 100 + radius * math.sin(mid_angle_rad)
+        sx = center_x + radius * math.cos(mid_angle_rad)
+        sy = center_y + radius * math.sin(mid_angle_rad)
         
-        # Elbow Point (slightly out)
-        ex = 100 + label_r * math.cos(mid_angle_rad)
-        ey = 100 + label_r * math.sin(mid_angle_rad)
+        # Elbow Point
+        ex = center_x + label_r * math.cos(mid_angle_rad)
+        ey = center_y + label_r * math.sin(mid_angle_rad)
         
         # Label alignment
         is_right = math.cos(mid_angle_rad) >= 0
         text_anchor = "start" if is_right else "end"
-        label_x = ex + (5 if is_right else -5)
+        label_x = ex + (10 if is_right else -10)
         
         ticker = h.get('Ticker', 'Asset')
         safe_name = h.get('Name', ticker).replace("'", "\\'")
         pct_fmt = f"{weight:.1f}%"
         
-        # SVG Construction
         svg_elements.append(f"""
             <!-- Slice -->
-            <circle r="{radius}" cx="100" cy="100" fill="transparent"
-                stroke="{color}" stroke-width="20"
+            <circle r="{radius}" cx="{center_x}" cy="{center_y}" fill="transparent"
+                stroke="{color}" stroke-width="25"
                 stroke-dasharray="{dash_len} {circum}"
                 stroke-dashoffset="-{cumulative_offset}" 
-                transform="rotate(-90 100 100)"
+                transform="rotate(-90 {center_x} {center_y})"
                 class="donut-segment segment-{ticker}"
                 data-ticker="{ticker}"
                 onmouseover="showTT('{safe_name}', '{pct_fmt}', '{color}')"
@@ -131,20 +118,20 @@ def generate_oracle_ring(holdings, total_invested):
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="{sx}" y1="{sy}" x2="{ex}" y2="{ey}" stroke="{color}" stroke-width="1" opacity="0.6" />
+            <line x1="{sx}" y1="{sy}" x2="{ex}" y2="{ey}" stroke="{color}" stroke-width="2" opacity="0.5" />
+            <circle cx="{ex}" cy="{ey}" r="2" fill="{color}" />
                 
             <!-- Label (Ticker + %) -->
             <text x="{label_x}" y="{ey}" dy="0.3em" text-anchor="{text_anchor}" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">{ticker} {pct_fmt}</text>
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">{ticker} {pct_fmt}</text>
         """)
         
         cumulative_offset += dash_len
 
     return f"""
-    <svg viewBox="0 0 200 200" class="w-full h-full overflow-visible">
-        <circle cx="100" cy="100" r="{radius}" stroke="#f3f4f6" stroke-width="18" fill="none" />
+    <svg viewBox="0 0 300 300" class="w-full h-full overflow-visible">
+        <circle cx="{center_x}" cy="{center_y}" r="{radius}" stroke="#f3f4f6" stroke-width="24" fill="none" />
         {''.join(svg_elements)}
-        <!-- NO CENTER TEXT As Requested -->
     </svg>
     """
 
@@ -254,15 +241,15 @@ def render():
             'x': h.get('Ticker', 'N/A'),
             'y': truncate_decimal(val, 2),
             'val_pct': truncate_decimal(pct, 4),
-            'company_name': h.get('Name', h.get('Ticker', 'N/A')),
+            'company_name': '', # REMOVED per Spec v32.60 (Tickers Only)
             'shares_held': f"{truncate_decimal(safe_val(h.get('Shares')), 2):,.2f}",
-            'formatted_value': f"£{val:,.2f}", # Pre-formatted
+            'formatted_value': f"£{val:,.2f}", 
             'formatted_pl_gbp': f"{'+' if pnl >= 0 else ''}£{abs(pnl):,.2f}",
             'formatted_pl_pct': f"({pct*100:+.2f}%)",
             'price_avg': f"{h.get('Currency', '')} {truncate_decimal(safe_val(h.get('Avg_Price')), 2)}",
             'price_cur': f"{h.get('Currency', '')} {truncate_decimal(safe_val(h.get('Price')), 2)}",
             'currency': h.get('Currency', 'GBP'), 
-            'pl_per_share_gbp': 0, # Legacy placeholder or calc if needed
+            'pl_per_share_gbp': 0, 
             'pl_per_share_pct': 0
         })
 

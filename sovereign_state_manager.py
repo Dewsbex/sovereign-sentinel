@@ -13,8 +13,11 @@ class SovereignStateManager:
         self.config_file = config_file
         self.state = {}
         self.config = {}
+        self.scalper_ledger_file = "data/eod_balance.json"
+        self.scalper_state = {} 
         self.load_config()
         self.load_state()
+        self.load_scalper_ledger()
 
     def load_config(self):
         try:
@@ -59,34 +62,63 @@ class SovereignStateManager:
             logger.info("State saved successfully.")
         except Exception as e:
             logger.error(f"Failed to save state: {e}")
-
-    def update_equity(self, new_equity):
-        self.state['current_equity'] = float(new_equity)
-        
-        # Update HWM
-        if self.state['current_equity'] > self.state['high_water_mark']:
-            self.state['high_water_mark'] = self.state['current_equity']
-            logger.info(f"🚀 NEW HIGH WATER MARK: {self.state['high_water_mark']}")
-
-        # Check Circuit Breaker
-        drawdown = (self.state['high_water_mark'] - self.state['current_equity']) / self.state['high_water_mark'] * 100
-        max_dd = self.config['risk']['max_drawdown_percent']
-        
-        if drawdown >= max_dd:
-            self.state['circuit_breaker_tripped'] = True
-            logger.critical(f"🛑 CIRCUIT BREAKER TRIGGERED! Drawdown: {drawdown:.2f}% (Limit: {max_dd}%)")
-
         self.save_state()
 
+    def load_scalper_ledger(self):
+        if not os.path.exists(self.scalper_ledger_file):
+            # init new ledger
+            self.scalper_state = {
+                "initial_seed": self.config['risk'].get('seed_capital', 1000.0),
+                "current_balance": self.config['risk'].get('seed_capital', 1000.0),
+                "history": []
+            }
+            self.save_scalper_ledger()
+        else:
+            try:
+                with open(self.scalper_ledger_file, 'r') as f:
+                    self.scalper_state = json.load(f)
+            except:
+                self.scalper_state = {"current_balance": 1000.0}
+
+    def save_scalper_ledger(self):
+        with open(self.scalper_ledger_file, 'w') as f:
+            json.dump(self.scalper_state, f, indent=4)
+
     def get_allocation_amount(self):
-        """Returns the £ amount to allocate to a single trade based on configuration."""
-        if self.state['circuit_breaker_tripped']:
+        """Returns the £ amount to allocate to a single trade based on v32.60 'Scale Earned' rule."""
+        if self.state.get('circuit_breaker_tripped'):
             return 0.0
             
-        alloc_pct = self.config['risk']['trade_allocation_percent'] / 100.0
-        # Allocate based on current equity (or HWM? Conservative is Current)
-        amount = self.state['current_equity'] * alloc_pct
+        seed = self.config['risk'].get('seed_capital', 1000.0)
+        
+        # v32.60 Logic: Check INDEPENDENT Scalper Ledger
+        scalper_balance = self.scalper_state.get('current_balance', seed)
+        cumulative_profit = scalper_balance - seed
+        
+        # Scale Gate: ONLY if Cumulative Profit >= £1,000
+        if cumulative_profit >= 1000.0:
+            # Scale Mode: 5% of Total Account Equity
+            alloc_pct = 0.05
+            amount = self.state['current_equity'] * alloc_pct
+            logger.info(f"Allocation Scale UNLOCKED: Using 5% of Total Equity (£{amount:.2f})")
+        else:
+            # Seed Mode: Hard Cap at £1,000 (Active Risk Capital)
+            # Interpretation: We risk the Seed, not the Profit.
+            # Spec: "If cumulative_profit < 1000.00, set active_risk = 1000.00"
+            amount = 1000.0 
+            logger.info(f"Allocation Seed Mode: Hard Cap £{amount:.2f} (Profit: £{cumulative_profit:.2f})")
+            
         return round(amount, 2)
+        
+    def check_circuit_breaker(self):
+        """v32.60: Disable Job C if Session Loss >= £1,000"""
+        today_pnl = self.state['daily_performance']['pnl']
+        if today_pnl <= -1000.0:
+            logger.critical(f"🛑 CIRCUIT BREAKER TRIPPED: Session Loss £{today_pnl} >= £1,000 limit.")
+            self.state['circuit_breaker_tripped'] = True
+            self.save_state()
+            return True
+        return False
 
     def record_trade(self, ticker, pnl):
         today = datetime.datetime.utcnow().strftime("%Y-%m-%d")
@@ -96,6 +128,17 @@ class SovereignStateManager:
         self.state['daily_performance']['pnl'] += pnl
         self.state['daily_performance']['trades_taken'] += 1
         self.update_equity(self.state['current_equity'] + pnl)
+        
+        # Update Scalper Independent Ledger
+        if 'current_balance' in self.scalper_state:
+            self.scalper_state['current_balance'] += pnl
+            self.scalper_state['history'].append({
+                "date": today,
+                "ticker": ticker,
+                "pnl": pnl,
+                "balance": self.scalper_state['current_balance']
+            })
+            self.save_scalper_ledger()
 
 if __name__ == "__main__":
     # Internal Logic Test

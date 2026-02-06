@@ -451,7 +451,7 @@
             <div class="flex flex-col text-right">
                 <span class="text-[0.6rem] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">Total
                     Wealth</span>
-                <span class="text-lg font-bold text-gray-800 mono leading-none">£171,978.30</span>
+                <span class="text-lg font-bold text-gray-800 mono leading-none">£171,999.12</span>
             </div>
             <div class="h-6 w-px bg-gray-200"></div>
             <div class="flex flex-col text-right">
@@ -459,7 +459,7 @@
                     Return</span>
                 <div class="flex items-baseline justify-end gap-2">
                     <span
-                        class="text-lg font-bold text-emerald-500 mono leading-none">+£21,348.84 <span class="text-xs">(+13.21%)</span></span>
+                        class="text-lg font-bold text-emerald-500 mono leading-none">+£21,369.66 <span class="text-xs">(+13.22%)</span></span>
                 </div>
             </div>
             <div class="h-6 w-px bg-gray-200"></div>
@@ -480,8 +480,12 @@
             <span id="market-status-badge" class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200 uppercase tracking-wide">LIVE</span>
             <div class="text-right hidden sm:block">
                 <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
-                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">06/02 14:00</span>
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">06/02 14:42</span>
             </div>
+            <!-- v32.60 Manual API Hub Trigger -->
+            <button onclick="openSettingsModal()" class="text-gray-400 hover:text-indigo-600 transition-colors">
+                <i class="fas fa-cog text-xl"></i>
+            </button>
         </div>
     </nav>
 
@@ -492,20 +496,20 @@
              <i class="fas fa-cog text-gray-400"></i>
         </div>
         <div class="text-[2.5rem] font-bold tracking-tight text-gray-900 leading-none mb-4">
-            £171,978.30
+            £171,999.12
         </div>
         
         <div class="flex gap-8 mb-2">
             <div>
                  <div class="text-[0.6rem] text-gray-400 font-bold tracking-widest uppercase mb-0.5">Total Return</div>
                  <div class="font-bold text-sm text-rose-500">
-                    £4773.79
+                    £4752.97
                  </div>
             </div>
             <div>
                  <div class="text-[0.6rem] text-gray-400 font-bold tracking-widest uppercase mb-0.5">Rate of Return</div>
                  <div class="font-bold text-sm text-rose-500">
-                    -3.0%
+                    -2.9%
                  </div>
             </div>
         </div>
@@ -520,20 +524,20 @@
         <button onclick="document.getElementById('intel-section').scrollIntoView({behavior: 'smooth'})" class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold mr-1">Targets</button>
     </div>
 
-    <div class="main-grid mt-4 md:mt-24"> <!-- Added margin-top for fixed header -->
+    <div class="main-grid mt-4 md:mt-24 flex flex-col gap-6"> <!-- Sovereign Stack: Vertical Flex -->
 
 
 
 
-        <!-- NEW ROW: HEATMAP + ASSET ALLOCATION -->
-        <div class="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- HEATMAP (2/3 Width) -->
-            <div id="heatmap-section" class="md:col-span-2 sentinel-card">
+        <!-- NEW ROW: HEATMAP + ASSET ALLOCATION (STACKED) -->
+        <div class="col-span-12 flex flex-col gap-8">
+            <!-- HEATMAP (Full Width) -->
+            <div id="heatmap-section" class="w-full sentinel-card">
                 <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1 md:mb-2 flex items-center gap-2">
                     <span>🔥 HEATMAP</span>
                     <span class="ml-auto text-[0.6rem] text-indigo-400 cursor-pointer hover:text-indigo-600 transition-colors" onclick="openPortfolioModal()">See All</span>
                 </h2>
-                <div id="heatmap-chart" style="min-height: 400px;"></div>
+                <div id="heatmap-chart" style="min-height: 500px;"></div>
                 
                 
                 <!-- Fortress Section (Hidden by default) -->
@@ -560,9 +564,9 @@
                                     <td class="p-2 text-right">119.1502</td>
                                     <td class="p-2 text-right">£142.75</td>
                                     <td class="p-2 text-right">£186.44</td>
-                                    <td class="p-2 text-right font-semibold">£16340.47</td>
+                                    <td class="p-2 text-right font-semibold">£16341.31</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£3767.6
+                                        +£3768.44
                                         <span class="text-[0.55rem] ml-1">(+30.0%)</span>
                                     </td>
                                 </tr>
@@ -572,11 +576,11 @@
                                     <td class="p-2 text-gray-700">Rio Tinto</td>
                                     <td class="p-2 text-right">102.3696</td>
                                     <td class="p-2 text-right">£45.76</td>
-                                    <td class="p-2 text-right">£68.49</td>
-                                    <td class="p-2 text-right font-semibold">£7012.22</td>
+                                    <td class="p-2 text-right">£68.66</td>
+                                    <td class="p-2 text-right font-semibold">£7029.01</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£2327.1
-                                        <span class="text-[0.55rem] ml-1">(+49.7%)</span>
+                                        +£2343.89
+                                        <span class="text-[0.55rem] ml-1">(+50.0%)</span>
                                     </td>
                                 </tr>
                                 
@@ -586,9 +590,9 @@
                                     <td class="p-2 text-right">190.0</td>
                                     <td class="p-2 text-right">£50.57</td>
                                     <td class="p-2 text-right">£59.51</td>
-                                    <td class="p-2 text-right font-semibold">£8317.14</td>
+                                    <td class="p-2 text-right font-semibold">£8317.57</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£1160.01
+                                        +£1160.44
                                         <span class="text-[0.55rem] ml-1">(+16.2%)</span>
                                     </td>
                                 </tr>
@@ -598,11 +602,11 @@
                                     <td class="p-2 text-gray-700">British American Tobacco</td>
                                     <td class="p-2 text-right">100.0</td>
                                     <td class="p-2 text-right">£42.02</td>
-                                    <td class="p-2 text-right">£45.74</td>
-                                    <td class="p-2 text-right font-semibold">£4574.1</td>
+                                    <td class="p-2 text-right">£45.76</td>
+                                    <td class="p-2 text-right font-semibold">£4576.8</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£371.38
-                                        <span class="text-[0.55rem] ml-1">(+8.8%)</span>
+                                        +£374.08
+                                        <span class="text-[0.55rem] ml-1">(+8.9%)</span>
                                     </td>
                                 </tr>
                                 
@@ -612,9 +616,9 @@
                                     <td class="p-2 text-right">225.0</td>
                                     <td class="p-2 text-right">£69.94</td>
                                     <td class="p-2 text-right">£72.45</td>
-                                    <td class="p-2 text-right font-semibold">£11992.54</td>
+                                    <td class="p-2 text-right font-semibold">£11993.16</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£314.12
+                                        +£314.74
                                         <span class="text-[0.55rem] ml-1">(+2.7%)</span>
                                     </td>
                                 </tr>
@@ -625,10 +629,10 @@
                                     <td class="p-2 text-right">1000.0</td>
                                     <td class="p-2 text-right">£2.59</td>
                                     <td class="p-2 text-right">£2.67</td>
-                                    <td class="p-2 text-right font-semibold">£2676.0</td>
+                                    <td class="p-2 text-right font-semibold">£2670.0</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£78.0
-                                        <span class="text-[0.55rem] ml-1">(+3.0%)</span>
+                                        +£72.0
+                                        <span class="text-[0.55rem] ml-1">(+2.8%)</span>
                                     </td>
                                 </tr>
                                 
@@ -638,10 +642,10 @@
                                     <td class="p-2 text-right">60.0</td>
                                     <td class="p-2 text-right">£217.7</td>
                                     <td class="p-2 text-right">£215.72</td>
-                                    <td class="p-2 text-right font-semibold">£9520.77</td>
-                                    <td class="p-2 text-right font-bold text-rose-500">
-                                        £-0.16
-                                        <span class="text-[0.55rem] ml-1">(-0.0%)</span>
+                                    <td class="p-2 text-right font-semibold">£9521.26</td>
+                                    <td class="p-2 text-right font-bold text-emerald-600">
+                                        +£0.33
+                                        <span class="text-[0.55rem] ml-1">(+0.0%)</span>
                                     </td>
                                 </tr>
                                 
@@ -664,9 +668,9 @@
                                     <td class="p-2 text-right">100.0</td>
                                     <td class="p-2 text-right">£80.44</td>
                                     <td class="p-2 text-right">£77.01</td>
-                                    <td class="p-2 text-right font-semibold">£5664.71</td>
+                                    <td class="p-2 text-right font-semibold">£5665.0</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-313.13
+                                        £-312.84
                                         <span class="text-[0.55rem] ml-1">(-5.2%)</span>
                                     </td>
                                 </tr>
@@ -677,9 +681,9 @@
                                     <td class="p-2 text-right">111.0</td>
                                     <td class="p-2 text-right">£33.25</td>
                                     <td class="p-2 text-right">£29.76</td>
-                                    <td class="p-2 text-right font-semibold">£2429.89</td>
+                                    <td class="p-2 text-right font-semibold">£2430.01</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-328.98
+                                        £-328.86
                                         <span class="text-[0.55rem] ml-1">(-11.9%)</span>
                                     </td>
                                 </tr>
@@ -690,9 +694,9 @@
                                     <td class="p-2 text-right">167.837</td>
                                     <td class="p-2 text-right">£114.0</td>
                                     <td class="p-2 text-right">£112.53</td>
-                                    <td class="p-2 text-right font-semibold">£13892.7</td>
+                                    <td class="p-2 text-right font-semibold">£13893.41</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-374.47
+                                        £-373.76
                                         <span class="text-[0.55rem] ml-1">(-2.6%)</span>
                                     </td>
                                 </tr>
@@ -703,9 +707,9 @@
                                     <td class="p-2 text-right">30.0</td>
                                     <td class="p-2 text-right">£423.35</td>
                                     <td class="p-2 text-right">£393.74</td>
-                                    <td class="p-2 text-right font-semibold">£8688.83</td>
+                                    <td class="p-2 text-right font-semibold">£8689.27</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-590.41
+                                        £-589.97
                                         <span class="text-[0.55rem] ml-1">(-6.4%)</span>
                                     </td>
                                 </tr>
@@ -716,9 +720,9 @@
                                     <td class="p-2 text-right">66.9526</td>
                                     <td class="p-2 text-right">£333.79</td>
                                     <td class="p-2 text-right">£326.14</td>
-                                    <td class="p-2 text-right font-semibold">£16062.08</td>
+                                    <td class="p-2 text-right font-semibold">£16062.91</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-932.09
+                                        £-931.26
                                         <span class="text-[0.55rem] ml-1">(-5.5%)</span>
                                     </td>
                                 </tr>
@@ -729,9 +733,9 @@
                                     <td class="p-2 text-right">1406.1646</td>
                                     <td class="p-2 text-right">£15.77</td>
                                     <td class="p-2 text-right">£14.19</td>
-                                    <td class="p-2 text-right font-semibold">£14677.39</td>
+                                    <td class="p-2 text-right font-semibold">£14678.15</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-1821.31
+                                        £-1820.55
                                         <span class="text-[0.55rem] ml-1">(-11.0%)</span>
                                     </td>
                                 </tr>
@@ -742,9 +746,9 @@
                                     <td class="p-2 text-right">190.0</td>
                                     <td class="p-2 text-right">£92.46</td>
                                     <td class="p-2 text-right">£80.81</td>
-                                    <td class="p-2 text-right font-semibold">£11295.43</td>
+                                    <td class="p-2 text-right font-semibold">£11296.01</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-1827.19
+                                        £-1826.61
                                         <span class="text-[0.55rem] ml-1">(-13.9%)</span>
                                     </td>
                                 </tr>
@@ -755,9 +759,9 @@
                                     <td class="p-2 text-right">108.0</td>
                                     <td class="p-2 text-right">£168.85</td>
                                     <td class="p-2 text-right">£136.35</td>
-                                    <td class="p-2 text-right font-semibold">£10832.02</td>
+                                    <td class="p-2 text-right font-semibold">£10832.57</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-2670.73
+                                        £-2670.18
                                         <span class="text-[0.55rem] ml-1">(-19.8%)</span>
                                     </td>
                                 </tr>
@@ -768,9 +772,9 @@
                                     <td class="p-2 text-right">92.0</td>
                                     <td class="p-2 text-right">£242.96</td>
                                     <td class="p-2 text-right">£189.96</td>
-                                    <td class="p-2 text-right font-semibold">£12855.25</td>
+                                    <td class="p-2 text-right font-semibold">£12855.91</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-3700.49
+                                        £-3699.83
                                         <span class="text-[0.55rem] ml-1">(-22.4%)</span>
                                     </td>
                                 </tr>
@@ -781,21 +785,22 @@
                 </div>
             </div>
 
-            <!-- ASSET ALLOCATION (1/3 Width) -->
-            <div id="allocation-section" class="sentinel-card">
+            <!-- ASSET ALLOCATION (Full Width) -->
+            <div id="allocation-section" class="w-full sentinel-card">
                 <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1 md:mb-2">📊 ASSET ALLOCATION</h2>
-                <div class="flex flex-col p-4">
-                    <div class="asset-allocation-container" id="donut-container">
+                <div class="flex flex-col p-4 items-center">
+                    <!-- Increased Container Size for larger Donut -->
+                    <div class="asset-allocation-container" id="donut-container" style="width: 300px; height: 300px;">
                         
-    <svg viewBox="0 0 200 200" class="w-full h-full overflow-visible">
-        <circle cx="100" cy="100" r="65" stroke="#f3f4f6" stroke-width="18" fill="none" />
+    <svg viewBox="0 0 300 300" class="w-full h-full overflow-visible">
+        <circle cx="150" cy="150" r="90" stroke="#f3f4f6" stroke-width="24" fill="none" />
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#4f46e5" stroke-width="20"
-                stroke-dasharray="42.55682011039335 408.4070449666731"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#4f46e5" stroke-width="25"
+                stroke-dasharray="58.92003426942697 565.4866776461628"
                 stroke-dashoffset="-0" 
-                transform="rotate(-90 100 100)"
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-NUE"
                 data-ticker="NUE"
                 onmouseover="showTT('Nucor', '10.4%', '#4f46e5')"
@@ -804,18 +809,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="120.90039228971062" y1="38.45185947458522" x2="128.93900470883008" y2="14.779497734041072" stroke="#4f46e5" stroke-width="1" opacity="0.6" />
+            <line x1="178.9367351933928" y1="64.77872709031233" x2="188.58231359119037" y2="36.37163612041644" stroke="#4f46e5" stroke-width="2" opacity="0.5" />
+            <circle cx="188.58231359119037" cy="36.37163612041644" r="2" fill="#4f46e5" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="133.93900470883008" y="14.779497734041072" dy="0.3em" text-anchor="start" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">NUE 10.4%</text>
+            <text x="198.58231359119037" y="36.37163612041644" dy="0.3em" text-anchor="start" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">NUE 10.4%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#10b981" stroke-width="20"
-                stroke-dasharray="41.8317863047236 408.4070449666731"
-                stroke-dashoffset="-42.55682011039335" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#10b981" stroke-width="25"
+                stroke-dasharray="57.91623851862066 565.4866776461628"
+                stroke-dashoffset="-58.92003426942697" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-RE"
                 data-ticker="RE"
                 onmouseover="showTT('Everest Group', '10.2%', '#10b981')"
@@ -824,18 +830,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="153.8553954809297" y1="63.604995156029226" x2="174.56900912744112" y2="49.60691636988662" stroke="#10b981" stroke-width="1" opacity="0.6" />
+            <line x1="224.56501005693667" y1="99.60099926378564" x2="249.42001340924887" y2="82.8013323517142" stroke="#10b981" stroke-width="2" opacity="0.5" />
+            <circle cx="249.42001340924887" cy="82.8013323517142" r="2" fill="#10b981" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="179.56900912744112" y="49.60691636988662" dy="0.3em" text-anchor="start" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">RE 10.2%</text>
+            <text x="259.4200134092489" y="82.8013323517142" dy="0.3em" text-anchor="start" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">RE 10.2%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#ef4444" stroke-width="20"
-                stroke-dasharray="38.22552508710498 408.4070449666731"
-                stroke-dashoffset="-84.38860641511695" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#ef4444" stroke-width="25"
+                stroke-dasharray="52.923364223051244 565.4866776461628"
+                stroke-dashoffset="-116.83627278804764" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-CNNE"
                 data-ticker="CNNE"
                 onmouseover="showTT('Cannae', '9.4%', '#ef4444')"
@@ -844,18 +851,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="164.98493210710504" y1="101.39949956589805" x2="189.9791367636839" y2="101.937768629705" stroke="#ef4444" stroke-width="1" opacity="0.6" />
+            <line x1="239.97938647703532" y1="151.9261384208604" x2="269.97251530271376" y2="152.5681845611472" stroke="#ef4444" stroke-width="2" opacity="0.5" />
+            <circle cx="269.97251530271376" cy="152.5681845611472" r="2" fill="#ef4444" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="194.9791367636839" y="101.937768629705" dy="0.3em" text-anchor="start" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">CNNE 9.4%</text>
+            <text x="279.97251530271376" y="152.5681845611472" dy="0.3em" text-anchor="start" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">CNNE 9.4%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#f59e0b" stroke-width="20"
-                stroke-dasharray="36.18189285544796 408.4070449666731"
-                stroke-dashoffset="-122.61413150222194" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#f59e0b" stroke-width="25"
+                stroke-dasharray="50.09391495046599 565.4866776461628"
+                stroke-dashoffset="-169.75963701109887" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-EOG"
                 data-ticker="EOG"
                 onmouseover="showTT('EOG Resources', '8.9%', '#f59e0b')"
@@ -864,18 +872,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="153.8697988060601" y1="136.37368247228494" x2="174.58895219300626" y2="150.3635603462407" stroke="#f59e0b" stroke-width="1" opacity="0.6" />
+            <line x1="224.5978044557781" y1="200.35044756879023" x2="249.46373927437077" y2="217.13393009172032" stroke="#f59e0b" stroke-width="2" opacity="0.5" />
+            <circle cx="249.46373927437077" cy="217.13393009172032" r="2" fill="#f59e0b" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="179.58895219300626" y="150.3635603462407" dy="0.3em" text-anchor="start" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">EOG 8.9%</text>
+            <text x="259.46373927437077" y="217.13393009172032" dy="0.3em" text-anchor="start" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">EOG 8.9%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#8b5cf6" stroke-width="20"
-                stroke-dasharray="33.479977119638185 408.4070449666731"
-                stroke-dashoffset="-158.7960243576699" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#8b5cf6" stroke-width="25"
+                stroke-dasharray="46.35311720814725 565.4866776461628"
+                stroke-dashoffset="-219.85355196156485" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-CRM"
                 data-ticker="CRM"
                 onmouseover="showTT('Salesforce', '8.2%', '#8b5cf6')"
@@ -884,18 +893,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="127.74712967770341" y1="158.7800714073121" x2="138.41910263066626" y2="181.38779117935525" stroke="#8b5cf6" stroke-width="1" opacity="0.6" />
+            <line x1="188.43696494529883" y1="231.37935687748995" x2="201.24928659373177" y2="258.5058091699866" stroke="#8b5cf6" stroke-width="2" opacity="0.5" />
+            <circle cx="201.24928659373177" cy="258.5058091699866" r="2" fill="#8b5cf6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="143.41910263066626" y="181.38779117935525" dy="0.3em" text-anchor="start" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">CRM 8.2%</text>
+            <text x="211.24928659373177" y="258.5058091699866" dy="0.3em" text-anchor="start" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">CRM 8.2%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#ec4899" stroke-width="20"
-                stroke-dasharray="31.233151032173296 408.4070449666731"
-                stroke-dashoffset="-192.27600147730809" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#ec4899" stroke-width="25"
+                stroke-dasharray="43.242396001221486 565.4866776461628"
+                stroke-dashoffset="-266.2066691697121" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-CTVA"
                 data-ticker="CTVA"
                 onmouseover="showTT('Corteva', '7.6%', '#ec4899')"
@@ -904,18 +914,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="96.31292563637732" y1="164.89534253424597" x2="94.89482011190705" y2="189.85508966280213" stroke="#ec4899" stroke-width="1" opacity="0.6" />
+            <line x1="144.91817590029885" y1="239.85641359313033" x2="143.22423453373182" y2="269.8085514575071" stroke="#ec4899" stroke-width="2" opacity="0.5" />
+            <circle cx="143.22423453373182" cy="269.8085514575071" r="2" fill="#ec4899" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="89.89482011190705" y="189.85508966280213" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">CTVA 7.6%</text>
+            <text x="133.22423453373182" y="269.8085514575071" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">CTVA 7.6%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#06b6d4" stroke-width="20"
-                stroke-dasharray="29.417610544833803 408.4070449666731"
-                stroke-dashoffset="-223.5091525094814" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#06b6d4" stroke-width="25"
+                stroke-dasharray="40.72876019779257 565.4866776461628"
+                stroke-dashoffset="-309.4490651709336" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-NFLX"
                 data-ticker="NFLX"
                 onmouseover="showTT('Netflix', '7.2%', '#06b6d4')"
@@ -924,18 +935,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="67.51687606488483" y1="156.3013912742478" x2="55.02336685907131" y2="177.9557725335739" stroke="#06b6d4" stroke-width="1" opacity="0.6" />
+            <line x1="105.04658578591304" y1="227.96916410028211" x2="90.06211438121738" y2="253.95888546704285" stroke="#06b6d4" stroke-width="2" opacity="0.5" />
+            <circle cx="90.06211438121738" cy="253.95888546704285" r="2" fill="#06b6d4" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="50.02336685907131" y="177.9557725335739" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">NFLX 7.2%</text>
+            <text x="80.06211438121738" y="253.95888546704285" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">NFLX 7.2%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#3b82f6" stroke-width="20"
-                stroke-dasharray="28.210714047526356 408.4070449666731"
-                stroke-dashoffset="-252.9267630543152" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#3b82f6" stroke-width="25"
+                stroke-dasharray="39.05778640916588 565.4866776461628"
+                stroke-dashoffset="-350.17782536872613" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-QCOM"
                 data-ticker="QCOM"
                 onmouseover="showTT('Qualcomm', '6.9%', '#3b82f6')"
@@ -944,18 +956,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="46.50789810575278" y1="136.92688769630433" x2="25.934012761811545" y2="151.12953681026755" stroke="#3b82f6" stroke-width="1" opacity="0.6" />
+            <line x1="75.95109590482383" y1="201.15427452621532" x2="51.268127873098436" y2="218.20569936828707" stroke="#3b82f6" stroke-width="2" opacity="0.5" />
+            <circle cx="51.268127873098436" cy="218.20569936828707" r="2" fill="#3b82f6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="20.934012761811545" y="151.12953681026755" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">QCOM 6.9%</text>
+            <text x="41.268127873098436" y="218.20569936828707" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">QCOM 6.9%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#f43f5e" stroke-width="20"
-                stroke-dasharray="24.795718617789436 408.4070449666731"
-                stroke-dashoffset="-281.13747710184157" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#f43f5e" stroke-width="25"
+                stroke-dasharray="34.32974256581169 565.4866776461628"
+                stroke-dashoffset="-389.235611777892" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-DHR"
                 data-ticker="DHR"
                 onmouseover="showTT('Danaher', '6.1%', '#f43f5e')"
@@ -964,18 +977,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="36.25036711663853" y1="112.68795914387488" x2="11.731277546114896" y2="117.56794342998059" stroke="#f43f5e" stroke-width="1" opacity="0.6" />
+            <line x1="61.73773672625967" y1="167.60036595633593" x2="32.31698230167956" y2="173.4671546084479" stroke="#f43f5e" stroke-width="2" opacity="0.5" />
+            <circle cx="32.31698230167956" cy="173.4671546084479" r="2" fill="#f43f5e" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="6.731277546114896" y="117.56794342998059" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">DHR 6.1%</text>
+            <text x="22.31698230167956" y="173.4671546084479" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">DHR 6.1%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#10b981" stroke-width="20"
-                stroke-dasharray="22.629029353487937 408.4070449666731"
-                stroke-dashoffset="-305.933195719631" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#10b981" stroke-width="25"
+                stroke-dasharray="31.329929251467828 565.4866776461628"
+                stroke-dashoffset="-423.5653543437037" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-MSFT"
                 data-ticker="MSFT"
                 onmouseover="showTT('Microsoft', '5.5%', '#10b981')"
@@ -984,18 +998,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="35.91887838309843" y1="89.10918495612611" x2="11.272293145828598" y2="84.92040993925154" stroke="#10b981" stroke-width="1" opacity="0.6" />
+            <line x1="61.266311605268854" y1="134.9556474427526" x2="31.688415473691805" y2="129.94086325700346" stroke="#10b981" stroke-width="2" opacity="0.5" />
+            <circle cx="31.688415473691805" cy="129.94086325700346" r="2" fill="#10b981" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="6.272293145828598" y="84.92040993925154" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">MSFT 5.5%</text>
+            <text x="21.688415473691805" y="129.94086325700346" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">MSFT 5.5%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#4f46e5" stroke-width="20"
-                stroke-dasharray="21.661006740501158 408.4070449666731"
-                stroke-dashoffset="-328.56222507311895" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#4f46e5" stroke-width="25"
+                stroke-dasharray="29.98973212296674 565.4866776461628"
+                stroke-dashoffset="-454.8952835951715" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-BMY"
                 data-ticker="BMY"
                 onmouseover="showTT('Bristol-Myers Squibb', '5.3%', '#4f46e5')"
@@ -1004,18 +1019,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="43.24109521327718" y1="68.32308841740198" x2="21.41074721838379" y2="56.1396608856335" stroke="#4f46e5" stroke-width="1" opacity="0.6" />
+            <line x1="71.39211680232555" y1="106.17305966439395" x2="45.189489069767404" y2="91.56407955252527" stroke="#4f46e5" stroke-width="2" opacity="0.5" />
+            <circle cx="45.189489069767404" cy="91.56407955252527" r="2" fill="#4f46e5" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="16.41074721838379" y="56.1396608856335" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">BMY 5.3%</text>
+            <text x="35.189489069767404" y="91.56407955252527" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">BMY 5.3%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#10b981" stroke-width="20"
-                stroke-dasharray="18.26249704656613 408.4070449666731"
-                stroke-dashoffset="-350.2232318136201" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#10b981" stroke-width="25"
+                stroke-dasharray="25.343715410829663 565.4866776461628"
+                stroke-dashoffset="-484.8850157181383" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-RIO"
                 data-ticker="RIO"
                 onmouseover="showTT('Rio Tinto', '4.5%', '#10b981')"
@@ -1024,18 +1040,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="55.472578232003336" y1="52.64697780822288" x2="38.346646782773846" y2="34.434276965231675" stroke="#10b981" stroke-width="1" opacity="0.6" />
+            <line x1="88.33872938349532" y1="84.44172282649447" x2="67.78497251132708" y2="62.5889637686593" stroke="#10b981" stroke-width="2" opacity="0.5" />
+            <circle cx="67.78497251132708" cy="62.5889637686593" r="2" fill="#10b981" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="33.346646782773846" y="34.434276965231675" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">RIO 4.5%</text>
+            <text x="57.784972511327084" y="62.5889637686593" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">RIO 4.5%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#ef4444" stroke-width="20"
-                stroke-dasharray="14.753066738444264 408.4070449666731"
-                stroke-dashoffset="-368.4857288601862" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#ef4444" stroke-width="25"
+                stroke-dasharray="20.425657070106606 565.4866776461628"
+                stroke-dashoffset="-510.2287311289679" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-SOLV"
                 data-ticker="SOLV"
                 onmouseover="showTT('Solventum', '3.6%', '#ef4444')"
@@ -1044,18 +1061,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="68.79804684057555" y1="42.97861700171521" x2="56.79729562541229" y2="21.047315848528754" stroke="#ef4444" stroke-width="1" opacity="0.6" />
+            <line x1="106.81211219478115" y1="71.03921006649041" x2="92.41614959304152" y2="44.718946755320545" stroke="#ef4444" stroke-width="2" opacity="0.5" />
+            <circle cx="92.41614959304152" cy="44.718946755320545" r="2" fill="#ef4444" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="51.79729562541229" y="21.047315848528754" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">SOLV 3.6%</text>
+            <text x="82.41614959304152" y="44.718946755320545" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">SOLV 3.6%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#f59e0b" stroke-width="20"
-                stroke-dasharray="11.912702074478288 408.4070449666731"
-                stroke-dashoffset="-383.2387955986305" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#f59e0b" stroke-width="25"
+                stroke-dasharray="16.502056006789747 565.4866776461628"
+                stroke-dashoffset="-530.6543881990746" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-BATS"
                 data-ticker="BATS"
                 onmouseover="showTT('British American Tobacco', '2.9%', '#f59e0b')"
@@ -1064,18 +1082,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="81.06660838680972" y1="37.81859858429069" x2="73.78453468942885" y2="13.90267496286404" stroke="#f59e0b" stroke-width="1" opacity="0.6" />
+            <line x1="123.80350405169591" y1="63.89690133316637" x2="115.07133873559454" y2="35.195868444221816" stroke="#f59e0b" stroke-width="2" opacity="0.5" />
+            <circle cx="115.07133873559454" cy="35.195868444221816" r="2" fill="#f59e0b" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="68.78453468942885" y="13.90267496286404" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">BATS 2.9%</text>
+            <text x="105.07133873559454" y="35.195868444221816" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">BATS 2.9%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#8b5cf6" stroke-width="20"
-                stroke-dasharray="6.969325277388753 408.4070449666731"
-                stroke-dashoffset="-395.15149767310874" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#8b5cf6" stroke-width="25"
+                stroke-dasharray="9.626920454931092 565.4866776461628"
+                stroke-dashoffset="-547.1564442058643" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-LGEN"
                 data-ticker="LGEN"
                 onmouseover="showTT('Legal & General', '1.7%', '#8b5cf6')"
@@ -1084,18 +1103,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="90.2658717482498" y1="35.73300421539467" x2="86.52197626680741" y2="11.014928913623393" stroke="#8b5cf6" stroke-width="1" opacity="0.6" />
+            <line x1="136.53398344331114" y1="61.01311108879588" x2="132.04531125774818" y2="31.350814785061175" stroke="#8b5cf6" stroke-width="2" opacity="0.5" />
+            <circle cx="132.04531125774818" cy="31.350814785061175" r="2" fill="#8b5cf6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="81.52197626680741" y="11.014928913623393" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">LGEN 1.7%</text>
+            <text x="122.04531125774818" y="31.350814785061175" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">LGEN 1.7%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#ec4899" stroke-width="20"
-                stroke-dasharray="6.328360911163736 408.4070449666731"
-                stroke-dashoffset="-402.1208229504975" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#ec4899" stroke-width="25"
+                stroke-dasharray="8.76161534632476 565.4866776461628"
+                stroke-dashoffset="-556.7833646607954" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-VSNTV"
                 data-ticker="VSNTV"
                 onmouseover="showTT('Versant Media Group', '1.5%', '#ec4899')"
@@ -1104,13 +1124,13 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="96.87915873435998" y1="35.07496361345126" x2="95.67883517065226" y2="10.103795772470974" stroke="#ec4899" stroke-width="1" opacity="0.6" />
+            <line x1="145.6791562639415" y1="60.103780338611756" x2="144.2388750185887" y2="30.138373784815684" stroke="#ec4899" stroke-width="2" opacity="0.5" />
+            <circle cx="144.2388750185887" cy="30.138373784815684" r="2" fill="#ec4899" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="90.67883517065226" y="10.103795772470974" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">VSNTV 1.5%</text>
+            <text x="134.2388750185887" y="30.138373784815684" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">VSNTV 1.5%</text>
         
-        <!-- NO CENTER TEXT As Requested -->
     </svg>
     
                         
@@ -1128,7 +1148,7 @@
                     </div>
 
                     <!-- v32.14 Sovereign Guard Legend Grid -->
-                    <div class="mt-6 border-t border-gray-100 pt-4 overflow-y-auto max-height-[200px]">
+                    <div class="mt-8 border-t border-gray-100 pt-4 w-full">
                         <div class="ticker-legend">
         <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('NUE')"
@@ -1408,11 +1428,77 @@
         updateMarketStatus();
         setInterval(updateMarketStatus, 60000);
 
-        // v0.15.14: Version Toggle Logic
-        function toggleVersion() {
-            const badge = document.getElementById('version-badge');
             if (badge) {
                 if (badge.classList.contains('hidden')) {
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        }
+        
+        // v32.60: Manual API Hub Modal Logic
+        function openSettingsModal() {
+            const modal = document.getElementById('settings-modal');
+            if (modal) {
+                modal.classList.add('open');
+            }
+        }
+        
+        function closeSettingsModal() {
+            const modal = document.getElementById('settings-modal');
+            if (modal) {
+                modal.classList.remove('open');
+            }
+        }
+    </script>
+
+    <!-- v32.60: Manual API Hub Modal -->
+    <div id="settings-modal" class="modal-backdrop">
+        <div class="portfolio-modal p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-bold mono uppercase tracking-tight text-gray-900">
+                    <i class="fas fa-cog text-indigo-500 mr-2"></i> Manual API Hub
+                </h2>
+                <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="flex flex-col gap-6">
+                <!-- Sync Metadata -->
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-sm text-gray-800">Sync Metadata</div>
+                            <div class="text-[0.65rem] text-gray-500">Force refresh instrument definitions</div>
+                        </div>
+                        <button class="bg-indigo-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-indigo-700 transition">SYNC NOW</button>
+                    </div>
+                </div>
+
+                <!-- Mode Switch -->
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-sm text-gray-800">Environment Mode</div>
+                            <div class="text-[0.65rem] text-gray-500">Current: <span class="font-bold text-emerald-600">LIVE</span></div>
+                        </div>
+                        <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded text-xs font-bold hover:bg-white transition">SWITCH</button>
+                    </div>
+                </div>
+
+                <!-- Panic Sell -->
+                <div class="p-4 bg-rose-50 rounded-lg border border-rose-100">
+                    <div class="font-bold text-sm text-rose-700 mb-2">Panic Protocol</div>
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="TICKER" class="flex-1 border border-rose-200 rounded px-3 py-2 text-xs font-mono uppercase bg-white">
+                        <button class="bg-rose-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-rose-700 transition">SELL ALL</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
                     badge.classList.remove('hidden');
                 } else {
                     badge.classList.add('hidden');
@@ -1483,7 +1569,7 @@
         }
 
         // v30.6 DYNAMIC HEATMAP LOGIC
-        const rawMapData = [{"x": "BMY", "y": 8317.14, "val_pct": 0.162, "company_name": "Bristol-Myers Squibb", "shares_held": "190.00", "formatted_value": "\u00a38,317.14", "formatted_pl_gbp": "+\u00a31,160.01", "formatted_pl_pct": "(+16.21%)", "price_avg": "USD 50.57", "price_cur": "USD 59.51", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "DHR", "y": 9520.77, "val_pct": -0.0001, "company_name": "Danaher", "shares_held": "60.00", "formatted_value": "\u00a39,520.77", "formatted_pl_gbp": "\u00a30.16", "formatted_pl_pct": "(-0.00%)", "price_avg": "USD 217.7", "price_cur": "USD 215.72", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RIO", "y": 7012.22, "val_pct": 0.4967, "company_name": "Rio Tinto", "shares_held": "102.36", "formatted_value": "\u00a37,012.22", "formatted_pl_gbp": "+\u00a32,327.10", "formatted_pl_pct": "(+49.67%)", "price_avg": "GBX 45.76", "price_cur": "GBX 68.49", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "LGEN", "y": 2676.0, "val_pct": 0.03, "company_name": "Legal & General", "shares_held": "1,000.00", "formatted_value": "\u00a32,676.00", "formatted_pl_gbp": "+\u00a378.00", "formatted_pl_pct": "(+3.00%)", "price_avg": "GBX 2.59", "price_cur": "GBX 2.67", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QELL", "y": 0.22, "val_pct": -0.999, "company_name": "Lilium", "shares_held": "275.36", "formatted_value": "\u00a30.22", "formatted_pl_gbp": "\u00a3216.64", "formatted_pl_pct": "(-99.90%)", "price_avg": "USD 1.02", "price_cur": "USD 0.0", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "BATS", "y": 4574.1, "val_pct": 0.0883, "company_name": "British American Tobacco", "shares_held": "100.00", "formatted_value": "\u00a34,574.10", "formatted_pl_gbp": "+\u00a3371.38", "formatted_pl_pct": "(+8.84%)", "price_avg": "GBX 42.02", "price_cur": "GBX 45.74", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "VSNTV", "y": 2429.89, "val_pct": -0.1193, "company_name": "Versant Media Group", "shares_held": "111.00", "formatted_value": "\u00a32,429.89", "formatted_pl_gbp": "\u00a3328.98", "formatted_pl_pct": "(-11.92%)", "price_avg": "USD 33.25", "price_cur": "USD 29.76", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NUE", "y": 16340.47, "val_pct": 0.2996, "company_name": "Nucor", "shares_held": "119.15", "formatted_value": "\u00a316,340.47", "formatted_pl_gbp": "+\u00a33,767.60", "formatted_pl_pct": "(+29.97%)", "price_avg": "USD 142.75", "price_cur": "USD 186.44", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "SOLV", "y": 5664.71, "val_pct": -0.0524, "company_name": "Solventum", "shares_held": "100.00", "formatted_value": "\u00a35,664.71", "formatted_pl_gbp": "\u00a3313.13", "formatted_pl_pct": "(-5.24%)", "price_avg": "USD 80.44", "price_cur": "USD 77.01", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RE", "y": 16062.08, "val_pct": -0.0549, "company_name": "Everest Group", "shares_held": "66.95", "formatted_value": "\u00a316,062.08", "formatted_pl_gbp": "\u00a3932.09", "formatted_pl_pct": "(-5.48%)", "price_avg": "USD 333.79", "price_cur": "USD 326.14", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NFLX", "y": 11295.43, "val_pct": -0.1393, "company_name": "Netflix", "shares_held": "190.00", "formatted_value": "\u00a311,295.43", "formatted_pl_gbp": "\u00a31,827.19", "formatted_pl_pct": "(-13.92%)", "price_avg": "USD 92.46", "price_cur": "USD 80.81", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CRM", "y": 12855.25, "val_pct": -0.2236, "company_name": "Salesforce", "shares_held": "92.00", "formatted_value": "\u00a312,855.25", "formatted_pl_gbp": "\u00a33,700.49", "formatted_pl_pct": "(-22.35%)", "price_avg": "USD 242.96", "price_cur": "USD 189.96", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QCOM", "y": 10832.02, "val_pct": -0.1978, "company_name": "Qualcomm", "shares_held": "108.00", "formatted_value": "\u00a310,832.02", "formatted_pl_gbp": "\u00a32,670.73", "formatted_pl_pct": "(-19.78%)", "price_avg": "USD 168.85", "price_cur": "USD 136.35", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "EOG", "y": 13892.7, "val_pct": -0.0263, "company_name": "EOG Resources", "shares_held": "167.83", "formatted_value": "\u00a313,892.70", "formatted_pl_gbp": "\u00a3374.47", "formatted_pl_pct": "(-2.62%)", "price_avg": "USD 114.0", "price_cur": "USD 112.53", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CTVA", "y": 11992.54, "val_pct": 0.0268, "company_name": "Corteva", "shares_held": "225.00", "formatted_value": "\u00a311,992.54", "formatted_pl_gbp": "+\u00a3314.12", "formatted_pl_pct": "(+2.69%)", "price_avg": "USD 69.94", "price_cur": "USD 72.45", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "MSFT", "y": 8688.83, "val_pct": -0.0637, "company_name": "Microsoft", "shares_held": "30.00", "formatted_value": "\u00a38,688.83", "formatted_pl_gbp": "\u00a3590.41", "formatted_pl_pct": "(-6.36%)", "price_avg": "USD 423.35", "price_cur": "USD 393.74", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CNNE", "y": 14677.39, "val_pct": -0.1104, "company_name": "Cannae", "shares_held": "1,406.16", "formatted_value": "\u00a314,677.39", "formatted_pl_gbp": "\u00a31,821.31", "formatted_pl_pct": "(-11.04%)", "price_avg": "USD 15.77", "price_cur": "USD 14.19", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}];
+        const rawMapData = [{"x": "BMY", "y": 8317.57, "val_pct": 0.1621, "company_name": "", "shares_held": "190.00", "formatted_value": "\u00a38,317.57", "formatted_pl_gbp": "+\u00a31,160.44", "formatted_pl_pct": "(+16.21%)", "price_avg": "USD 50.57", "price_cur": "USD 59.51", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "DHR", "y": 9521.26, "val_pct": 0.0, "company_name": "", "shares_held": "60.00", "formatted_value": "\u00a39,521.26", "formatted_pl_gbp": "+\u00a30.33", "formatted_pl_pct": "(+0.00%)", "price_avg": "USD 217.7", "price_cur": "USD 215.72", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RIO", "y": 7029.01, "val_pct": 0.5002, "company_name": "", "shares_held": "102.36", "formatted_value": "\u00a37,029.01", "formatted_pl_gbp": "+\u00a32,343.89", "formatted_pl_pct": "(+50.03%)", "price_avg": "GBX 45.76", "price_cur": "GBX 68.66", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "LGEN", "y": 2670.0, "val_pct": 0.0277, "company_name": "", "shares_held": "1,000.00", "formatted_value": "\u00a32,670.00", "formatted_pl_gbp": "+\u00a372.00", "formatted_pl_pct": "(+2.77%)", "price_avg": "GBX 2.59", "price_cur": "GBX 2.67", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QELL", "y": 0.22, "val_pct": -0.999, "company_name": "", "shares_held": "275.36", "formatted_value": "\u00a30.22", "formatted_pl_gbp": "\u00a3216.64", "formatted_pl_pct": "(-99.90%)", "price_avg": "USD 1.02", "price_cur": "USD 0.0", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "BATS", "y": 4576.8, "val_pct": 0.089, "company_name": "", "shares_held": "100.00", "formatted_value": "\u00a34,576.80", "formatted_pl_gbp": "+\u00a3374.08", "formatted_pl_pct": "(+8.90%)", "price_avg": "GBX 42.02", "price_cur": "GBX 45.76", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "VSNTV", "y": 2430.01, "val_pct": -0.1193, "company_name": "", "shares_held": "111.00", "formatted_value": "\u00a32,430.01", "formatted_pl_gbp": "\u00a3328.86", "formatted_pl_pct": "(-11.92%)", "price_avg": "USD 33.25", "price_cur": "USD 29.76", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NUE", "y": 16341.31, "val_pct": 0.2997, "company_name": "", "shares_held": "119.15", "formatted_value": "\u00a316,341.31", "formatted_pl_gbp": "+\u00a33,768.44", "formatted_pl_pct": "(+29.97%)", "price_avg": "USD 142.75", "price_cur": "USD 186.44", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "SOLV", "y": 5665.0, "val_pct": -0.0524, "company_name": "", "shares_held": "100.00", "formatted_value": "\u00a35,665.00", "formatted_pl_gbp": "\u00a3312.84", "formatted_pl_pct": "(-5.23%)", "price_avg": "USD 80.44", "price_cur": "USD 77.01", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RE", "y": 16062.91, "val_pct": -0.0548, "company_name": "", "shares_held": "66.95", "formatted_value": "\u00a316,062.91", "formatted_pl_gbp": "\u00a3931.26", "formatted_pl_pct": "(-5.48%)", "price_avg": "USD 333.79", "price_cur": "USD 326.14", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NFLX", "y": 11296.01, "val_pct": -0.1392, "company_name": "", "shares_held": "190.00", "formatted_value": "\u00a311,296.01", "formatted_pl_gbp": "\u00a31,826.61", "formatted_pl_pct": "(-13.92%)", "price_avg": "USD 92.46", "price_cur": "USD 80.81", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CRM", "y": 12855.91, "val_pct": -0.2235, "company_name": "", "shares_held": "92.00", "formatted_value": "\u00a312,855.91", "formatted_pl_gbp": "\u00a33,699.83", "formatted_pl_pct": "(-22.35%)", "price_avg": "USD 242.96", "price_cur": "USD 189.96", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QCOM", "y": 10832.57, "val_pct": -0.1978, "company_name": "", "shares_held": "108.00", "formatted_value": "\u00a310,832.57", "formatted_pl_gbp": "\u00a32,670.18", "formatted_pl_pct": "(-19.78%)", "price_avg": "USD 168.85", "price_cur": "USD 136.35", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "EOG", "y": 13893.41, "val_pct": -0.0262, "company_name": "", "shares_held": "167.83", "formatted_value": "\u00a313,893.41", "formatted_pl_gbp": "\u00a3373.76", "formatted_pl_pct": "(-2.62%)", "price_avg": "USD 114.0", "price_cur": "USD 112.53", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CTVA", "y": 11993.16, "val_pct": 0.0269, "company_name": "", "shares_held": "225.00", "formatted_value": "\u00a311,993.16", "formatted_pl_gbp": "+\u00a3314.74", "formatted_pl_pct": "(+2.70%)", "price_avg": "USD 69.94", "price_cur": "USD 72.45", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "MSFT", "y": 8689.27, "val_pct": -0.0636, "company_name": "", "shares_held": "30.00", "formatted_value": "\u00a38,689.27", "formatted_pl_gbp": "\u00a3589.97", "formatted_pl_pct": "(-6.36%)", "price_avg": "USD 423.35", "price_cur": "USD 393.74", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CNNE", "y": 14678.15, "val_pct": -0.1104, "company_name": "", "shares_held": "1,406.16", "formatted_value": "\u00a314,678.15", "formatted_pl_gbp": "\u00a31,820.55", "formatted_pl_pct": "(-11.03%)", "price_avg": "USD 15.77", "price_cur": "USD 14.19", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}];
         const mapData = rawMapData.map(d => {
             const pct = d.val_pct || 0;
             const pctScaled = pct * 100;
@@ -1725,7 +1811,7 @@
                 <div class="flex justify-between items-start mb-4">
                     <div>
                         <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest font-bold">Investments Value</span>
-                        <div class="text-3xl font-bold text-gray-900 mono tracking-tight">£171,978.30</div>
+                        <div class="text-3xl font-bold text-gray-900 mono tracking-tight">£171,999.12</div>
                     </div>
                     <button onclick="closePortfolioModal()" class="p-2 -mr-2 text-gray-400 hover:text-gray-600 transition-colors">
                         <i class="fas fa-times text-xl"></i>
@@ -1736,8 +1822,8 @@
                     <div>
                         <span class="text-[0.65rem] text-gray-400 uppercase tracking-wide block mb-0.5">Unrealised Result</span>
                         <span class="font-bold mono text-rose-500">
-                            -£4773.79 
-                            <span class="text-xs opacity-80">(-2.95%)</span>
+                            -£4752.97 
+                            <span class="text-xs opacity-80">(-2.94%)</span>
                         </span>
                     </div>
                     <div class="text-right">
@@ -1761,7 +1847,7 @@
                                     <circle class="text-blue-500" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="249.77593731302147"
+                                            stroke-dashoffset="249.77776374669824"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -1785,10 +1871,10 @@
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£16340.47</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£16341.31</div>
                             <div class="text-xs mono font-bold mt-0.5 text-emerald-500">
-                                +£3767.6
-                                <span class="opacity-75">(29.966109567664347%)</span>
+                                +£3768.44
+                                <span class="opacity-75">(29.9727906198028%)</span>
                             </div>
                         </div>
                     </div>
@@ -1803,7 +1889,7 @@
                                     <circle class="text-blue-500" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="250.22271251663727"
+                                            stroke-dashoffset="250.2245009160512"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -1827,10 +1913,10 @@
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£16062.08</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£16062.91</div>
                             <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £932.09
-                                <span class="opacity-75">(-5.484763304121356%)</span>
+                                £931.26
+                                <span class="opacity-75">(-5.479879276245913%)</span>
                             </div>
                         </div>
                     </div>
@@ -1845,7 +1931,7 @@
                                     <circle class="text-blue-500" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="252.44493729732181"
+                                            stroke-dashoffset="252.4465690289578"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -1869,10 +1955,10 @@
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£14677.39</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£14678.15</div>
                             <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £1821.31
-                                <span class="opacity-75">(-11.039112172474194%)</span>
+                                £1820.55
+                                <span class="opacity-75">(-11.034505748937793%)</span>
                             </div>
                         </div>
                     </div>
@@ -1887,7 +1973,7 @@
                                     <circle class="text-blue-500" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="253.70424989664394"
+                                            stroke-dashoffset="253.7058094250715"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -1911,10 +1997,10 @@
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£13892.7</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£13893.41</div>
                             <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £374.47
-                                <span class="opacity-75">(-2.624697119330603%)</span>
+                                £373.76
+                                <span class="opacity-75">(-2.6197206593879514%)</span>
                             </div>
                         </div>
                     </div>
@@ -1929,7 +2015,7 @@
                                     <circle class="text-blue-500" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="255.36920530090134"
+                                            stroke-dashoffset="255.3706435242227"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -1953,10 +2039,10 @@
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£12855.25</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£12855.91</div>
                             <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £3700.49
-                                <span class="opacity-75">(-22.351704001150054%)</span>
+                                £3699.83
+                                <span class="opacity-75">(-22.34771746838257%)</span>
                             </div>
                         </div>
                     </div>
@@ -1971,7 +2057,7 @@
                                     <circle class="text-blue-500" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="256.75372858087326"
+                                            stroke-dashoffset="256.75506339799875"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -1995,10 +2081,10 @@
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£11992.54</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£11993.16</div>
                             <div class="text-xs mono font-bold mt-0.5 text-emerald-500">
-                                +£314.12
-                                <span class="opacity-75">(2.6897474144618876%)</span>
+                                +£314.74
+                                <span class="opacity-75">(2.695056351801014%)</span>
                             </div>
                         </div>
                     </div>
@@ -2013,7 +2099,7 @@
                                     <circle class="text-blue-500" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="257.8724880987892"
+                                            stroke-dashoffset="257.87375167965973"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -2037,10 +2123,10 @@
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£11295.43</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£11296.01</div>
                             <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £1827.19
-                                <span class="opacity-75">(-13.923972499394175%)</span>
+                                £1826.61
+                                <span class="opacity-75">(-13.919552650309159%)</span>
                             </div>
                         </div>
                     </div>
@@ -2055,7 +2141,7 @@
                                     <circle class="text-blue-500" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="258.6161933220645"
+                                            stroke-dashoffset="258.61741501933267"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -2079,10 +2165,10 @@
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£10832.02</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£10832.57</div>
                             <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £2670.73
-                                <span class="opacity-75">(-19.779156097831923%)</span>
+                                £2670.18
+                                <span class="opacity-75">(-19.775082853492805%)</span>
                             </div>
                         </div>
                     </div>
@@ -2097,7 +2183,7 @@
                                     <circle class="text-blue-500" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="260.72055765175025"
+                                            stroke-dashoffset="260.7216209013162"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -2121,10 +2207,10 @@
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£9520.77</div>
-                            <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £0.16
-                                <span class="opacity-75">(-0.0016805081016245263%)</span>
+                            <div class="font-bold text-gray-900 text-sm mono">£9521.26</div>
+                            <div class="text-xs mono font-bold mt-0.5 text-emerald-500">
+                                +£0.33
+                                <span class="opacity-75">(0.003466047959600585%)</span>
                             </div>
                         </div>
                     </div>
@@ -2139,7 +2225,7 @@
                                     <circle class="text-blue-500" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="262.05569958535466"
+                                            stroke-dashoffset="262.05668145278884"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -2163,10 +2249,10 @@
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£8688.83</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£8689.27</div>
                             <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £590.41
-                                <span class="opacity-75">(-6.362697807147999%)</span>
+                                £589.97
+                                <span class="opacity-75">(-6.357956039503236%)</span>
                             </div>
                         </div>
                     </div>
@@ -2181,7 +2267,7 @@
                                     <circle class="text-blue-500" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="262.65220763317234"
+                                            stroke-dashoffset="262.65313334161243"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -2205,10 +2291,10 @@
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£8317.14</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£8317.57</div>
                             <div class="text-xs mono font-bold mt-0.5 text-emerald-500">
-                                +£1160.01
-                                <span class="opacity-75">(16.207753666623358%)</span>
+                                +£1160.44
+                                <span class="opacity-75">(16.213761661448096%)</span>
                             </div>
                         </div>
                     </div>
@@ -2223,7 +2309,7 @@
                                     <circle class="text-indigo-400" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="264.74641323934475"
+                                            stroke-dashoffset="264.72083322286767"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -2240,17 +2326,17 @@
                             <div>
                                 <div class="font-bold text-gray-900 text-sm leading-tight">Rio Tinto</div>
                                 <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">RIO</span> · <span class="text-blue-500">4.08%</span>
+                                    <span class="font-bold text-gray-700">RIO</span> · <span class="text-blue-500">4.09%</span>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£7012.22</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£7029.01</div>
                             <div class="text-xs mono font-bold mt-0.5 text-emerald-500">
-                                +£2327.1
-                                <span class="opacity-75">(49.67001912437674%)</span>
+                                +£2343.89
+                                <span class="opacity-75">(50.0283877467386%)</span>
                             </div>
                         </div>
                     </div>
@@ -2265,7 +2351,7 @@
                                     <circle class="text-indigo-400" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="266.90896956185753"
+                                            stroke-dashoffset="266.90960465379123"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -2289,10 +2375,10 @@
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£5664.71</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£5665.0</div>
                             <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £313.13
-                                <span class="opacity-75">(-5.238179676940166%)</span>
+                                £312.84
+                                <span class="opacity-75">(-5.233328426321212%)</span>
                             </div>
                         </div>
                     </div>
@@ -2307,7 +2393,7 @@
                                     <circle class="text-indigo-400" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="268.65923898538364"
+                                            stroke-dashoffset="268.6557949831371"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -2331,10 +2417,10 @@
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£4574.1</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£4576.8</div>
                             <div class="text-xs mono font-bold mt-0.5 text-emerald-500">
-                                +£371.38
-                                <span class="opacity-75">(8.836658164236495%)</span>
+                                +£374.08
+                                <span class="opacity-75">(8.900902272813797%)</span>
                             </div>
                         </div>
                     </div>
@@ -2349,7 +2435,7 @@
                                     <circle class="text-indigo-400" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="271.7054116711236"
+                                            stroke-dashoffset="271.71555947495546"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -2366,17 +2452,17 @@
                             <div>
                                 <div class="font-bold text-gray-900 text-sm leading-tight">Legal & General</div>
                                 <div class="text-xs text-gray-500 mono mt-0.5">
-                                    <span class="font-bold text-gray-700">LGEN</span> · <span class="text-blue-500">1.56%</span>
+                                    <span class="font-bold text-gray-700">LGEN</span> · <span class="text-blue-500">1.55%</span>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£2676.0</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£2670.0</div>
                             <div class="text-xs mono font-bold mt-0.5 text-emerald-500">
-                                +£78.0
-                                <span class="opacity-75">(3.0023094688221708%)</span>
+                                +£72.0
+                                <span class="opacity-75">(2.771362586605081%)</span>
                             </div>
                         </div>
                     </div>
@@ -2391,7 +2477,7 @@
                                     <circle class="text-indigo-400" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="272.1003821993821"
+                                            stroke-dashoffset="272.10066167780394"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
@@ -2415,10 +2501,10 @@
                         
                         <!-- Value & Return -->
                         <div class="text-right">
-                            <div class="font-bold text-gray-900 text-sm mono">£2429.89</div>
+                            <div class="font-bold text-gray-900 text-sm mono">£2430.01</div>
                             <div class="text-xs mono font-bold mt-0.5 text-rose-500">
-                                £328.98
-                                <span class="opacity-75">(-11.924447328072727%)</span>
+                                £328.86
+                                <span class="opacity-75">(-11.92009772116845%)</span>
                             </div>
                         </div>
                     </div>
@@ -2433,7 +2519,7 @@
                                     <circle class="text-indigo-400" 
                                             stroke-width="6" 
                                             stroke-dasharray="276"
-                                            stroke-dashoffset="275.99964693220016"
+                                            stroke-dashoffset="275.999646974938"
                                             stroke-linecap="round"
                                             stroke="currentColor" 
                                             fill="transparent" 
