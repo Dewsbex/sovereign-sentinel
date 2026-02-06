@@ -982,8 +982,51 @@
         </div>
 
             <!-- Target Tracker Container -->
-            <div id="target-tracker-container" class="mt-4">
-                <!-- Data injected via Jinja2 -->
+            <div id="target-tracker-container" class="mt-4 sentinel-card p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest">🎯 ACTIVE TARGET TRACKER (Job C)</h2>
+                    <span id="orb-status" class="px-2 py-0.5 rounded text-[0.55rem] font-bold bg-white text-gray-400 border border-indigo-100 uppercase tracking-wider">OFFLINE</span>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left font-mono text-[0.75rem]">
+                        <thead>
+                            <tr class="text-gray-400 border-b border-gray-100">
+                                <th class="py-2 font-medium">TICKER</th>
+                                <th class="py-2 font-medium">TRIGGER</th>
+                                <th class="py-2 font-medium">TARGET</th>
+                                <th class="py-2 font-medium text-right">ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            {% for target in orb_intel.targets %}
+                            <tr class="group hover:bg-gray-50 transition-colors" style="height: 48px;">
+                                <td class="py-2">
+                                    <div class="font-bold text-gray-900">{{ target.ticker }}</div>
+                                    <div class="text-[0.6rem] text-gray-400">{{ target.company }}</div>
+                                </td>
+                                <td class="py-2">
+                                    <span class="px-2 py-1 bg-amber-50 text-amber-600 rounded">{{ target.trigger | round(2) }}</span>
+                                </td>
+                                <td class="py-2">
+                                    <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded">{{ target.goal | round(2) }}</span>
+                                </td>
+                                <td class="py-2 text-right">
+                                    <div class="flex items-center justify-end gap-1">
+                                        <button class="px-3 py-1 bg-emerald-500 text-white rounded font-bold text-[0.6rem] hover:bg-emerald-600">BUY</button>
+                                        <button class="px-3 py-1 bg-rose-500 text-white rounded font-bold text-[0.6rem] hover:bg-rose-600">CUT</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% if not orb_intel.targets %}
+                            <tr>
+                                <td colspan="4" class="py-8 text-center text-gray-400 italic">No active targets for current session.</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
                     <!-- Mobile List View (T212 Style) -->
@@ -1214,9 +1257,8 @@
                 },
                 plotOptions: {
                     treemap: {
-                        distributed: false, // Use sector colors from series.data
-                        enableShades: true,
-                        shadeIntensity: 0.5
+                        distributed: true, // v32.67 Performance Coloring Enabled
+                        enableShades: false // Keep colors distinct
                     }
                 },
                 stroke: { width: 2, colors: ['#0f0f0f'] }, 

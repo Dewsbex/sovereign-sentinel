@@ -94,13 +94,13 @@ def generate_oracle_ring(holdings, total_invested):
         sy = center_y + radius * math.sin(angle_rad)
         
         # 3. Label Elbow Point (Further out)
-        label_r = 130 # Push out
+        label_r = 135 # Pushed further out for v32.67
         lx = center_x + label_r * math.cos(angle_rad)
         ly = center_y + label_r * math.sin(angle_rad)
         
         # 4. Label Anchor Point (Horizontal line)
         is_right = lx >= center_x
-        ax = lx + (10 if is_right else -10)
+        ax = lx + (15 if is_right else -15)
         ticker = h.get('Ticker', 'Asset')
         safe_name = h.get('Name', ticker).replace("'", "\\'")
         pct_fmt = f"{weight:.1f}%"
@@ -279,7 +279,7 @@ def render():
             'label_pl': f"{'+' if pnl >= 0 else ''}£{abs(pnl):,.2f}",
             'label_pct': f"{pct*100:+.2f}%",
             'is_profit': pnl >= 0,
-            'fillColor': h['Sector_Color'],
+            'fillColor': '#10b981' if pnl >= 0 else '#ef4444',
             # v32.66 Forensic Tooltip Data
             'name': h.get('Name', ticker),
             'price': h.get('Price', 0),
