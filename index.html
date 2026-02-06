@@ -844,7 +844,7 @@
                     OFFLINE
                 </div>
                 <div class="sync-timestamp hidden sm:block">
-                    SYNC: 06/02 19:04
+                    SYNC: 06/02 19:11
                 </div>
                 <button id="settings-toggle" class="cog-btn" onclick="toggleSettingsModal()">
                     ⚙️
@@ -860,7 +860,7 @@
             <header>
                 <h2>COMMAND CENTER (LIVE)</h2>
                 <div style="text-align: right;">
-                     <p>SITREP SYNC: 19:04 06/02</p>
+                     <p>SITREP SYNC: 19:11 06/02</p>
                      <p style="color: #444; font-size: 0.6rem; cursor: pointer;" onclick="api.toggle()">[CLOSE]</p>
                 </div>
             </header>
@@ -1771,14 +1771,7 @@
         updateMarketStatus();
         setInterval(updateMarketStatus, 60000);
 
-            if (badge) {
-                if (badge.classList.contains('hidden')) {
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
-                }
-            }
-        }
+
         
         // v32.61: Manual API Hub Logic merged.
         function openSettingsModal() {
@@ -1795,7 +1788,7 @@
         // v32.13 Sovereign Finality - Artist interaction
         function showTT(name, weight, color) {
             const tt = document.getElementById('donut-tooltip');
-            const hmap = document.getElementById('heatmap-chart');
+            const hmap = document.getElementById('heatmap-container');
             const crest = document.getElementById('donut-crest'); // v0.15.13
 
             if (tt) {
@@ -1816,7 +1809,7 @@
 
         function hideTT() {
             const tt = document.getElementById('donut-tooltip');
-            const hmap = document.getElementById('heatmap-chart');
+            const hmap = document.getElementById('heatmap-container');
             const crest = document.getElementById('donut-crest'); // v0.15.13
 
             if (tt) {
