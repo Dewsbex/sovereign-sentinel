@@ -18,13 +18,16 @@ if __name__ == "__main__":
     
     print(f"📥 Response Code: {resp.status_code}")
     if resp.status_code == 200:
+        txs = resp.json() # Assuming the response contains a list of transactions
         if txs:
             print(f"🔎 DEBUG Raw Item: {txs[0]}")
             
         msg_lines = ["🏦 **TRANSACTION REPORT**"]
         for t in txs:
             if isinstance(t, dict):
-                info = f"{t.get('date')} | {t.get('type')} | {t.get('amount')} {t.get('currency')}"
+                # Spec says 'dateTime', not 'date'
+                date_str = t.get('dateTime') or t.get('date') 
+                info = f"{date_str} | {t.get('type')} | {t.get('amount')} {t.get('currency')}"
                 print(f"   🏦 {info}")
                 msg_lines.append(f"🏦 {info}")
             else:

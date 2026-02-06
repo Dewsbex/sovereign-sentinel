@@ -59,30 +59,28 @@ class ORBExecutionEngine:
 
     def place_order(self, ticker, side, quantity, price=None):
         """Executes the trade via T212 API."""
-        # Convert side to API format
-        # Side: BUY/SELL
-        # Payload depends on Market vs Limit.
-        # We use MARKET orders for "Synthetic Limit" entry usually (to guarantee fill at breakout)
-        # OR we use LIMIT if we want to be strict.
-        # User Spec: "Entry only occurs if Price >= Range_High... Synthetic Limit"
-        # Usually 'Synthetic Limit' means 'Market Order triggered by logic'.
+        # Convert side to API format (Official Spec v0)
+        # Buy = Positive Quantity
+        # Sell = Negative Quantity
+        # Key = 'ticker', NOT 'instrumentCode'
+        
+        signed_qty = quantity if side == "BUY" else -quantity
         
         payload = {
-            "instrumentCode": f"{ticker}_US_EQ",
-            "quantity": quantity,
-            "side": side,
+            "ticker": f"{ticker}_US_EQ", # Spec says key is 'ticker', value example 'AAPL_US_EQ'
+            "quantity": signed_qty,
             "timeValidity": "DAY"
         }
         
         if price:
-            payload["type"] = "LIMIT"
             payload["limitPrice"] = price
+            # Endpoint: /orders/limit
+            endpoint = "/orders/limit"
         else:
-            payload["type"] = "MARKET"
-
-        endpoint = "/orders/limit" if price else "/orders/market"
+            # Endpoint: /orders/market
+            endpoint = "/orders/market"
         
-        logger.info(f"🚀 SENDING ORDER: {side} {quantity} {ticker}...")
+        logger.info(f"🚀 SENDING ORDER: {side} {quantity} {ticker} (Signed: {signed_qty})...")
         try:
             resp = requests.post(f"{self.base_url}{endpoint}", json=payload, auth=self.auth, timeout=5)
             if resp.status_code == 200:

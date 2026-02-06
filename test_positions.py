@@ -29,7 +29,8 @@ if __name__ == "__main__":
             if isinstance(p, dict):
                 ticker = p.get('ticker')
                 qty = p.get('quantity')
-                ppl = p.get('ppl', 0) # Profit/Loss
+                # Spec: 'ppl' might not exist. Use walletImpact.unrealizedProfitLoss
+                ppl = p.get('ppl') or p.get('walletImpact', {}).get('unrealizedProfitLoss', 0)
                 total_ppl += float(ppl) if ppl else 0.0
                 
                 info = f"{ticker}: {qty} shares | P/L: {ppl}"

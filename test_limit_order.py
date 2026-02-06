@@ -21,7 +21,7 @@ if __name__ == "__main__":
         "ticker": "DHR_US_EQ",
         "quantity": 1.0,
         "limitPrice": 190.0, # Safe limit below market
-        "timeValidity": "GOOD_TILL_CANCEL"
+        "timeValidity": "GTC"
     }
     
     url = f"{base_url}/orders/limit"

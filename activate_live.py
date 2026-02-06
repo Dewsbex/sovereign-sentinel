@@ -15,13 +15,15 @@ if __name__ == "__main__":
     auth = HTTPBasicAuth(t212_key, t212_secret)
     base_url = "https://live.trading212.com/api/v0/equity"
     
-    # Target: Danaher (DHR)
-    # Using EXACT fields from your Limit Order documentation
+    # 2. Place Limit Order (Safe Price)
+    # Payload adjusted for Official Spec v32.43
+    instrument_code = "DHR_US_EQ" # Assuming instrument_code needs to be defined
+    limit_price = 100.0 # Way below current price (~230) so it won't fill
     payload = {
-        "ticker": "DHR_US_EQ",
-        "quantity": 1.0,
-        "limitPrice": 200.0,
-        "timeValidity": "GOOD_TILL_CANCEL"
+        "ticker": instrument_code,
+        "quantity": 1, # Buy 1 share
+        "limitPrice": limit_price,
+        "timeValidity": "GTC"
     }
     
     # Official endpoint for limit orders
