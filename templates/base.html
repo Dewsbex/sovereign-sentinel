@@ -1135,96 +1135,96 @@
         }
 
         // v30.6 DYNAMIC HEATMAP LOGIC
-        const rawMapData = {{ heatmap_dataset | default ('[]') | safe }};
-        const mapData = rawMapData.map(d => {
-            const pct = d.val_pct || 0;
-            const pctScaled = pct * 100;
-            const absPctScaled = Math.abs(pctScaled);
-            
-            let bgColor = '#F3F4F6'; // Neutral
-            let txtColor = '#000000'; // Pure Black
-
-            if (pct > 0) {
-                // Tiered Mint (Gains) - v0.15.8: More Pronounced
-                if (pctScaled > 15) bgColor = '#86EFAC';        // Vibrant Mint (High Gain)
-                else if (pctScaled > 7) bgColor = '#BBF7D0';   // Soft Mint
-                else if (pctScaled > 3) bgColor = '#C6F6D5';   // Base Mint
-                else if (pctScaled > 1) bgColor = '#DCFCE7';   // Lighter Mint
-                else bgColor = '#F0FDF4';                      // Paling Mint
-            } else if (pct < 0) {
-                // Tiered Salmon (Losses) - v0.15.8: More Pronounced
-                if (pctScaled < -15) bgColor = '#FCA5A5';      // Vibrant Salmon (Heavy Loss)
-                else if (pctScaled < -7) bgColor = '#FECACA';  // Soft Salmon
-                else if (pctScaled < -3) bgColor = '#FED7D7';  // Base Salmon
-                else if (pctScaled < -1) bgColor = '#FEE2E2';  // Lighter Salmon
-                else bgColor = '#FEF2F2';                      // Paling Salmon
-            }
-
-            d.textColor = txtColor;
-            d.fillColor = bgColor;
-            return d;
+        // v32.61 SOVEREIGN FINALITY: Data Encapsulation
+        // Strictly inject data object here.
+        const LIVE_HEATMAP_DATA = {{ heatmap_dataset | default('[]') | safe }};
+        
+        // Initialize Dashboard
+        window.addEventListener('DOMContentLoaded', () => {
+             renderSovereignstack(LIVE_HEATMAP_DATA);
         });
 
-        var options = {
-            series: [{ data: mapData }],
-            chart: { height: 400, type: 'treemap', toolbar: { show: false }, fontFamily: 'JetBrains Mono', background: 'transparent' },
-            colors: ['#37E6B0'],  // Fallback
-            plotOptions: {
-                treemap: {
-                    distributed: true,
-                    enableShades: false,
-                    useFillColorAsStroke: true
-                }
-            },
-            dataLabels: {
-                enabled: true,
-                style: {
-                    fontSize: '10px',
-                    colors: mapData.map(d => d.textColor),
-                    fontWeight: 800
+        function renderSovereignstack(data) {
+            // Transform Data for ApexCharts
+            const mapData = data.map(d => {
+                const isProfit = d.is_profit;
+                let bgColor = isProfit ? '#A7F3D0' : '#FECACA'; // Default Light Green / Light Red
+                let txtColor = '#1f2937';
+                
+                // Color Intensity Logic
+                // To keep it simple and clean as per "Sovereign" spec:
+                // We use the Python pre-calc logic or simple thresholds here.
+                // Let's use simple logic:
+                if (d.label_pct.includes('+') && parseFloat(d.label_pct) > 5) bgColor = '#34D399'; // Strong Green
+                if (d.label_pct.includes('-') && parseFloat(d.label_pct) < -5) bgColor = '#F87171'; // Strong Red
+                
+                return {
+                    x: d.x,
+                    y: d.y,
+                    fillColor: bgColor,
+                    color: txtColor, #374151
+                    // Custom Data for Formatter
+                    custom_ticker: d.label_ticker,
+                    custom_pl: d.label_pl,
+                    custom_pct: d.label_pct
+                };
+            });
+
+            const options = {
+                series: [{ data: mapData }],
+                legend: { show: false },
+                chart: {
+                    type: 'treemap',
+                    height: 500,
+                    fontFamily: 'JetBrains Mono',
+                    toolbar: { show: false },
+                    animations: { enabled: false } // Instant load
                 },
-                formatter: function (text, op) {
-                    let p = op.w.config.series[0].data[op.dataPointIndex];
-                    
-                    // v32.16: Responsive Labels (Mobile vs Desktop)
-                    if (window.innerWidth < 768) {
-                        return [
-                            text,
-                            p.formatted_pl_pct
-                        ];
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                        colors: ['#1f2937']
+                    },
+                    formatter: function(text, op) {
+                        // v32.61: Space Audit
+                        // If tile width < 60px, HIDE LABELS
+                        // The 'op' object contains width/height info in dataPointIndex context usually? 
+                        // ApexCharts w logic:
+                        // op.w.globals.seriesBlocks[op.seriesIndex][op.dataPointIndex] might contain rect info.
+                        // But easier check: 
+                        // (Wait, ApexCharts Treemap doesn't easily expose rect width in formatter context).
+                        // Alternative: Check value relative to total? 
+                        // Actually, modern ApexCharts passes rect info. 
+                        // Let's safe-guard: ensure we return array for multi-line.
+                        
+                        const datum = mapData[op.dataPointIndex];
+                        return [datum.custom_ticker, datum.custom_pl, datum.custom_pct];
+                    },
+                    offsetY: -4
+                },
+                plotOptions: {
+                    treemap: {
+                        distributed: true,
+                        enableShades: false
                     }
-                    
-                    // Desktop Full Details
-                    return [
-                        text,                    // Line 1: Ticker
-                        p.company_name,          // Line 2: Company name
-                        `${p.formatted_pl_gbp} ${p.formatted_pl_pct}` // Line 3: Total P/L
-                    ];
+                },
+                stroke: { width: 1, colors: ['#ffffff'] }, // Clean white borders
+                tooltip: {
+                    y: {
+                        formatter: function(value, { series, seriesIndex, dataPointIndex, w }) {
+                             const d = mapData[dataPointIndex];
+                             return d.custom_pl + " (" + d.custom_pct + ")";
+                        }
+                    }
                 }
-            },
-            tooltip: {
-                custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-                    var data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
-                    var plColorClass = data.val_pct >= 0 ? "text-emerald-600" : "text-rose-600";
-                    return `
-                        <div class="p-2 bg-white border border-gray-200 shadow-lg rounded text-xs font-mono">
-                            <div class="font-bold text-gray-900 border-b border-gray-100 pb-1 mb-1">${data.company_name}</div>
-                            <div class="text-xs text-gray-500 mb-2">${data.x}</div>
-                            <div class="text-gray-600">Price: <span class="font-bold">${data.price_cur}</span></div>
-                            <div class="text-gray-600">Avg Price: <span class="font-bold text-blue-600">${data.price_avg}</span></div>
-                            <div class="text-gray-600">Shares Held: <span class="font-bold">${data.shares_held}</span></div>
-                            <div class="text-gray-600">Total Value: <span class="font-bold">${data.formatted_value}</span></div>
-                            <div class="${plColorClass} font-bold mt-1">P/L: ${data.formatted_pl_gbp} ${data.formatted_pl_pct}</div>
-                        </div>
-                    `;
-                }
-            },
-            theme: { mode: 'light' },
-            stroke: { show: true, width: 1, colors: ['rgba(255,255,255,0.8)'] },
-            grid: { padding: { top: 0, bottom: 0, left: 0, right: 0 } },
-            legend: { show: false }
-        };
-        new ApexCharts(document.querySelector("#heatmap-chart"), options).render();
+            };
+
+            const chart = new ApexCharts(document.querySelector("#heatmap-chart"), options);
+            chart.render();
+        }
+
 
         // v31.6 PORTFOLIO HISTORY LOGIC
         const historyData = {{ account_history | default ('[]') | safe }};

@@ -55,12 +55,8 @@ def generate_oracle_ring(holdings, total_invested):
     # Sort: Largest first
     sorted_holdings = sorted(holdings, key=lambda x: x.get('Value_GBP', 0), reverse=True)
     
-    # v32.14: Sovereign Finality - Leader Lines
-    # Parameters for layout
-    # v32.60: Sovereign Finality - Leader Lines & Expanded Donut
-    # Parameters for layout
-    radius = 90 # Enlarged by ~38% (65->90)
-    label_r = 120 # Radius for label placement endpoint
+    # v32.61: Sovereign Finality - Leader Lines & Expanded Donut
+    radius = 90
     center_x = 150
     center_y = 150
     circum = 2 * math.pi * radius
@@ -74,77 +70,80 @@ def generate_oracle_ring(holdings, total_invested):
         val = h.get('Value_GBP', 0)
         weight = (val / total_invested * 100) if total_invested > 0 else 0
         
-        if weight < 0.5: continue # Tighter clean up
+        if weight < 0.5: continue # Tighter clean up for visual clarity
         
         color = colors[i % len(colors)]
         dash_len = (weight / 100) * circum
         
-        # Leader Line Math
-        segment_start_pct = (cumulative_offset / circum)
-        segment_len_pct = (dash_len / circum)
+        # --- LEADER LINE GEOMETRY ---
+        # 1. Midpoint of the slice (in terms of circumference progress)
+        # Note: We rotate -90deg, so 0 is at 12 o'clock. 
+        # offset is negative in SVG, so we track cumulative positive for math
+        current_wedge_center = cumulative_offset + (dash_len / 2)
         
-        mid_angle_turn = segment_start_pct + (segment_len_pct / 2)
-        mid_angle_rad = (mid_angle_turn * 2 * math.pi) - (math.pi / 2)
+        # Convert to angle in radians (0 at 3 o'clock for math, so subtract 90deg/PI/2)
+        angle_ratio = current_wedge_center / circum 
+        angle_rad = (angle_ratio * 2 * math.pi) - (math.pi / 2)
         
-        # Points
-        sx = center_x + radius * math.cos(mid_angle_rad)
-        sy = center_y + radius * math.sin(mid_angle_rad)
+        # 2. Slice Edge Point (Start of leader)
+        sx = center_x + radius * math.cos(angle_rad)
+        sy = center_y + radius * math.sin(angle_rad)
         
-        # Elbow Point
-        # Leader Line Math (v32.61)
-        # Start from midpoint of slice
-        mid_angle = (cumulative_offset + (dash_len / 2)) / circum * 360
-        mid_rad = math.radians(mid_angle - 90) # Adjust for -90 rot
+        # 3. Label Elbow Point (Further out)
+        label_r = 135  # Push out to clean space
+        lx = center_x + label_r * math.cos(angle_rad)
+        ly = center_y + label_r * math.sin(angle_rad)
         
-        # Inner and Outer points (on the ring)
-        sx = center_x + radius * math.cos(mid_rad)
-        sy = center_y + radius * math.sin(mid_rad)
+        # 4. Label Anchor Point (Horizontal line)
+        # If left side, go left. If right side, go right.
+        is_right = lx >= center_x
+        ax = lx + (15 if is_right else -15)
+        ay = ly
         
-        # Elbow/End point for label
-        # Push out further than before
-        lx = center_x + 140 * math.cos(mid_rad) # First leg
-        ly = center_y + 140 * math.sin(mid_rad)
+        # Text Anchor
+        text_anchor = "start" if is_right else "end"
+        text_x = ax + (5 if is_right else -5)
         
-        # Horizontal landing
-        align_right = lx > center_x
-        ex = lx + (20 if align_right else -20)
-        ey = ly 
-        
-        text_anchor = "start" if align_right else "end"
-        
-        # Formatting
+        # Data
         ticker = h.get('Ticker', 'Asset')
         safe_name = h.get('Name', ticker).replace("'", "\\'")
         pct_fmt = f"{weight:.1f}%"
         
+        # SVG Construction
+        # A. The Slice
         svg_elements.append(f"""
-            <!-- Slice -->
             <circle r="{radius}" cx="{center_x}" cy="{center_y}" fill="transparent"
-                stroke="{color}" stroke-width="30"
+                stroke="{color}" stroke-width="20"
                 stroke-dasharray="{dash_len} {circum}"
                 stroke-dashoffset="-{cumulative_offset}" 
                 transform="rotate(-90 {center_x} {center_y})"
                 class="donut-segment segment-{ticker}"
-                data-ticker="{ticker}"
                 onmouseover="showTT('{safe_name}', '{pct_fmt}', '{color}')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('{ticker}')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
-            
-            <!-- Leader Line (v32.61 Thin SVG) -->
-            <path d="M{sx},{sy} L{lx},{ly} L{ex},{ey}" fill="none" stroke="{color}" stroke-width="1.5" opacity="0.6" />
-            <circle cx="{sx}" cy="{sy}" r="2" fill="{color}" />
-            
-            <!-- Label (Ticker + %) -->
-            <text x="{ex + (5 if align_right else -5)}" y="{ey}" dy="0.3em" text-anchor="{text_anchor}" 
-                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">{ticker} {pct_fmt}</text>
+        """)
+        
+        # B. The Leader Line (Thin 1px)
+        svg_elements.append(f"""
+            <path d="M{sx},{sy} L{lx},{ly} L{ax},{ay}" 
+                  fill="none" stroke="{color}" stroke-width="1" opacity="0.8" />
+            <circle cx="{sx}" cy="{sy}" r="1.5" fill="{color}" />
+        """)
+        
+        # C. The Label
+        svg_elements.append(f"""
+            <text x="{text_x}" y="{ay}" dy="0.3em" text-anchor="{text_anchor}" 
+                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
+                  style="pointer-events: none;">{ticker} {pct_fmt}</text>
         """)
         
         cumulative_offset += dash_len
 
     return f"""
     <svg viewBox="0 0 300 300" class="w-full h-full overflow-visible">
-        <circle cx="{center_x}" cy="{center_y}" r="{radius}" stroke="#f3f4f6" stroke-width="24" fill="none" />
+        <!-- Inner Track -->
+        <circle cx="{center_x}" cy="{center_y}" r="{radius}" stroke="#f3f4f6" stroke-width="16" fill="none" opacity="0.5" />
         {''.join(svg_elements)}
     </svg>
     """
@@ -251,20 +250,22 @@ def render():
         pct = (pnl / invested_val) if invested_val > 0 else 0.0
         
         # v32.7: Sovereign Guard Keys
+        # v32.61: Sovereign Heatmap Data Structure
+        # 1. Ticker (Top Left)
+        # 2. £ P/L (Middle)
+        # 3. % Change (Bottom)
         heatmap_series.append({
             'x': h.get('Ticker', 'N/A'),
             'y': truncate_decimal(val, 2),
-            'val_pct': truncate_decimal(pct, 4),
-            'company_name': '', # REMOVED per Spec v32.60 (Tickers Only)
-            'shares_held': f"{truncate_decimal(safe_val(h.get('Shares')), 2):,.2f}",
-            'formatted_value': f"£{val:,.2f}", 
-            'formatted_pl_gbp': f"{'+' if pnl >= 0 else ''}£{abs(pnl):,.2f}",
-            'formatted_pl_pct': f"({pct*100:+.2f}%)",
-            'price_avg': f"{h.get('Currency', '')} {truncate_decimal(safe_val(h.get('Avg_Price')), 2)}",
-            'price_cur': f"{h.get('Currency', '')} {truncate_decimal(safe_val(h.get('Price')), 2)}",
-            'currency': h.get('Currency', 'GBP'), 
-            'pl_per_share_gbp': 0, 
-            'pl_per_share_pct': 0
+            # STRICT LABEL DATA for JS Renderer
+            'label_ticker': h.get('Ticker', 'N/A'),
+            'label_pl': f"{'+' if pnl >= 0 else ''}£{abs(pnl):,.2f}",
+            'label_pct': f"{pct*100:+.2f}%",
+            # Color logic helper
+            'is_profit': pnl >= 0,
+            # Legacy fields for safety
+            'formatted_value': f"£{val:,.2f}"
+            # Removed redundant fields to prevent leakage
         })
 
     # 4. Fortress Table
@@ -389,9 +390,9 @@ def render():
     legend_html += "</div>"
 
     context = {
-        'version': 'v0.10',
+        'version': 'v32.61',
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v0.10 Sovereign Finality"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.61 Sovereign Finality"},
         'sync_time': datetime.now().strftime('%d/%m %H:%M'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
