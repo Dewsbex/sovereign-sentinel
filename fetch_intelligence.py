@@ -100,6 +100,40 @@ def fetch_live_prices(strategy_data):
     strategy_data['watchlist'] = enriched_watchlist
     return strategy_data
 
+def enrich_sector_data(strategy_data):
+    """
+    Tier 2: API Enrichment. Fetches Sector and Industry using yfinance.
+    """
+    print("   [INTEL] Enriching Sector Intelligence (Tier 2)...")
+    
+    # Load Tier 1 (Manual Mappings) for reference if needed
+    try:
+        with open('data/sector_mapping.json', 'r') as f:
+            tier1 = json.load(f).get('mappings', {})
+    except:
+        tier1 = {}
+
+    for item in strategy_data.get('watchlist', []):
+        ticker = item['ticker']
+        
+        # Check Tier 1 first
+        clean_ticker = ticker.split('.')[0] if '.' in ticker else ticker
+        if clean_ticker in tier1:
+            item['sector'] = tier1[clean_ticker]
+            continue
+            
+        # Tier 2: Fetch via yfinance
+        try:
+            stock = yf.Ticker(ticker)
+            info = stock.info
+            item['sector'] = info.get('sector', 'Diversified/Funds')
+            item['industry'] = info.get('industry', 'N/A')
+        except Exception as e:
+            print(f"   [WARN] Sector fetch failed for {ticker}: {e}")
+            item['sector'] = 'Diversified/Funds'
+            
+    return strategy_data
+
 def fetch_news(strategy_data):
     """
     Scans Google News RSS for Watchlist items.
@@ -197,6 +231,7 @@ def run_intel():
     print("--- INTELLIGENCE ENGINE ONLINE (v3.0 - REAL DATA) ---")
     data = load_strategy()
     data = fetch_live_prices(data)
+    data = enrich_sector_data(data)
     data = fetch_news(data)
     
     # Generate SITREP

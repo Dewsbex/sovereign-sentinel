@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe-folio Sentinel | v32.65</title>
+    <title>Vibe-folio Sentinel | v32.66</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -41,7 +41,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 100vw;
+            max-width: 100%;
         }
 
         .sitrep-data {
@@ -844,7 +844,7 @@
                     OFFLINE
                 </div>
                 <div class="sync-timestamp hidden sm:block">
-                    SYNC: 06/02 19:11
+                    SYNC: 06/02 19:40
                 </div>
                 <button id="settings-toggle" class="cog-btn" onclick="toggleSettingsModal()">
                     ⚙️
@@ -860,7 +860,7 @@
             <header>
                 <h2>COMMAND CENTER (LIVE)</h2>
                 <div style="text-align: right;">
-                     <p>SITREP SYNC: 19:11 06/02</p>
+                     <p>SITREP SYNC: 19:40 06/02</p>
                      <p style="color: #444; font-size: 0.6rem; cursor: pointer;" onclick="api.toggle()">[CLOSE]</p>
                 </div>
             </header>
@@ -877,16 +877,17 @@
     
             <section class="order-form">
                 <div class="input-row">
-                    <input type="text" id="order-ticker" placeholder="TICKER">
-                    <input type="number" id="order-qty" placeholder="QTY">
+                    <input type="text" id="order-ticker" placeholder="TICKER (e.g. NVDA)">
+                    <input type="number" id="order-qty" placeholder="QUANTITY">
                 </div>
                 <div class="input-row">
-                    <input type="number" id="order-limit" placeholder="LIMIT PRICE (OPTIONAL)">
+                    <input type="number" id="order-limit" placeholder="LIMIT PRICE (LEAVE BLANK FOR MARKET)">
                 </div>
                 <div class="btn-row">
-                    <button class="btn-buy" onclick="api.placeOrder('BUY')">BUY</button>
-                    <button class="btn-sell" onclick="api.placeOrder('SELL')">SELL</button>
+                    <button class="btn-buy" onclick="api.placeOrder('BUY')">BUY MARKET</button>
+                    <button class="btn-sell" onclick="api.placeOrder('SELL')">SELL MARKET</button>
                 </div>
+                <button class="w-full mt-2 py-2 border border-gray-700 text-gray-400 text-[0.6rem] font-bold hover:bg-gray-800 transition-colors" onclick="api.placeOrder('LIMIT')">SET LIMIT ORDER</button>
             </section>
         </div>
     </div>
@@ -1168,311 +1169,295 @@
                         
     <svg viewBox="0 0 300 300" class="w-full h-full overflow-visible">
         <!-- Inner Track -->
-        <circle cx="150" cy="150" r="90" stroke="#f3f4f6" stroke-width="16" fill="none" opacity="0.5" />
+        <circle cx="150" cy="150" r="80" stroke="#f3f4f6" stroke-width="16" fill="none" opacity="0.5" />
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#4f46e5" stroke-width="20"
-                stroke-dasharray="60.15886740646692 565.4866776461628"
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#718096" stroke-width="20"
+                stroke-dasharray="53.47454880574837 502.6548245743669"
                 stroke-dashoffset="-0" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-NUE"
-                onmouseover="showTT('Nucor', '10.6%', '#4f46e5')"
+                onmouseover="showTT('Nucor', '10.6%', '#718096')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('NUE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M179.52257266208068,64.97989823922717 L194.283858993121,22.469847358840752 L209.283858993121,22.469847358840752" 
-                  fill="none" stroke="#4f46e5" stroke-width="1" opacity="0.8" />
-            <circle cx="179.52257266208068" cy="64.97989823922717" r="1.5" fill="#4f46e5" />
+            <path d="M176.24228681073836,74.42657621264638 L192.64371606744984,27.19318634555036 L202.64371606744984,27.19318634555036" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="214.283858993121" y="22.469847358840752" dy="0.3em" text-anchor="start" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">NUE 10.6%</text>
+            <text x="206.64371606744984" y="27.19318634555036" dy="0.3em" text-anchor="start" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">NUE</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#10b981" stroke-width="20"
-                stroke-dasharray="57.86431417681066 565.4866776461628"
-                stroke-dashoffset="-60.15886740646692" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#718096" stroke-width="20"
+                stroke-dasharray="51.43494593494281 502.6548245743669"
+                stroke-dashoffset="-53.47454880574837" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-RE"
-                onmouseover="showTT('Everest Group', '10.2%', '#10b981')"
+                onmouseover="showTT('Everest Group', '10.2%', '#718096')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('RE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M225.23741293123118,100.61040903777996 L262.8561193968468,75.91561355666992 L277.8561193968468,75.91561355666992" 
-                  fill="none" stroke="#10b981" stroke-width="1" opacity="0.8" />
-            <circle cx="225.23741293123118" cy="100.61040903777996" r="1.5" fill="#10b981" />
+            <path d="M216.8777003833166,106.09814136691551 L258.6762631228895,78.65947972123772 L268.6762631228895,78.65947972123772" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="282.8561193968468" y="75.91561355666992" dy="0.3em" text-anchor="start" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">RE 10.2%</text>
+            <text x="272.6762631228895" y="78.65947972123772" dy="0.3em" text-anchor="start" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">RE</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#ef4444" stroke-width="20"
-                stroke-dasharray="52.34554426271345 565.4866776461628"
-                stroke-dashoffset="-118.02318158327758" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#718096" stroke-width="20"
+                stroke-dasharray="46.52937267796751 502.6548245743669"
+                stroke-dashoffset="-104.90949474069117" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-CNNE"
-                onmouseover="showTT('Cannae', '9.3%', '#ef4444')"
+                onmouseover="showTT('Cannae', '9.3%', '#718096')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('CNNE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M239.95568929300458,152.82382078404788 L284.9335339395069,154.23573117607182 L299.9335339395069,154.23573117607182" 
-                  fill="none" stroke="#ef4444" stroke-width="1" opacity="0.8" />
-            <circle cx="239.95568929300458" cy="152.82382078404788" r="1.5" fill="#ef4444" />
+            <path d="M229.96061270489295,152.51006291915368 L279.93599564545104,154.0788522436247 L289.93599564545104,154.0788522436247" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="304.9335339395069" y="154.23573117607182" dy="0.3em" text-anchor="start" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">CNNE 9.3%</text>
+            <text x="293.93599564545104" y="154.0788522436247" dy="0.3em" text-anchor="start" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">CNNE</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#f59e0b" stroke-width="20"
-                stroke-dasharray="50.27391706679833 565.4866776461628"
-                stroke-dashoffset="-170.36872584599104" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#718096" stroke-width="20"
+                stroke-dasharray="44.68792628159852 502.6548245743669"
+                stroke-dashoffset="-151.43886741865867" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-EOG"
-                onmouseover="showTT('EOG Resources', '8.9%', '#f59e0b')"
+                onmouseover="showTT('EOG Resources', '8.9%', '#718096')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('EOG')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M224.20445247672484,200.92837355177844 L261.30667871508723,226.39256032766764 L276.30667871508723,226.39256032766764" 
-                  fill="none" stroke="#f59e0b" stroke-width="1" opacity="0.8" />
-            <circle cx="224.20445247672484" cy="200.92837355177844" r="1.5" fill="#f59e0b" />
+            <path d="M215.95951331264428,195.26966537935863 L257.184209133047,223.56320624145775 L267.184209133047,223.56320624145775" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="281.30667871508723" y="226.39256032766764" dy="0.3em" text-anchor="start" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">EOG 8.9%</text>
+            <text x="271.184209133047" y="223.56320624145775" dy="0.3em" text-anchor="start" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">EOG</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#8b5cf6" stroke-width="20"
-                stroke-dasharray="45.75464716949237 565.4866776461628"
-                stroke-dashoffset="-220.64264291278937" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#718096" stroke-width="20"
+                stroke-dasharray="40.67079748399322 502.6548245743669"
+                stroke-dashoffset="-196.1267937002572" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-CRM"
-                onmouseover="showTT('Salesforce', '8.1%', '#8b5cf6')"
+                onmouseover="showTT('Salesforce', '8.1%', '#718096')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('CRM')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M187.9934626759213,231.58735682624715 L206.99019401388193,272.3810352393707 L221.99019401388193,272.3810352393707" 
-                  fill="none" stroke="#8b5cf6" stroke-width="1" opacity="0.8" />
-            <circle cx="187.9934626759213" cy="231.58735682624715" r="1.5" fill="#8b5cf6" />
+            <path d="M183.77196682304117,222.52209495666412 L204.87944608744186,267.8484043045792 L214.87944608744186,267.8484043045792" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="226.99019401388193" y="272.3810352393707" dy="0.3em" text-anchor="start" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">CRM 8.1%</text>
+            <text x="218.87944608744186" y="267.8484043045792" dy="0.3em" text-anchor="start" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">CRM</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#ec4899" stroke-width="20"
-                stroke-dasharray="42.75972481184437 565.4866776461628"
-                stroke-dashoffset="-266.39729008228176" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#718096" stroke-width="20"
+                stroke-dasharray="38.008644277194996 502.6548245743669"
+                stroke-dashoffset="-236.79759118425042" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-CTVA"
-                onmouseover="showTT('Corteva', '7.6%', '#ec4899')"
+                onmouseover="showTT('Corteva', '7.6%', '#718096')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('CTVA')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M144.9688104761164,239.85926291693454 L142.4532157141746,284.7888943754018 L127.4532157141746,284.7888943754018" 
-                  fill="none" stroke="#ec4899" stroke-width="1" opacity="0.8" />
-            <circle cx="144.9688104761164" cy="239.85926291693454" r="1.5" fill="#ec4899" />
+            <path d="M145.52783153432577,229.8749003706085 L142.73272624327936,279.79671310223875 L132.73272624327936,279.79671310223875" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="122.4532157141746" y="284.7888943754018" dy="0.3em" text-anchor="end" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">CTVA 7.6%</text>
+            <text x="128.73272624327936" y="279.79671310223875" dy="0.3em" text-anchor="end" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">CTVA</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#06b6d4" stroke-width="20"
-                stroke-dasharray="40.580552172593386 565.4866776461628"
-                stroke-dashoffset="-309.1570148941261" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#718096" stroke-width="20"
+                stroke-dasharray="36.07160193119412 502.6548245743669"
+                stroke-dashoffset="-274.8062354614454" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-NFLX"
-                onmouseover="showTT('Netflix', '7.2%', '#06b6d4')"
+                onmouseover="showTT('Netflix', '7.2%', '#718096')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('NFLX')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M105.36416520389155,228.1514059505938 L83.04624780583733,267.2271089258908 L68.04624780583733,267.2271089258908" 
-                  fill="none" stroke="#06b6d4" stroke-width="1" opacity="0.8" />
-            <circle cx="105.36416520389155" cy="228.1514059505938" r="1.5" fill="#06b6d4" />
+            <path d="M110.32370240345915,219.46791640052786 L85.52601640562112,262.88536415085775 L75.52601640562112,262.88536415085775" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="63.046247805837325" y="267.2271089258908" dy="0.3em" text-anchor="end" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">NFLX 7.2%</text>
+            <text x="71.52601640562112" y="262.88536415085775" dy="0.3em" text-anchor="end" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">NFLX</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#3b82f6" stroke-width="20"
-                stroke-dasharray="39.36399353813122 565.4866776461628"
-                stroke-dashoffset="-349.7375670667195" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#718096" stroke-width="20"
+                stroke-dasharray="34.99021647833886 502.6548245743669"
+                stroke-dashoffset="-310.8778373926395" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-QCOM"
-                onmouseover="showTT('Qualcomm', '7.0%', '#3b82f6')"
+                onmouseover="showTT('Qualcomm', '7.0%', '#718096')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('QCOM')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M76.11468578328954,201.3902747910338 L39.172028674934324,227.08541218655068 L24.172028674934324,227.08541218655068" 
-                  fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.8" />
-            <circle cx="76.11468578328954" cy="201.3902747910338" r="1.5" fill="#3b82f6" />
+            <path d="M84.3241651407019,195.68024425869683 L43.27676835364059,224.23039692038236 L33.27676835364059,224.23039692038236" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="19.172028674934324" y="227.08541218655068" dy="0.3em" text-anchor="end" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">QCOM 7.0%</text>
+            <text x="29.27676835364059" y="224.23039692038236" dy="0.3em" text-anchor="end" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">QCOM</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#f43f5e" stroke-width="20"
-                stroke-dasharray="34.15261898302997 565.4866776461628"
-                stroke-dashoffset="-389.10156060485076" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#718096" stroke-width="20"
+                stroke-dasharray="30.357883540471082 502.6548245743669"
+                stroke-dashoffset="-345.8680538709784" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-DHR"
-                onmouseover="showTT('Danaher', '6.0%', '#f43f5e')"
+                onmouseover="showTT('Danaher', '6.0%', '#718096')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('DHR')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M61.781540787100354,167.8186266053801 L17.672311180650524,176.72793990807014 L2.6723111806505244,176.72793990807014" 
-                  fill="none" stroke="#f43f5e" stroke-width="1" opacity="0.8" />
-            <circle cx="61.781540787100354" cy="167.8186266053801" r="1.5" fill="#f43f5e" />
+            <path d="M71.58359181075588,165.83877920478238 L22.573336692478293,175.73801620777138 L12.573336692478293,175.73801620777138" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="-2.3276888193494756" y="176.72793990807014" dy="0.3em" text-anchor="end" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">DHR 6.0%</text>
+            <text x="8.573336692478293" y="175.73801620777138" dy="0.3em" text-anchor="end" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">DHR</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#10b981" stroke-width="20"
-                stroke-dasharray="31.353968848316313 565.4866776461628"
-                stroke-dashoffset="-423.25417958788074" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#3182ce" stroke-width="20"
+                stroke-dasharray="27.870194531836724 502.6548245743669"
+                stroke-dashoffset="-376.2259374114495" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-MSFT"
-                onmouseover="showTT('Microsoft', '5.5%', '#10b981')"
+                onmouseover="showTT('Microsoft', '5.5%', '#3182ce')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('MSFT')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M61.216795303590686,135.25067581766933 L16.82519295538603,127.87601372650401 L1.8251929553860293,127.87601372650401" 
-                  fill="none" stroke="#10b981" stroke-width="1" opacity="0.8" />
-            <circle cx="61.216795303590686" cy="135.25067581766933" r="1.5" fill="#10b981" />
+            <path d="M71.08159582541393,136.88948961570614 L21.757593216297636,128.6954206255225 L11.757593216297636,128.6954206255225" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="-3.1748070446139707" y="127.87601372650401" dy="0.3em" text-anchor="end" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">MSFT 5.5%</text>
+            <text x="7.757593216297636" y="128.6954206255225" dy="0.3em" text-anchor="end" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">MSFT</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#4f46e5" stroke-width="20"
-                stroke-dasharray="30.90210625705478 565.4866776461628"
-                stroke-dashoffset="-454.60814843619704" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#718096" stroke-width="20"
+                stroke-dasharray="27.468538895159803 502.6548245743669"
+                stroke-dashoffset="-404.0961319432862" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-BMY"
-                onmouseover="showTT('Bristol-Myers Squibb', '5.5%', '#4f46e5')"
+                onmouseover="showTT('Bristol-Myers Squibb', '5.5%', '#718096')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('BMY')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M71.47457795875756,106.02548359282667 L32.21186693813634,84.03822538924001 L17.21186693813634,84.03822538924001" 
-                  fill="none" stroke="#4f46e5" stroke-width="1" opacity="0.8" />
-            <circle cx="71.47457795875756" cy="106.02548359282667" r="1.5" fill="#4f46e5" />
+            <path d="M80.19962485222891,110.91154097140155 L36.574390384871975,86.48125407852751 L26.574390384871975,86.48125407852751" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="12.211866938136339" y="84.03822538924001" dy="0.3em" text-anchor="end" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">BMY 5.5%</text>
+            <text x="22.574390384871975" y="86.48125407852751" dy="0.3em" text-anchor="end" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">BMY</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#10b981" stroke-width="20"
-                stroke-dasharray="25.06230997467651 565.4866776461628"
-                stroke-dashoffset="-485.5102546932518" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#ed8936" stroke-width="20"
+                stroke-dasharray="22.27760886637912 502.6548245743669"
+                stroke-dashoffset="-431.564670838446" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-RIO"
-                onmouseover="showTT('Rio Tinto', '4.4%', '#10b981')"
+                onmouseover="showTT('Rio Tinto', '4.4%', '#ed8936')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('RIO')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M88.69256975975945,84.11070650448558 L58.03885463963917,51.16605975672837 L43.03885463963917,51.16605975672837" 
-                  fill="none" stroke="#10b981" stroke-width="1" opacity="0.8" />
-            <circle cx="88.69256975975945" cy="84.11070650448558" r="1.5" fill="#10b981" />
+            <path d="M95.50450645311946,91.43173911509834 L61.444822986319124,54.82657606203482 L51.444822986319124,54.82657606203482" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="38.03885463963917" y="51.16605975672837" dy="0.3em" text-anchor="end" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">RIO 4.4%</text>
+            <text x="47.444822986319124" y="54.82657606203482" dy="0.3em" text-anchor="end" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">RIO</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#ef4444" stroke-width="20"
-                stroke-dasharray="20.396676667960335 565.4866776461628"
-                stroke-dashoffset="-510.5725646679283" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#718096" stroke-width="20"
+                stroke-dasharray="18.130379260409185 502.6548245743669"
+                stroke-dashoffset="-453.8422797048251" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-SOLV"
-                onmouseover="showTT('Solventum', '3.6%', '#ef4444')"
+                onmouseover="showTT('Solventum', '3.6%', '#718096')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('SOLV')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M107.10134749300471,70.88169862108978 L85.65202123950705,31.322547931634674 L70.65202123950705,31.322547931634674" 
-                  fill="none" stroke="#ef4444" stroke-width="1" opacity="0.8" />
-            <circle cx="107.10134749300471" cy="70.88169862108978" r="1.5" fill="#ef4444" />
+            <path d="M111.8678644382264,79.67262099652424 L88.0352797121179,35.718009119351905 L78.0352797121179,35.718009119351905" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="65.65202123950705" y="31.322547931634674" dy="0.3em" text-anchor="end" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">SOLV 3.6%</text>
+            <text x="74.0352797121179" y="35.718009119351905" dy="0.3em" text-anchor="end" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">SOLV</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#f59e0b" stroke-width="20"
-                stroke-dasharray="16.48958577295651 565.4866776461628"
-                stroke-dashoffset="-530.9692413358887" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#48bb78" stroke-width="20"
+                stroke-dasharray="14.657409575961342 502.6548245743669"
+                stroke-dashoffset="-471.9726589652343" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-BATS"
-                onmouseover="showTT('British American Tobacco', '2.9%', '#f59e0b')"
+                onmouseover="showTT('British American Tobacco', '2.9%', '#48bb78')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('BATS')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M124.09891268862614,63.80757761793332 L111.14836903293923,20.711366426899986 L96.14836903293923,20.711366426899986" 
-                  fill="none" stroke="#f59e0b" stroke-width="1" opacity="0.8" />
-            <circle cx="124.09891268862614" cy="63.80757761793332" r="1.5" fill="#f59e0b" />
+            <path d="M126.97681127877865,73.384513438163 L112.58731832801533,25.499834337014875 L102.58731832801533,25.499834337014875" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="91.14836903293923" y="20.711366426899986" dy="0.3em" text-anchor="end" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">BATS 2.9%</text>
+            <text x="98.58731832801533" y="25.499834337014875" dy="0.3em" text-anchor="end" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">BATS</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#8b5cf6" stroke-width="20"
-                stroke-dasharray="9.559594963189367 565.4866776461628"
-                stroke-dashoffset="-547.4588271088452" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#f6ad55" stroke-width="20"
+                stroke-dasharray="8.497417745057216 502.6548245743669"
+                stroke-dashoffset="-486.63006854119567" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-LGEN"
-                onmouseover="showTT('Legal & General', '1.7%', '#8b5cf6')"
+                onmouseover="showTT('Legal & General', '1.7%', '#f6ad55')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('LGEN')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M136.79973830321592,60.973301245433035 L130.19960745482388,16.459951868149545 L115.19960745482388,16.459951868149545" 
-                  fill="none" stroke="#8b5cf6" stroke-width="1" opacity="0.8" />
-            <circle cx="136.79973830321592" cy="60.973301245433035" r="1.5" fill="#8b5cf6" />
+            <path d="M138.26643404730302,70.86515666260715 L130.93295532686741,21.405879576736623 L120.93295532686741,21.405879576736623" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="110.19960745482388" y="16.459951868149545" dy="0.3em" text-anchor="end" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">LGEN 1.7%</text>
+            <text x="116.93295532686741" y="21.405879576736623" dy="0.3em" text-anchor="end" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">LGEN</text>
         
-            <circle r="90" cx="150" cy="150" fill="transparent"
-                stroke="#ec4899" stroke-width="20"
-                stroke-dasharray="8.465321866093147 565.4866776461628"
-                stroke-dashoffset="-557.0184220720346" 
+            <circle r="80" cx="150" cy="150" fill="transparent"
+                stroke="#718096" stroke-width="20"
+                stroke-dasharray="7.524730547638353 502.6548245743669"
+                stroke-dashoffset="-495.12748628625286" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-VSNTV"
-                onmouseover="showTT('Versant Media Group', '1.5%', '#ec4899')"
+                onmouseover="showTT('Versant Media Group', '1.5%', '#718096')"
                 onmouseout="hideTT()"
                 onclick="highlightSegment('VSNTV')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M145.76596871823563,60.09964972757314 L143.64895307735347,15.149474591359706 L128.64895307735347,15.149474591359706" 
-                  fill="none" stroke="#ec4899" stroke-width="1" opacity="0.8" />
-            <circle cx="145.76596871823563" cy="60.09964972757314" r="1.5" fill="#ec4899" />
+            <path d="M146.23641663843162,70.08857753562057 L143.88417703745137,20.143938495383424 L133.88417703745137,20.143938495383424" 
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         
-            <text x="123.64895307735347" y="15.149474591359706" dy="0.3em" text-anchor="end" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">VSNTV 1.5%</text>
+            <text x="129.88417703745137" y="20.143938495383424" dy="0.3em" text-anchor="end" 
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">VSNTV</text>
         
     </svg>
     
@@ -1626,70 +1611,10 @@
             </div>
         </div>
 
-        <!-- 🎯 OPERATIONAL INTELLIGENCE (v0.15.12 Consolidated) -->
-        <div id="intel-section" class="col-span-12 sentinel-card border-l-4 border-indigo-500 bg-indigo-50/20">
-            <div class="flex flex-col md:flex-row gap-8 mt-4">
-                <!-- AI Briefing Section -->
-                <div class="md:w-1/3">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xs mono text-indigo-600 uppercase tracking-widest flex items-center gap-2">
-                            <i class="fas fa-brain text-indigo-500"></i> AI BRIEF
-                        </h2>
-                        <div class="flex items-center gap-2">
-                             <button id="run-orb-btn" onclick="triggerOrbWorkflow()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-0.5 rounded text-[0.6rem] font-bold transition-all shadow-sm flex items-center gap-1">
-                                <span id="btn-icon">⚡</span> LAUNCH
-                            </button>
-                            <div id="orb-status" class="px-2 py-0.5 rounded text-[0.55rem] font-bold bg-white text-gray-400 border border-indigo-100 uppercase tracking-wider">
-                                STANDBY
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="text-[0.7rem] text-gray-800 leading-relaxed font-medium bg-white/50 p-4 rounded-lg border border-indigo-50 relative min-h-[100px]">
-                        
-                            <div class="text-center py-4">
-                                <div class="text-lg mb-1">🌙</div>
-                                <div class="text-gray-400 mono uppercase tracking-tighter text-[0.6rem]">Market Closed • Waiting for Tomorrow</div>
-                            </div>
-                        
-                        <div class="absolute bottom-2 right-2 text-[0.5rem] mono text-indigo-300 font-bold uppercase tracking-widest">
-                            Sync: <span id="orb-last-sync">2026-02-05 22:53:38</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Live Target Tracker Section (High-Density Table) -->
-                <div class="md:w-3/5 border-l border-indigo-100 md:pl-8">
-                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest flex items-center gap-2 mb-4 md:mb-0">
-                        <i class="fas fa-crosshairs text-rose-500"></i> ACTIVE TARGET TRACKER
-                    </h2>
-                    
-                    <!-- Desktop Table (Hidden on Mobile) -->
-                    <div class="hidden md:block overflow-x-auto max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-indigo-200 scrollbar-track-transparent">
-                        <table class="w-full text-left text-[0.65rem] mono border-collapse min-w-[600px]">
-                            <thead class="text-gray-400 uppercase font-bold tracking-tight border-b border-gray-100">
-                                <tr>
-                                    <th class="pb-2">Company</th>
-                                    <th class="pb-2">Ticker</th>
-                                    <th class="pb-2">Alert $</th>
-                                    <th class="pb-2">Trigger $</th>
-                                    <th class="pb-2">Buy Limit $</th>
-                                    <th class="pb-2 text-right text-rose-500">Stop Loss</th>
-                                    <th class="pb-2 text-right text-emerald-500">Take Profit</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-0">
-                                
-                                <tr>
-                                    <td colspan="7" class="py-12 text-center text-gray-300 mono uppercase tracking-tight text-[0.6rem]">
-                                        No active targets • Standby Mode
-                                    </td>
-                                </tr>
-                                
-                                
-                            </tbody>
-                        </table>
-                    </div>
+            <!-- Target Tracker Container -->
+            <div id="target-tracker-container" class="mt-4">
+                <!-- Data injected via Jinja2 -->
+            </div>
 
                     <!-- Mobile List View (T212 Style) -->
                     <div class="md:hidden flex flex-col mt-4">
@@ -1850,7 +1775,7 @@
         // v30.6 DYNAMIC HEATMAP LOGIC
         // v32.61 SOVEREIGN FINALITY: Data Encapsulation
         // Strictly inject data object here.
-        const LIVE_HEATMAP_DATA = [{"x": "BMY", "y": 8637.44, "label_ticker": "BMY", "label_pl": "+\u00a31,480.31", "label_pct": "+20.68%", "is_profit": true, "formatted_value": "\u00a38,637.44"}, {"x": "DHR", "y": 9545.99, "label_ticker": "DHR", "label_pl": "+\u00a325.06", "label_pct": "+0.26%", "is_profit": true, "formatted_value": "\u00a39,545.99"}, {"x": "RIO", "y": 7005.16, "label_ticker": "RIO", "label_pl": "+\u00a32,320.04", "label_pct": "+49.52%", "is_profit": true, "formatted_value": "\u00a37,005.16"}, {"x": "LGEN", "y": 2672.0, "label_ticker": "LGEN", "label_pl": "+\u00a374.00", "label_pct": "+2.85%", "is_profit": true, "formatted_value": "\u00a32,672.00"}, {"x": "QELL", "y": 0.22, "label_ticker": "QELL", "label_pl": "\u00a3216.64", "label_pct": "-99.90%", "is_profit": false, "formatted_value": "\u00a30.22"}, {"x": "BATS", "y": 4609.0, "label_ticker": "BATS", "label_pl": "+\u00a3406.28", "label_pct": "+9.67%", "is_profit": true, "formatted_value": "\u00a34,609.00"}, {"x": "VSNTV", "y": 2366.14, "label_ticker": "VSNTV", "label_pl": "\u00a3392.73", "label_pct": "-14.24%", "is_profit": false, "formatted_value": "\u00a32,366.14"}, {"x": "NUE", "y": 16814.99, "label_ticker": "NUE", "label_pl": "+\u00a34,242.12", "label_pct": "+33.74%", "is_profit": true, "formatted_value": "\u00a316,814.99"}, {"x": "SOLV", "y": 5701.07, "label_ticker": "SOLV", "label_pl": "\u00a3276.77", "label_pct": "-4.63%", "is_profit": false, "formatted_value": "\u00a35,701.07"}, {"x": "RE", "y": 16173.64, "label_ticker": "RE", "label_pl": "\u00a3820.53", "label_pct": "-4.83%", "is_profit": false, "formatted_value": "\u00a316,173.64"}, {"x": "NFLX", "y": 11342.66, "label_ticker": "NFLX", "label_pl": "\u00a31,779.96", "label_pct": "-13.56%", "is_profit": false, "formatted_value": "\u00a311,342.66"}, {"x": "CRM", "y": 12788.87, "label_ticker": "CRM", "label_pl": "\u00a33,766.87", "label_pct": "-22.75%", "is_profit": false, "formatted_value": "\u00a312,788.87"}, {"x": "QCOM", "y": 11002.62, "label_ticker": "QCOM", "label_pl": "\u00a32,500.13", "label_pct": "-18.52%", "is_profit": false, "formatted_value": "\u00a311,002.62"}, {"x": "EOG", "y": 14052.05, "label_ticker": "EOG", "label_pl": "\u00a3215.12", "label_pct": "-1.51%", "is_profit": false, "formatted_value": "\u00a314,052.05"}, {"x": "CTVA", "y": 11951.76, "label_ticker": "CTVA", "label_pl": "+\u00a3273.34", "label_pct": "+2.34%", "is_profit": true, "formatted_value": "\u00a311,951.76"}, {"x": "MSFT", "y": 8763.74, "label_ticker": "MSFT", "label_pl": "\u00a3515.50", "label_pct": "-5.56%", "is_profit": false, "formatted_value": "\u00a38,763.74"}, {"x": "CNNE", "y": 14631.09, "label_ticker": "CNNE", "label_pl": "\u00a31,867.61", "label_pct": "-11.32%", "is_profit": false, "formatted_value": "\u00a314,631.09"}];
+        const LIVE_HEATMAP_DATA = [{"name": "DIVERSIFIED/FUNDS", "data": [{"x": "BMY", "y": 8637.44, "label_ticker": "BMY", "label_pl": "+\u00a31,480.31", "label_pct": "+20.68%", "is_profit": true, "fillColor": "#718096"}, {"x": "DHR", "y": 9545.99, "label_ticker": "DHR", "label_pl": "+\u00a325.06", "label_pct": "+0.26%", "is_profit": true, "fillColor": "#718096"}, {"x": "QELL", "y": 0.22, "label_ticker": "QELL", "label_pl": "\u00a3216.64", "label_pct": "-99.90%", "is_profit": false, "fillColor": "#718096"}, {"x": "VSNTV", "y": 2366.14, "label_ticker": "VSNTV", "label_pl": "\u00a3392.73", "label_pct": "-14.24%", "is_profit": false, "fillColor": "#718096"}, {"x": "NUE", "y": 16814.99, "label_ticker": "NUE", "label_pl": "+\u00a34,242.12", "label_pct": "+33.74%", "is_profit": true, "fillColor": "#718096"}, {"x": "SOLV", "y": 5701.07, "label_ticker": "SOLV", "label_pl": "\u00a3276.77", "label_pct": "-4.63%", "is_profit": false, "fillColor": "#718096"}, {"x": "RE", "y": 16173.64, "label_ticker": "RE", "label_pl": "\u00a3820.53", "label_pct": "-4.83%", "is_profit": false, "fillColor": "#718096"}, {"x": "NFLX", "y": 11342.66, "label_ticker": "NFLX", "label_pl": "\u00a31,779.96", "label_pct": "-13.56%", "is_profit": false, "fillColor": "#718096"}, {"x": "CRM", "y": 12788.87, "label_ticker": "CRM", "label_pl": "\u00a33,766.87", "label_pct": "-22.75%", "is_profit": false, "fillColor": "#718096"}, {"x": "QCOM", "y": 11002.62, "label_ticker": "QCOM", "label_pl": "\u00a32,500.13", "label_pct": "-18.52%", "is_profit": false, "fillColor": "#718096"}, {"x": "EOG", "y": 14052.05, "label_ticker": "EOG", "label_pl": "\u00a3215.12", "label_pct": "-1.51%", "is_profit": false, "fillColor": "#718096"}, {"x": "CTVA", "y": 11951.76, "label_ticker": "CTVA", "label_pl": "+\u00a3273.34", "label_pct": "+2.34%", "is_profit": true, "fillColor": "#718096"}, {"x": "CNNE", "y": 14631.09, "label_ticker": "CNNE", "label_pl": "\u00a31,867.61", "label_pct": "-11.32%", "is_profit": false, "fillColor": "#718096"}]}, {"name": "MATERIALS", "data": [{"x": "RIO", "y": 7005.16, "label_ticker": "RIO", "label_pl": "+\u00a32,320.04", "label_pct": "+49.52%", "is_profit": true, "fillColor": "#ed8936"}]}, {"name": "FINANCIALS", "data": [{"x": "LGEN", "y": 2672.0, "label_ticker": "LGEN", "label_pl": "+\u00a374.00", "label_pct": "+2.85%", "is_profit": true, "fillColor": "#f6ad55"}]}, {"name": "CONSUMER STAPLES", "data": [{"x": "BATS", "y": 4609.0, "label_ticker": "BATS", "label_pl": "+\u00a3406.28", "label_pct": "+9.67%", "is_profit": true, "fillColor": "#48bb78"}]}, {"name": "INFO TECH", "data": [{"x": "MSFT", "y": 8763.74, "label_ticker": "MSFT", "label_pl": "\u00a3515.50", "label_pct": "-5.56%", "is_profit": false, "fillColor": "#3182ce"}]}];
         
         // Initialize Dashboard
         window.addEventListener('DOMContentLoaded', () => {
@@ -1858,86 +1783,56 @@
         });
 
         function renderSovereignstack(data) {
-            // Transform Data for ApexCharts
-            const mapData = data.map(d => {
-                const isProfit = d.is_profit;
-                let bgColor = isProfit ? '#A7F3D0' : '#FECACA'; // Default Light Green / Light Red
-                let txtColor = '#1f2937';
-                
-                // Color Intensity Logic
-                // To keep it simple and clean as per "Sovereign" spec:
-                // We use the Python pre-calc logic or simple thresholds here.
-                // Let's use simple logic:
-                if (d.label_pct.includes('+') && parseFloat(d.label_pct) > 5) bgColor = '#34D399'; // Strong Green
-                if (d.label_pct.includes('-') && parseFloat(d.label_pct) < -5) bgColor = '#F87171'; // Strong Red
-                
-                return {
-                    x: d.x,
-                    y: d.y,
-                    fillColor: bgColor,
-                    color: txtColor, // #374151
-                    // Custom Data for Formatter
-                    custom_ticker: d.label_ticker,
-                    custom_pl: d.label_pl,
-                    custom_pct: d.label_pct
-                };
-            });
-
             const options = {
-                series: [{ data: mapData }],
+                series: data, // Grouped Data [ { name: 'SECTOR', data: [...] } ]
                 legend: { show: false },
                 chart: {
                     type: 'treemap',
                     height: 600,
                     fontFamily: 'JetBrains Mono',
                     toolbar: { show: false },
-                    animations: { enabled: false } // Instant load
+                    animations: { enabled: false }
                 },
                 dataLabels: {
                     enabled: true,
                     style: {
-                        fontSize: '14px',
+                        fontSize: '11px',
                         fontWeight: 'bold',
-                        colors: ['#1f2937']
+                        colors: ['#fff']
                     },
                     formatter: function(text, op) {
-                        // v32.65: Narrow Fund Guard
-                        // Attempt to detect narrow tiles. 
-                        // ApexCharts doesn't universally expose 'width' here, but we can infer from text length vs container? 
-                        // Or use the user's explicit directive: "if (tile.width < 70)"
-                        // We will try to inspect the internal rect if available.
+                        // v32.66 Readable Ticker Logic
+                        // If tile width < 80px, hide labels to preserve "Sovereign" aesthetic
+                        const rect = op.w.globals.dom.baseEl.querySelector(`.apexcharts-treemap-rect[j="${op.seriesIndex}"][i="${op.dataPointIndex}"]`);
+                        if (rect) {
+                            const width = rect.getBoundingClientRect().width;
+                            if (width < 80) return '';
+                        }
                         
-                        // Safe Guard:
-                        const datum = mapData[op.dataPointIndex];
-                        
-                        // If we can't get width, we default to showing.
-                        // However, let's try to access the rect via internal API if possible (risky),
-                        // or just rely on the user's directive which suggests THEY see it working or want it tried.
-                        // Actually, let's implement a heuristic: if name is long and value is small? No.
-                        
-                        // Let's implement the array return for 3-line data which is CRITICAL.
-                        return [datum.custom_ticker, datum.custom_pl, datum.custom_pct];
+                        const d = op.w.config.series[op.seriesIndex].data[op.dataPointIndex];
+                        return [d.label_ticker, d.label_pl, d.label_pct];
                     },
                     offsetY: -4
                 },
                 plotOptions: {
                     treemap: {
-                        distributed: true,
-                        enableShades: false
+                        distributed: false, // Use sector colors from series.data
+                        enableShades: true,
+                        shadeIntensity: 0.5
                     }
                 },
-                stroke: { width: 1, colors: ['#ffffff'] }, // Clean white borders
+                stroke: { width: 2, colors: ['#0f0f0f'] }, 
                 tooltip: {
+                    theme: 'dark',
                     y: {
-                        formatter: function(value, { series, seriesIndex, dataPointIndex, w }) {
-                             const d = mapData[dataPointIndex];
-                             return d.custom_pl + " (" + d.custom_pct + ")";
+                        formatter: function(value, { seriesIndex, dataPointIndex, w }) {
+                             const d = w.config.series[seriesIndex].data[dataPointIndex];
+                             return d.label_pl + " (" + d.label_pct + ")";
                         }
                     }
                 }
             };
 
-            // RENDER TO #heatmap-container (Updated ID)
             const chart = new ApexCharts(document.querySelector("#heatmap-container"), options);
             chart.render();
         }
@@ -2033,42 +1928,8 @@
         // Initial render
         renderHistory('MAX');
 
-        // ASSET ALLOCATION CHART
-        // Aggregate mapData for simple donut
-        // Ideally we would pass this from backend, but JS aggregation is fine for visual
-        let allocSeries = mapData.map(x => x.y);
-        let allocLabels = mapData.map(x => x.x);
-
-        var allocOptions = {
-            series: allocSeries,
-            labels: allocLabels,
-            chart: { type: 'donut', height: 350, fontFamily: 'Inter', background: 'transparent' },
-            colors: ['#37E6B0', '#FF4B4B', '#2E93fA', '#66DA26', '#546E7A', '#E91E63', '#FF9800'],
-            stroke: { show: true, width: 2, colors: ['#0A0A0A'] },
-            dataLabels: { enabled: false },
-            plotOptions: {
-                pie: {
-                    donut: {
-                        size: '75%',
-                        labels: {
-                            show: true,
-                            name: { show: true, color: '#888' },
-                            value: { show: true, color: '#fff', fontSize: '24px', fontWeight: 'bold' },
-                            total: {
-                                show: true,
-                                label: 'Invested',
-                                color: '#888',
-                                formatter: function (w) {
-                                    return "£" + w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            legend: { position: 'bottom', labels: { colors: '#888' } }
-        };
-        new ApexCharts(document.querySelector("#allocation-chart"), allocOptions).render();
+        // v32.66: Donut and Leader lines are rendered via Python SVG injection (allocation_donut).
+        // Redundant JS removed.
         
         // v32.15: See All Button Toggle
         const seeAllBtn = document.getElementById('see-all-btn');
@@ -2085,7 +1946,6 @@
                 }
             });
         }
-    </script>
     </script>
     <!-- FULL PORTFOLIO MODAL STRUCTURE -->
     <div id="portfolio-backdrop" class="modal-backdrop">

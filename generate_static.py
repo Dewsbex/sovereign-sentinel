@@ -55,33 +55,37 @@ def generate_oracle_ring(holdings, total_invested):
     # Sort: Largest first
     sorted_holdings = sorted(holdings, key=lambda x: x.get('Value_GBP', 0), reverse=True)
     
-    # v32.61: Sovereign Finality - Leader Lines & Expanded Donut
-    radius = 90
+    # v32.66: Sector Colors from Mapping
+    radius = 80
     center_x = 150
     center_y = 150
     circum = 2 * math.pi * radius
     cumulative_offset = 0
     svg_elements = []
     
-    # Vibrant Palette
-    colors = ["#4f46e5", "#10b981", "#ef4444", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4", "#3b82f6", "#f43f5e", "#10b981"]
+    # Load colors
+    try:
+        with open('data/sector_mapping.json', 'r') as f:
+            mapping_data = json.load(f)
+            gics_colors = mapping_data.get('gics_colors', {})
+            sector_map = mapping_data.get('mappings', {})
+    except:
+        gics_colors = {}
+        sector_map = {}
 
     for i, h in enumerate(sorted_holdings):
         val = h.get('Value_GBP', 0)
         weight = (val / total_invested * 100) if total_invested > 0 else 0
         
-        if weight < 0.5: continue # Tighter clean up for visual clarity
+        if weight < 0.5: continue 
         
-        color = colors[i % len(colors)]
+        ticker = h.get('Ticker', 'N/A')
+        clean_ticker = ticker.split('.')[0] if '.' in ticker else ticker
+        sector = sector_map.get(clean_ticker, "Diversified/Funds")
+        color = gics_colors.get(sector, "#ccc")
+        
         dash_len = (weight / 100) * circum
-        
-        # --- LEADER LINE GEOMETRY ---
-        # 1. Midpoint of the slice (in terms of circumference progress)
-        # Note: We rotate -90deg, so 0 is at 12 o'clock. 
-        # offset is negative in SVG, so we track cumulative positive for math
         current_wedge_center = cumulative_offset + (dash_len / 2)
-        
-        # Convert to angle in radians (0 at 3 o'clock for math, so subtract 90deg/PI/2)
         angle_ratio = current_wedge_center / circum 
         angle_rad = (angle_ratio * 2 * math.pi) - (math.pi / 2)
         
@@ -90,24 +94,20 @@ def generate_oracle_ring(holdings, total_invested):
         sy = center_y + radius * math.sin(angle_rad)
         
         # 3. Label Elbow Point (Further out)
-        label_r = 135  # Push out to clean space
+        label_r = 130 # Push out
         lx = center_x + label_r * math.cos(angle_rad)
         ly = center_y + label_r * math.sin(angle_rad)
         
         # 4. Label Anchor Point (Horizontal line)
-        # If left side, go left. If right side, go right.
         is_right = lx >= center_x
-        ax = lx + (15 if is_right else -15)
-        ay = ly
-        
-        # Text Anchor
-        text_anchor = "start" if is_right else "end"
-        text_x = ax + (5 if is_right else -5)
-        
-        # Data
+        ax = lx + (10 if is_right else -10)
         ticker = h.get('Ticker', 'Asset')
         safe_name = h.get('Name', ticker).replace("'", "\\'")
         pct_fmt = f"{weight:.1f}%"
+        ay = ly
+        
+        text_anchor = "start" if is_right else "end"
+        text_x = ax + (4 if is_right else -4)
         
         # SVG Construction
         # A. The Slice
@@ -124,18 +124,17 @@ def generate_oracle_ring(holdings, total_invested):
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         """)
         
-        # B. The Leader Line (Thin 1px)
+        # B. Thin Gray Leader Line (v32.66)
         svg_elements.append(f"""
             <path d="M{sx},{sy} L{lx},{ly} L{ax},{ay}" 
-                  fill="none" stroke="{color}" stroke-width="1" opacity="0.8" />
-            <circle cx="{sx}" cy="{sy}" r="1.5" fill="{color}" />
+                  fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.6" />
         """)
         
         # C. The Label
         svg_elements.append(f"""
             <text x="{text_x}" y="{ay}" dy="0.3em" text-anchor="{text_anchor}" 
-                  class="text-[0.55rem] font-bold fill-gray-500 mono" 
-                  style="pointer-events: none;">{ticker} {pct_fmt}</text>
+                  class="text-[0.45rem] font-bold fill-gray-400 mono" 
+                  style="pointer-events: none;">{ticker}</text>
         """)
         
         cumulative_offset += dash_len
@@ -149,7 +148,18 @@ def generate_oracle_ring(holdings, total_invested):
     """
 
 def render():
-    print(f"Starting The Artist (Job B) [v0.15.11 Sovereign Finality]... ({datetime.now().strftime('%H:%M:%S')})")
+    env_mode = "LIVE" if os.environ.get('ENV') == 'LIVE' else "DEMO"
+    prefix = f"({env_mode})"
+    print(f"{prefix} Starting Sector Sentinel (Job B) [v32.66]... ({datetime.now().strftime('%H:%M:%S')})")
+    
+    # Load Sector Mapping (Tier 1)
+    mapping_data = {"mappings": {}, "gics_colors": {}}
+    try:
+        with open('data/sector_mapping.json', 'r') as f:
+            mapping_data = json.load(f)
+            print(f"      [DATA] Loaded {len(mapping_data.get('mappings', {}))} sector mappings.")
+    except Exception as e:
+        print(f"      [WARN] Sector mapping load failed: {e}")
     
     # 1. Load Data
     state = load_state()
@@ -240,32 +250,44 @@ def render():
     if total_cost > 0:
         return_rate_pct = truncate_decimal((total_return / total_cost) * 100, 2)
 
-    # 3. Heatmap Data
-    heatmap_series = []
+    # 3. Sector & Heatmap Data (v32.66 Nested)
+    sector_groups = {}
+    gics_map = mapping_data.get('mappings', {})
+    gics_colors = mapping_data.get('gics_colors', {})
+
     for h in holdings:
+        ticker = h.get('Ticker', 'N/A')
+        clean_ticker = ticker.split('.')[0] if '.' in ticker else ticker
+        
+        # Auditor Sector Mapping
+        sector = gics_map.get(clean_ticker, "Diversified/Funds")
+        h['Sector'] = sector
+        h['Sector_Color'] = gics_colors.get(sector, "#aaa")
+        
         val = safe_val(h.get('Value_GBP', h.get('Value', 0)))
         pnl = safe_val(h.get('PL_GBP', h.get('PL', 0)))
-        
         invested_val = val - pnl
         pct = (pnl / invested_val) if invested_val > 0 else 0.0
         
-        # v32.7: Sovereign Guard Keys
-        # v32.61: Sovereign Heatmap Data Structure
-        # 1. Ticker (Top Left)
-        # 2. £ P/L (Middle)
-        # 3. % Change (Bottom)
-        heatmap_series.append({
-            'x': h.get('Ticker', 'N/A'),
+        if sector not in sector_groups:
+            sector_groups[sector] = []
+            
+        sector_groups[sector].append({
+            'x': ticker,
             'y': truncate_decimal(val, 2),
-            # STRICT LABEL DATA for JS Renderer
-            'label_ticker': h.get('Ticker', 'N/A'),
+            'label_ticker': ticker,
             'label_pl': f"{'+' if pnl >= 0 else ''}£{abs(pnl):,.2f}",
             'label_pct': f"{pct*100:+.2f}%",
-            # Color logic helper
             'is_profit': pnl >= 0,
-            # Legacy fields for safety
-            'formatted_value': f"£{val:,.2f}"
-            # Removed redundant fields to prevent leakage
+            'fillColor': h['Sector_Color']
+        })
+
+    # Transform into ApexCharts Grouped Treemap Structure
+    heatmap_series = []
+    for sector, items in sector_groups.items():
+        heatmap_series.append({
+            'name': sector.upper(),
+            'data': items
         })
 
     # 4. Fortress Table
@@ -390,9 +412,9 @@ def render():
     legend_html += "</div>"
 
     context = {
-        'version': 'v32.65',
+        'version': 'v32.66',
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.65 Sovereign Finality"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.66 Sector Sentinel"},
         'sync_time': datetime.now().strftime('%d/%m %H:%M'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
