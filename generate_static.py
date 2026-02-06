@@ -390,9 +390,9 @@ def render():
     legend_html += "</div>"
 
     context = {
-        'version': 'v32.61',
+        'version': 'v32.65',
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.61 Sovereign Finality"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.65 Sovereign Finality"},
         'sync_time': datetime.now().strftime('%d/%m %H:%M'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe-folio Sentinel | v32.61</title>
+    <title>Vibe-folio Sentinel | v32.65</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -818,13 +818,13 @@
                 <div class="metric-group">
                     <span class="label">TOTAL WEALTH</span>
                     <!-- Using total_wealth_str from generate_static.py -->
-                    <span class="value wealth-value">£173,484.40</span>
+                    <span class="value wealth-value">£173,046.62</span>
                 </div>
                 <div class="metric-group">
                     <span class="label">RETURN</span>
                     <!-- Convert python string check to basic logic. Adjusting var names to match python output. -->
                     <span class="value pos">
-                        +£24,657.70 (+15.25%)
+                        +£24,219.92 (+14.98%)
                     </span>
                 </div>
                 <div class="metric-group desktop-only">
@@ -844,7 +844,7 @@
                     OFFLINE
                 </div>
                 <div class="sync-timestamp hidden sm:block">
-                    SYNC: 06/02 19:00
+                    SYNC: 06/02 19:04
                 </div>
                 <button id="settings-toggle" class="cog-btn" onclick="toggleSettingsModal()">
                     ⚙️
@@ -860,7 +860,7 @@
             <header>
                 <h2>COMMAND CENTER (LIVE)</h2>
                 <div style="text-align: right;">
-                     <p>SITREP SYNC: 19:00 06/02</p>
+                     <p>SITREP SYNC: 19:04 06/02</p>
                      <p style="color: #444; font-size: 0.6rem; cursor: pointer;" onclick="api.toggle()">[CLOSE]</p>
                 </div>
             </header>
@@ -937,11 +937,11 @@
                                     <td class="p-2 text-gray-700">Nucor</td>
                                     <td class="p-2 text-right">119.1502</td>
                                     <td class="p-2 text-right">£142.75</td>
-                                    <td class="p-2 text-right">£192.33</td>
-                                    <td class="p-2 text-right font-semibold">£16841.71</td>
+                                    <td class="p-2 text-right">£192.27</td>
+                                    <td class="p-2 text-right font-semibold">£16820.25</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£4268.84
-                                        <span class="text-[0.55rem] ml-1">(+34.0%)</span>
+                                        +£4247.39
+                                        <span class="text-[0.55rem] ml-1">(+33.8%)</span>
                                     </td>
                                 </tr>
                                 
@@ -963,11 +963,11 @@
                                     <td class="p-2 text-gray-700">Bristol-Myers Squibb</td>
                                     <td class="p-2 text-right">190.0</td>
                                     <td class="p-2 text-right">£50.57</td>
-                                    <td class="p-2 text-right">£61.71</td>
-                                    <td class="p-2 text-right font-semibold">£8616.94</td>
+                                    <td class="p-2 text-right">£61.66</td>
+                                    <td class="p-2 text-right font-semibold">£8601.68</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£1459.81
-                                        <span class="text-[0.55rem] ml-1">(+20.4%)</span>
+                                        +£1444.55
+                                        <span class="text-[0.55rem] ml-1">(+20.2%)</span>
                                     </td>
                                 </tr>
                                 
@@ -989,11 +989,11 @@
                                     <td class="p-2 text-gray-700">Corteva</td>
                                     <td class="p-2 text-right">225.0</td>
                                     <td class="p-2 text-right">£69.94</td>
-                                    <td class="p-2 text-right">£72.8</td>
-                                    <td class="p-2 text-right font-semibold">£12038.1</td>
+                                    <td class="p-2 text-right">£72.3</td>
+                                    <td class="p-2 text-right font-semibold">£11943.92</td>
                                     <td class="p-2 text-right font-bold text-emerald-600">
-                                        +£359.68
-                                        <span class="text-[0.55rem] ml-1">(+3.1%)</span>
+                                        +£265.5
+                                        <span class="text-[0.55rem] ml-1">(+2.3%)</span>
                                     </td>
                                 </tr>
                                 
@@ -1015,10 +1015,10 @@
                                     <td class="p-2 text-gray-700">Danaher</td>
                                     <td class="p-2 text-right">60.0</td>
                                     <td class="p-2 text-right">£217.7</td>
-                                    <td class="p-2 text-right">£215.6</td>
-                                    <td class="p-2 text-right font-semibold">£9507.01</td>
+                                    <td class="p-2 text-right">£215.84</td>
+                                    <td class="p-2 text-right font-semibold">£9508.44</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-13.92
+                                        £-12.49
                                         <span class="text-[0.55rem] ml-1">(-0.1%)</span>
                                     </td>
                                 </tr>
@@ -1041,24 +1041,11 @@
                                     <td class="p-2 text-gray-700">Solventum</td>
                                     <td class="p-2 text-right">100.0</td>
                                     <td class="p-2 text-right">£80.44</td>
-                                    <td class="p-2 text-right">£77.97</td>
-                                    <td class="p-2 text-right font-semibold">£5730.22</td>
+                                    <td class="p-2 text-right">£77.61</td>
+                                    <td class="p-2 text-right font-semibold">£5698.28</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-247.62
-                                        <span class="text-[0.55rem] ml-1">(-4.2%)</span>
-                                    </td>
-                                </tr>
-                                
-                                <tr class="border-b border-gray-100 hover:bg-gray-50">
-                                    <td class="p-2 font-bold">VSNTV</td>
-                                    <td class="p-2 text-gray-700">Versant Media Group</td>
-                                    <td class="p-2 text-right">111.0</td>
-                                    <td class="p-2 text-right">£33.25</td>
-                                    <td class="p-2 text-right">£30.17</td>
-                                    <td class="p-2 text-right font-semibold">£2461.17</td>
-                                    <td class="p-2 text-right font-bold text-rose-500">
-                                        £-297.7
-                                        <span class="text-[0.55rem] ml-1">(-10.8%)</span>
+                                        £-279.56
+                                        <span class="text-[0.55rem] ml-1">(-4.7%)</span>
                                     </td>
                                 </tr>
                                 
@@ -1067,11 +1054,24 @@
                                     <td class="p-2 text-gray-700">EOG Resources</td>
                                     <td class="p-2 text-right">167.837</td>
                                     <td class="p-2 text-right">£114.0</td>
-                                    <td class="p-2 text-right">£113.17</td>
-                                    <td class="p-2 text-right font-semibold">£13959.28</td>
+                                    <td class="p-2 text-right">£113.2</td>
+                                    <td class="p-2 text-right font-semibold">£13949.56</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-307.89
+                                        £-317.61
                                         <span class="text-[0.55rem] ml-1">(-2.2%)</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 font-bold">VSNTV</td>
+                                    <td class="p-2 text-gray-700">Versant Media Group</td>
+                                    <td class="p-2 text-right">111.0</td>
+                                    <td class="p-2 text-right">£33.25</td>
+                                    <td class="p-2 text-right">£29.43</td>
+                                    <td class="p-2 text-right font-semibold">£2398.5</td>
+                                    <td class="p-2 text-right font-bold text-rose-500">
+                                        £-360.37
+                                        <span class="text-[0.55rem] ml-1">(-13.1%)</span>
                                     </td>
                                 </tr>
                                 
@@ -1080,11 +1080,11 @@
                                     <td class="p-2 text-gray-700">Microsoft</td>
                                     <td class="p-2 text-right">30.0</td>
                                     <td class="p-2 text-right">£423.35</td>
-                                    <td class="p-2 text-right">£396.92</td>
-                                    <td class="p-2 text-right font-semibold">£8751.2</td>
+                                    <td class="p-2 text-right">£399.67</td>
+                                    <td class="p-2 text-right font-semibold">£8803.37</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-528.03
-                                        <span class="text-[0.55rem] ml-1">(-5.7%)</span>
+                                        £-475.87
+                                        <span class="text-[0.55rem] ml-1">(-5.1%)</span>
                                     </td>
                                 </tr>
                                 
@@ -1093,11 +1093,11 @@
                                     <td class="p-2 text-gray-700">Everest Group</td>
                                     <td class="p-2 text-right">66.9526</td>
                                     <td class="p-2 text-right">£333.79</td>
-                                    <td class="p-2 text-right">£330.07</td>
-                                    <td class="p-2 text-right font-semibold">£16241.18</td>
+                                    <td class="p-2 text-right">£328.0</td>
+                                    <td class="p-2 text-right font-semibold">£16123.8</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-752.99
-                                        <span class="text-[0.55rem] ml-1">(-4.4%)</span>
+                                        £-870.37
+                                        <span class="text-[0.55rem] ml-1">(-5.1%)</span>
                                     </td>
                                 </tr>
                                 
@@ -1106,10 +1106,10 @@
                                     <td class="p-2 text-gray-700">Netflix</td>
                                     <td class="p-2 text-right">190.0</td>
                                     <td class="p-2 text-right">£92.46</td>
-                                    <td class="p-2 text-right">£81.33</td>
-                                    <td class="p-2 text-right font-semibold">£11356.6</td>
+                                    <td class="p-2 text-right">£81.34</td>
+                                    <td class="p-2 text-right font-semibold">£11348.47</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-1766.02
+                                        £-1774.15
                                         <span class="text-[0.55rem] ml-1">(-13.5%)</span>
                                     </td>
                                 </tr>
@@ -1119,11 +1119,11 @@
                                     <td class="p-2 text-gray-700">Cannae</td>
                                     <td class="p-2 text-right">1406.1646</td>
                                     <td class="p-2 text-right">£15.77</td>
-                                    <td class="p-2 text-right">£14.24</td>
-                                    <td class="p-2 text-right font-semibold">£14716.01</td>
+                                    <td class="p-2 text-right">£14.23</td>
+                                    <td class="p-2 text-right font-semibold">£14691.53</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-1782.69
-                                        <span class="text-[0.55rem] ml-1">(-10.8%)</span>
+                                        £-1807.17
+                                        <span class="text-[0.55rem] ml-1">(-11.0%)</span>
                                     </td>
                                 </tr>
                                 
@@ -1132,11 +1132,11 @@
                                     <td class="p-2 text-gray-700">Qualcomm</td>
                                     <td class="p-2 text-right">108.0</td>
                                     <td class="p-2 text-right">£168.85</td>
-                                    <td class="p-2 text-right">£138.96</td>
-                                    <td class="p-2 text-right font-semibold">£11029.54</td>
+                                    <td class="p-2 text-right">£138.11</td>
+                                    <td class="p-2 text-right font-semibold">£10951.53</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-2473.21
-                                        <span class="text-[0.55rem] ml-1">(-18.3%)</span>
+                                        £-2551.22
+                                        <span class="text-[0.55rem] ml-1">(-18.9%)</span>
                                     </td>
                                 </tr>
                                 
@@ -1145,11 +1145,11 @@
                                     <td class="p-2 text-gray-700">Salesforce</td>
                                     <td class="p-2 text-right">92.0</td>
                                     <td class="p-2 text-right">£242.96</td>
-                                    <td class="p-2 text-right">£189.28</td>
-                                    <td class="p-2 text-right font-semibold">£12797.84</td>
+                                    <td class="p-2 text-right">£188.85</td>
+                                    <td class="p-2 text-right font-semibold">£12756.48</td>
                                     <td class="p-2 text-right font-bold text-rose-500">
-                                        £-3757.9
-                                        <span class="text-[0.55rem] ml-1">(-22.7%)</span>
+                                        £-3799.26
+                                        <span class="text-[0.55rem] ml-1">(-22.9%)</span>
                                     </td>
                                 </tr>
                                 
@@ -1172,7 +1172,7 @@
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#4f46e5" stroke-width="20"
-                stroke-dasharray="60.15459075339601 565.4866776461628"
+                stroke-dasharray="60.24456070788726 565.4866776461628"
                 stroke-dashoffset="-0" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-NUE"
@@ -1181,18 +1181,18 @@
                 onclick="highlightSegment('NUE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M179.52055264552988,64.97919683099613 L194.28082896829483,22.468795246494196 L209.28082896829483,22.468795246494196" 
+            <path d="M179.5630451661099,64.99396279965435 L194.34456774916484,22.490944199481532 L209.34456774916484,22.490944199481532" 
                   fill="none" stroke="#4f46e5" stroke-width="1" opacity="0.8" />
-            <circle cx="179.52055264552988" cy="64.97919683099613" r="1.5" fill="#4f46e5" />
+            <circle cx="179.5630451661099" cy="64.99396279965435" r="1.5" fill="#4f46e5" />
         
-            <text x="214.28082896829483" y="22.468795246494196" dy="0.3em" text-anchor="start" 
+            <text x="214.34456774916484" y="22.490944199481532" dy="0.3em" text-anchor="start" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">NUE 10.7%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#10b981" stroke-width="20"
-                stroke-dasharray="58.009640128718544 565.4866776461628"
-                stroke-dashoffset="-60.15459075339601" 
+                stroke-dasharray="57.75007330099729 565.4866776461628"
+                stroke-dashoffset="-60.24456070788726" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-RE"
                 onmouseover="showTT('Everest Group', '10.2%', '#10b981')"
@@ -1200,18 +1200,18 @@
                 onclick="highlightSegment('RE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M225.2749197912404,100.66759229043927 L262.91237968686056,76.0013884356589 L277.91237968686056,76.0013884356589" 
+            <path d="M225.2530891620181,100.63429761896066 L262.87963374302717,75.95144642844099 L277.87963374302717,75.95144642844099" 
                   fill="none" stroke="#10b981" stroke-width="1" opacity="0.8" />
-            <circle cx="225.2749197912404" cy="100.66759229043927" r="1.5" fill="#10b981" />
+            <circle cx="225.2530891620181" cy="100.63429761896066" r="1.5" fill="#10b981" />
         
-            <text x="282.91237968686056" y="76.0013884356589" dy="0.3em" text-anchor="start" 
+            <text x="282.87963374302717" y="75.95144642844099" dy="0.3em" text-anchor="start" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">RE 10.2%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#ef4444" stroke-width="20"
-                stroke-dasharray="52.56209488661681 565.4866776461628"
-                stroke-dashoffset="-118.16423088211455" 
+                stroke-dasharray="52.62015991291139 565.4866776461628"
+                stroke-dashoffset="-117.99463400888456" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-CNNE"
                 onmouseover="showTT('Cannae', '9.3%', '#ef4444')"
@@ -1219,18 +1219,18 @@
                 onclick="highlightSegment('CNNE')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M239.94752136883062,153.07301148773558 L284.92128205324593,154.60951723160338 L299.92128205324593,154.60951723160338" 
+            <path d="M239.95221117228107,152.93252539926885 L284.9283167584216,154.3987880989033 L299.9283167584216,154.3987880989033" 
                   fill="none" stroke="#ef4444" stroke-width="1" opacity="0.8" />
-            <circle cx="239.94752136883062" cy="153.07301148773558" r="1.5" fill="#ef4444" />
+            <circle cx="239.95221117228107" cy="152.93252539926885" r="1.5" fill="#ef4444" />
         
-            <text x="304.92128205324593" y="154.60951723160338" dy="0.3em" text-anchor="start" 
+            <text x="304.9283167584216" y="154.3987880989033" dy="0.3em" text-anchor="start" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">CNNE 9.3%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#f59e0b" stroke-width="20"
-                stroke-dasharray="49.85923493588631 565.4866776461628"
-                stroke-dashoffset="-170.72632576873136" 
+                stroke-dasharray="49.962670866461984 565.4866776461628"
+                stroke-dashoffset="-170.61479392179595" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-EOG"
                 onmouseover="showTT('EOG Resources', '8.8%', '#f59e0b')"
@@ -1238,18 +1238,18 @@
                 onclick="highlightSegment('EOG')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M224.119321996123,201.05219002976304 L261.1789829941845,226.57828504464456 L276.1789829941845,226.57828504464456" 
+            <path d="M224.15323484305068,201.00291915480304 L261.22985226457604,226.50437873220454 L276.22985226457604,226.50437873220454" 
                   fill="none" stroke="#f59e0b" stroke-width="1" opacity="0.8" />
-            <circle cx="224.119321996123" cy="201.05219002976304" r="1.5" fill="#f59e0b" />
+            <circle cx="224.15323484305068" cy="201.00291915480304" r="1.5" fill="#f59e0b" />
         
-            <text x="281.1789829941845" y="226.57828504464456" dy="0.3em" text-anchor="start" 
+            <text x="281.22985226457604" y="226.50437873220454" dy="0.3em" text-anchor="start" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">EOG 8.8%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#8b5cf6" stroke-width="20"
-                stroke-dasharray="45.710846922755564 565.4866776461628"
-                stroke-dashoffset="-220.58556070461768" 
+                stroke-dasharray="45.689456273502884 565.4866776461628"
+                stroke-dashoffset="-220.57746478825794" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-CRM"
                 onmouseover="showTT('Salesforce', '8.1%', '#8b5cf6')"
@@ -1257,18 +1257,18 @@
                 onclick="highlightSegment('CRM')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M188.06504758826208,231.55398305480452 L207.0975713823931,272.33097458220675 L222.0975713823931,272.33097458220675" 
+            <path d="M188.08207454231342,231.5460336163181 L207.12311181347013,272.31905042447715 L222.12311181347013,272.31905042447715" 
                   fill="none" stroke="#8b5cf6" stroke-width="1" opacity="0.8" />
-            <circle cx="188.06504758826208" cy="231.55398305480452" r="1.5" fill="#8b5cf6" />
+            <circle cx="188.08207454231342" cy="231.5460336163181" r="1.5" fill="#8b5cf6" />
         
-            <text x="227.0975713823931" y="272.33097458220675" dy="0.3em" text-anchor="start" 
+            <text x="227.12311181347013" y="272.31905042447715" dy="0.3em" text-anchor="start" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">CRM 8.1%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#ec4899" stroke-width="20"
-                stroke-dasharray="42.9972359664462 565.4866776461628"
-                stroke-dashoffset="-266.29640762737324" 
+                stroke-dasharray="42.779137393247716 565.4866776461628"
+                stroke-dashoffset="-266.26692106176085" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-CTVA"
                 onmouseover="showTT('Corteva', '7.6%', '#ec4899')"
@@ -1276,18 +1276,18 @@
                 onclick="highlightSegment('CTVA')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M144.95096540206396,239.85826199982307 L142.42644810309594,284.7873929997346 L127.42644810309594,284.7873929997346" 
+            <path d="M145.08928900576103,239.8659274560223 L142.63393350864155,284.79889118403344 L127.63393350864155,284.79889118403344" 
                   fill="none" stroke="#ec4899" stroke-width="1" opacity="0.8" />
-            <circle cx="144.95096540206396" cy="239.85826199982307" r="1.5" fill="#ec4899" />
+            <circle cx="145.08928900576103" cy="239.8659274560223" r="1.5" fill="#ec4899" />
         
-            <text x="122.42644810309594" y="284.7873929997346" dy="0.3em" text-anchor="end" 
+            <text x="122.63393350864155" y="284.79889118403344" dy="0.3em" text-anchor="end" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">CTVA 7.6%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#06b6d4" stroke-width="20"
-                stroke-dasharray="40.56307971993445 565.4866776461628"
-                stroke-dashoffset="-309.2936435938194" 
+                stroke-dasharray="40.646434113184775 565.4866776461628"
+                stroke-dashoffset="-309.04605845500856" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-NFLX"
                 onmouseover="showTT('Netflix', '7.2%', '#06b6d4')"
@@ -1295,18 +1295,18 @@
                 onclick="highlightSegment('NFLX')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M105.2531550126582,228.08789831772145 L82.87973251898731,267.13184747658215 L67.87973251898731,267.13184747658215" 
+            <path d="M105.43192661611758,228.19006864588926 L83.14788992417638,267.2851029688339 L68.14788992417638,267.2851029688339" 
                   fill="none" stroke="#06b6d4" stroke-width="1" opacity="0.8" />
-            <circle cx="105.2531550126582" cy="228.08789831772145" r="1.5" fill="#06b6d4" />
+            <circle cx="105.43192661611758" cy="228.19006864588926" r="1.5" fill="#06b6d4" />
         
-            <text x="62.87973251898731" y="267.13184747658215" dy="0.3em" text-anchor="end" 
+            <text x="63.14788992417638" y="267.2851029688339" dy="0.3em" text-anchor="end" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">NFLX 7.2%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#3b82f6" stroke-width="20"
-                stroke-dasharray="39.394899027367856 565.4866776461628"
-                stroke-dashoffset="-349.85672331375383" 
+                stroke-dasharray="39.224727437581144 565.4866776461628"
+                stroke-dashoffset="-349.69249256819336" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-QCOM"
                 onmouseover="showTT('Qualcomm', '6.9%', '#3b82f6')"
@@ -1314,18 +1314,18 @@
                 onclick="highlightSegment('QCOM')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M76.03790630688394,201.27971037877188 L39.056859460325924,226.9195655681578 L24.056859460325924,226.9195655681578" 
+            <path d="M76.18024413662421,201.484401951189 L39.27036620493631,227.22660292678353 L24.27036620493631,227.22660292678353" 
                   fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.8" />
-            <circle cx="76.03790630688394" cy="201.27971037877188" r="1.5" fill="#3b82f6" />
+            <circle cx="76.18024413662421" cy="201.484401951189" r="1.5" fill="#3b82f6" />
         
-            <text x="19.056859460325924" y="226.9195655681578" dy="0.3em" text-anchor="end" 
+            <text x="19.27036620493631" y="227.22660292678353" dy="0.3em" text-anchor="end" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">QCOM 6.9%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#f43f5e" stroke-width="20"
-                stroke-dasharray="33.95678323866421 565.4866776461628"
-                stroke-dashoffset="-389.2516223411217" 
+                stroke-dasharray="34.05606041864416 565.4866776461628"
+                stroke-dashoffset="-388.9172200057745" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-DHR"
                 onmouseover="showTT('Danaher', '6.0%', '#f43f5e')"
@@ -1333,18 +1333,18 @@
                 onclick="highlightSegment('DHR')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M61.77123190474798,167.76751193595317 L17.65684785712196,176.65126790392975 L2.65684785712196,176.65126790392975" 
+            <path d="M61.82789059386954,168.04658202744665 L17.74183589080431,177.06987304116998 L2.7418358908043103,177.06987304116998" 
                   fill="none" stroke="#f43f5e" stroke-width="1" opacity="0.8" />
-            <circle cx="61.77123190474798" cy="167.76751193595317" r="1.5" fill="#f43f5e" />
+            <circle cx="61.82789059386954" cy="168.04658202744665" r="1.5" fill="#f43f5e" />
         
-            <text x="-2.34315214287804" y="176.65126790392975" dy="0.3em" text-anchor="end" 
+            <text x="-2.2581641091956897" y="177.06987304116998" dy="0.3em" text-anchor="end" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">DHR 6.0%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#10b981" stroke-width="20"
-                stroke-dasharray="31.25724502719894 565.4866776461628"
-                stroke-dashoffset="-423.2084055797859" 
+                stroke-dasharray="31.53073486372943 565.4866776461628"
+                stroke-dashoffset="-422.97328042441865" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-MSFT"
                 onmouseover="showTT('Microsoft', '5.6%', '#10b981')"
@@ -1352,18 +1352,18 @@
                 onclick="highlightSegment('MSFT')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M61.20141674751228,135.34354707471795 L16.802125121268432,128.01532061207692 L1.802125121268432,128.01532061207692" 
+            <path d="M61.18544863315327,135.44062276380805 L16.778172949729907,128.1609341457121 L1.7781729497299068,128.1609341457121" 
                   fill="none" stroke="#10b981" stroke-width="1" opacity="0.8" />
-            <circle cx="61.20141674751228" cy="135.34354707471795" r="1.5" fill="#10b981" />
+            <circle cx="61.18544863315327" cy="135.44062276380805" r="1.5" fill="#10b981" />
         
-            <text x="-3.197874878731568" y="128.01532061207692" dy="0.3em" text-anchor="end" 
+            <text x="-3.221827050270093" y="128.1609341457121" dy="0.3em" text-anchor="end" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">MSFT 5.6%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#4f46e5" stroke-width="20"
-                stroke-dasharray="30.777664456077694 565.4866776461628"
-                stroke-dashoffset="-454.46565060698487" 
+                stroke-dasharray="30.808348559999647 565.4866776461628"
+                stroke-dashoffset="-454.5040152881481" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-BMY"
                 onmouseover="showTT('Bristol-Myers Squibb', '5.4%', '#4f46e5')"
@@ -1371,18 +1371,18 @@
                 onclick="highlightSegment('BMY')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M71.37475444595194,106.20421525345567 L32.062131668927904,84.30632288018352 L17.062131668927904,84.30632288018352" 
+            <path d="M71.4009032050114,106.15730410875702 L32.10135480751711,84.23595616313553 L17.10135480751711,84.23595616313553" 
                   fill="none" stroke="#4f46e5" stroke-width="1" opacity="0.8" />
-            <circle cx="71.37475444595194" cy="106.20421525345567" r="1.5" fill="#4f46e5" />
+            <circle cx="71.4009032050114" cy="106.15730410875702" r="1.5" fill="#4f46e5" />
         
-            <text x="12.062131668927904" y="84.30632288018352" dy="0.3em" text-anchor="end" 
+            <text x="12.101354807517112" y="84.23595616313553" dy="0.3em" text-anchor="end" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">BMY 5.4%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#10b981" stroke-width="20"
-                stroke-dasharray="25.02076885079126 565.4866776461628"
-                stroke-dashoffset="-485.24331506306254" 
+                stroke-dasharray="25.090146459594774 565.4866776461628"
+                stroke-dashoffset="-485.31236384814775" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-RIO"
                 onmouseover="showTT('Rio Tinto', '4.4%', '#10b981')"
@@ -1390,18 +1390,18 @@
                 onclick="highlightSegment('RIO')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M88.48224981098213,84.30702920645473 L57.7233747164732,51.46054380968209 L42.7233747164732,51.46054380968209" 
+            <path d="M88.55801099797894,84.23616504889999 L57.8370164969684,51.35424757334998 L42.8370164969684,51.35424757334998" 
                   fill="none" stroke="#10b981" stroke-width="1" opacity="0.8" />
-            <circle cx="88.48224981098213" cy="84.30702920645473" r="1.5" fill="#10b981" />
+            <circle cx="88.55801099797894" cy="84.23616504889999" r="1.5" fill="#10b981" />
         
-            <text x="37.7233747164732" y="51.46054380968209" dy="0.3em" text-anchor="end" 
+            <text x="37.8370164969684" y="51.35424757334998" dy="0.3em" text-anchor="end" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">RIO 4.4%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#ef4444" stroke-width="20"
-                stroke-dasharray="20.466985776796115 565.4866776461628"
-                stroke-dashoffset="-510.2640839138538" 
+                stroke-dasharray="20.40933822607616 565.4866776461628"
+                stroke-dashoffset="-510.40251030774255" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-SOLV"
                 onmouseover="showTT('Solventum', '3.6%', '#ef4444')"
@@ -1409,18 +1409,18 @@
                 onclick="highlightSegment('SOLV')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M106.86126675131987,71.01234467526447 L85.2919001269798,31.518517012896723 L70.2919001269798,31.518517012896723" 
+            <path d="M106.95749042556653,70.95986861388195 L85.43623563834979,31.439802920822927 L70.43623563834979,31.439802920822927" 
                   fill="none" stroke="#ef4444" stroke-width="1" opacity="0.8" />
-            <circle cx="106.86126675131987" cy="71.01234467526447" r="1.5" fill="#ef4444" />
+            <circle cx="106.95749042556653" cy="70.95986861388195" r="1.5" fill="#ef4444" />
         
-            <text x="65.2919001269798" y="31.518517012896723" dy="0.3em" text-anchor="end" 
+            <text x="65.43623563834979" y="31.439802920822927" dy="0.3em" text-anchor="end" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">SOLV 3.6%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#f59e0b" stroke-width="20"
-                stroke-dasharray="16.462254057480045 565.4866776461628"
-                stroke-dashoffset="-530.73106969065" 
+                stroke-dasharray="16.50790060930404 565.4866776461628"
+                stroke-dashoffset="-530.8118485338186" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-BATS"
                 onmouseover="showTT('British American Tobacco', '2.9%', '#f59e0b')"
@@ -1428,18 +1428,18 @@
                 onclick="highlightSegment('BATS')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M123.85783124434828,63.88039124130309 L110.7867468665224,20.820586861954638 L95.7867468665224,20.820586861954638" 
+            <path d="M123.95698380933199,63.850355150513806 L110.93547571399799,20.775532725770688 L95.93547571399799,20.775532725770688" 
                   fill="none" stroke="#f59e0b" stroke-width="1" opacity="0.8" />
-            <circle cx="123.85783124434828" cy="63.88039124130309" r="1.5" fill="#f59e0b" />
+            <circle cx="123.95698380933199" cy="63.850355150513806" r="1.5" fill="#f59e0b" />
         
-            <text x="90.7867468665224" y="20.820586861954638" dy="0.3em" text-anchor="end" 
+            <text x="90.93547571399799" y="20.775532725770688" dy="0.3em" text-anchor="end" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">BATS 2.9%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#8b5cf6" stroke-width="20"
-                stroke-dasharray="9.543749802904463 565.4866776461628"
-                stroke-dashoffset="-547.1933237481301" 
+                stroke-dasharray="9.570212720342894 565.4866776461628"
+                stroke-dashoffset="-547.3197491431226" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-LGEN"
                 onmouseover="showTT('Legal & General', '1.7%', '#8b5cf6')"
@@ -1447,18 +1447,18 @@
                 onclick="highlightSegment('LGEN')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M136.52933064999178,61.01381530112245 L129.79399597498767,16.520722951683666 L114.79399597498767,16.520722951683666" 
+            <path d="M136.66743048572283,60.99301943023251 L130.00114572858425,16.48952914534877 L115.00114572858425,16.48952914534877" 
                   fill="none" stroke="#8b5cf6" stroke-width="1" opacity="0.8" />
-            <circle cx="136.52933064999178" cy="61.01381530112245" r="1.5" fill="#8b5cf6" />
+            <circle cx="136.66743048572283" cy="60.99301943023251" r="1.5" fill="#8b5cf6" />
         
-            <text x="109.79399597498767" y="16.520722951683666" dy="0.3em" text-anchor="end" 
+            <text x="110.00114572858425" y="16.48952914534877" dy="0.3em" text-anchor="end" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">LGEN 1.7%</text>
         
             <circle r="90" cx="150" cy="150" fill="transparent"
                 stroke="#ec4899" stroke-width="20"
-                stroke-dasharray="8.790715083238915 565.4866776461628"
-                stroke-dashoffset="-556.7370735510345" 
+                stroke-dasharray="8.590626949753906 565.4866776461628"
+                stroke-dashoffset="-556.8899618634655" 
                 transform="rotate(-90 150 150)"
                 class="donut-segment segment-VSNTV"
                 onmouseover="showTT('Versant Media Group', '1.5%', '#ec4899')"
@@ -1466,11 +1466,11 @@
                 onclick="highlightSegment('VSNTV')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
         
-            <path d="M145.64745189331325,60.105309806535416 L143.47117783996987,15.15796470980311 L128.47117783996987,15.15796470980311" 
+            <path d="M145.70023505272448,60.10276966781356 L143.55035257908673,15.154154501720342 L128.55035257908673,15.154154501720342" 
                   fill="none" stroke="#ec4899" stroke-width="1" opacity="0.8" />
-            <circle cx="145.64745189331325" cy="60.105309806535416" r="1.5" fill="#ec4899" />
+            <circle cx="145.70023505272448" cy="60.10276966781356" r="1.5" fill="#ec4899" />
         
-            <text x="123.47117783996987" y="15.15796470980311" dy="0.3em" text-anchor="end" 
+            <text x="123.55035257908673" y="15.154154501720342" dy="0.3em" text-anchor="end" 
                   class="text-[0.55rem] font-bold fill-gray-500 mono" 
                   style="pointer-events: none;">VSNTV 1.5%</text>
         
@@ -1857,7 +1857,7 @@
         // v30.6 DYNAMIC HEATMAP LOGIC
         // v32.61 SOVEREIGN FINALITY: Data Encapsulation
         // Strictly inject data object here.
-        const LIVE_HEATMAP_DATA = [{"x": "BMY", "y": 8616.94, "label_ticker": "BMY", "label_pl": "+\u00a31,459.81", "label_pct": "+20.40%", "is_profit": true, "formatted_value": "\u00a38,616.94"}, {"x": "DHR", "y": 9507.01, "label_ticker": "DHR", "label_pl": "\u00a313.92", "label_pct": "-0.15%", "is_profit": false, "formatted_value": "\u00a39,507.01"}, {"x": "RIO", "y": 7005.16, "label_ticker": "RIO", "label_pl": "+\u00a32,320.04", "label_pct": "+49.52%", "is_profit": true, "formatted_value": "\u00a37,005.16"}, {"x": "LGEN", "y": 2672.0, "label_ticker": "LGEN", "label_pl": "+\u00a374.00", "label_pct": "+2.85%", "is_profit": true, "formatted_value": "\u00a32,672.00"}, {"x": "QELL", "y": 0.22, "label_ticker": "QELL", "label_pl": "\u00a3216.64", "label_pct": "-99.90%", "is_profit": false, "formatted_value": "\u00a30.22"}, {"x": "BATS", "y": 4609.0, "label_ticker": "BATS", "label_pl": "+\u00a3406.28", "label_pct": "+9.67%", "is_profit": true, "formatted_value": "\u00a34,609.00"}, {"x": "VSNTV", "y": 2461.17, "label_ticker": "VSNTV", "label_pl": "\u00a3297.70", "label_pct": "-10.79%", "is_profit": false, "formatted_value": "\u00a32,461.17"}, {"x": "NUE", "y": 16841.71, "label_ticker": "NUE", "label_pl": "+\u00a34,268.84", "label_pct": "+33.95%", "is_profit": true, "formatted_value": "\u00a316,841.71"}, {"x": "SOLV", "y": 5730.22, "label_ticker": "SOLV", "label_pl": "\u00a3247.62", "label_pct": "-4.14%", "is_profit": false, "formatted_value": "\u00a35,730.22"}, {"x": "RE", "y": 16241.18, "label_ticker": "RE", "label_pl": "\u00a3752.99", "label_pct": "-4.43%", "is_profit": false, "formatted_value": "\u00a316,241.18"}, {"x": "NFLX", "y": 11356.6, "label_ticker": "NFLX", "label_pl": "\u00a31,766.02", "label_pct": "-13.46%", "is_profit": false, "formatted_value": "\u00a311,356.60"}, {"x": "CRM", "y": 12797.84, "label_ticker": "CRM", "label_pl": "\u00a33,757.90", "label_pct": "-22.70%", "is_profit": false, "formatted_value": "\u00a312,797.84"}, {"x": "QCOM", "y": 11029.54, "label_ticker": "QCOM", "label_pl": "\u00a32,473.21", "label_pct": "-18.32%", "is_profit": false, "formatted_value": "\u00a311,029.54"}, {"x": "EOG", "y": 13959.28, "label_ticker": "EOG", "label_pl": "\u00a3307.89", "label_pct": "-2.16%", "is_profit": false, "formatted_value": "\u00a313,959.28"}, {"x": "CTVA", "y": 12038.1, "label_ticker": "CTVA", "label_pl": "+\u00a3359.68", "label_pct": "+3.08%", "is_profit": true, "formatted_value": "\u00a312,038.10"}, {"x": "MSFT", "y": 8751.2, "label_ticker": "MSFT", "label_pl": "\u00a3528.03", "label_pct": "-5.69%", "is_profit": false, "formatted_value": "\u00a38,751.21"}, {"x": "CNNE", "y": 14716.01, "label_ticker": "CNNE", "label_pl": "\u00a31,782.69", "label_pct": "-10.81%", "is_profit": false, "formatted_value": "\u00a314,716.01"}];
+        const LIVE_HEATMAP_DATA = [{"x": "BMY", "y": 8601.68, "label_ticker": "BMY", "label_pl": "+\u00a31,444.55", "label_pct": "+20.18%", "is_profit": true, "formatted_value": "\u00a38,601.68"}, {"x": "DHR", "y": 9508.44, "label_ticker": "DHR", "label_pl": "\u00a312.49", "label_pct": "-0.13%", "is_profit": false, "formatted_value": "\u00a39,508.44"}, {"x": "RIO", "y": 7005.16, "label_ticker": "RIO", "label_pl": "+\u00a32,320.04", "label_pct": "+49.52%", "is_profit": true, "formatted_value": "\u00a37,005.16"}, {"x": "LGEN", "y": 2672.0, "label_ticker": "LGEN", "label_pl": "+\u00a374.00", "label_pct": "+2.85%", "is_profit": true, "formatted_value": "\u00a32,672.00"}, {"x": "QELL", "y": 0.22, "label_ticker": "QELL", "label_pl": "\u00a3216.64", "label_pct": "-99.90%", "is_profit": false, "formatted_value": "\u00a30.22"}, {"x": "BATS", "y": 4609.0, "label_ticker": "BATS", "label_pl": "+\u00a3406.28", "label_pct": "+9.67%", "is_profit": true, "formatted_value": "\u00a34,609.00"}, {"x": "VSNTV", "y": 2398.5, "label_ticker": "VSNTV", "label_pl": "\u00a3360.37", "label_pct": "-13.06%", "is_profit": false, "formatted_value": "\u00a32,398.50"}, {"x": "NUE", "y": 16820.25, "label_ticker": "NUE", "label_pl": "+\u00a34,247.39", "label_pct": "+33.78%", "is_profit": true, "formatted_value": "\u00a316,820.26"}, {"x": "SOLV", "y": 5698.28, "label_ticker": "SOLV", "label_pl": "\u00a3279.56", "label_pct": "-4.68%", "is_profit": false, "formatted_value": "\u00a35,698.28"}, {"x": "RE", "y": 16123.8, "label_ticker": "RE", "label_pl": "\u00a3870.37", "label_pct": "-5.12%", "is_profit": false, "formatted_value": "\u00a316,123.80"}, {"x": "NFLX", "y": 11348.47, "label_ticker": "NFLX", "label_pl": "\u00a31,774.15", "label_pct": "-13.52%", "is_profit": false, "formatted_value": "\u00a311,348.47"}, {"x": "CRM", "y": 12756.48, "label_ticker": "CRM", "label_pl": "\u00a33,799.26", "label_pct": "-22.95%", "is_profit": false, "formatted_value": "\u00a312,756.48"}, {"x": "QCOM", "y": 10951.53, "label_ticker": "QCOM", "label_pl": "\u00a32,551.22", "label_pct": "-18.89%", "is_profit": false, "formatted_value": "\u00a310,951.53"}, {"x": "EOG", "y": 13949.56, "label_ticker": "EOG", "label_pl": "\u00a3317.61", "label_pct": "-2.23%", "is_profit": false, "formatted_value": "\u00a313,949.56"}, {"x": "CTVA", "y": 11943.92, "label_ticker": "CTVA", "label_pl": "+\u00a3265.50", "label_pct": "+2.27%", "is_profit": true, "formatted_value": "\u00a311,943.92"}, {"x": "MSFT", "y": 8803.37, "label_ticker": "MSFT", "label_pl": "\u00a3475.87", "label_pct": "-5.13%", "is_profit": false, "formatted_value": "\u00a38,803.37"}, {"x": "CNNE", "y": 14691.53, "label_ticker": "CNNE", "label_pl": "\u00a31,807.17", "label_pct": "-10.95%", "is_profit": false, "formatted_value": "\u00a314,691.53"}];
         
         // Initialize Dashboard
         window.addEventListener('DOMContentLoaded', () => {
