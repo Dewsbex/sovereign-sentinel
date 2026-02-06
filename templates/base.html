@@ -1003,74 +1003,17 @@
             }
         }
         
-        // v32.60: Manual API Hub Modal Logic
+        // v32.61: Manual API Hub Logic merged.
         function openSettingsModal() {
             const modal = document.getElementById('settings-modal');
-            if (modal) {
-                modal.classList.add('open');
-            }
+            if (modal) modal.classList.remove('hidden');
         }
         
         function closeSettingsModal() {
             const modal = document.getElementById('settings-modal');
-            if (modal) {
-                modal.classList.remove('open');
-            }
+            if (modal) modal.classList.add('hidden');
         }
-    </script>
 
-    <!-- v32.60: Manual API Hub Modal -->
-    <div id="settings-modal" class="modal-backdrop">
-        <div class="portfolio-modal p-6">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-lg font-bold mono uppercase tracking-tight text-gray-900">
-                    <i class="fas fa-cog text-indigo-500 mr-2"></i> Manual API Hub
-                </h2>
-                <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            
-            <div class="flex flex-col gap-6">
-                <!-- Sync Metadata -->
-                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <div class="font-bold text-sm text-gray-800">Sync Metadata</div>
-                            <div class="text-[0.65rem] text-gray-500">Force refresh instrument definitions</div>
-                        </div>
-                        <button class="bg-indigo-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-indigo-700 transition">SYNC NOW</button>
-                    </div>
-                </div>
-
-                <!-- Mode Switch -->
-                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <div class="font-bold text-sm text-gray-800">Environment Mode</div>
-                            <div class="text-[0.65rem] text-gray-500">Current: <span class="font-bold text-emerald-600">{{ env }}</span></div>
-                        </div>
-                        <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded text-xs font-bold hover:bg-white transition">SWITCH</button>
-                    </div>
-                </div>
-
-                <!-- Panic Sell -->
-                <div class="p-4 bg-rose-50 rounded-lg border border-rose-100">
-                    <div class="font-bold text-sm text-rose-700 mb-2">Panic Protocol</div>
-                    <div class="flex gap-2">
-                        <input type="text" placeholder="TICKER" class="flex-1 border border-rose-200 rounded px-3 py-2 text-xs font-mono uppercase bg-white">
-                        <button class="bg-rose-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-rose-700 transition">SELL ALL</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
-                }
-            }
-        }
 
         // v32.13 Sovereign Finality - Artist interaction
         function showTT(name, weight, color) {
@@ -1369,6 +1312,7 @@
             });
         }
     </script>
+    </script>
     <!-- FULL PORTFOLIO MODAL STRUCTURE -->
     <div id="portfolio-backdrop" class="modal-backdrop">
         <div class="portfolio-modal">
@@ -1426,30 +1370,32 @@
             </script>
     <script>
         // --- PORTFOLIO MODAL LOGIC ---
+        // --- CONSOLIDATED PORTFOLIO VIEW LOGIC ---
+        // v32.61: Replaced Modal with Inline Expansion for stability
         function openPortfolioModal() {
-            const backdrop = document.getElementById('portfolio-backdrop');
-            if (backdrop) {
-                backdrop.classList.add('open');
-                document.body.style.overflow = 'hidden'; // Lock scroll
+            const fortress = document.getElementById('fortress-section');
+            if (fortress) {
+                fortress.style.display = 'block';
+                fortress.scrollIntoView({ behavior: 'smooth' });
+                // syncing button state
+                const btn = document.getElementById('see-all-btn'); 
+                if(btn) btn.textContent = 'See less';
             }
         }
 
         function closePortfolioModal() {
-            const backdrop = document.getElementById('portfolio-backdrop');
-            if (backdrop) {
-                backdrop.classList.remove('open');
-                document.body.style.overflow = ''; // Unlock scroll
-            }
+             const fortress = document.getElementById('fortress-section');
+             if (fortress) {
+                 fortress.style.display = 'none';
+                 const btn = document.getElementById('see-all-btn'); 
+                 if(btn) btn.textContent = 'See all holdings';
+             }
         }
         
-        // Close on backdrop click
-        if (backdrop) {
-            backdrop.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closePortfolioModal();
-                }
-            });
-        }
+        // No-op for backdrop since we removed it
+        const backdrop = document.getElementById('portfolio-backdrop');
+        if (backdrop) backdrop.remove(); // Self-clean
+
 
         // v32.17 Mobile Area Chart Logic
         function renderMobileChart(data) {
