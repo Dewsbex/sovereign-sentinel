@@ -1,0 +1,12 @@
+{
+    "high_water_mark": 1000.0,
+    "current_equity": 1000.0,
+    "last_updated": "2024-01-01T00:00:00Z",
+    "daily_performance": {
+        "date": "1970-01-01",
+        "pnl": 0.0,
+        "trades_taken": 0
+    },
+    "active_positions": [],
+    "circuit_breaker_tripped": false
+}
