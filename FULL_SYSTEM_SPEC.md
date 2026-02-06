@@ -1,11 +1,11 @@
-# Sovereign Sentinel (ORB Engine) - Master System Specification (v32.47)
+# Sovereign Sentinel (ORB Engine) - Master System Specification (v32.48)
 
 **CODEBASE REALITY EDITION**
-*This document reflects the exact state of the codebase as of v32.47. Discrepancies have been resolved in favor of the actual code.*
+*This document reflects the exact state of the codebase as of v32.48. Discrepancies have been resolved in favor of the actual code.*
 
 ## 1. System Overview
 **Name**: Sovereign Sentinel (ORB Engine)
-**Version**: v32.47 (Active Codebase)
+**Version**: v32.48 (Active Codebase)
 **Architecture**: **Cron-Based Simulation Loop** (Active) vs **FastAPI Daemon** (Legacy/Deprecated).
 **Broker API**: Trading 212 API v0 (REST).
 
