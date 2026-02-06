@@ -3,8 +3,8 @@ import requests
 import json
 from requests.auth import HTTPBasicAuth
 
-# V32.23 - NUE VERBOSE TEST
-print("🚀 STARTING NUE VERBOSE TEST...")
+# V32.24 - NUE FORENSIC PAYLOAD TEST
+print("🚀 STARTING NUE FORENSIC PAYLOAD TEST...")
 
 if __name__ == "__main__":
     t212_key = os.getenv('T212_API_KEY', '').strip()
@@ -12,68 +12,66 @@ if __name__ == "__main__":
     token = os.getenv('TELEGRAM_TOKEN', '').strip()
     chat_id = os.getenv('TELEGRAM_CHAT_ID', '').strip()
     
-    # Pre-test notification check
-    print(f"🔍 DEBUG: Telegram Token present: {bool(token)}")
-    print(f"🔍 DEBUG: Telegram Chat ID present: {bool(chat_id)}")
-
-    if not t212_key:
-        print("❌ ERROR: T212_API_KEY is empty.")
-        exit(1)
-
     auth = HTTPBasicAuth(t212_key, t212_secret)
     base_url = "https://live.trading212.com/api/v0/equity"
 
-    # Step 1: Find NUE
-    print("📡 Step 1: Finding exact code for NUE...")
-    nue_code = "NUE_US_EQ"
+    # Step 1: Discover the EXACT ID T212 uses for NUE
+    print("📡 Step 1: Finding exact ID for NUE...")
+    valid_id = None
     try:
         r = requests.get(f"{base_url}/instruments", auth=auth, timeout=30)
         if r.status_code == 200:
             instruments = r.json()
-            matches = [i for i in instruments if i.get('ticker') == 'NUE']
+            # Filter for NUE accurately
+            matches = [i for i in instruments if i.get('ticker') == 'NUE' or i.get('name') == 'Nucor']
             if matches:
-                nue_code = matches[0].get('id')
-                print(f"✅ Found NUE Code: {nue_code}")
+                valid_id = matches[0].get('id')
+                print(f"✅ Found ID in T212 Database: `{valid_id}`")
+            else:
+                print("⚠️ NUE not found in database. Using default fallback.")
+                valid_id = "NUE_US_EQ"
         else:
-            print(f"❌ Failed to fetch instruments: {r.status_code}")
+            print(f"❌ Failed to fetch list: {r.status_code}")
+            valid_id = "NUE_US_EQ"
     except Exception as e:
-        print(f"❌ Discovery Exception: {e}")
+        print(f"❌ Discovery Error: {e}")
+        valid_id = "NUE_US_EQ"
 
-    # Step 2: Place Order
-    print(f"\n🚀 Step 2: Placing Order for {nue_code}...")
+    # Step 2: Attempt different payload variations
+    # We'll try: 1.0 (float) vs 1 (int) and different timeValidity
+    print(f"\n🚀 Step 2: Attempting Trade with ID: {valid_id}...")
+    
     trade_url = f"{base_url}/orders/limit"
     
+    # Variation 1: The standard format
     payload = {
-        "instrumentCode": nue_code,
-        "quantity": 1, # Try integer quantity for safety
+        "instrumentCode": valid_id,
+        "quantity": 1.0,
         "limitPrice": 100.0,
-        "timeValidity": "DAY" # Try DAY instead of GTC
+        "timeValidity": "DAY"
     }
     
-    print(f"📡 Sending Payload: {json.dumps(payload, indent=2)}")
-    trade_resp = requests.post(trade_url, json=payload, auth=auth, timeout=10)
+    print(f"📡 Trying Payload: {json.dumps(payload)}")
+    resp = requests.post(trade_url, json=payload, auth=auth, timeout=10)
     
-    print(f"📥 Response Code: {trade_resp.status_code}")
-    print(f"📄 Response Body: {trade_resp.text}")
-    
-    final_status = "FAILED"
-    if trade_resp.status_code == 200:
-        print("\n✅ SUCCESS!")
-        final_status = f"SUCCESS (Order ID: {trade_resp.json().get('orderId')})"
-    else:
-        print("\n❌ FAILED.")
-        final_status = f"FAILED: {trade_resp.status_code} - {trade_resp.text}"
+    print(f"📥 Response Code: {resp.status_code}")
+    print(f"📄 Body: {resp.text}")
 
-    # Step 3: Send Mandatory Telegram Notification
-    if token and chat_id:
-        print("📡 Sending Telegram Pulse...")
-        msg = f"🛰️ **NUE VERBOSE TEST REPORT**\n\n**Status**: {final_status}\n**Ticker**: {nue_code}\n**Auth**: v0 Basic (LIVE)"
-        try:
-            tr = requests.post(f"https://api.telegram.org/bot{token}/sendMessage", 
-                               data={"chat_id": chat_id, "text": msg, "parse_mode": "Markdown"}, 
-                               timeout=10)
-            print(f"📥 Telegram Response: {tr.status_code}")
-        except Exception as te:
-            print(f"❌ Telegram Exception: {te}")
+    result_msg = ""
+    if resp.status_code == 200:
+        result_msg = f"✅ SUCCESS!\nPlaced 1.0 NUE at $100.\nID used: `{valid_id}`"
     else:
-        print("⚠️ Skipping Telegram: Missing Token/ChatID")
+        # If it failed, try variation 2: Integer Quantity
+        print("🔄 Retrying with Integer Quantity...")
+        payload["quantity"] = 1
+        resp2 = requests.post(trade_url, json=payload, auth=auth, timeout=10)
+        if resp2.status_code == 200:
+            result_msg = f"✅ SUCCESS (Int Qty)!\nPlaced 1 share NUE at $100.\nID used: `{valid_id}`"
+        else:
+            result_msg = f"❌ FAILED BOTH WAYS\nFinal Error: {resp2.status_code} - {resp2.text}\nID detected: `{valid_id}`"
+
+    # Step 3: Telegram Report
+    if token and chat_id:
+        msg = f"🛰️ **NUE FORENSIC REPORT**\n\n{result_msg}"
+        requests.post(f"https://api.telegram.org/bot{token}/sendMessage", 
+                       data={"chat_id": chat_id, "text": msg, "parse_mode": "Markdown"})
