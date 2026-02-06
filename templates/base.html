@@ -484,6 +484,10 @@
                 <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
                 <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">{{ sync_time }}</span>
             </div>
+            <!-- v32.60 Manual API Hub Trigger -->
+            <button onclick="openSettingsModal()" class="text-gray-400 hover:text-indigo-600 transition-colors">
+                <i class="fas fa-cog text-xl"></i>
+            </button>
         </div>
     </nav>
 
@@ -522,20 +526,20 @@
         <button onclick="document.getElementById('intel-section').scrollIntoView({behavior: 'smooth'})" class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold mr-1">Targets</button>
     </div>
 
-    <div class="main-grid mt-4 md:mt-24"> <!-- Added margin-top for fixed header -->
+    <div class="main-grid mt-4 md:mt-24 flex flex-col gap-6"> <!-- Sovereign Stack: Vertical Flex -->
 
 
 
 
-        <!-- NEW ROW: HEATMAP + ASSET ALLOCATION -->
-        <div class="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- HEATMAP (2/3 Width) -->
-            <div id="heatmap-section" class="md:col-span-2 sentinel-card">
+        <!-- NEW ROW: HEATMAP + ASSET ALLOCATION (STACKED) -->
+        <div class="col-span-12 flex flex-col gap-8">
+            <!-- HEATMAP (Full Width) -->
+            <div id="heatmap-section" class="w-full sentinel-card">
                 <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1 md:mb-2 flex items-center gap-2">
                     <span>🔥 HEATMAP</span>
                     <span class="ml-auto text-[0.6rem] text-indigo-400 cursor-pointer hover:text-indigo-600 transition-colors" onclick="openPortfolioModal()">See All</span>
                 </h2>
-                <div id="heatmap-chart" style="min-height: 400px;"></div>
+                <div id="heatmap-chart" style="min-height: 500px;"></div>
                 
                 
                 <!-- Fortress Section (Hidden by default) -->
@@ -575,11 +579,12 @@
                 </div>
             </div>
 
-            <!-- ASSET ALLOCATION (1/3 Width) -->
-            <div id="allocation-section" class="sentinel-card">
+            <!-- ASSET ALLOCATION (Full Width) -->
+            <div id="allocation-section" class="w-full sentinel-card">
                 <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1 md:mb-2">📊 ASSET ALLOCATION</h2>
-                <div class="flex flex-col p-4">
-                    <div class="asset-allocation-container" id="donut-container">
+                <div class="flex flex-col p-4 items-center">
+                    <!-- Increased Container Size for larger Donut -->
+                    <div class="asset-allocation-container" id="donut-container" style="width: 300px; height: 300px;">
                         {{ allocation_donut | safe }}
                         
                         <!-- v0.15.13: Center Crest (Default View) -->
@@ -596,7 +601,7 @@
                     </div>
 
                     <!-- v32.14 Sovereign Guard Legend Grid -->
-                    <div class="mt-6 border-t border-gray-100 pt-4 overflow-y-auto max-height-[200px]">
+                    <div class="mt-8 border-t border-gray-100 pt-4 w-full">
                         {{ legend_html | safe }}
                     </div>
                 </div>
@@ -667,17 +672,17 @@
                                 {% endif %}
                                 {% for target in orb_intel.targets %}
                                 <tr class="hover:bg-gray-50/50 transition-colors">
-                                    <td class="py-3 font-bold text-gray-900">{{ target.company }}</td>
-                                    <td class="py-3">
+                                    <td class="py-4 font-bold text-gray-900">{{ target.company }}</td>
+                                    <td class="py-4">
                                         <span class="bg-gray-100 text-gray-900 px-1.5 py-0.5 rounded text-[0.6rem] font-bold">{{ target.ticker }}</span>
                                     </td>
-                                    <td class="py-3 text-orange-600 font-bold">${{ target.alert | round(2) }}</td>
-                                    <td class="py-3 text-indigo-600 font-bold">${{ target.trigger | round(2) }}</td>
-                                    <td class="py-3">
+                                    <td class="py-4 text-orange-600 font-bold">${{ target.alert | round(2) }}</td>
+                                    <td class="py-4 text-indigo-600 font-bold">${{ target.trigger | round(2) }}</td>
+                                    <td class="py-4">
                                         <span class="bg-indigo-600 text-white px-2 py-1 rounded text-[0.65rem] font-black">${{ (target.trigger * 1.001) | round(2) }}</span>
                                     </td>
-                                    <td class="py-3 text-right text-rose-600 font-bold">${{ target.stop | round(2) }}</td>
-                                    <td class="py-3 text-right text-emerald-600 font-bold">${{ (target.trigger * (1 + (target.gap_to_fill / 100))) | round(2) }}</td>
+                                    <td class="py-4 text-right text-rose-600 font-bold">${{ target.stop | round(2) }}</td>
+                                    <td class="py-4 text-right text-emerald-600 font-bold">${{ (target.trigger * (1 + (target.gap_to_fill / 100))) | round(2) }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -792,11 +797,77 @@
         updateMarketStatus();
         setInterval(updateMarketStatus, 60000);
 
-        // v0.15.14: Version Toggle Logic
-        function toggleVersion() {
-            const badge = document.getElementById('version-badge');
             if (badge) {
                 if (badge.classList.contains('hidden')) {
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        }
+        
+        // v32.60: Manual API Hub Modal Logic
+        function openSettingsModal() {
+            const modal = document.getElementById('settings-modal');
+            if (modal) {
+                modal.classList.add('open');
+            }
+        }
+        
+        function closeSettingsModal() {
+            const modal = document.getElementById('settings-modal');
+            if (modal) {
+                modal.classList.remove('open');
+            }
+        }
+    </script>
+
+    <!-- v32.60: Manual API Hub Modal -->
+    <div id="settings-modal" class="modal-backdrop">
+        <div class="portfolio-modal p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-bold mono uppercase tracking-tight text-gray-900">
+                    <i class="fas fa-cog text-indigo-500 mr-2"></i> Manual API Hub
+                </h2>
+                <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="flex flex-col gap-6">
+                <!-- Sync Metadata -->
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-sm text-gray-800">Sync Metadata</div>
+                            <div class="text-[0.65rem] text-gray-500">Force refresh instrument definitions</div>
+                        </div>
+                        <button class="bg-indigo-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-indigo-700 transition">SYNC NOW</button>
+                    </div>
+                </div>
+
+                <!-- Mode Switch -->
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-sm text-gray-800">Environment Mode</div>
+                            <div class="text-[0.65rem] text-gray-500">Current: <span class="font-bold text-emerald-600">{{ env }}</span></div>
+                        </div>
+                        <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded text-xs font-bold hover:bg-white transition">SWITCH</button>
+                    </div>
+                </div>
+
+                <!-- Panic Sell -->
+                <div class="p-4 bg-rose-50 rounded-lg border border-rose-100">
+                    <div class="font-bold text-sm text-rose-700 mb-2">Panic Protocol</div>
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="TICKER" class="flex-1 border border-rose-200 rounded px-3 py-2 text-xs font-mono uppercase bg-white">
+                        <button class="bg-rose-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-rose-700 transition">SELL ALL</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
                     badge.classList.remove('hidden');
                 } else {
                     badge.classList.add('hidden');

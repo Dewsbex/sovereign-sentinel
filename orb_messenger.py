@@ -15,17 +15,25 @@ class ORBMessenger:
         else:
             self.enabled = True
             self.base_url = f"https://api.telegram.org/bot{self.token}/sendMessage"
+            
+        # Telemetry Prefix (v32.60)
+        # Using ENV var to determine context
+        env = os.getenv('ENV', 'DEMO').upper()
+        self.prefix = f"({env})"
 
     def send(self, message):
         """Sends a message to Telegram."""
+        # Prepend Prefix
+        full_message = f"{self.prefix} {message}"
+        
         if not self.enabled:
-            logger.info(f"msg (local): {message}")
+            logger.info(f"msg (local): {full_message}")
             return
 
         try:
             payload = {
                 "chat_id": self.chat_id,
-                "text": message,
+                "text": full_message,
                 "parse_mode": "Markdown"
             }
             requests.post(self.base_url, data=payload, timeout=5)

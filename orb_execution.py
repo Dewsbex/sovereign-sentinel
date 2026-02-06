@@ -39,7 +39,7 @@ class ORBExecutionEngine:
         # To make this runnable, we will use a placeholder that returns a dummy or YF price.
         return 0.0
 
-    def set_range(self, ticker, high, low):
+    def set_range(self, ticker, high, low, vwap=0.0):
         """Sets the 15-minute Opening Range for a ticker."""
         r_pct = (high - low) / low * 100
         min_r = self.config['risk']['min_range_percent']
@@ -48,13 +48,18 @@ class ORBExecutionEngine:
             logger.info(f"🚫 Range too tight for {ticker} ({r_pct:.2f}% < {min_r}%). Skipping.")
             self.ranges[ticker] = {"active": False}
         else:
-            logger.info(f"✅ Range SET for {ticker}: {low} - {high} ({r_pct:.2f}%)")
+            logger.info(f"✅ Range SET for {ticker}: {low} - {high} ({r_pct:.2f}%) [VWAP: {vwap}]")
             self.ranges[ticker] = {
                 "high": high, 
                 "low": low, 
+                "vwap": vwap,
                 "active": True,
                 "trigger_long": high + 0.01,
-                "trigger_short": low - 0.01
+                "trigger_short": low - 0.01,
+                "bracket": { # Bracket Simulation
+                    "stop_loss": low,
+                    "take_profit_2r": high + (2 * (high - low))
+                }
             }
 
     def place_order(self, ticker, side, quantity, price=None):
@@ -86,7 +91,20 @@ class ORBExecutionEngine:
             if resp.status_code == 200:
                 data = resp.json()
                 logger.info(f"✅ ORDER FILLED/PLACED: ID {data.get('id')}")
-                self.messenger.notify_trade(ticker, side, quantity, price if price else "MARKET")
+                
+                # Slippage Audit
+                fill_price = float(data.get('averagePrice', 0) or data.get('price', price or 0)) # Assuming API returns avgPrice
+                expected = price if price else 0 # If market, hard to know Expected without ticker price arg
+                
+                if fill_price > 0 and expected > 0:
+                    slip_pct = abs(fill_price - expected) / expected
+                    if slip_pct > 0.002: # 0.2% Limit
+                        logger.warning(f"⚠️ SLIPPAGE ALERT: {slip_pct*100:.3f}% > 0.2%. INITIATING EMERGENCY EXIT.")
+                        self.messenger.notify_error("Execution", f"Slippage > 0.2% on {ticker}. Closing.")
+                        self.place_order(ticker, "SELL", quantity) # Close immediately
+                        return None
+                
+                self.messenger.notify_trade(ticker, side, quantity, fill_price)
                 return data
             else:
                 logger.error(f"❌ ORDER FAILED: {resp.text}")
@@ -95,27 +113,34 @@ class ORBExecutionEngine:
             logger.error(f"Order Connection Error: {e}")
             return None
 
-    def execute_logic_cycle(self, ticker, current_price):
-        """The main 'Tick' logic. Called every second."""
+    def execute_logic_cycle(self, ticker, current_price, is_candle_close=False):
+        """The main 'Tick' logic. Called every loop."""
         r = self.ranges.get(ticker)
         if not r or not r['active']:
             return
 
-        # Check Long Breakout
-        if current_price >= r['trigger_long']:
-            logger.info(f"🟢 BREAKOUT LONG: {ticker} @ {current_price}")
-            
-            # Sizing
-            qty = self.calculate_position_size(ticker, current_price)
-            if qty > 0:
-                # EXECUTE
-                order = self.place_order(ticker, "BUY", qty)
-                if order:
-                    # Deactivate range to prevent double entry
-                    self.ranges[ticker]['active'] = False
-                    # Trigger Shield (Handled by Orchestrator or here?)
-                    # Ideally return the Order ID so the Shield can takeover.
-                    return {"action": "FILLED", "order_id": order.get('id'), "side": "BUY", "price": current_price}
+        # 1. VWAP Guard (Trend Bias)
+        vwap = r.get('vwap', 0)
+        long_bias = current_price > vwap if vwap > 0 else True
+        
+        # 2. Candle Close Confirmation (v32.60)
+        # Spec: "Fire place_market_order() only if candle_close > range_high"
+        # Since we don't have a live websocket here, we rely on the `is_candle_close` flag passed from main loop.
+        if not is_candle_close:
+            return 
+
+        # Check Long Breakout (Close > High)
+        if current_price > r['high'] and long_bias:
+             logger.info(f"🟢 5m CANDLE CLOSE BREAKOUT (Bias: {long_bias}): {ticker} @ {current_price} > {r['high']}")
+             
+             qty = self.calculate_position_size(ticker, current_price)
+             if qty > 0:
+                 # Market Order for Speed
+                 order = self.place_order(ticker, "BUY", qty, price=current_price) 
+                 if order:
+                     self.ranges[ticker]['active'] = False
+                     self.messenger.notify_shield(ticker, r['bracket']['stop_loss'], r['bracket']['take_profit_2r'])
+                     return {"action": "FILLED", "order_id": order.get('id'), "side": "BUY", "price": current_price}
 
         # Check Short Breakout (Inverse logic if needed, spec says ISA Long Only so maybe skip?)
         # Spec 6: "ISA Compliance: Only Long positions." -> Bearish needs Inverse ETP.

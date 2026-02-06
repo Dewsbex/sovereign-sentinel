@@ -459,7 +459,7 @@
                     Return</span>
                 <div class="flex items-baseline justify-end gap-2">
                     <span
-                        class="text-lg font-bold text-emerald-500 mono leading-none">+£21,534.26 <span class="text-xs">(+13.32%)</span></span>
+                        class="text-lg font-bold text-emerald-500 mono leading-none">+£23,337.02 <span class="text-xs">(+14.44%)</span></span>
                 </div>
             </div>
             <div class="h-6 w-px bg-gray-200"></div>
@@ -480,8 +480,12 @@
             <span id="market-status-badge" class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200 uppercase tracking-wide">LIVE</span>
             <div class="text-right hidden sm:block">
                 <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
-                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">06/02 10:51</span>
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">06/02 13:43</span>
             </div>
+            <!-- v32.60 Manual API Hub Trigger -->
+            <button onclick="openSettingsModal()" class="text-gray-400 hover:text-indigo-600 transition-colors">
+                <i class="fas fa-cog text-xl"></i>
+            </button>
         </div>
     </nav>
 
@@ -520,20 +524,20 @@
         <button onclick="document.getElementById('intel-section').scrollIntoView({behavior: 'smooth'})" class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold mr-1">Targets</button>
     </div>
 
-    <div class="main-grid mt-4 md:mt-24"> <!-- Added margin-top for fixed header -->
+    <div class="main-grid mt-4 md:mt-24 flex flex-col gap-6"> <!-- Sovereign Stack: Vertical Flex -->
 
 
 
 
-        <!-- NEW ROW: HEATMAP + ASSET ALLOCATION -->
-        <div class="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- HEATMAP (2/3 Width) -->
-            <div id="heatmap-section" class="md:col-span-2 sentinel-card">
+        <!-- NEW ROW: HEATMAP + ASSET ALLOCATION (STACKED) -->
+        <div class="col-span-12 flex flex-col gap-8">
+            <!-- HEATMAP (Full Width) -->
+            <div id="heatmap-section" class="w-full sentinel-card">
                 <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1 md:mb-2 flex items-center gap-2">
                     <span>🔥 HEATMAP</span>
                     <span class="ml-auto text-[0.6rem] text-indigo-400 cursor-pointer hover:text-indigo-600 transition-colors" onclick="openPortfolioModal()">See All</span>
                 </h2>
-                <div id="heatmap-chart" style="min-height: 400px;"></div>
+                <div id="heatmap-chart" style="min-height: 500px;"></div>
                 
                 
                 <!-- Fortress Section (Hidden by default) -->
@@ -781,21 +785,22 @@
                 </div>
             </div>
 
-            <!-- ASSET ALLOCATION (1/3 Width) -->
-            <div id="allocation-section" class="sentinel-card">
+            <!-- ASSET ALLOCATION (Full Width) -->
+            <div id="allocation-section" class="w-full sentinel-card">
                 <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest mb-1 md:mb-2">📊 ASSET ALLOCATION</h2>
-                <div class="flex flex-col p-4">
-                    <div class="asset-allocation-container" id="donut-container">
+                <div class="flex flex-col p-4 items-center">
+                    <!-- Increased Container Size for larger Donut -->
+                    <div class="asset-allocation-container" id="donut-container" style="width: 300px; height: 300px;">
                         
-    <svg viewBox="0 0 200 200" class="w-full h-full overflow-visible">
-        <circle cx="100" cy="100" r="65" stroke="#f3f4f6" stroke-width="18" fill="none" />
+    <svg viewBox="0 0 300 300" class="w-full h-full overflow-visible">
+        <circle cx="150" cy="150" r="90" stroke="#f3f4f6" stroke-width="24" fill="none" />
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#4f46e5" stroke-width="20"
-                stroke-dasharray="42.568236903681196 408.4070449666731"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#4f46e5" stroke-width="25"
+                stroke-dasharray="58.94063571278935 565.4866776461628"
                 stroke-dashoffset="-0" 
-                transform="rotate(-90 100 100)"
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-NUE"
                 data-ticker="NUE"
                 onmouseover="showTT('Nucor', '10.4%', '#4f46e5')"
@@ -804,18 +809,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="120.90579745831789" y1="38.45369521545758" x2="128.94648878844015" y2="14.782039529095115" stroke="#4f46e5" stroke-width="1" opacity="0.6" />
+            <line x1="178.94648878844015" y1="64.78203952909512" x2="188.59531838458688" y2="36.376052705460154" stroke="#4f46e5" stroke-width="2" opacity="0.5" />
+            <circle cx="188.59531838458688" cy="36.376052705460154" r="2" fill="#4f46e5" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="133.94648878844015" y="14.782039529095115" dy="0.3em" text-anchor="start" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">NUE 10.4%</text>
+            <text x="198.59531838458688" y="36.376052705460154" dy="0.3em" text-anchor="start" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">NUE 10.4%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#10b981" stroke-width="20"
-                stroke-dasharray="41.843018850202355 408.4070449666731"
-                stroke-dashoffset="-42.568236903681196" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#10b981" stroke-width="25"
+                stroke-dasharray="57.93648763874173 565.4866776461628"
+                stroke-dashoffset="-58.94063571278935" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-RE"
                 data-ticker="RE"
                 onmouseover="showTT('Everest Group', '10.2%', '#10b981')"
@@ -824,18 +830,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="153.8649308397388" y1="63.61910905942302" x2="174.582211931946" y2="49.62645869766264" stroke="#10b981" stroke-width="1" opacity="0.6" />
+            <line x1="224.582211931946" y1="99.62645869766264" x2="249.4429492425947" y2="82.83527826355018" stroke="#10b981" stroke-width="2" opacity="0.5" />
+            <circle cx="249.4429492425947" cy="82.83527826355018" r="2" fill="#10b981" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="179.582211931946" y="49.62645869766264" dy="0.3em" text-anchor="start" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">RE 10.2%</text>
+            <text x="259.4429492425947" y="82.83527826355018" dy="0.3em" text-anchor="start" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">RE 10.2%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#ef4444" stroke-width="20"
-                stroke-dasharray="38.23578805010515 408.4070449666731"
-                stroke-dashoffset="-84.41125575388355" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#ef4444" stroke-width="25"
+                stroke-dasharray="52.94186037706868 565.4866776461628"
+                stroke-dashoffset="-116.87712335153108" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-CNNE"
                 data-ticker="CNNE"
                 onmouseover="showTT('Cannae', '9.4%', '#ef4444')"
@@ -844,18 +851,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="164.98432802953198" y1="101.42727381752123" x2="189.97830034858276" y2="101.9762252857986" stroke="#ef4444" stroke-width="1" opacity="0.6" />
+            <line x1="239.97830034858276" y1="151.97622528579862" x2="269.9710671314437" y2="152.6349670477315" stroke="#ef4444" stroke-width="2" opacity="0.5" />
+            <circle cx="269.9710671314437" cy="152.6349670477315" r="2" fill="#ef4444" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="194.97830034858276" y="101.9762252857986" dy="0.3em" text-anchor="start" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">CNNE 9.4%</text>
+            <text x="279.9710671314437" y="152.6349670477315" dy="0.3em" text-anchor="start" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">CNNE 9.4%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#f59e0b" stroke-width="20"
-                stroke-dasharray="36.191603886522266 408.4070449666731"
-                stroke-dashoffset="-122.64704380398871" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#f59e0b" stroke-width="25"
+                stroke-dasharray="50.11145153518468 565.4866776461628"
+                stroke-dashoffset="-169.81898372859976" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-EOG"
                 data-ticker="EOG"
                 onmouseover="showTT('EOG Resources', '8.9%', '#f59e0b')"
@@ -864,18 +872,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="153.84865502765544" y1="136.40497701843196" x2="174.55967619213828" y2="150.4068912562904" stroke="#f59e0b" stroke-width="1" opacity="0.6" />
+            <line x1="224.55967619213828" y1="200.4068912562904" x2="249.41290158951773" y2="217.20918834172053" stroke="#f59e0b" stroke-width="2" opacity="0.5" />
+            <circle cx="249.41290158951773" cy="217.20918834172053" r="2" fill="#f59e0b" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="179.55967619213828" y="150.4068912562904" dy="0.3em" text-anchor="start" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">EOG 8.9%</text>
+            <text x="259.41290158951773" y="217.20918834172053" dy="0.3em" text-anchor="start" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">EOG 8.9%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#8b5cf6" stroke-width="20"
-                stroke-dasharray="33.48895117716264 408.4070449666731"
-                stroke-dashoffset="-158.83864769051098" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#8b5cf6" stroke-width="25"
+                stroke-dasharray="46.36931701453289 565.4866776461628"
+                stroke-dashoffset="-219.93043526378443" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-CRM"
                 data-ticker="CRM"
                 onmouseover="showTT('Salesforce', '8.2%', '#8b5cf6')"
@@ -884,18 +893,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="127.70452007953122" y1="158.8001663872038" x2="138.36010472550475" y2="181.4156149976668" stroke="#8b5cf6" stroke-width="1" opacity="0.6" />
+            <line x1="188.3601047255048" y1="231.41561499766678" x2="201.14680630067306" y2="258.5541533302224" stroke="#8b5cf6" stroke-width="2" opacity="0.5" />
+            <circle cx="201.14680630067306" cy="258.5541533302224" r="2" fill="#8b5cf6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="143.36010472550475" y="181.4156149976668" dy="0.3em" text-anchor="start" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">CRM 8.2%</text>
+            <text x="211.14680630067306" y="258.5541533302224" dy="0.3em" text-anchor="start" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">CRM 8.2%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#ec4899" stroke-width="20"
-                stroke-dasharray="31.241526988764296 408.4070449666731"
-                stroke-dashoffset="-192.32759886767363" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#ec4899" stroke-width="25"
+                stroke-dasharray="43.257498907519796 565.4866776461628"
+                stroke-dashoffset="-266.2997522783173" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-CTVA"
                 data-ticker="CTVA"
                 onmouseover="showTT('Corteva', '7.6%', '#ec4899')"
@@ -904,18 +914,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="96.25723145329813" y1="164.89215425308225" x2="94.81770508918204" y2="189.85067511965232" stroke="#ec4899" stroke-width="1" opacity="0.6" />
+            <line x1="144.8177050891821" y1="239.85067511965235" x2="143.09027345224283" y2="269.80090015953647" stroke="#ec4899" stroke-width="2" opacity="0.5" />
+            <circle cx="143.09027345224283" cy="269.80090015953647" r="2" fill="#ec4899" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="89.81770508918204" y="189.85067511965232" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">CTVA 7.6%</text>
+            <text x="133.09027345224283" y="269.80090015953647" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">CTVA 7.6%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#06b6d4" stroke-width="20"
-                stroke-dasharray="29.425503359887202 408.4070449666731"
-                stroke-dashoffset="-223.56912585643792" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#06b6d4" stroke-width="25"
+                stroke-dasharray="40.74300465215151 565.4866776461628"
+                stroke-dashoffset="-309.5572511858371" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-NFLX"
                 data-ticker="NFLX"
                 onmouseover="showTT('Netflix', '7.2%', '#06b6d4')"
@@ -924,18 +935,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="67.4615260706693" y1="156.26942077496682" x2="54.94672840554211" y2="177.9115056884156" stroke="#06b6d4" stroke-width="1" opacity="0.6" />
+            <line x1="104.9467284055421" y1="227.9115056884156" x2="89.92897120738948" y2="253.88200758455412" stroke="#06b6d4" stroke-width="2" opacity="0.5" />
+            <circle cx="89.92897120738948" cy="253.88200758455412" r="2" fill="#06b6d4" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="49.94672840554211" y="177.9115056884156" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">NFLX 7.2%</text>
+            <text x="79.92897120738948" y="253.88200758455412" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">NFLX 7.2%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#3b82f6" stroke-width="20"
-                stroke-dasharray="28.218263335356223 408.4070449666731"
-                stroke-dashoffset="-252.9946292163251" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#3b82f6" stroke-width="25"
+                stroke-dasharray="39.071441541262466 565.4866776461628"
+                stroke-dashoffset="-350.30025583798863" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-QCOM"
                 data-ticker="QCOM"
                 onmouseover="showTT('Qualcomm', '6.9%', '#3b82f6')"
@@ -944,18 +956,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="46.46723103514976" y1="136.86790809031572" x2="25.877704510207366" y2="151.04787274043713" stroke="#3b82f6" stroke-width="1" opacity="0.6" />
+            <line x1="75.87770451020737" y1="201.04787274043713" x2="51.17027268027648" y2="218.06383032058284" stroke="#3b82f6" stroke-width="2" opacity="0.5" />
+            <circle cx="51.17027268027648" cy="218.06383032058284" r="2" fill="#3b82f6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="20.877704510207366" y="151.04787274043713" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">QCOM 6.9%</text>
+            <text x="41.17027268027648" y="218.06383032058284" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">QCOM 6.9%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#f43f5e" stroke-width="20"
-                stroke-dasharray="24.8023845924128 408.4070449666731"
-                stroke-dashoffset="-281.2128925516813" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#f43f5e" stroke-width="25"
+                stroke-dasharray="34.34176328180234 565.4866776461628"
+                stroke-dashoffset="-389.3716973792511" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-DHR"
                 data-ticker="DHR"
                 onmouseover="showTT('Danaher', '6.1%', '#f43f5e')"
@@ -964,18 +977,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="36.235042259768555" y1="112.61071625192234" x2="11.710058513525695" y2="117.46099173343093" stroke="#f43f5e" stroke-width="1" opacity="0.6" />
+            <line x1="61.710058513525695" y1="167.46099173343094" x2="32.28007801803426" y2="173.28132231124124" stroke="#f43f5e" stroke-width="2" opacity="0.5" />
+            <circle cx="32.28007801803426" cy="173.28132231124124" r="2" fill="#f43f5e" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="6.710058513525695" y="117.46099173343093" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">DHR 6.1%</text>
+            <text x="22.28007801803426" y="173.28132231124124" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">DHR 6.1%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#10b981" stroke-width="20"
-                stroke-dasharray="22.635106636761982 408.4070449666731"
-                stroke-dashoffset="-306.0152771440941" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#10b981" stroke-width="25"
+                stroke-dasharray="31.340916881670438 565.4866776461628"
+                stroke-dashoffset="-423.71346066105343" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-MSFT"
                 data-ticker="MSFT"
                 onmouseover="showTT('Microsoft', '5.5%', '#10b981')"
@@ -984,18 +998,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="35.93319527742102" y1="89.0252775598227" x2="11.292116537967573" y2="84.8042304674468" stroke="#10b981" stroke-width="1" opacity="0.6" />
+            <line x1="61.29211653796757" y1="134.8042304674468" x2="31.72282205062342" y2="129.73897395659574" stroke="#10b981" stroke-width="2" opacity="0.5" />
+            <circle cx="31.72282205062342" cy="129.73897395659574" r="2" fill="#10b981" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="6.292116537967573" y="84.8042304674468" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">MSFT 5.5%</text>
+            <text x="21.72282205062342" y="129.73897395659574" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">MSFT 5.5%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#4f46e5" stroke-width="20"
-                stroke-dasharray="21.66682256614816 408.4070449666731"
-                stroke-dashoffset="-328.6503837808561" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#4f46e5" stroke-width="25"
+                stroke-dasharray="30.000215860820532 565.4866776461628"
+                stroke-dashoffset="-455.05437754272384" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-BMY"
                 data-ticker="BMY"
                 onmouseover="showTT('Bristol-Myers Squibb', '5.3%', '#4f46e5')"
@@ -1004,18 +1019,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="43.28553104683595" y1="68.24359889155272" x2="21.472273757157467" y2="56.029598465226854" stroke="#4f46e5" stroke-width="1" opacity="0.6" />
+            <line x1="71.47227375715747" y1="106.02959846522685" x2="45.296365009543294" y2="91.37279795363581" stroke="#4f46e5" stroke-width="2" opacity="0.5" />
+            <circle cx="45.296365009543294" cy="91.37279795363581" r="2" fill="#4f46e5" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="16.472273757157467" y="56.029598465226854" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">BMY 5.3%</text>
+            <text x="35.296365009543294" y="91.37279795363581" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">BMY 5.3%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#10b981" stroke-width="20"
-                stroke-dasharray="18.11096755627373 408.4070449666731"
-                stroke-dashoffset="-350.31720634700423" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#10b981" stroke-width="25"
+                stroke-dasharray="25.076724308686707 565.4866776461628"
+                stroke-dashoffset="-485.05459340354435" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-RIO"
                 data-ticker="RIO"
                 onmouseover="showTT('Rio Tinto', '4.4%', '#10b981')"
@@ -1024,18 +1040,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="55.48584595620644" y1="52.63450528321891" x2="38.3650174778243" y2="34.417007315226186" stroke="#10b981" stroke-width="1" opacity="0.6" />
+            <line x1="88.3650174778243" y1="84.41700731522619" x2="67.82002330376574" y2="62.55600975363491" stroke="#10b981" stroke-width="2" opacity="0.5" />
+            <circle cx="67.82002330376574" cy="62.55600975363491" r="2" fill="#10b981" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="33.3650174778243" y="34.417007315226186" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">RIO 4.4%</text>
+            <text x="57.82002330376574" y="62.55600975363491" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">RIO 4.4%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#ef4444" stroke-width="20"
-                stroke-dasharray="14.757025905239383 408.4070449666731"
-                stroke-dashoffset="-368.428173903278" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#ef4444" stroke-width="25"
+                stroke-dasharray="20.432805099562223 565.4866776461628"
+                stroke-dashoffset="-510.13131771223107" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-SOLV"
                 data-ticker="SOLV"
                 onmouseover="showTT('Solventum', '3.6%', '#ef4444')"
@@ -1044,18 +1061,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="68.74930464124563" y1="43.00531569001958" x2="56.729806426340105" y2="21.08428326310404" stroke="#ef4444" stroke-width="1" opacity="0.6" />
+            <line x1="106.7298064263401" y1="71.08428326310404" x2="92.30640856845348" y2="44.77904435080538" stroke="#ef4444" stroke-width="2" opacity="0.5" />
+            <circle cx="92.30640856845348" cy="44.77904435080538" r="2" fill="#ef4444" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="51.729806426340105" y="21.08428326310404" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">SOLV 3.6%</text>
+            <text x="82.30640856845348" y="44.77904435080538" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">SOLV 3.6%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#f59e0b" stroke-width="20"
-                stroke-dasharray="11.9626251391123 408.4070449666731"
-                stroke-dashoffset="-383.1851998085174" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#f59e0b" stroke-width="25"
+                stroke-dasharray="16.563634808001645 565.4866776461628"
+                stroke-dashoffset="-530.5641228117933" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-BATS"
                 data-ticker="BATS"
                 onmouseover="showTT('British American Tobacco', '2.9%', '#f59e0b')"
@@ -1064,18 +1082,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="81.03921763594496" y1="37.82694528863055" x2="73.74660903438533" y2="13.914231938103839" stroke="#f59e0b" stroke-width="1" opacity="0.6" />
+            <line x1="123.74660903438524" y1="63.91423193810385" x2="114.99547871251366" y2="35.21897591747181" stroke="#f59e0b" stroke-width="2" opacity="0.5" />
+            <circle cx="114.99547871251366" cy="35.21897591747181" r="2" fill="#f59e0b" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="68.74660903438533" y="13.914231938103839" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">BATS 2.9%</text>
+            <text x="104.99547871251366" y="35.21897591747181" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">BATS 2.9%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#8b5cf6" stroke-width="20"
-                stroke-dasharray="6.9767022469609214 408.4070449666731"
-                stroke-dashoffset="-395.14782494762966" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#8b5cf6" stroke-width="25"
+                stroke-dasharray="9.660049265022815 565.4866776461628"
+                stroke-dashoffset="-547.1277576197949" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-LGEN"
                 data-ticker="LGEN"
                 onmouseover="showTT('Legal & General', '1.7%', '#8b5cf6')"
@@ -1084,18 +1103,19 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="90.26588732983959" y1="35.73300185534863" x2="86.52199784131635" y2="11.014925645867336" stroke="#8b5cf6" stroke-width="1" opacity="0.6" />
+            <line x1="136.52199784131633" y1="61.014925645867336" x2="132.02933045508846" y2="31.353234194489772" stroke="#8b5cf6" stroke-width="2" opacity="0.5" />
+            <circle cx="132.02933045508846" cy="31.353234194489772" r="2" fill="#8b5cf6" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="81.52199784131635" y="11.014925645867336" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">LGEN 1.7%</text>
+            <text x="122.02933045508846" y="31.353234194489772" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">LGEN 1.7%</text>
         
             <!-- Slice -->
-            <circle r="65" cx="100" cy="100" fill="transparent"
-                stroke="#ec4899" stroke-width="20"
-                stroke-dasharray="6.330043629670833 408.4070449666731"
-                stroke-dashoffset="-402.1245271945906" 
-                transform="rotate(-90 100 100)"
+            <circle r="90" cx="150" cy="150" fill="transparent"
+                stroke="#ec4899" stroke-width="25"
+                stroke-dasharray="8.764675794928847 565.4866776461628"
+                stroke-dashoffset="-556.7878068848178" 
+                transform="rotate(-90 150 150)"
                 class="donut-segment segment-VSNTV"
                 data-ticker="VSNTV"
                 onmouseover="showTT('Versant Media Group', '1.5%', '#ec4899')"
@@ -1104,13 +1124,13 @@
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
             <!-- Leader Line -->
-            <line x1="96.88369910295187" y1="35.07474552441819" x2="95.68512183485642" y2="10.103493803040564" stroke="#ec4899" stroke-width="1" opacity="0.6" />
+            <line x1="145.68512183485643" y1="60.103493803040564" x2="144.2468291131419" y2="30.137991737387424" stroke="#ec4899" stroke-width="2" opacity="0.5" />
+            <circle cx="144.2468291131419" cy="30.137991737387424" r="2" fill="#ec4899" />
                 
             <!-- Label (Ticker + %) -->
-            <text x="90.68512183485642" y="10.103493803040564" dy="0.3em" text-anchor="end" 
-                class="text-[0.4rem] font-bold fill-gray-500 mono" style="pointer-events: none;">VSNTV 1.5%</text>
+            <text x="134.2468291131419" y="30.137991737387424" dy="0.3em" text-anchor="end" 
+                class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">VSNTV 1.5%</text>
         
-        <!-- NO CENTER TEXT As Requested -->
     </svg>
     
                         
@@ -1128,7 +1148,7 @@
                     </div>
 
                     <!-- v32.14 Sovereign Guard Legend Grid -->
-                    <div class="mt-6 border-t border-gray-100 pt-4 overflow-y-auto max-height-[200px]">
+                    <div class="mt-8 border-t border-gray-100 pt-4 w-full">
                         <div class="ticker-legend">
         <div class="legend-ticker hover:bg-gray-50 transition-colors" 
              onclick="highlightSegment('NUE')"
@@ -1408,11 +1428,77 @@
         updateMarketStatus();
         setInterval(updateMarketStatus, 60000);
 
-        // v0.15.14: Version Toggle Logic
-        function toggleVersion() {
-            const badge = document.getElementById('version-badge');
             if (badge) {
                 if (badge.classList.contains('hidden')) {
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        }
+        
+        // v32.60: Manual API Hub Modal Logic
+        function openSettingsModal() {
+            const modal = document.getElementById('settings-modal');
+            if (modal) {
+                modal.classList.add('open');
+            }
+        }
+        
+        function closeSettingsModal() {
+            const modal = document.getElementById('settings-modal');
+            if (modal) {
+                modal.classList.remove('open');
+            }
+        }
+    </script>
+
+    <!-- v32.60: Manual API Hub Modal -->
+    <div id="settings-modal" class="modal-backdrop">
+        <div class="portfolio-modal p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-bold mono uppercase tracking-tight text-gray-900">
+                    <i class="fas fa-cog text-indigo-500 mr-2"></i> Manual API Hub
+                </h2>
+                <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="flex flex-col gap-6">
+                <!-- Sync Metadata -->
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-sm text-gray-800">Sync Metadata</div>
+                            <div class="text-[0.65rem] text-gray-500">Force refresh instrument definitions</div>
+                        </div>
+                        <button class="bg-indigo-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-indigo-700 transition">SYNC NOW</button>
+                    </div>
+                </div>
+
+                <!-- Mode Switch -->
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-sm text-gray-800">Environment Mode</div>
+                            <div class="text-[0.65rem] text-gray-500">Current: <span class="font-bold text-emerald-600">LIVE</span></div>
+                        </div>
+                        <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded text-xs font-bold hover:bg-white transition">SWITCH</button>
+                    </div>
+                </div>
+
+                <!-- Panic Sell -->
+                <div class="p-4 bg-rose-50 rounded-lg border border-rose-100">
+                    <div class="font-bold text-sm text-rose-700 mb-2">Panic Protocol</div>
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="TICKER" class="flex-1 border border-rose-200 rounded px-3 py-2 text-xs font-mono uppercase bg-white">
+                        <button class="bg-rose-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-rose-700 transition">SELL ALL</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
                     badge.classList.remove('hidden');
                 } else {
                     badge.classList.add('hidden');
@@ -1483,7 +1569,7 @@
         }
 
         // v30.6 DYNAMIC HEATMAP LOGIC
-        const rawMapData = [{"x": "BMY", "y": 8329.2, "val_pct": 0.1637, "company_name": "Bristol-Myers Squibb", "shares_held": "190.00", "formatted_value": "\u00a38,329.21", "formatted_pl_gbp": "+\u00a31,172.08", "formatted_pl_pct": "(+16.38%)", "price_avg": "USD 50.57", "price_cur": "USD 59.51", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "DHR", "y": 9534.59, "val_pct": 0.0014, "company_name": "Danaher", "shares_held": "60.00", "formatted_value": "\u00a39,534.59", "formatted_pl_gbp": "+\u00a313.66", "formatted_pl_pct": "(+0.14%)", "price_avg": "USD 217.7", "price_cur": "USD 215.72", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RIO", "y": 6962.26, "val_pct": 0.486, "company_name": "Rio Tinto", "shares_held": "102.36", "formatted_value": "\u00a36,962.26", "formatted_pl_gbp": "+\u00a32,277.14", "formatted_pl_pct": "(+48.60%)", "price_avg": "GBX 45.76", "price_cur": "GBX 68.01", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "LGEN", "y": 2682.0, "val_pct": 0.0323, "company_name": "Legal & General", "shares_held": "1,000.00", "formatted_value": "\u00a32,682.00", "formatted_pl_gbp": "+\u00a384.00", "formatted_pl_pct": "(+3.23%)", "price_avg": "GBX 2.59", "price_cur": "GBX 2.68", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QELL", "y": 0.22, "val_pct": -0.999, "company_name": "Lilium", "shares_held": "275.36", "formatted_value": "\u00a30.22", "formatted_pl_gbp": "\u00a3216.64", "formatted_pl_pct": "(-99.90%)", "price_avg": "USD 1.02", "price_cur": "USD 0.0", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "BATS", "y": 4598.7, "val_pct": 0.0942, "company_name": "British American Tobacco", "shares_held": "100.00", "formatted_value": "\u00a34,598.70", "formatted_pl_gbp": "+\u00a3395.98", "formatted_pl_pct": "(+9.42%)", "price_avg": "GBX 42.02", "price_cur": "GBX 45.98", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "VSNTV", "y": 2433.41, "val_pct": -0.118, "company_name": "Versant Media Group", "shares_held": "111.00", "formatted_value": "\u00a32,433.41", "formatted_pl_gbp": "\u00a3325.46", "formatted_pl_pct": "(-11.80%)", "price_avg": "USD 33.25", "price_cur": "USD 29.76", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NUE", "y": 16364.18, "val_pct": 0.3015, "company_name": "Nucor", "shares_held": "119.15", "formatted_value": "\u00a316,364.18", "formatted_pl_gbp": "+\u00a33,791.31", "formatted_pl_pct": "(+30.15%)", "price_avg": "USD 142.75", "price_cur": "USD 186.44", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "SOLV", "y": 5672.93, "val_pct": -0.0511, "company_name": "Solventum", "shares_held": "100.00", "formatted_value": "\u00a35,672.93", "formatted_pl_gbp": "\u00a3304.91", "formatted_pl_pct": "(-5.10%)", "price_avg": "USD 80.44", "price_cur": "USD 77.01", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RE", "y": 16085.39, "val_pct": -0.0535, "company_name": "Everest Group", "shares_held": "66.95", "formatted_value": "\u00a316,085.39", "formatted_pl_gbp": "\u00a3908.78", "formatted_pl_pct": "(-5.35%)", "price_avg": "USD 333.79", "price_cur": "USD 326.14", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NFLX", "y": 11311.82, "val_pct": -0.138, "company_name": "Netflix", "shares_held": "190.00", "formatted_value": "\u00a311,311.82", "formatted_pl_gbp": "\u00a31,810.80", "formatted_pl_pct": "(-13.80%)", "price_avg": "USD 92.46", "price_cur": "USD 80.81", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CRM", "y": 12873.9, "val_pct": -0.2224, "company_name": "Salesforce", "shares_held": "92.00", "formatted_value": "\u00a312,873.90", "formatted_pl_gbp": "\u00a33,681.84", "formatted_pl_pct": "(-22.24%)", "price_avg": "USD 242.96", "price_cur": "USD 189.96", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QCOM", "y": 10847.73, "val_pct": -0.1967, "company_name": "Qualcomm", "shares_held": "108.00", "formatted_value": "\u00a310,847.73", "formatted_pl_gbp": "\u00a32,655.02", "formatted_pl_pct": "(-19.66%)", "price_avg": "USD 168.85", "price_cur": "USD 136.35", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "EOG", "y": 13912.86, "val_pct": -0.0249, "company_name": "EOG Resources", "shares_held": "167.83", "formatted_value": "\u00a313,912.86", "formatted_pl_gbp": "\u00a3354.31", "formatted_pl_pct": "(-2.48%)", "price_avg": "USD 114.0", "price_cur": "USD 112.53", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CTVA", "y": 12009.94, "val_pct": 0.0283, "company_name": "Corteva", "shares_held": "225.00", "formatted_value": "\u00a312,009.94", "formatted_pl_gbp": "+\u00a3331.52", "formatted_pl_pct": "(+2.84%)", "price_avg": "USD 69.94", "price_cur": "USD 72.45", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "MSFT", "y": 8701.44, "val_pct": -0.0623, "company_name": "Microsoft", "shares_held": "30.00", "formatted_value": "\u00a38,701.44", "formatted_pl_gbp": "\u00a3577.80", "formatted_pl_pct": "(-6.23%)", "price_avg": "USD 423.35", "price_cur": "USD 393.74", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CNNE", "y": 14698.69, "val_pct": -0.1092, "company_name": "Cannae", "shares_held": "1,406.16", "formatted_value": "\u00a314,698.69", "formatted_pl_gbp": "\u00a31,800.01", "formatted_pl_pct": "(-10.91%)", "price_avg": "USD 15.77", "price_cur": "USD 14.19", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}];
+        const rawMapData = [{"x": "BMY", "y": 8329.2, "val_pct": 0.1637, "company_name": "", "shares_held": "190.00", "formatted_value": "\u00a38,329.21", "formatted_pl_gbp": "+\u00a31,172.08", "formatted_pl_pct": "(+16.38%)", "price_avg": "USD 50.57", "price_cur": "USD 59.51", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "DHR", "y": 9534.59, "val_pct": 0.0014, "company_name": "", "shares_held": "60.00", "formatted_value": "\u00a39,534.59", "formatted_pl_gbp": "+\u00a313.66", "formatted_pl_pct": "(+0.14%)", "price_avg": "USD 217.7", "price_cur": "USD 215.72", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RIO", "y": 6962.26, "val_pct": 0.486, "company_name": "", "shares_held": "102.36", "formatted_value": "\u00a36,962.26", "formatted_pl_gbp": "+\u00a32,277.14", "formatted_pl_pct": "(+48.60%)", "price_avg": "GBX 45.76", "price_cur": "GBX 68.01", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "LGEN", "y": 2682.0, "val_pct": 0.0323, "company_name": "", "shares_held": "1,000.00", "formatted_value": "\u00a32,682.00", "formatted_pl_gbp": "+\u00a384.00", "formatted_pl_pct": "(+3.23%)", "price_avg": "GBX 2.59", "price_cur": "GBX 2.68", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QELL", "y": 0.22, "val_pct": -0.999, "company_name": "", "shares_held": "275.36", "formatted_value": "\u00a30.22", "formatted_pl_gbp": "\u00a3216.64", "formatted_pl_pct": "(-99.90%)", "price_avg": "USD 1.02", "price_cur": "USD 0.0", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "BATS", "y": 4598.7, "val_pct": 0.0942, "company_name": "", "shares_held": "100.00", "formatted_value": "\u00a34,598.70", "formatted_pl_gbp": "+\u00a3395.98", "formatted_pl_pct": "(+9.42%)", "price_avg": "GBX 42.02", "price_cur": "GBX 45.98", "currency": "GBX", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "VSNTV", "y": 2433.41, "val_pct": -0.118, "company_name": "", "shares_held": "111.00", "formatted_value": "\u00a32,433.41", "formatted_pl_gbp": "\u00a3325.46", "formatted_pl_pct": "(-11.80%)", "price_avg": "USD 33.25", "price_cur": "USD 29.76", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NUE", "y": 16364.18, "val_pct": 0.3015, "company_name": "", "shares_held": "119.15", "formatted_value": "\u00a316,364.18", "formatted_pl_gbp": "+\u00a33,791.31", "formatted_pl_pct": "(+30.15%)", "price_avg": "USD 142.75", "price_cur": "USD 186.44", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "SOLV", "y": 5672.93, "val_pct": -0.0511, "company_name": "", "shares_held": "100.00", "formatted_value": "\u00a35,672.93", "formatted_pl_gbp": "\u00a3304.91", "formatted_pl_pct": "(-5.10%)", "price_avg": "USD 80.44", "price_cur": "USD 77.01", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "RE", "y": 16085.39, "val_pct": -0.0535, "company_name": "", "shares_held": "66.95", "formatted_value": "\u00a316,085.39", "formatted_pl_gbp": "\u00a3908.78", "formatted_pl_pct": "(-5.35%)", "price_avg": "USD 333.79", "price_cur": "USD 326.14", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "NFLX", "y": 11311.82, "val_pct": -0.138, "company_name": "", "shares_held": "190.00", "formatted_value": "\u00a311,311.82", "formatted_pl_gbp": "\u00a31,810.80", "formatted_pl_pct": "(-13.80%)", "price_avg": "USD 92.46", "price_cur": "USD 80.81", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CRM", "y": 12873.9, "val_pct": -0.2224, "company_name": "", "shares_held": "92.00", "formatted_value": "\u00a312,873.90", "formatted_pl_gbp": "\u00a33,681.84", "formatted_pl_pct": "(-22.24%)", "price_avg": "USD 242.96", "price_cur": "USD 189.96", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "QCOM", "y": 10847.73, "val_pct": -0.1967, "company_name": "", "shares_held": "108.00", "formatted_value": "\u00a310,847.73", "formatted_pl_gbp": "\u00a32,655.02", "formatted_pl_pct": "(-19.66%)", "price_avg": "USD 168.85", "price_cur": "USD 136.35", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "EOG", "y": 13912.86, "val_pct": -0.0249, "company_name": "", "shares_held": "167.83", "formatted_value": "\u00a313,912.86", "formatted_pl_gbp": "\u00a3354.31", "formatted_pl_pct": "(-2.48%)", "price_avg": "USD 114.0", "price_cur": "USD 112.53", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CTVA", "y": 12009.94, "val_pct": 0.0283, "company_name": "", "shares_held": "225.00", "formatted_value": "\u00a312,009.94", "formatted_pl_gbp": "+\u00a3331.52", "formatted_pl_pct": "(+2.84%)", "price_avg": "USD 69.94", "price_cur": "USD 72.45", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "MSFT", "y": 8701.44, "val_pct": -0.0623, "company_name": "", "shares_held": "30.00", "formatted_value": "\u00a38,701.44", "formatted_pl_gbp": "\u00a3577.80", "formatted_pl_pct": "(-6.23%)", "price_avg": "USD 423.35", "price_cur": "USD 393.74", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}, {"x": "CNNE", "y": 14698.69, "val_pct": -0.1092, "company_name": "", "shares_held": "1,406.16", "formatted_value": "\u00a314,698.69", "formatted_pl_gbp": "\u00a31,800.01", "formatted_pl_pct": "(-10.91%)", "price_avg": "USD 15.77", "price_cur": "USD 14.19", "currency": "USD", "pl_per_share_gbp": 0, "pl_per_share_pct": 0}];
         const mapData = rawMapData.map(d => {
             const pct = d.val_pct || 0;
             const pctScaled = pct * 100;

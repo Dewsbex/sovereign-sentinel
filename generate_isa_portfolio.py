@@ -80,11 +80,14 @@ def run_audit():
     total_value_gbp = 0
     holdings = []
 
-    # v32.14 Sovereign Finality - Strict Unit Normalization
+    # v32.60 Sovereign Finality - Strict Unit Normalization
     def normalize_uk_assets(value, ticker):
         """If the ticker is UK, the T212 API is sending Pence. We need Pounds."""
+        # Check for UK identifiers
         if "_UK_EQ" in ticker or ticker.endswith("l_EQ") or ticker.endswith(".L"):
-            return float(value) / 100.0
+            # Dividing by 100 to convert Pence to Pounds
+            norm = float(value) / 100.0
+            return norm
         return float(value)
 
     # v32.15: Dynamic FX Rate Fetching (Sovereign Finality)

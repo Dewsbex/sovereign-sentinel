@@ -128,15 +128,38 @@ class ORBObserver:
             logger.error(f"RVOL Calc Failed for {ticker}: {e}")
             return 0.0
 
+    def calculate_vwap(self, ticker):
+        """Calculates Intraday VWAP (Volume Weighted Average Price)."""
+        try:
+            # Get Intraday Data (1 Minute Intervals, Today)
+            df = yf.Ticker(ticker).history(period="1d", interval="1m")
+            if df.empty: return 0.0
+            
+            # VWAP Formula: CumSum(Price * Volume) / CumSum(Volume)
+            # Price is typical price: (High + Low + Close) / 3
+            df['Typical_Price'] = (df['High'] + df['Low'] + df['Close']) / 3
+            df['PV'] = df['Typical_Price'] * df['Volume']
+            
+            vwap = df['PV'].cumsum().iloc[-1] / df['Volume'].cumsum().iloc[-1]
+            vwap = round(float(vwap), 2)
+            logger.info(f"VWAP for {ticker}: {vwap}")
+            return vwap
+        except Exception as e:
+            logger.error(f"VWAP Calc Failed for {ticker}: {e}")
+            return 0.0
+
     def analyze_market_conditions(self):
         """Main method to filter the watchlist."""
         approved = {}
         for t in self.tickers:
             avg_vol = self.calculate_rvol(t)
+            vwap = self.calculate_vwap(t)
+            
             # We store the benchmark. 
             # Real-time RVOL check happens in the loop.
             approved[t] = {
-                "avg_15m_volume": avg_vol
+                "avg_15m_volume": avg_vol,
+                "vwap": vwap
             }
         
         return approved
