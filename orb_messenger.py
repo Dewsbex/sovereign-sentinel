@@ -41,7 +41,7 @@ class ORBMessenger:
             logger.error(f"Failed to send Telegram message: {e}")
 
     def notify_startup(self, equity):
-        self.send(f"🚀 **Sovereign Finality ORB Engine (v32.25)**\n\n✅ System Online\n💰 Equity: £{equity:.2f}\n📡 Status: Observation Phase Started")
+        self.send(f"🚀 **Sovereign Finality ORB Engine (v32.60)**\n\n✅ System Online\n💰 Equity: £{equity:.2f}\n📡 Status: Observation Phase Started")
 
     def notify_shutdown(self, pnl):
         icon = "✅" if pnl >= 0 else "🔻"

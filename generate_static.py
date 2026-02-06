@@ -1,5 +1,5 @@
 """
-The Artist (Job B) -# SOVEREIGN SENTINEL | generate_static.py v0.15.13
+The Artist (Job B) -# SOVEREIGN SENTINEL | generate_static.py v32.60
 # Static Site Generator for Sovereign Sentinel Dashboard
 STRICT RULE: NO NETWORK CALLS.
 Reads live_state.json and generates index.html.
