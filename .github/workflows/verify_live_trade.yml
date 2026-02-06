@@ -13,6 +13,12 @@ on:
           - stop
           - stop_limit
           - management
+          - get_order
+          - positions
+          - history_dividends
+          - history_orders
+          - history_transactions
+          - history_exports
 
 jobs:
   test-live-trade:
@@ -36,4 +42,10 @@ jobs:
             "stop") python test_stop_order.py ;;
             "stop_limit") python test_stop_limit_order.py ;;
             "management") python test_order_manage.py ;;
+            "get_order") python test_get_order.py ;;
+            "positions") python test_positions.py ;;
+            "history_dividends") python test_history_dividends.py ;;
+            "history_orders") python test_history_orders.py ;;
+            "history_transactions") python test_history_transactions.py ;;
+            "history_exports") python test_history_exports.py ;;
           esac
