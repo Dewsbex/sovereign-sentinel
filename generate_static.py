@@ -91,14 +91,28 @@ def generate_oracle_ring(holdings, total_invested):
         sy = center_y + radius * math.sin(mid_angle_rad)
         
         # Elbow Point
-        ex = center_x + label_r * math.cos(mid_angle_rad)
-        ey = center_y + label_r * math.sin(mid_angle_rad)
+        # Leader Line Math (v32.61)
+        # Start from midpoint of slice
+        mid_angle = (cumulative_offset + (dash_len / 2)) / circum * 360
+        mid_rad = math.radians(mid_angle - 90) # Adjust for -90 rot
         
-        # Label alignment
-        is_right = math.cos(mid_angle_rad) >= 0
-        text_anchor = "start" if is_right else "end"
-        label_x = ex + (10 if is_right else -10)
+        # Inner and Outer points (on the ring)
+        sx = center_x + radius * math.cos(mid_rad)
+        sy = center_y + radius * math.sin(mid_rad)
         
+        # Elbow/End point for label
+        # Push out further than before
+        lx = center_x + 140 * math.cos(mid_rad) # First leg
+        ly = center_y + 140 * math.sin(mid_rad)
+        
+        # Horizontal landing
+        align_right = lx > center_x
+        ex = lx + (20 if align_right else -20)
+        ey = ly 
+        
+        text_anchor = "start" if align_right else "end"
+        
+        # Formatting
         ticker = h.get('Ticker', 'Asset')
         safe_name = h.get('Name', ticker).replace("'", "\\'")
         pct_fmt = f"{weight:.1f}%"
@@ -106,7 +120,7 @@ def generate_oracle_ring(holdings, total_invested):
         svg_elements.append(f"""
             <!-- Slice -->
             <circle r="{radius}" cx="{center_x}" cy="{center_y}" fill="transparent"
-                stroke="{color}" stroke-width="25"
+                stroke="{color}" stroke-width="30"
                 stroke-dasharray="{dash_len} {circum}"
                 stroke-dashoffset="-{cumulative_offset}" 
                 transform="rotate(-90 {center_x} {center_y})"
@@ -117,12 +131,12 @@ def generate_oracle_ring(holdings, total_invested):
                 onclick="highlightSegment('{ticker}')"
                 style="cursor: pointer; transition: all 0.3s;"></circle>
             
-            <!-- Leader Line -->
-            <line x1="{sx}" y1="{sy}" x2="{ex}" y2="{ey}" stroke="{color}" stroke-width="2" opacity="0.5" />
-            <circle cx="{ex}" cy="{ey}" r="2" fill="{color}" />
-                
+            <!-- Leader Line (v32.61 Thin SVG) -->
+            <path d="M{sx},{sy} L{lx},{ly} L{ex},{ey}" fill="none" stroke="{color}" stroke-width="1.5" opacity="0.6" />
+            <circle cx="{sx}" cy="{sy}" r="2" fill="{color}" />
+            
             <!-- Label (Ticker + %) -->
-            <text x="{label_x}" y="{ey}" dy="0.3em" text-anchor="{text_anchor}" 
+            <text x="{ex + (5 if align_right else -5)}" y="{ey}" dy="0.3em" text-anchor="{text_anchor}" 
                 class="text-[0.6rem] font-bold fill-gray-600 mono" style="pointer-events: none;">{ticker} {pct_fmt}</text>
         """)
         
