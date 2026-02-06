@@ -1221,12 +1221,39 @@
                 },
                 stroke: { width: 2, colors: ['#0f0f0f'] }, 
                 tooltip: {
-                    theme: 'dark',
-                    y: {
-                        formatter: function(value, { seriesIndex, dataPointIndex, w }) {
-                             const d = w.config.series[seriesIndex].data[dataPointIndex];
-                             return d.label_pl + " (" + d.label_pct + ")";
-                        }
+                    theme: 'light',
+                    custom: function({ seriesIndex, dataPointIndex, w }) {
+                        const d = w.config.series[seriesIndex].data[dataPointIndex];
+                        const isPos = d.pnl_gbp >= 0;
+                        const pnlColor = isPos ? 'text-emerald-600' : 'text-rose-500';
+                        const pnlSign = isPos ? '+' : '-';
+                        
+                        return `
+                        <div class="sentinel-tooltip p-4 bg-white border border-gray-100 shadow-xl rounded-lg font-mono text-[0.7rem] min-w-[200px]">
+                            <div class="flex flex-col gap-1">
+                                <span class="text-xs font-black text-gray-900 leading-tight">${d.name}</span>
+                                <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest border-b border-gray-50 pb-2 mb-2">${d.label_ticker}</span>
+                                
+                                <div class="grid grid-cols-2 gap-x-4 gap-y-1">
+                                    <span class="text-gray-400">Price:</span>
+                                    <span class="text-right font-bold text-gray-900">${d.currency} ${d.price.toFixed(2)}</span>
+                                    
+                                    <span class="text-gray-400">Avg Price:</span>
+                                    <span class="text-right font-bold text-blue-600">${d.currency} ${d.avg_price.toFixed(2)}</span>
+                                    
+                                    <span class="text-gray-400">Shares Held:</span>
+                                    <span class="text-right font-bold text-gray-900">${d.shares.toFixed(2)}</span>
+                                    
+                                    <span class="text-gray-400 border-t border-gray-50 mt-1 pt-1">Total Value:</span>
+                                    <span class="text-right font-bold text-gray-900 border-t border-gray-50 mt-1 pt-1">£${d.val_gbp.toLocaleString(undefined, {minimumFractionDigits:2})}</span>
+                                </div>
+                                
+                                <div class="mt-2 pt-2 border-t-2 border-dashed border-gray-50 font-black ${pnlColor} text-[0.75rem]">
+                                    P/L: £${Math.abs(d.pnl_gbp).toLocaleString(undefined, {minimumFractionDigits:2})} (${d.pnl_pct.toFixed(2)}%)
+                                </div>
+                            </div>
+                        </div>
+                        `;
                     }
                 }
             };

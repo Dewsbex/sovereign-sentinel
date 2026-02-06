@@ -279,7 +279,16 @@ def render():
             'label_pl': f"{'+' if pnl >= 0 else ''}£{abs(pnl):,.2f}",
             'label_pct': f"{pct*100:+.2f}%",
             'is_profit': pnl >= 0,
-            'fillColor': h['Sector_Color']
+            'fillColor': h['Sector_Color'],
+            # v32.66 Forensic Tooltip Data
+            'name': h.get('Name', ticker),
+            'price': h.get('Price', 0),
+            'avg_price': h.get('Avg_Price', 0),
+            'shares': h.get('Shares', 0),
+            'currency': h.get('Currency', 'GBP'),
+            'val_gbp': val,
+            'pnl_gbp': pnl,
+            'pnl_pct': pct * 100
         })
 
     # Transform into ApexCharts Grouped Treemap Structure
