@@ -20,9 +20,9 @@ if __name__ == "__main__":
     # Current price ~$257. Let's set stop at $280.
     payload = {
         "ticker": "DHR_US_EQ",
-        "quantity": 1.0,
+        "quantity": -1.0, # STOP SELL (Protect Long)
         "stopPrice": 280.0,
-        "timeValidity": "GOOD_TILL_CANCEL"
+        "timeValidity": "GTC"
     }
     
     url = f"{base_url}/orders/stop"

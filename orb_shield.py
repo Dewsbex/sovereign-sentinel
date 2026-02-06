@@ -36,12 +36,12 @@ class ORBShield:
         
         # 2. Place STOP LOSS
         # POST /orders/stop
+        # Sell = Negative Quantity
         stop_payload = {
-            "instrumentCode": f"{ticker}_US_EQ",
-            "quantity": qty, # Sell the same amount
-            "side": "SELL", # Closing the Buy
+            "ticker": f"{ticker}_US_EQ",
+            "quantity": -qty, # Always selling to close a Long
             "stopPrice": stop_price,
-            "timeValidity": "DAY" # Or GTC
+            "timeValidity": "DAY"
         }
         try:
             r_stop = requests.post(f"{self.base_url}/orders/stop", json=stop_payload, auth=self.auth)
@@ -56,11 +56,10 @@ class ORBShield:
         # 3. Place TAKE PROFIT (Limit Sell)
         # POST /orders/limit
         limit_payload = {
-            "instrumentCode": f"{ticker}_US_EQ",
-            "quantity": qty,
-            "side": "SELL",
+            "ticker": f"{ticker}_US_EQ",
+            "quantity": -qty, # Always selling to close a Long
             "limitPrice": target_price,
-            "timeValidity": "DAY" # Or GTC
+            "timeValidity": "DAY"
         }
         try:
             r_limit = requests.post(f"{self.base_url}/orders/limit", json=limit_payload, auth=self.auth)
