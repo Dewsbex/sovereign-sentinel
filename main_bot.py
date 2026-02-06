@@ -9,23 +9,30 @@ from sovereign_state_manager import SovereignStateManager
 from orb_observer import ORBObserver
 from orb_execution import ORBExecutionEngine
 from orb_shield import ORBShield
+from orb_messenger import ORBMessenger
 
 # Configure Logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger("MainBot")
 
 def main():
-    logger.info("🚀 STARTING SOVEREIGN FINALITY (v32.24)...")
+    # Initialize Messenger
+    msg = ORBMessenger()
+    logger.info("🚀 STARTING SOVEREIGN FINALITY (v32.25)...")
     
     # 1. Initialize State & Config
     try:
         mgr = SovereignStateManager()
         if mgr.state.get('circuit_breaker_tripped'):
             logger.critical("🛑 CIRCUIT BREAKER TRIPPED. ABORTING RUN.")
+            msg.notify_error("Startup", "Circuit Breaker Tripped. Manual intervention required.")
             sys.exit(0)
     except Exception as e:
         logger.critical(f"State Init Failed: {e}")
+        msg.notify_error("Startup", str(e))
         sys.exit(1)
+
+    msg.notify_startup(mgr.state['current_equity'])
 
     # 2. Observation Phase (14:25 - 14:30)
     # Ideally checking time. For this script, we assume it's launched AT schedule.
@@ -39,8 +46,8 @@ def main():
     logger.info("🔍 OBSERVATION COMPLETE. Proceeding to Execution Phase.")
     
     # 3. Execution Phase (The "Local Brain")
-    engine = ORBExecutionEngine(mgr)
-    shield = ORBShield()
+    engine = ORBExecutionEngine(mgr, msg)
+    shield = ORBShield(msg) # Shield also needs it
     
     # Simple Polling Loop (Simulation)
     # The "Observation Window" is 14:30 - 14:45.
