@@ -150,7 +150,7 @@ def generate_oracle_ring(holdings, total_invested):
 def render():
     env_mode = "LIVE" if os.environ.get('ENV') == 'LIVE' else "DEMO"
     prefix = f"({env_mode})"
-    print(f"{prefix} Starting Sector Sentinel (Job B) [v32.67]... ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"{prefix} Starting Sector Sentinel (Job B) [v32.80]... ({datetime.now().strftime('%H:%M:%S')})")
     
     # Load Sector Mapping (Tier 1)
     mapping_data = {"mappings": {}, "gics_colors": {}}
@@ -250,11 +250,18 @@ def render():
     if total_cost > 0:
         return_rate_pct = truncate_decimal((total_return / total_cost) * 100, 2)
 
-    # 3. Sector & Heatmap Data (v32.66 Nested)
-    sector_groups = {}
+    # 3. v32.80 SOVEREIGN SEPARATION: Dual Data Structures
+    # Performance Heatmap (Flat P/L) + Sector Allocation (GICS Grouped)
+    
     gics_map = mapping_data.get('mappings', {})
     gics_colors = mapping_data.get('gics_colors', {})
-
+    
+    # Performance Series: Flat P/L treemap
+    performance_data = []
+    
+    # Sector Allocation: Aggregate by GICS sector
+    sector_totals = {}
+    
     for h in holdings:
         ticker = h.get('Ticker', 'N/A')
         clean_ticker = ticker.split('.')[0] if '.' in ticker else ticker
@@ -277,10 +284,8 @@ def render():
         base_color = "80, 200, 120" if pnl >= 0 else "204, 38, 48"
         fill_color_rgba = f"rgba({base_color}, {alpha:.2f})"
 
-        if sector not in sector_groups:
-            sector_groups[sector] = []
-            
-        sector_groups[sector].append({
+        # PERFORMANCE HEATMAP: Individual tiles with P/L data
+        performance_data.append({
             'x': ticker,
             'y': truncate_decimal(val, 2),
             'label_ticker': ticker,
@@ -288,9 +293,7 @@ def render():
             'label_pct': f"{pct*100:+.2f}%",
             'is_profit': pnl >= 0,
             'fillColor': fill_color_rgba,
-            # v32.67: Sector Grouping Metadata
             'sector': sector,
-            # v32.66 Forensic Tooltip Data
             'name': h.get('Name', ticker),
             'price': h.get('Price', 0),
             'avg_price': h.get('Avg_Price', 0),
@@ -300,13 +303,39 @@ def render():
             'pnl_gbp': pnl,
             'pnl_pct': pct * 100
         })
+        
+        # SECTOR ALLOCATION: Aggregate totals by sector
+        if sector not in sector_totals:
+            sector_totals[sector] = {
+                'sector': sector,
+                'total_value': 0,
+                'color': gics_colors.get(sector, "#aaa"),
+                'holdings': []
+            }
+        sector_totals[sector]['total_value'] += val
+        sector_totals[sector]['holdings'].append({
+            'ticker': ticker,
+            'value': val,
+            'name': h.get('Name', ticker)
+        })
 
-    # Transform into ApexCharts Grouped Treemap Structure
-    heatmap_series = []
-    for sector, items in sector_groups.items():
-        heatmap_series.append({
+    # Performance Heatmap Series (Flat)
+    performance_series = [{
+        'name': 'Holdings',
+        'data': performance_data
+    }]
+    
+    # Sector Allocation Series (Grouped by GICS)
+    allocation_series = []
+    for sector, data in sector_totals.items():
+        allocation_series.append({
             'name': sector.upper(),
-            'data': items
+            'data': [{
+                'x': h['ticker'],
+                'y': h['value'],
+                'sector': sector,
+                'name': h['name']
+            } for h in data['holdings']]
         })
 
     # 4. Fortress Table
@@ -431,9 +460,9 @@ def render():
     legend_html += "</div>"
 
     context = {
-        'version': 'v32.67',
+        'version': 'v32.80',
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.67 Sector Sentinel"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.80 Sovereign Separation"},
         'sync_time': datetime.now().strftime('%d/%m %H:%M'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
@@ -447,7 +476,8 @@ def render():
         'holdings': holdings,
         'fortress_holdings': fortress_display,
         'sniper_architect': sniper_display,
-        'heatmap_dataset': json.dumps(heatmap_series),
+        'performance_dataset': json.dumps(performance_series),
+        'allocation_dataset': json.dumps(allocation_series),
         'orb_intel': orb_intel,
         'account_history': json.dumps(history_log),
         'pending_orders': [],

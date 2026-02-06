@@ -1226,16 +1226,17 @@
         }
 
         // v30.6 DYNAMIC HEATMAP LOGIC
-        // v32.61 SOVEREIGN FINALITY: Data Encapsulation
-        // Strictly inject data object here.
-        const LIVE_HEATMAP_DATA = {{ heatmap_dataset | default('[]') | safe }};
+        // v32.80 SOVEREIGN SEPARATION: Dual Data Injection
+        const PERFORMANCE_DATA = {{ performance_dataset | default('[]') | safe }};
+        const ALLOCATION_DATA = {{ allocation_dataset | default('[]') | safe }};
         
         // Initialize Dashboard
         window.addEventListener('DOMContentLoaded', () => {
-             renderSovereignstack(LIVE_HEATMAP_DATA);
+             renderPerformanceHeatmap(PERFORMANCE_DATA);
+             renderSectorAllocation(ALLOCATION_DATA);
         });
 
-        function renderSovereignstack(data) {
+        function renderPerformanceHeatmap(data) {
             const options = {
                 series: data, // Grouped Data [ { name: 'SECTOR', data: [...] } ]
                 legend: { show: false },
@@ -1269,9 +1270,13 @@
                 },
                 plotOptions: {
                     treemap: {
-                        distributed: true, // v32.67 Performance Coloring Enabled
-                        enableShades: true,
-                        shadeIntensity: 0.5
+                        distributed: true, // v32.80 Performance Coloring (Individual Tiles)
+                        enableShades: false, // Disable shading to use exact fill colors
+                        shadeIntensity: 0,
+                        useFillColorAsStroke: false,
+                        colorScale: {
+                            ranges: [] // Disable color scale to use individual fillColor
+                        }
                     }
                 },
                 stroke: { width: 1, colors: ['#ffffff'] }, 
@@ -1313,8 +1318,67 @@
                 }
             };
 
-            const chart = new ApexCharts(document.querySelector("#heatmap-container"), options);
+            const chart = new ApexCharts(document.querySelector("#performance-chart-container"), options);
             chart.render();
+        }
+
+        // v32.80 SECTOR ALLOCATION RENDERER
+        function renderSectorAllocation(data) {
+            const options = {
+                series: data, // Grouped by GICS Sector [ { name: 'SECTOR', data: [...] } ]
+                legend: { show: false },
+                chart: {
+                    type: 'treemap',
+                    height: 500,
+                    fontFamily: 'JetBrains Mono',
+                    toolbar: { show: false },
+                    animations: { enabled: false }
+                },
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        colors: ['#fff']
+                    },
+                    formatter: function(text, op) {
+                        // Show sector name
+                        return op.w.config.series[op.seriesIndex].name;
+                    }
+                },
+                plotOptions: {
+                    treemap: {
+                        distributed: false,
+                        enableShades: true,
+                        shadeIntensity: 0.3
+                    }
+                },
+                stroke: { width: 2, colors: ['#ffffff'] },
+                tooltip: {
+                    theme: 'light',
+                    custom: function({ seriesIndex, dataPointIndex, w }) {
+                        const d = w.config.series[seriesIndex].data[dataPointIndex];
+                        const sector = w.config.series[seriesIndex].name;
+                        return `
+                        <div class="sentinel-tooltip p-4 bg-white border border-gray-100 shadow-xl rounded-lg font-mono text-[0.7rem] min-w-[200px]">
+                            <div class="flex flex-col gap-1">
+                                <span class="text-xs font-black text-gray-900 leading-tight">${d.name}</span>
+                                <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest border-b border-gray-50 pb-2 mb-2">${d.x}</span>
+                                <div class="grid grid-cols-2 gap-x-4 gap-y-1">
+                                    <span class="text-gray-400">Sector:</span>
+                                    <span class="text-right font-bold text-indigo-600">${sector}</span>
+                                    <span class="text-gray-400">Value:</span>
+                                    <span class="text-right font-bold text-gray-900">£${d.y.toFixed(2)}</span>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                    }
+                }
+            };
+
+            const allocationChart = new ApexCharts(document.querySelector("#sector-allocation-container"), options);
+            allocationChart.render();
         }
 
 
