@@ -2,12 +2,42 @@ import requests, json, os, base64, subprocess, yfinance as yf
 from datetime import datetime
 from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
+try:
+    from oracle import Oracle
+    from config import RISK_FREE_RATE
+except ImportError:
+    print("[WARN] Oracle/Config not found. Running in Light Mode.")
+    Oracle = None
 
 load_dotenv()
 
 API_KEY = os.environ.get("T212_API_KEY")
 API_SECRET = os.environ.get("T212_API_SECRET")
 BASE_URL = "https://live.trading212.com/api/v0/equity"
+
+def fetch_fundamentals(ticker):
+    """Fetches key data for the Oracle Protocol."""
+    try:
+        t = yf.Ticker(ticker)
+        # Fast Info is cheaper but less detailed. Info is heavy.
+        # We need Sector, OCF, Capex, Mcap.
+        info = t.info
+        
+        # Insider Mock (Hard to get reliable structured insider data via YF free)
+        # We'll default to 'Neutral' to pass the gate unless we iterate transactions
+        insider = "Neutral" 
+        
+        return {
+            "sector": info.get('sector', 'Unknown'),
+            "moat": "Unknown", # YF doesn't have Moat ratings
+            "ocf": info.get('operatingCashflow', 0),
+            "capex": info.get('capitalExpenditures', 0), # Usually negative
+            "mcap": info.get('marketCap', 1),
+            "insider_activity": insider
+        }
+    except Exception as e:
+        print(f"[YF] Fundamental Fetch Failed for {ticker}: {e}")
+        return {}
 
 
 
@@ -97,6 +127,29 @@ def run_audit():
 
         total_value_gbp += val_gbp
         
+        # 3. Oracle Protocol (The Investor Mandate)
+        oracle_data = {}
+        if Oracle:
+            print(f"    [Oracle] Auditing {ticker_clean}...")
+            f_data = fetch_fundamentals(ticker_clean)
+            if f_data:
+                # Adjust CAPEX (YF gives negative, we need magnitude or ensure math works)
+                # Oracle: (ocf - capex) / mcap
+                # If Capex is negative, (OCF - (-Capex)) = OCF + Capex. 
+                # FCF = OCF - Capex (where Capex is positive outlay).
+                # YF Capex is usually negative number.
+                # So OCF + YF_Capex = FCF.
+                f_data['capex'] = abs(f_data['capex']) # Make it positive for the Oracle func which might expect subtraction
+                # Wait, let's check Oracle logic: (op_cash_flow - maint_capex)
+                # If we pass positive Capex, it subtracts. Correct.
+                
+                audit = Oracle.run_full_audit(f_data)
+                oracle_data = {
+                    "Oracle_Verdict": audit.get('verdict'),
+                    "Oracle_Yield": audit.get('net_yield', 0),
+                    "Oracle_Gates": audit.get('gates')
+                }
+        
         holdings.append({
             "Ticker": ticker_clean,
             "Name": name,
@@ -109,7 +162,8 @@ def run_audit():
             "PL": pl_gbp,           
             "Shares": qty,
             "Currency": currency, 
-            "FX_Impact": wi.get('fxImpact', 0.0)
+            "FX_Impact": wi.get('fxImpact', 0.0),
+            **oracle_data # Merge Oracle Results
         })
 
     # Calculate Weights

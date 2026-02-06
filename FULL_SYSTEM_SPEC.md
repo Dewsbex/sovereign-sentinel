@@ -27,6 +27,63 @@
 | `immune_system.py` | **The Shield (Risk)** | **Global Safety**. Logic for "Falling Knife" & "Earnings Blackout". | **Restoring** |
 | `config.py` | **Detailed Config** | **Active Legacy Support**. Required by `oracle.py` for variables. | **Active** |
 
+### 2.2 🛠 UTILITIES & MAINTENANCE (Active Support)
+*Helper scripts involved in Data Warehousing, Intelligence, and Debugging.*
+
+| File | Category | Description | Status |
+| :--- | :--- | :--- | :--- |
+| `ledger_sync.py` | **Data Warehouse** | **Critical**. Fetches multi-year history, syncs Dividends/Fees to CSV/GDrive. | **Active** |
+| `fetch_intelligence.py` | **Intelligence** | **SITREP Generator**. Fetches live news/prices for `generate_static.py`. | **Active** |
+| `sniper_intelligence.py`| **Intelligence** | **Live Watchlist**. Independent scanner for `watchlist.json` targets. | **Active** |
+| `golden_return.py` | **Math** | **Truth Engine**. Calculates Total Return (`Value - Net Deposits`). | **Active** |
+| `total_ledger_performance.py` | **Math** | **History**. Summarizes all-time P/L from CSV history. | **Active** |
+| `inject_ledger_metrics.py`| **Data** | **Injector**. Merges CSV data into JSON cache. | **Active** |
+| `utils.py` | **Helper** | Common string formatting and math functions. | **Active** |
+| `global_normalization.py` | **Helper** | Standalone script to normalize pence/pounds in `data`. | **Active (Manual)** |
+| `activate_live.py` | **Ops** | Script to switch environment modes. | **Active (Manual)** |
+| `fix_v30.py` | **Maintenance** | Emergency patch script (Legacy/Active). | **Active** |
+| `analyze_discrepancy.py` | **Debug** | Tool to find mismatches between T212 and Local Ledger. | **Dev Tool** |
+| `fetch_ledger.py` | **Debug** | standalone ledger fetcher. | **Dev Tool** |
+| `check_ledger.py` | **Debug** | Simple consistency check. | **Dev Tool** |
+
+### 2.1.1 ⚙️ ORB COMPONENTS (The Scalper Engine)
+*Modular components imported by `main_bot.py` to execute Job C.*
+
+| File | Role | Description |
+| :--- | :--- | :--- |
+| `sovereign_state_manager.py` | **State** | Manages persistent state (`data/ledger_state.json`) and configuration. |
+| `orb_observer.py` | **Eyes** | Analyzes market conditions (RVOL, Gap) during observation window. |
+| `orb_execution.py` | **Hands** | Handles order logic, entry triggers, and position management. |
+| `orb_shield.py` | **Defense** | Risk management wrapper (Max Drawdown, Circuit Breakers). |
+| `orb_messenger.py` | **Voice** | Handles Telegram/Discord notifications and alerts. |
+
+### 2.3 🧪 VERIFICATION & TESTING
+*Files used for CI/CD and Logic Verification.*
+
+| Group | Files | Description |
+| :--- | :--- | :--- |
+| **Unit Tests** | `test_*.py` (15 files) | Local logic tests (`test_limit_order.py`, `test_orb_flow.py`, etc.). |
+| **Verification** | `verify_*.py` (5 files) | Live/Mock environment verifiers (`verify_live_trade.py`, `verify_keys.py`). |
+| **Inspection** | `inspect_*.py` (3 files) | API Schema inspectors (`inspect_t212_full.py`). |
+| **Debug Logs** | `debug_*.py`, `.log` files | Transient debug scripts and log outputs. |
+
+### 2.4 ❌ ARCHIVED / DEPRECATED (Do Not Replicate)
+*Legacy files from previous architectures (v27/v29). Preserved for reference but NOT used.*
+
+| File | Former Role | Reason for Abandonment |
+| :--- | :--- | :--- |
+| `sovereign_sentinel.py` | **Daemon API** | Replaced by `main_bot.py` (Cron Architecture). |
+| `sentinel_daemon.py` | Daemon Logic | Obsolete v29 Logic. |
+| `sovereign_architect.py` | Setup Script | Obsolete v27 Setup. |
+| `orb_sidecar.py` | Helper | Merged into `main_bot.py`. |
+| `reset_orb_data.py` | Utility | Dangerous/Obsolete manual reset. |
+| `.github/workflows/sentinel-daemon.yml` | Workflow | Replaced by `deployment.yml`. |
+| `.github/workflows/orb-autonomous.yml` | Workflow | Replaced by `deployment.yml`. |
+| `T212_Script_Spec.txt` | Spec | Old reference text. |
+| `FUNCTIONALITY_GAP_ANALYSIS.md` | Doc | Superseded by this Spec. |
+
+> **Audit Note**: Any file in the root directory NOT listed above is considered **Transient/Temporary** (e.g., `scan_output.txt`, `runs.json`).
+
 ---
 
 ## 3. Operational Logic (The Dual Mandate)
@@ -74,10 +131,3 @@ To build the Hybrid System:
     1.  `Run Investor Audit` (Job A)
     2.  `Run Scalper` (Job C) - *Dependent on Job A Success*.
     3.  `Generate Report` (Job B) - *Final State*.
-
----
-
-## 6. Deprecated (Truly Unused)
-- `sovereign_sentinel.py` (The old Daemon Loop).
-- `sentinel_daemon.py` (Old Logic).
-- `orb_sidecar.py`.

@@ -2,7 +2,7 @@
     "risk": {
         "initial_capital": 1000.0,
         "max_drawdown_percent": 10.0,
-        "trade_allocation_percent": 35.0,
+        "trade_allocation_percent": 5.0,
         "min_range_percent": 0.8,
         "max_spread_to_range_ratio": 0.10
     },
