@@ -7,7 +7,8 @@ from requests.auth import HTTPBasicAuth
 logger = logging.getLogger("ORB_Shield")
 
 class ORBShield:
-    def __init__(self, config_file="config/orb_config.json"):
+    def __init__(self, messenger, config_file="config/orb_config.json"):
+        self.messenger = messenger
         self.t212_key = os.getenv('T212_API_KEY')
         self.t212_secret = os.getenv('T212_API_SECRET')
         self.auth = HTTPBasicAuth(self.t212_key, self.t212_secret)
@@ -71,6 +72,7 @@ class ORBShield:
         except Exception as e:
             logger.error(f"Target Order Error: {e}")
             
+        self.messenger.notify_shield(ticker, stop_price, target_price)
         return ids
 
     def check_oco(self, stop_id, target_id):

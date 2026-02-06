@@ -10,8 +10,9 @@ from requests.auth import HTTPBasicAuth
 logger = logging.getLogger("ORB_Execution")
 
 class ORBExecutionEngine:
-    def __init__(self, state_manager, config_file="config/orb_config.json"):
+    def __init__(self, state_manager, messenger, config_file="config/orb_config.json"):
         self.state_manager = state_manager
+        self.messenger = messenger
         with open(config_file, 'r') as f:
             self.config = json.load(f)
             
@@ -87,6 +88,7 @@ class ORBExecutionEngine:
             if resp.status_code == 200:
                 data = resp.json()
                 logger.info(f"✅ ORDER FILLED/PLACED: ID {data.get('id')}")
+                self.messenger.notify_trade(ticker, side, quantity, price if price else "MARKET")
                 return data
             else:
                 logger.error(f"❌ ORDER FAILED: {resp.text}")
