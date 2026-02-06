@@ -18,10 +18,23 @@ if __name__ == "__main__":
     
     print(f"📥 Response Code: {resp.status_code}")
     if resp.status_code == 200:
-        orders = resp.json()
-        print(f"✅ Found {len(orders)} historical orders.")
+        # DEBUG
+        if orders:
+            print(f"🔎 DEBUG Raw Item: {orders[0]}")
+
+        msg_lines = ["📜 **ORDER HISTORY REPORT**"]
         for o in orders:
-            # Display crucial execution info
-            print(f"   📜 {o.get('dateCreated')} | {o.get('ticker')} | {o.get('status')} | {o.get('filledQuantity')} @ {o.get('fillPrice')}")
-    else:
-        print(f"❌ Failed to fetch order history: {resp.text}")
+            if isinstance(o, dict):
+                info = f"{o.get('dateCreated')} | {o.get('ticker')} | {o.get('status')} | {o.get('filledQuantity')} @ {o.get('fillPrice')}"
+                print(f"   📜 {info}")
+                msg_lines.append(f"📜 {info}")
+            else:
+                print(f"   ⚠️ Raw: {o}")
+                msg_lines.append(f"⚠️ Raw: {o}")
+
+        # Telegram Notification
+        token = os.getenv('TELEGRAM_TOKEN', '').strip()
+        chat_id = os.getenv('TELEGRAM_CHAT_ID', '').strip()
+        if token and chat_id:
+            requests.post(f"https://api.telegram.org/bot{token}/sendMessage", 
+                           data={"chat_id": chat_id, "text": "\n".join(msg_lines), "parse_mode": "Markdown"})

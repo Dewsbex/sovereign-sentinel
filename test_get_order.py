@@ -37,10 +37,21 @@ if __name__ == "__main__":
         print(f"📡 Requesting details for Order ID: {order_id}...")
         resp = requests.get(f"{base_url}/orders/{order_id}", auth=auth, timeout=15)
         
-        print(f"📥 Response Code: {resp.status_code}")
-        print(f"📄 Body: {json.dumps(resp.json(), indent=2) if resp.status_code == 200 else resp.text}")
+        token = os.getenv('TELEGRAM_TOKEN', '').strip()
+        chat_id = os.getenv('TELEGRAM_CHAT_ID', '').strip()
         
+        print(f"📥 Response Code: {resp.status_code}")
+        body_text = json.dumps(resp.json(), indent=2) if resp.status_code == 200 else resp.text
+        print(f"📄 Body: {body_text}")
+        
+        msg = ""
         if resp.status_code == 200:
             print("✅ GET ORDER SUCCESS")
+            msg = f"✅ **GET ORDER REPORT**\n\n`{body_text}`"
         else:
             print("❌ GET ORDER FAILED")
+            msg = f"❌ **GET ORDER FAILED**\n\nError: {resp.status_code}\n`{body_text}`"
+
+        if token and chat_id:
+             requests.post(f"https://api.telegram.org/bot{token}/sendMessage", 
+                           data={"chat_id": chat_id, "text": msg, "parse_mode": "Markdown"})
