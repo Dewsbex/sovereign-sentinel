@@ -480,7 +480,7 @@
             <span id="market-status-badge" class="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600 border border-gray-200 uppercase tracking-wide">LIVE</span>
             <div class="text-right hidden sm:block">
                 <span class="text-[0.6rem] font-bold text-gray-400 mono mr-2">LAST UPDATE:</span>
-                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">06/02 14:42</span>
+                <span class="text-xs font-bold text-emerald-500 mono bg-emerald-50 px-2 py-1 rounded">06/02 15:01</span>
             </div>
             <!-- v32.60 Manual API Hub Trigger -->
             <button onclick="openSettingsModal()" class="text-gray-400 hover:text-indigo-600 transition-colors">
@@ -1809,9 +1809,9 @@
             <!-- Modal Header -->
             <div class="px-6 py-5 border-b border-gray-100 bg-white z-10">
                 <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <span class="text-[0.6rem] text-gray-400 uppercase tracking-widest font-bold">Investments Value</span>
-                        <div class="text-3xl font-bold text-gray-900 mono tracking-tight">£171,999.12</div>
+                    <div class="flex items-center space-x-4">
+                        <span id="version-display" onclick="toggleVersion()" class="text-[0.6rem] mono text-gray-400 cursor-pointer hover:text-white transition-colors" title="Toggle Version">v32.60</span>
+                        <button id="see-all-btn" class="text-[0.6rem] uppercase tracking-widest text-indigo-400 hover:text-indigo-300 transition-colors font-bold hidden md:block">See all holdings</button>
                     </div>
                     <button onclick="closePortfolioModal()" class="p-2 -mr-2 text-gray-400 hover:text-gray-600 transition-colors">
                         <i class="fas fa-times text-xl"></i>
