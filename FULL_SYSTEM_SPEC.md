@@ -1,113 +1,83 @@
-# Sovereign Sentinel (ORB Engine) - Master System Specification (v32.48)
+# Sovereign Sentinel (ORB Engine) - Master System Specification (v32.50)
 
-**CODEBASE REALITY EDITION**
-*This document reflects the exact state of the codebase as of v32.48. Discrepancies have been resolved in favor of the actual code.*
+**HYBRID DUAL-MANDATE EDITION**
+*This system implements a 95/5 Split Strategy: 95% Capital for Smart Investing (Fundamental), 5% for High-Risk Scalping (Technical).*
 
 ## 1. System Overview
-**Name**: Sovereign Sentinel (ORB Engine)
-**Version**: v32.48 (Active Codebase)
-**Architecture**: **Cron-Based Simulation Loop** (Active) vs **FastAPI Daemon** (Legacy/Deprecated).
-**Broker API**: Trading 212 API v0 (REST).
+**Name**: Sovereign Sentinel (Hybrid Engine)
+**Version**: v32.50
+**Architecture**: **Dual-Process**.
+1.  **The Investor (95%)**: Daily Fundamental/Metric checks (Job A).
+2.  **The Scalper (5%)**: Technical Breakout Simulation (Job C / Sentinel).
 
 ---
 
 ## 2. File Inventory & Status
-Every file in the repository has been audited and categorized.
+**All modules are now Active or Designated for Re-integration.**
 
-### 2.1 ✅ ACTIVE CORE (The "Sovereign Finality" Stack)
-*Replicate these files to build the v32.25 system.*
+### 2.1 ✅ ACTIVE CORE (The Hybrid Stack)
 
-| File | Role | Dependencies |
-| :--- | :--- | :--- |
-| `main_bot.py` | **Entry Point**. Runs the logic loop. | `orb_*.py`, `sovereign_state_manager.py` |
-| `orb_execution.py` | **Execution Engine**. Limit/Market Logic. | `config/orb_config.json` |
-| `orb_shield.py` | **Protection**. Stop/Limit Logic. | `t212_api` |
-| `orb_observer.py` | **Market Data**. RVOL Calculation. | `yfinance`, `config/orb_config.json` |
-| `orb_messenger.py` | **Notifications**. Telegram Bot. | `requests` |
-| `sovereign_state_manager.py` | **State**. Manages `ledger_state.json`. | `json`, `os` |
-| `generate_isa_portfolio.py` | **Job A (Auditor)**. Syncs T212 Data. | `yfinance`, `requests` |
-| `generate_static.py` | **Job B (Artist)**. Generates UI. | `jinja2`, `utils.py` |
-| `templates/base.html` | **UI Template**. Tailwind + CSS Animations. | N/A |
-| `utils.py` | **Helper**. Formatting/Truncation. | N/A |
-| `config/orb_config.json` | **Config**. Strategy Parameters. | N/A |
-| `data/ledger_state.json` | **Database**. Persistent State. | N/A |
-
-### 2.2 ❌ ARCHIVED / LOST FUNCTIONALITY (Do Not Replicate)
-*The following files belong to the Legacy "Sovereign Architect" (v27). They are deprecated, but contain **significant functionality** that is **NOT** present in the active v32 System. Replicating the active system WILL result in the loss of these features.*
-
-| File | Status | **LOST FUNCTIONALITY** (Gap Analysis) |
-| :--- | :--- | :--- |
-| `sovereign_sentinel.py` | **Abandoned** | **The Daemon**: Continuous loop, 15-minute polling, and FastAPI Dashboard. *Active system is a 5-minute cron job.* |
-| `oracle.py` | **Abandoned** | **Fundamental Analysis**: Dividend Yield checks, Moat analysis, Insider Trading scans. *Active system is Purely Technical (Price Action).* |
-| `solar_cycle.py` | **Abandoned** | **Macro & Tax Logic**: pre-market Futures checks, "Transatlantic Pivot" (Macro data lock), and **ISA/GIA Tax Logic** (Bed & Breakfast rules). |
-| `immune_system.py` | **Abandoned** | **Advanced Risk**: "Earnings Radar" (Block buy <7 days to earnings), "Falling Knife" protection, and Split Guard. *Active system checks only Price.* |
-| `config.py` | **Abandoned** | **Complex Config**: Variables for Stamp Duty, FX Friction, and Tax Drag. *Active config is simplified.* |
-
-> **CRITICAL WARNING**: The "Active" v32 system is a **Technical Scalper**. The "Legacy" v27 system was a **Fundamental Investor**. If your goal is *Investing*, v32 is a functional regression.
+| File | Role | Mandate | Status |
+| :--- | :--- | :--- | :--- |
+| `generate_isa_portfolio.py` | **Job A (The Investor)** | **95% Capital**. Manages Core Holdings using `oracle.py` logic. | **Active** |
+| `main_bot.py` | **Job C (The Sentinel)** | **5% Capital**. Executes ORB Scalping logic on specific targets. | **Active** |
+| `generate_static.py` | **Job B (The Artist)** | **Reporting**. Generates the Unified Dashboard. | **Active** |
+| `oracle.py` | **The Brain (Fundamental)** | **Investing Logic**. Checks Yields, Moats, Cash Flow. | **Restoring** |
+| `solar_cycle.py` | **The Clock (Macro)** | **Global Context**. Checks Tax Year, Macro Events. | **Restoring** |
+| `immune_system.py` | **The Shield (Risk)** | **Global Safety**. Logic for "Falling Knife" & "Earnings Blackout". | **Restoring** |
+| `config.py` | **Detailed Config** | **Legacy Settings**. Contains Tax/Macro vars needed by Oracle. | **Partial** |
 
 ---
 
-## 3. Operational Logic (Code Truth)
+## 3. Operational Logic (The Dual Mandate)
 
-### 3.1 The Sentinel Loop (`main_bot.py`)
-- **Mode**: **Simulation Burst**.
-- **Duration**: **300 Seconds** (5 Minutes).
-- **Trigger**: GitHub Actions Cron (`deployment.yml`).
-- **Logic**:
-    1.  **Init**: Loads State & Config. Checks Circuit Breaker.
-    2.  **Observe**: Runs `ORBObserver`. (Note: Result currently unused in loop).
-    3.  **Execute**: Loops for 5 mins. Calls `engine.fetch_current_price(ticker)`.
-    4.  **Shutdown**: Saves State. Commits to Git.
+### 3.1 Mandate A: The Smart Investor (95% Equity)
+**Process**: `generate_isa_portfolio.py` (Job A)
+**Frequency**: Daily (End of Day or Morning Prep).
+**Logic**:
+1.  **Audits Portfolio**: Fetches T212 Holdings.
+2.  **Applies Oracle**: Calls `oracle.run_full_audit(ticker)` on every holding.
+    - *Checks*: Dividend Yield > Risk Free Rate? Management Buying?
+3.  **Applies Solar Cycle**: Checks `solar_cycle.phase_4b_tax_logic_fork()` (ISA vs GIA).
+4.  **Rebalancing**: Generates "TRIM" or "ADD" signals in `ledger_state.json` based on Fundamental Health.
 
-### 3.2 Execution Realities (`orb_execution.py`)
-- **Price Feed**: `fetch_current_price()` returns **`0.0` (Hardcoded Mock)**.
-    - *Implication*: The bot cannot trade in its current state without a Price Source update.
-- **Entry Logic**: `if current_price >= r['trigger_long']`.
-- **Order Type**: Market Order (Synthetic Limit).
-
-### 3.3 Shield Logic (`orb_shield.py`)
-- **Target Calculation**: `Entry Price + (Range * 2.0)`.
-- **Stop Calculation**: `Range Low`.
-- **TimeValidity**: `"DAY"` (Hardcoded).
-
-### 3.4 Intelligence Source
-- **Fact**: `main_bot.py` does **NOT** generate `orb_intel.json`.
-- **Source**: `orb_intel.json` must be provided manually or by a separate script (`fetch_intelligence.py` exists but is standalone).
+### 3.2 Mandate B: The Scalper (5% Equity)
+**Process**: `main_bot.py` (Job C)
+**Frequency**: Cron Trigger (14:25 UTC).
+**Logic**:
+1.  **Budget Constraint**: `Allocated Capital = Total Net Equity * 0.05`.
+2.  **Strategy**: Technical ORB (Opening Range Breakout).
+3.  **Constraints**:
+    - **Immune System**: Must check `immune.check_earnings_radar()` before trading.
+    - **Oracle Check**: Ideally only scalps tickers that pass a basic "Quality" filter (optional).
 
 ---
 
-## 4. Configuration Schema (Active)
-**File**: `config/orb_config.json` (NOT `config.py`)
+## 4. Integration Plan (Replication Steps)
+To build the Hybrid System:
 
-```json
-{
-    "risk": {
-        "initial_capital": 1000.0,
-        "max_drawdown_percent": 10.0,
-        "trade_allocation_percent": 35.0,
-        "min_range_percent": 0.8
-    },
-    "filters": { "min_rvol": 1.5, "index_ticker": "SPY" },
-    "watchlist": ["TSLA", "NVDA", "AMD", "PLTR", "COIN", "MARA", "MSTR", "NUE", "DHR"]
-}
-```
+1.  **Deploy Core**: All files in Section 2.1.
+2.  **Configure Split**:
+    - In `orb_config.json`: Set `"trade_allocation_percent": 5.0` (Scalper uses 5% of Total).
+    - In `config.py`: Ensure `RISK_FREE_RATE` and `TAX_VARS` are correct for Oracle.
+3.  **Run Pipeline**:
+    - **Step 1 (Investor)**: `python generate_isa_portfolio.py` -> Runs Oracle, Updates Core DB.
+    - **Step 2 (Reporter)**: `python generate_static.py` -> Visualizes Health.
+    - **Step 3 (Scalper)**: `python main_bot.py` -> Trades the 5% Budget using Technicals.
 
 ---
 
-## 5. Automation (GitHub Actions)
-**Active Workflow**: `.github/workflows/deployment.yml`
-
+## 5. Automation
+**Workflow**: `.github/workflows/deployment.yml`
 - **Schedule**: `25 14 * * 1-5`.
-- **Env Secrets**: `T212_API_KEY`, `T212_API_SECRET`, `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`.
-- **Permissions**: `contents: write`.
+- **Job Chain**:
+    1.  `Run Investor Audit` (Job A)
+    2.  `Run Scalper` (Job C) - *Dependent on Job A Success*.
+    3.  `Generate Report` (Job B) - *Final State*.
 
 ---
 
-## 6. How to Replicate (The Only Way)
-1.  **Ignore** all files in Section 2.2.
-2.  **Deploy** files in Section 2.1.
-3.  **Configure** `orb_config.json`.
-4.  **Run Sequence**:
-    - `python generate_isa_portfolio.py` (Job A)
-    - `python generate_static.py` (Job B)
-    - `python main_bot.py` (The Sentinel)
+## 6. Deprecated (Truly Unused)
+- `sovereign_sentinel.py` (The old Daemon Loop).
+- `sentinel_daemon.py` (Old Logic).
+- `orb_sidecar.py`.
