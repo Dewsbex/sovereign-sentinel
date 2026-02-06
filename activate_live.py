@@ -12,12 +12,12 @@ if __name__ == "__main__":
     t212_secret = os.getenv('T212_API_SECRET', '').strip()
     
     auth = HTTPBasicAuth(t212_key, t212_secret)
-    # Using the EXACT format verified in the forensic test
-    ticker = "NUE"
+    # Using the verified format: TICKER_US_EQ
+    ticker = "DHR"
     instrument_code = f"{ticker}_US_EQ"
     
     # Place a safe limit order (1 share @ $100)
-    # This will sit in "Pending Orders" and not execute tonight.
+    # Danaher (DHR) is currently ~$250, so $100 is very secure.
     url = "https://live.trading212.com/api/v0/equity/orders/limit"
     payload = {
         "instrumentCode": instrument_code,
