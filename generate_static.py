@@ -150,7 +150,7 @@ def generate_oracle_ring(holdings, total_invested):
 def render():
     env_mode = "LIVE" if os.environ.get('ENV') == 'LIVE' else "DEMO"
     prefix = f"({env_mode})"
-    print(f"{prefix} Starting Sector Sentinel (Job B) [v32.66]... ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"{prefix} Starting Sector Sentinel (Job B) [v32.67]... ({datetime.now().strftime('%H:%M:%S')})")
     
     # Load Sector Mapping (Tier 1)
     mapping_data = {"mappings": {}, "gics_colors": {}}
@@ -269,6 +269,14 @@ def render():
         invested_val = val - pnl
         pct = (pnl / invested_val) if invested_val > 0 else 0.0
         
+        abs_pct = abs(pct * 100)
+        # Transparency Logic: High (>10%): Full (1.0). Low (<2%): Base (0.4).
+        alpha = min(1.0, max(0.4, 0.4 + (abs_pct - 2.0) * (0.6 / 8.0)))
+        
+        # Emerald Green: #50C878, Cherry Red: #CC2630
+        base_color = "80, 200, 120" if pnl >= 0 else "204, 38, 48"
+        fill_color_rgba = f"rgba({base_color}, {alpha:.2f})"
+
         if sector not in sector_groups:
             sector_groups[sector] = []
             
@@ -279,7 +287,9 @@ def render():
             'label_pl': f"{'+' if pnl >= 0 else ''}£{abs(pnl):,.2f}",
             'label_pct': f"{pct*100:+.2f}%",
             'is_profit': pnl >= 0,
-            'fillColor': '#10b981' if pnl >= 0 else '#ef4444',
+            'fillColor': fill_color_rgba,
+            # v32.67: Sector Grouping Metadata
+            'sector': sector,
             # v32.66 Forensic Tooltip Data
             'name': h.get('Name', ticker),
             'price': h.get('Price', 0),
@@ -421,9 +431,9 @@ def render():
     legend_html += "</div>"
 
     context = {
-        'version': 'v32.66',
+        'version': 'v32.67',
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.66 Sector Sentinel"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.67 Sector Sentinel"},
         'sync_time': datetime.now().strftime('%d/%m %H:%M'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",
@@ -438,6 +448,7 @@ def render():
         'fortress_holdings': fortress_display,
         'sniper_architect': sniper_display,
         'heatmap_dataset': json.dumps(heatmap_series),
+        'orb_intel': orb_intel,
         'account_history': json.dumps(history_log),
         'pending_orders': [],
         'portfolio_metrics': {

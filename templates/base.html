@@ -17,8 +17,8 @@
             --bg-dark: #0a0a0a;
             --panel-white: #FFFFFF;
             --text-dark: #1F2937;
-            --pos-green: #00ff88;
-            --neg-red: #ff4d4d;
+            --pos-green: #50C878;
+            --neg-red: #CC2630;
             --dim-gray: #666;
             --border-subtle: rgba(0, 0, 0, 0.05);
             --t212-teal: #37E6B0;
@@ -981,6 +981,18 @@
             </div>
         </div>
 
+
+            <!-- AI BRIEF (v32.67) -->
+            <div id="ai-brief-container" class="mt-4 sentinel-card bg-neutral-50 border-indigo-50 p-4 w-full">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fas fa-moon text-indigo-400"></i>
+                    <h2 class="text-xs mono text-neutral-500 uppercase tracking-widest">SITREP: MARKET STATUS & STRATEGY</h2>
+                </div>
+                <div class="text-sm text-neutral-800 leading-relaxed font-medium">
+                    {{ orb_intel.briefing | safe }}
+                </div>
+            </div>
+
             <!-- Target Tracker Container -->
             <div id="target-tracker-container" class="mt-4 sentinel-card p-4">
                 <div class="flex items-center justify-between mb-2">
@@ -1006,10 +1018,10 @@
                                     <div class="text-[0.6rem] text-gray-400">{{ target.company }}</div>
                                 </td>
                                 <td class="py-2">
-                                    <span class="px-2 py-1 bg-amber-50 text-amber-600 rounded">{{ target.trigger | round(2) }}</span>
+                                    <span class="px-2 py-1 bg-amber-50 text-amber-600 rounded">{{ target.trigger | default(0) | round(2) }}</span>
                                 </td>
                                 <td class="py-2">
-                                    <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded">{{ target.goal | round(2) }}</span>
+                                    <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded">{{ target.goal | default(0) | round(2) }}</span>
                                 </td>
                                 <td class="py-2 text-right">
                                     <div class="flex items-center justify-end gap-1">
@@ -1258,10 +1270,11 @@
                 plotOptions: {
                     treemap: {
                         distributed: true, // v32.67 Performance Coloring Enabled
-                        enableShades: false // Keep colors distinct
+                        enableShades: true,
+                        shadeIntensity: 0.5
                     }
                 },
-                stroke: { width: 2, colors: ['#0f0f0f'] }, 
+                stroke: { width: 1, colors: ['#ffffff'] }, 
                 tooltip: {
                     theme: 'light',
                     custom: function({ seriesIndex, dataPointIndex, w }) {

@@ -19,7 +19,7 @@ def main():
     # Initialize Messenger
     os.environ['ENV'] = 'LIVE' # FORCE LIVE MODE v32.61
     msg = ORBMessenger()
-    logger.info("🚀 STARTING SOVEREIGN FINALITY (v32.61)...")
+    logger.info("🚀 STARTING SOVEREIGN FINALITY (v32.67)...")
     
     # 1. Initialize State & Config
     try:
