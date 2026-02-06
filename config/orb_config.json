@@ -1,0 +1,22 @@
+{
+    "risk": {
+        "initial_capital": 1000.0,
+        "max_drawdown_percent": 10.0,
+        "trade_allocation_percent": 35.0,
+        "min_range_percent": 0.8,
+        "max_spread_to_range_ratio": 0.10
+    },
+    "filters": {
+        "min_rvol": 1.5,
+        "index_ticker": "SPY",
+        "index_correlation_threshold": 0.0
+    },
+    "time_window": {
+        "start_gmt": "14:30",
+        "end_observation_gmt": "14:45",
+        "hard_stop_gmt": "21:00"
+    },
+    "watchlist": [
+        "TSLA", "NVDA", "AMD", "PLTR", "COIN", "MARA", "MSTR", "NUE", "DHR"
+    ]
+}
