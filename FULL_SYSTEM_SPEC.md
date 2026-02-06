@@ -25,7 +25,7 @@
 | `oracle.py` | **The Brain (Fundamental)** | **Investing Logic**. Checks Yields, Moats, Cash Flow. | **Restoring** |
 | `solar_cycle.py` | **The Clock (Macro)** | **Global Context**. Checks Tax Year, Macro Events. | **Restoring** |
 | `immune_system.py` | **The Shield (Risk)** | **Global Safety**. Logic for "Falling Knife" & "Earnings Blackout". | **Restoring** |
-| `config.py` | **Detailed Config** | **Legacy Settings**. Contains Tax/Macro vars needed by Oracle. | **Partial** |
+| `config.py` | **Detailed Config** | **Active Legacy Support**. Required by `oracle.py` for variables. | **Active** |
 
 ---
 
