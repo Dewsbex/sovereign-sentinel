@@ -32,20 +32,18 @@ Every file in the repository has been audited and categorized.
 | `config/orb_config.json` | **Config**. Strategy Parameters. | N/A |
 | `data/ledger_state.json` | **Database**. Persistent State. | N/A |
 
-### 2.2 ❌ DEPRECATED / LEGACY (Do Not Replicate)
-*These files belong to previous architectures (v27 "Sovereign Architect" or v29 "Sentinel Daemon"). They are **NOT** used by `main_bot.py`.*
+### 2.2 ❌ ARCHIVED / LOST FUNCTIONALITY (Do Not Replicate)
+*The following files belong to the Legacy "Sovereign Architect" (v27). They are deprecated, but contain **significant functionality** that is **NOT** present in the active v32 System. Replicating the active system WILL result in the loss of these features.*
 
-| File | Reason for Deprecation |
-| :--- | :--- |
-| `sovereign_sentinel.py` | **FastAPI Daemon**. Replaced by Cron/`main_bot.py`. |
-| `sentinel_daemon.py` | Old Daemon logic. |
-| `config.py` | Configuration loader for the Legacy Daemon. Active system uses `config/orb_config.json`. |
-| `oracle.py` | Old logic module. |
-| `solar_cycle.py` | Old logic module. |
-| `immune_system.py` | Old logic module. |
-| `orb_sidecar.py` | Experimental sidecar. Merged into `main_bot.py`. |
-| `.github/workflows/sentinel-daemon.yml` | Workflow for the Legacy Daemon. |
-| `.github/workflows/orb-autonomous.yml` | Old workflow. |
+| File | Status | **LOST FUNCTIONALITY** (Gap Analysis) |
+| :--- | :--- | :--- |
+| `sovereign_sentinel.py` | **Abandoned** | **The Daemon**: Continuous loop, 15-minute polling, and FastAPI Dashboard. *Active system is a 5-minute cron job.* |
+| `oracle.py` | **Abandoned** | **Fundamental Analysis**: Dividend Yield checks, Moat analysis, Insider Trading scans. *Active system is Purely Technical (Price Action).* |
+| `solar_cycle.py` | **Abandoned** | **Macro & Tax Logic**: pre-market Futures checks, "Transatlantic Pivot" (Macro data lock), and **ISA/GIA Tax Logic** (Bed & Breakfast rules). |
+| `immune_system.py` | **Abandoned** | **Advanced Risk**: "Earnings Radar" (Block buy <7 days to earnings), "Falling Knife" protection, and Split Guard. *Active system checks only Price.* |
+| `config.py` | **Abandoned** | **Complex Config**: Variables for Stamp Duty, FX Friction, and Tax Drag. *Active config is simplified.* |
+
+> **CRITICAL WARNING**: The "Active" v32 system is a **Technical Scalper**. The "Legacy" v27 system was a **Fundamental Investor**. If your goal is *Investing*, v32 is a functional regression.
 
 ---
 
