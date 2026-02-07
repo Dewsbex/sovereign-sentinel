@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEALTH SEEKER v1.0 - PRODUCTION TERMINAL</title>
+    <title>SOVEREIGN TERMINAL v1.1</title>
     
     <style>
-        /* WEALTH SEEKER v1.0 - LIGHT INDUSTRIAL AESTHETIC */
+        /* SOVEREIGN TERMINAL v1.1 - ZERO-WASTE HYPER-EFFICIENCY */
         * {
             margin: 0;
             padding: 0;
@@ -18,7 +18,7 @@
         }
         
         :root {
-            /* Light Industrial Palette - LOCKED */
+            /* Light Industrial Palette */
             --lab-white: #f9fafb;
             --true-white: #ffffff;
             --charcoal: #111827;
@@ -26,16 +26,16 @@
             --label-dark: #374151;
             --label-medium: #6b7280;
             
-            /* INDUSTRIAL INSTRUMENT PALETTE */
+            /* Industrial Instrument v1.1 */
             --industrial-orange: #fb923c;
-            --whisper-mint: #f7fee7;
-            --whisper-rose: #fffafb;
+            --visible-mint: #f0fdf4;
+            --visible-rose: #fff1f2;
             
-            /* WHISPER-GLOW HEATMAP */
-            --glow-mint-solid: #dcfce7;      /* Gain >3% */
-            --glow-lime-whisper: #f7fee7;    /* Gain 0.1-2.9% */
-            --glow-rose-white: #fffafb;      /* Loss -0.1 to -2.9% */
-            --glow-rose-solid: #fee2e2;      /* Loss <-3% */
+            /* WHISPER-GLOW HEATMAP (Visible Tints) */
+            --soft-mint: #bbf7d0;           /* Gain >3% */
+            --visible-mint-tint: #f0fdf4;   /* Gain 0.1-2.9% */
+            --visible-rose-tint: #fff1f2;   /* Loss -0.1 to -2.9% */
+            --soft-rose: #fecaca;           /* Loss <-3% */
             
             /* Alert */
             --alert-amber: #f59e0b;
@@ -50,220 +50,163 @@
             overflow-x: hidden;
         }
         
-        /* 00 / NAV - STICKY COMMAND STRIP */
-        .nav-strip {
+        /* UNIFIED COMMAND & CONTROL HEADER */
+        .unified-header {
             position: sticky;
             top: 0;
             z-index: 2000;
-            background: rgba(249, 250, 251, 0.9);
+            background: rgba(249, 250, 251, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--slate-border);
-            padding: 12px 24px;
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-        }
-        
-        .nav-button {
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--label-medium);
-            text-decoration: none;
-            padding: 8px 16px;
-            border: 1px solid var(--slate-border);
-            background: var(--true-white);
-            transition: all 0.2s ease;
-        }
-        
-        .nav-button:hover {
-            color: var(--charcoal);
-            border-color: var(--charcoal);
-        }
-        
-        /* SCROLL OFFSET */
-        .section {
-            scroll-margin-top: 80px;
-        }
-        
-        /* GLOBAL SITREP - Fixed Header */
-        .global-sitrep {
-            position: sticky;
-            top: 45px;
-            z-index: 1000;
-            background: var(--true-white);
-            border-bottom: 1px solid var(--slate-border);
-            padding: 20px 24px;
+            padding: 12px 16px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            align-items: center;
         }
         
-        .vibe-lab-header {
-            grid-column: 1 / -1;
-            text-align: center;
-            font-size: 11px;
-            letter-spacing: 0.15em;
-            color: var(--label-medium);
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--slate-border);
-            margin-bottom: 8px;
-        }
-        
-        .vibe-lab-title {
-            font-weight: 700;
-            color: var(--charcoal);
-        }
-        
-        .metric {
+        .unified-header .metric {
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.08em;
             font-weight: 700;
         }
         
         .metric-label {
             color: var(--label-medium);
-            font-size: 10px;
-            margin-bottom: 4px;
+            font-size: 9px;
+            margin-bottom: 3px;
         }
         
         .metric-value {
-            font-size: 18px;
+            font-size: 14px;
             color: var(--charcoal);
         }
         
         .metric-value.positive {
-            color: var(--harvest-mint);
+            color: var(--ghost-mint);
+            text-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
         }
         
         .metric-value.negative {
-            color: var(--solid-rose);
+            color: var(--ghost-rose);
+            text-shadow: 0 0 8px rgba(239, 68, 68, 0.3);
         }
         
-        .fortress-alert-banner {
+        .nav-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            grid-column: span 2;
+        }
+        
+        .nav-btn {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--label-medium);
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 1px solid var(--slate-border);
+            background: var(--true-white);
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        
+        .nav-btn:hover {
+            color: var(--charcoal);
+            border-color: var(--charcoal);
+        }
+        
+        .fortress-alert {
             grid-column: 1 / -1;
             background: var(--alert-amber);
             color: var(--true-white);
-            padding: 12px;
-            border: 1px solid var(--alert-amber);
+            padding: 8px;
             text-align: center;
             font-weight: 700;
+            font-size: 10px;
             animation: pulse 2s infinite;
         }
         
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
+            50% { opacity: 0.85; }
         }
         
-        /* CONTAINER */
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 0;
-        }
-        
-        /* SECTION HEADERS */
-        .section-header {
-            background: var(--true-white);
-            border-top: 1px solid var(--slate-border);
-            border-bottom: 1px solid var(--slate-border);
-            padding: 16px 24px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 700;
-            font-size: 11px;
-            color: var(--label-medium);
-        }
-        
-        /* 01 / SENTINEL - THE LABORATORY */
-        .sentinel-lab {
-            background: var(--true-white);
-            border-bottom: 1px solid var(--slate-border);
-            padding: 24px;
-        }
-        
-        .sentinel-grid {
+        /* RESPONSIVE GRID CONTAINER */
+        .responsive-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 0;
         }
         
-        .sentinel-left,
-        .sentinel-right {
+        /* SECTION CONTAINERS WITH FLOATING LABELS */
+        .section {
+            position: relative;
+            background: var(--true-white);
+            border-bottom: 1px solid var(--slate-border);
+            padding: 16px;
+            scroll-margin-top: 70px;
+        }
+        
+        .section-label {
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--label-medium);
+            text-transform: uppercase;
+            z-index: 10;
+            background: var(--true-white);
+            padding: 2px 6px;
             border: 1px solid var(--slate-border);
-            padding: 20px;
+        }
+        
+        .chart-container {
+            margin-top: 24px;
+            border: 1px solid var(--slate-border);
+            padding: 16px;
             background: var(--lab-white);
         }
         
-        #sentinel-donut {
-            height: 400px;
-        }
-        
-        #equity-curve {
-            height: 400px;
-        }
-        
-        /* 02 / MOMENTUM - HEATMAP */
-        .heatmap-container {
-            background: var(--true-white);
-            border-bottom: 1px solid var(--slate-border);
-            padding: 24px;
+        #sentinel-donut,
+        #equity-curve,
+        #performance-heatmap,
+        #asset-donut {
+            min-height: 350px;
         }
         
         #performance-heatmap {
-            height: 550px !important;
-            min-height: 550px;
-            width: 100%;
-            border: 1px solid var(--slate-border);
+            min-height: 450px;
         }
         
-        /* 03 / MACRO - POWER-GRID */
-        .power-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 24px;
-            padding: 24px;
-            background: var(--true-white);
-            border-bottom: 1px solid var(--slate-border);
-        }
-        
-        .power-grid-left,
-        .power-grid-right {
-            border: 1px solid var(--slate-border);
-            padding: 20px;
-            background: var(--lab-white);
-        }
-        
-        #asset-donut {
-            height: 400px;
-        }
-        
+        /* MACRO POWER-GRID */
         .sector-bar-chart {
+            margin-top: 24px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
         
         .sector-bar-row {
             display: grid;
-            grid-template-columns: 120px 1fr 80px;
+            grid-template-columns: 100px 1fr 70px;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
         
         .sector-name {
             text-transform: uppercase;
-            font-size: 11px;
+            font-size: 10px;
             letter-spacing: 0.05em;
             color: var(--label-dark);
         }
         
         .bar-container {
             position: relative;
-            height: 24px;
+            height: 20px;
             background: #f3f4f6;
             border: 1px solid var(--slate-border);
         }
@@ -271,8 +214,8 @@
         .bar-fill {
             position: absolute;
             height: 100%;
-            background: var(--harvest-mint);
-            opacity: 0.3;
+            background: var(--ghost-mint);
+            opacity: 0.4;
             transition: width 0.3s ease;
         }
         
@@ -284,12 +227,12 @@
         
         .bar-status {
             text-align: right;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
         }
         
         .bar-status.over {
-            color: var(--solid-rose);
+            color: var(--ghost-rose);
         }
         
         .bar-status.under {
@@ -297,54 +240,62 @@
         }
         
         .bar-status.match {
-            color: var(--harvest-mint);
+            color: var(--ghost-mint);
         }
         
-        /* 04 / STRATEGIC BRIEF */
-        .ai-brief-section {
-            background: var(--true-white);
-            border-bottom: 1px solid var(--slate-border);
-            padding: 24px;
-        }
-        
+        /* AI BRIEF */
         .ai-brief-content {
+            margin-top: 24px;
             font-family: system-ui, -apple-system, sans-serif;
             color: var(--label-dark);
             line-height: 1.6;
-            max-width: 900px;
         }
         
         /* FOOTER */
         .footer {
             background: var(--true-white);
             border-top: 1px solid var(--slate-border);
-            padding: 24px;
+            padding: 16px;
             text-align: center;
             color: var(--label-medium);
-            font-size: 10px;
+            font-size: 9px;
             text-transform: uppercase;
             letter-spacing: 0.1em;
+        }
+        
+        /* MOBILE OPTIMIZATION */
+        @media (max-width: 768px) {
+            .metric-label {
+                font-size: 8px;
+            }
+            
+            .metric-value {
+                font-size: 12px;
+            }
+            
+            .nav-buttons {
+                grid-column: 1 / -1;
+                justify-content: center;
+            }
+            
+            .nav-btn {
+                flex: 1;
+                font-size: 9px;
+                padding: 8px 6px;
+            }
+            
+            .section-label {
+                font-size: 7px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 00 / NAV - STICKY COMMAND STRIP -->
-    <nav class="nav-strip">
-        <a href="#sentinel" class="nav-button">01 / SENTINEL</a>
-        <a href="#momentum" class="nav-button">02 / MOMENTUM</a>
-        <a href="#macro" class="nav-button">03 / MACRO</a>
-        <a href="#strategic" class="nav-button">04 / STRATEGIC</a>
-    </nav>
-    
-    <!-- GLOBAL SITREP HEADER -->
-    <header class="global-sitrep">
-        <div class="vibe-lab-header">
-            <span class="vibe-lab-title">WEALTH SEEKER v1.0 - PRODUCTION TERMINAL</span> // STATUS: NOMINAL
-        </div>
-        
+    <!-- UNIFIED COMMAND & CONTROL HEADER -->
+    <header class="unified-header">
         {% if fortress_alert %}
-        <div class="fortress-alert-banner">
-            ⚠️ FORTRESS MIGRATION ALERT - DEFENSIVE PIVOT RECOMMENDED ⚠️
+        <div class="fortress-alert">
+            ⚠️ FORTRESS MIGRATION ALERT
         </div>
         {% endif %}
         
@@ -361,122 +312,119 @@
         </div>
         
         <div class="metric">
-            <div class="metric-label">MACRO-CLOCK PHASE</div>
+            <div class="metric-label">PHASE</div>
             <div class="metric-value">{{ market_phase }}</div>
         </div>
         
         <div class="metric">
-            <div class="metric-label">SYSTEM STATUS</div>
+            <div class="metric-label">STATUS</div>
             <div class="metric-value">{{ connectivity }}</div>
+        </div>
+        
+        <div class="nav-buttons">
+            <a href="#sentinel" class="nav-btn">01</a>
+            <a href="#momentum" class="nav-btn">02</a>
+            <a href="#macro" class="nav-btn">03</a>
+            <a href="#strategic" class="nav-btn">04</a>
         </div>
     </header>
     
-    <div class="container">
-        <!-- 01 / SENTINEL - THE LABORATORY -->
+    <!-- 01 / SENTINEL - THE LABORATORY -->
+    <div class="responsive-grid">
         <div id="sentinel" class="section">
-            <div class="section-header">01 / SENTINEL - THE LABORATORY (£1,000 BOT TRACKING)</div>
-            <div class="sentinel-lab">
-                <div class="sentinel-grid">
-                    <!-- Left: Seed vs Harvest Donut -->
-                    <div class="sentinel-left">
-                        <div id="sentinel-donut"></div>
-                    </div>
-                    
-                    <!-- Right: Equity Growth Curve -->
-                    <div class="sentinel-right">
-                        <div id="equity-curve"></div>
-                    </div>
-                </div>
+            <div class="section-label">01 / SENTINEL</div>
+            <div class="chart-container">
+                <div id="sentinel-donut"></div>
             </div>
         </div>
         
-        <!-- 02 / MOMENTUM - GLOBAL HEATMAP -->
-        <div id="momentum" class="section">
-            <div class="section-header">02 / MOMENTUM - GLOBAL HEATMAP (ALL T212 HOLDINGS)</div>
-            <div class="heatmap-container">
-                <div id="performance-heatmap"></div>
+        <div class="section">
+            <div class="section-label">EQUITY CURVE</div>
+            <div class="chart-container">
+                <div id="equity-curve"></div>
             </div>
         </div>
-        
-        <!-- 03 / MACRO - POWER-GRID -->
+    </div>
+    
+    <!-- 02 / MOMENTUM - GLOBAL HEATMAP -->
+    <div id="momentum" class="section">
+        <div class="section-label">02 / MOMENTUM</div>
+        <div class="chart-container">
+            <div id="performance-heatmap"></div>
+        </div>
+    </div>
+    
+    <!-- 03 / MACRO - POWER-GRID -->
+    <div class="responsive-grid">
         <div id="macro" class="section">
-            <div class="section-header">03 / MACRO - POWER-GRID (SECTOR DELTAS)</div>
-            <div class="power-grid">
-                <!-- Left: Asset Mix Donut -->
-                <div class="power-grid-left">
-                    <div id="asset-donut"></div>
-                </div>
-                
-                <!-- Right: Sector Delta Bars -->
-                <div class="power-grid-right">
-                    <div class="sector-bar-chart">
-                        {% for delta in sector_deltas %}
-                        <div class="sector-bar-row">
-                            <div class="sector-name">{{ delta.sector }}</div>
-                            <div class="bar-container">
-                                <div class="bar-fill" style="width: {{ delta.current }}%;"></div>
-                                <div class="bar-target-line" style="left: {{ delta.target }}%;"></div>
-                            </div>
-                            <div class="bar-status {{ delta.status|lower }}">
-                                {{ delta.current }}% | {{ delta.status }}
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
+            <div class="section-label">03 / MACRO</div>
+            <div class="chart-container">
+                <div id="asset-donut"></div>
             </div>
         </div>
         
-        <!-- 04 / STRATEGIC - AI BRIEF -->
-        <div id="strategic" class="section">
-            <div class="section-header">04 / STRATEGIC - JOB A MOAT ANALYSIS</div>
-            <div class="ai-brief-section">
-                <div class="ai-brief-content">
-                    {{ ai_brief }}
+        <div class="section">
+            <div class="section-label">SECTOR DELTAS</div>
+            <div class="sector-bar-chart">
+                {% for delta in sector_deltas %}
+                <div class="sector-bar-row">
+                    <div class="sector-name">{{ delta.sector }}</div>
+                    <div class="bar-container">
+                        <div class="bar-fill" style="width: {{ delta.current }}%;"></div>
+                        <div class="bar-target-line" style="left: {{ delta.target }}%;"></div>
+                    </div>
+                    <div class="bar-status {{ delta.status|lower }}">
+                        {{ delta.current }}%
+                    </div>
                 </div>
+                {% endfor %}
             </div>
+        </div>
+    </div>
+    
+    <!-- 04 / STRATEGIC - AI BRIEF -->
+    <div id="strategic" class="section">
+        <div class="section-label">04 / STRATEGIC</div>
+        <div class="ai-brief-content">
+            {{ ai_brief }}
         </div>
     </div>
     
     <!-- FOOTER -->
     <footer class="footer">
-        WEALTH SEEKER v1.0 - PRODUCTION TERMINAL<br>
-        Last Update: {{ timestamp }}
+        SOVEREIGN TERMINAL v1.1 - ZERO-WASTE // {{ timestamp }}
     </footer>
     
-    <!-- ApexCharts Library -->
+    <!-- ApexCharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     
     <script>
         // ============================================
-        // 01 / SENTINEL - SEED VS HARVEST DONUT
+        // 01 / SENTINEL - CONDITION LOGIC
         // ============================================
         const sentinelLedger = {{ sentinel_ledger|tojson|safe }};
         const seedAmount = sentinelLedger.seed_amount;
         const harvestProfit = sentinelLedger.realized_profit;
         const totalPotValue = seedAmount + harvestProfit;
         
-        // CONDITION LOGIC: Orange/Mint if profit, Whisper Rose if loss
         let sentinelSeries, sentinelLabels, sentinelColors;
         
         if (harvestProfit >= 0) {
-            //Case A: Profit - Industrial Orange Seed + Whisper Mint Harvest
+            // Case A: Profit - Orange Seed + Visible Mint Harvest
             const seedPercent = (seedAmount / totalPotValue * 100).toFixed(1);
             const harvestPercent = (harvestProfit / totalPotValue * 100).toFixed(1);
             
             sentinelSeries = [seedAmount, harvestProfit];
             sentinelLabels = [
-                `SEED FUNDS: £${seedAmount.toFixed(2)} (${seedPercent}%)
-
-`,
+                `SEED: £${seedAmount.toFixed(2)} (${seedPercent}%)`,
                 `HARVEST: £+${harvestProfit.toFixed(2)} (${harvestPercent}%)`
             ];
-            sentinelColors = ['#fb923c', '#f7fee7'];  // Industrial Orange, Whisper Mint
+            sentinelColors = ['#fb923c', '#f0fdf4'];  // Industrial Orange + Visible Mint
         } else {
-            // Case B: Loss - Entire donut turns Whisper Rose
+            // Case B: Loss - Visible Rose Tint
             sentinelSeries = [totalPotValue];
-            sentinelLabels = [`CAPITAL EROSION: £${totalPotValue.toFixed(2)}`];
-            sentinelColors = ['#fffafb'];  // Whisper Rose
+            sentinelLabels = [`EROSION: £${totalPotValue.toFixed(2)}`];
+            sentinelColors = ['#fff1f2'];  // Visible Rose Tint
         }
         
         const sentinelDonutOptions = {
@@ -484,20 +432,18 @@
             labels: sentinelLabels,
             chart: {
                 type: 'donut',
-                height: 400,
+                height: 350,
                 background: 'transparent',
                 foreColor: '#111827',
-                fontFamily: "'JetBrains Mono', 'Courier New', monospace"
+                fontFamily: "'JetBrains Mono', monospace"
             },
-            theme: {
-                mode: 'light'
-            },
+            theme: { mode: 'light' },
             colors: sentinelColors,
             dataLabels: {
                 enabled: true,
                 style: {
-                    fontSize: '11px',
-                    fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                    fontSize: '10px',
+                    fontFamily: "'JetBrains Mono', monospace",
                     fontWeight: 700,
                     colors: ['#111827']
                 },
@@ -508,11 +454,9 @@
             legend: {
                 show: true,
                 position: 'bottom',
-                fontSize: '10px',
-                fontFamily: "'JetBrains Mono', 'Courier New', monospace",
-                labels: {
-                    colors: '#6b7280'
-                }
+                fontSize: '9px',
+                fontFamily: "'JetBrains Mono', monospace",
+                labels: { colors: '#6b7280' }
             },
             plotOptions: {
                 pie: {
@@ -520,12 +464,9 @@
                         size: '65%',
                         labels: {
                             show: true,
-                            name: {
-                                fontSize: '12px',
-                                color: '#111827'
-                            },
+                            name: { fontSize: '11px', color: '#111827' },
                             value: {
-                                fontSize: '16px',
+                                fontSize: '15px',
                                 color: '#111827',
                                 fontWeight: '700',
                                 formatter: function(val) {
@@ -534,8 +475,8 @@
                             },
                             total: {
                                 show: true,
-                                label: 'TOTAL POT VALUE',
-                                fontSize: '11px',
+                                label: 'POT',
+                                fontSize: '10px',
                                 fontWeight: '700',
                                 color: '#111827',
                                 formatter: function() {
@@ -546,27 +487,14 @@
                     }
                 }
             },
-            stroke: {
-                show: true,
-                width: 1,
-                colors: ['#f9fafb']
-            },
-            tooltip: {
-                theme: 'light',
-                style: {
-                    fontFamily: "'JetBrains Mono', 'Courier New', monospace"
-                }
-            }
+            stroke: { show: true, width: 1, colors: ['#f9fafb'] },
+            tooltip: { theme: 'light' }
         };
         
-        const sentinelDonutChart = new ApexCharts(
-            document.querySelector("#sentinel-donut"),
-            sentinelDonutOptions
-        );
-        sentinelDonutChart.render();
+        new ApexCharts(document.querySelector("#sentinel-donut"), sentinelDonutOptions).render();
         
         // ============================================
-        // 01 / SENTINEL - EQUITY GROWTH CURVE
+        // EQUITY CURVE
         // ============================================
         const historyData = sentinelLedger.history.map(h => ({
             x: h.date,
@@ -574,92 +502,50 @@
         }));
         
         const equityCurveOptions = {
-            series: [{
-                name: 'Pot Value',
-                data: historyData
-            }],
+            series: [{ name: 'Pot Value', data: historyData }],
             chart: {
                 type: 'area',
-                height: 400,
+                height: 350,
                 background: 'transparent',
                 foreColor: '#111827',
-                fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                fontFamily: "'JetBrains Mono', monospace",
                 toolbar: { show: false }
             },
-            theme: {
-                mode: 'light'
-            },
-            stroke: {
-                curve: 'smooth',
-                width: 2,
-                colors: ['#86efac']
-            },
+            theme: { mode: 'light' },
+            stroke: { curve: 'smooth', width: 2, colors: ['#fb923c'] },
             fill: {
                 type: 'gradient',
                 gradient: {
                     shadeIntensity: 1,
-                    opacityFrom: 0.4,
-                    opacityTo: 0.1,
-                    stops: [0, 90, 100],
+                    opacityFrom: 0.3,
+                    opacityTo: 0.05,
                     colorStops: [
-                        {
-                            offset: 0,
-                            color: '#86efac',
-                            opacity: 0.4
-                        },
-                        {
-                            offset: 100,
-                            color: '#86efac',
-                            opacity: 0.1
-                        }
+                        { offset: 0, color: '#fb923c', opacity: 0.3 },
+                        { offset: 100, color: '#fb923c', opacity: 0.05 }
                     ]
                 }
             },
             xaxis: {
                 type: 'datetime',
-                labels: {
-                    style: {
-                        colors: '#6b7280',
-                        fontSize: '10px'
-                    }
-                }
+                labels: { style: { colors: '#6b7280', fontSize: '9px' } }
             },
             yaxis: {
                 labels: {
-                    style: {
-                        colors: '#6b7280',
-                        fontSize: '10px'
-                    },
-                    formatter: function(val) {
-                        return '£' + val.toFixed(0);
-                    }
+                    style: { colors: '#6b7280', fontSize: '9px' },
+                    formatter: function(val) { return '£' + val.toFixed(0); }
                 }
             },
-            grid: {
-                show: true,
-                borderColor: '#e5e7eb'
-            },
+            grid: { show: true, borderColor: '#e5e7eb' },
             tooltip: {
                 theme: 'light',
-                style: {
-                    fontFamily: "'JetBrains Mono', 'Courier New', monospace"
-                },
-                y: {
-                    formatter: function(val) {
-                        return '£' + val.toFixed(2);
-                    }
-                }
+                y: { formatter: function(val) { return '£' + val.toFixed(2); } }
             }
         };
         
-        const equityCurveChart = new ApexCharts(
-            document.querySelector("#equity-curve"),
-            equityCurveOptions
-        );
-        equityCurveChart.render();
+        new ApexCharts(document.querySelector("#equity-curve"), equityCurveOptions).render();
         
         // ============================================
-        // 02 / MOMENTUM - HEATMAP (WHISPER PALETTE)
+        // 02 / MOMENTUM - GHOST-GLOW HEATMAP
         // ============================================
         const heatmapData = {{ heatmap_data|safe }};
         
@@ -673,26 +559,24 @@
             }],
             chart: {
                 type: 'treemap',
-                height: 550,
+                height: 450,
                 background: 'transparent',
                 foreColor: '#111827',
                 toolbar: { show: false },
-                fontFamily: "'JetBrains Mono', 'Courier New', monospace"
+                fontFamily: "'JetBrains Mono', monospace"
             },
-            theme: {
-                mode: 'light'
-            },
+            theme: { mode: 'light' },
             plotOptions: {
                 treemap: {
-                    distributed: false,  // SQUARIFIED BLOCKS
+                    distributed: false,
                     enableShades: false,
-                    useFillColorAsStroke: false,  // Keep white grid lines
+                    useFillColorAsStroke: false,
                     colorScale: {
                         ranges: [
-                            { from: 3.0, to: 100, color: '#dcfce7' },       // Soft Pastel Mint
-                            { from: 0.1, to: 2.99, color: '#f7fee7' },      // Whisper Lime Glow
-                            { from: -2.99, to: -0.1, color: '#fffafb' },    // White-Rose Glow
-                            { from: -100, to: -3.0, color: '#fee2e2' }      // Soft Pastel Rose
+                            { from: 3.0, to: 100, color: '#bbf7d0' },       // Soft Mint Pastel
+                            { from: 0.1, to: 2.99, color: '#f0fdf4' },      // Visible Mint Tint
+                            { from: -2.99, to: -0.1, color: '#fff1f2' },    // Visible Rose Tint
+                            { from: -100, to: -3.0, color: '#fecaca' }      // Soft Rose Pastel
                         ]
                     }
                 }
@@ -700,8 +584,8 @@
             dataLabels: {
                 enabled: true,
                 style: {
-                    fontSize: '14px',
-                    fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                    fontSize: '13px',
+                    fontFamily: "'JetBrains Mono', monospace",
                     fontWeight: 700,
                     colors: ['#111827']
                 },
@@ -710,53 +594,37 @@
                     return [text, item.pnl_percent.toFixed(2) + '%'];
                 }
             },
-            stroke: {
-                show: true,
-                width: 3,
-                colors: ['#f9fafb']  // Laboratory White gaps
-            },
+            stroke: { show: true, width: 4, colors: ['#f9fafb'] },  // Industrial Laboratory Dividers
             legend: { show: false },
             tooltip: {
                 theme: 'light',
-                style: {
-                    fontFamily: "'JetBrains Mono', 'Courier New', monospace",
-                    fontSize: '11px'
-                },
                 custom: function({ dataPointIndex }) {
                     const item = heatmapData[dataPointIndex];
                     const pos = {{ positions|tojson|safe }}[dataPointIndex] || {};
                     
                     return `
-                        <div style="padding: 16px; background: #ffffff; border: 1px solid #111827; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                            <div style="font-weight: 700; margin-bottom: 10px; color: #111827; font-size: 12px; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px;">
+                        <div style="padding: 14px; background: #ffffff; border: 1px solid #111827; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <div style="font-weight: 700; margin-bottom: 8px; color: #111827; font-size: 11px; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px;">
                                 ${pos.ticker || item.ticker} - ${pos.name || 'N/A'}
                             </div>
-                            <div style="font-size: 11px; color: #374151; line-height: 1.8;">
+                            <div style="font-size: 10px; color: #374151; line-height: 1.7;">
                                 <div><strong>Value:</strong> £${(pos.normalized_value || item.y).toFixed(2)}</div>
                                 <div><strong>P/L:</strong> £${item.pnl.toFixed(2)} (${item.pnl_percent.toFixed(2)}%)</div>
-                                <div><strong>VWAP Distance:</strong> ${(pos.vwap_distance_percent || 0).toFixed(2)}%</div>
-                                <div><strong>Job Assignment:</strong> ${pos.job_assignment || 'N/A'}</div>
-                                <div><strong>ROIC Spread:</strong> ${(pos.roic_wacc_spread || 0).toFixed(1)}%</div>
-                                <div><strong>Hold Time:</strong> ${pos.hold_time_days || 0} days</div>
+                                <div><strong>VWAP Dist:</strong> ${(pos.vwap_distance_percent || 0).toFixed(2)}%</div>
+                                <div><strong>Job:</strong> ${pos.job_assignment || 'N/A'}</div>
+                                <div><strong>ROIC:</strong> ${(pos.roic_wacc_spread || 0).toFixed(1)}%</div>
+                                <div><strong>Hold:</strong> ${pos.hold_time_days || 0} days</div>
                             </div>
                         </div>
                     `;
                 }
-            },
-            grid: {
-                show: true,
-                borderColor: '#e5e7eb'
             }
         };
         
-        const heatmapChart = new ApexCharts(
-            document.querySelector("#performance-heatmap"),
-            heatmapOptions
-        );
-        heatmapChart.render();
+        new ApexCharts(document.querySelector("#performance-heatmap"), heatmapOptions).render();
         
         // ============================================
-        // 03 / MACRO - ASSET MIX DONUT
+        // 03 / MACRO - ASSET MIX
         // ============================================
         const sectors = {{ sectors|tojson|safe }};
         const sectorNames = Object.keys(sectors);
@@ -767,34 +635,28 @@
             labels: sectorNames,
             chart: {
                 type: 'donut',
-                height: 400,
+                height: 350,
                 background: 'transparent',
                 foreColor: '#111827',
-                fontFamily: "'JetBrains Mono', 'Courier New', monospace"
+                fontFamily: "'JetBrains Mono', monospace"
             },
-            theme: {
-                mode: 'light'
-            },
-            colors: ['#86efac', '#fca5a5', '#f59e0b', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#f59e0b'],
+            theme: { mode: 'light' },
+            colors: ['#fb923c', '#fef2f2', '#f0fdf4', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4'],
             dataLabels: {
                 enabled: true,
                 style: {
-                    fontSize: '11px',
-                    fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                    fontSize: '10px',
+                    fontFamily: "'JetBrains Mono', monospace",
                     fontWeight: 700,
                     colors: ['#111827']
-                },
-                dropShadow: { enabled: false }
+                }
             },
             legend: {
                 show: true,
                 position: 'bottom',
-                fontSize: '11px',
-                fontFamily: "'JetBrains Mono', 'Courier New', monospace",
-                labels: {
-                    colors: '#6b7280',
-                    useSeriesColors: false
-                }
+                fontSize: '9px',
+                fontFamily: "'JetBrains Mono', monospace",
+                labels: { colors: '#6b7280' }
             },
             plotOptions: {
                 pie: {
@@ -802,48 +664,30 @@
                         size: '65%',
                         labels: {
                             show: true,
-                            name: {
-                                fontSize: '12px',
-                                color: '#111827'
-                            },
+                            name: { fontSize: '11px', color: '#111827' },
                             value: {
-                                fontSize: '16px',
+                                fontSize: '15px',
                                 color: '#111827',
-                                formatter: function(val) {
-                                    return val.toFixed(1) + '%';
-                                }
+                                formatter: function(val) { return val.toFixed(1) + '%'; }
                             },
                             total: {
                                 show: true,
-                                label: 'TOTAL WEALTH',
-                                fontSize: '11px',
+                                label: 'WEALTH',
+                                fontSize: '10px',
                                 color: '#6b7280',
                                 formatter: function() {
-                                    return '£{{ "%.2f"|format(total_wealth) }}';
+                                    return '£{{ "%.0f"|format(total_wealth) }}';
                                 }
                             }
                         }
                     }
                 }
             },
-            stroke: {
-                show: true,
-                width: 1,
-                colors: ['#f9fafb']
-            },
-            tooltip: {
-                theme: 'light',
-                style: {
-                    fontFamily: "'JetBrains Mono', 'Courier New', monospace"
-                }
-            }
+            stroke: { show: true, width: 1, colors: ['#f9fafb'] },
+            tooltip: { theme: 'light' }
         };
         
-        const donutChart = new ApexCharts(
-            document.querySelector("#asset-donut"),
-            donutOptions
-        );
-        donutChart.render();
+        new ApexCharts(document.querySelector("#asset-donut"), donutOptions).render();
     </script>
 </body>
 </html>
