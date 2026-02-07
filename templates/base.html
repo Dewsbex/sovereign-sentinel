@@ -267,6 +267,78 @@
             letter-spacing: 0.1em;
         }
         
+        
+        /* JOB C TARGET TRACKER */
+        .job-c-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            padding-top: 24px;
+        }
+        
+        .job-c-card {
+            background: #fafafa;
+            border: 1px solid #e5e7eb;
+            padding: 12px;
+            border-radius: 2px;
+        }
+        
+        .job-c-ticker {
+            font-size: 14px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+        }
+        
+        .job-c-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .job-c-metric {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+        }
+        
+        .job-c-label {
+            color: #6b7280;
+            font-weight: 600;
+        }
+        
+        .job-c-value {
+            color: #111827;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .job-c-status {
+            font-size: 9px;
+            font-weight: 700;
+            text-align: center;
+            padding: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .job-c-status.watching {
+            background: #eff6ff;
+            color: #3b82f6;
+        }
+        
+        .job-c-status.ready {
+            background: #f0fdf4;
+            color: #10b981;
+        }
+        
+        .job-c-status.waiting {
+            background: #fffbeb;
+            color: #f59e0b;
+        }
+        
         /* MOBILE OPTIMIZATION */
         @media (max-width: 768px) {
             .unified-header {
@@ -347,15 +419,15 @@
     <!-- SENTINEL - THE LABORATORY -->
     <div class="responsive-grid">
         <div id="sentinel" class="section">
-            <div class="section-label">SENTINEL LABORATORY</div>
             <div class="chart-container">
+                <div class="section-label">SENTINEL LABORATORY</div>
                 <div id="sentinel-donut"></div>
             </div>
         </div>
         
         <div class="section">
-            <div class="section-label">EQUITY CURVE</div>
             <div class="chart-container">
+                <div class="section-label">EQUITY CURVE</div>
                 <div id="equity-curve"></div>
             </div>
         </div>
@@ -363,8 +435,8 @@
     
     <!-- MOMENTUM - GLOBAL HEATMAP -->
     <div id="momentum" class="section">
-        <div class="section-label">GLOBAL MOMENTUM</div>
         <div class="chart-container">
+            <div class="section-label">GLOBAL MOMENTUM</div>
             <div id="performance-heatmap"></div>
         </div>
     </div>
@@ -372,36 +444,71 @@
     <!-- MACRO - POWER-GRID -->
     <div class="responsive-grid">
         <div id="macro" class="section">
-            <div class="section-label">ASSET MIX</div>
             <div class="chart-container">
+                <div class="section-label">ASSET MIX</div>
                 <div id="asset-donut"></div>
             </div>
         </div>
         
         <div class="section">
-            <div class="section-label">SECTOR DELTAS</div>
-            <div class="sector-bar-chart">
-                {% for delta in sector_deltas %}
-                <div class="sector-bar-row">
-                    <div class="sector-name">{{ delta.sector }}</div>
-                    <div class="bar-container">
-                        <div class="bar-fill" style="width: {{ delta.current }}%;"></div>
-                        <div class="bar-target-line" style="left: {{ delta.target }}%;"></div>
+            <div class="chart-container">
+                <div class="section-label">SECTOR DELTAS</div>
+                <div class="sector-bar-chart">
+                    {% for delta in sector_deltas %}
+                    <div class="sector-bar-row">
+                        <div class="sector-name">{{ delta.sector }}</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: {{ delta.current }}%;"></div>
+                            <div class="bar-target-line" style="left: {{ delta.target }}%;"></div>
+                        </div>
+                        <div class="bar-status {{ delta.status|lower }}">
+                            {{ delta.current }}%
+                        </div>
                     </div>
-                    <div class="bar-status {{ delta.status|lower }}">
-                        {{ delta.current }}%
-                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>
     
     <!-- STRATEGIC - AI BRIEF -->
     <div id="strategic" class="section">
-        <div class="section-label">STRATEGIC BRIEF</div>
-        <div class="ai-brief-content">
-            {{ ai_brief }}
+        <div class="chart-container">
+            <div class="section-label">STRATEGIC BRIEF</div>
+            <div class="ai-brief-content">
+                {{ ai_brief }}
+            </div>
+        </div>
+    </div>
+    
+    <!-- JOB C TARGET TRACKER -->
+    <div id="job-c-targets" class="section">
+        <div class="chart-container">
+            <div class="section-label">JOB C CANDIDATES</div>
+            <div class="job-c-grid">
+                {% for candidate in job_c_candidates %}
+                <div class="job-c-card">
+                    <div class="job-c-ticker">{{ candidate.ticker }}</div>
+                    <div class="job-c-metrics">
+                        <div class="job-c-metric">
+                            <span class="job-c-label">ORB HIGH</span>
+                            <span class="job-c-value">${{ "%.2f"|format(candidate.orb_high) }}</span>
+                        </div>
+                        <div class="job-c-metric">
+                            <span class="job-c-label">CURRENT</span>
+                            <span class="job-c-value">${{ "%.2f"|format(candidate.current) }}</span>
+                        </div>
+                        <div class="job-c-metric">
+                            <span class="job-c-label">VWAP</span>
+                            <span class="job-c-value">${{ "%.2f"|format(candidate.vwap) }}</span>
+                        </div>
+                    </div>
+                    <div class="job-c-status {{ candidate.status|lower }}">
+                        {{ candidate.status }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
     
