@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S. DEWSBERY | VIBE LAB v0.01</title>
+    <title>WEALTH SEEKER v1.0 - PRODUCTION TERMINAL</title>
     
     <style>
-        /* VIBE LAB - LIGHT INDUSTRIAL AESTHETIC */
+        /* WEALTH SEEKER v1.0 - LIGHT INDUSTRIAL AESTHETIC */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
+        html {
+            scroll-behavior: smooth;
+        }
+        
         :root {
-            /* Light Industrial Palette */
+            /* Light Industrial Palette - LOCKED */
             --lab-white: #f9fafb;
             --true-white: #ffffff;
             --charcoal: #111827;
@@ -22,13 +26,15 @@
             --label-dark: #374151;
             --label-medium: #6b7280;
             
-            /* Light Mode Inverted Momentum */
-            --mint-pastel: #dcfce7;
-            --rose-pastel: #fee2e2;
-            --emerald-solid: #22c55e;
-            --crimson-solid: #ef4444;
-            --forest-deep: #166534;
-            --blood-deep: #991b1b;
+            /* Sentinel Colors */
+            --seed-gray: #f3f4f6;
+            --harvest-mint: #86efac;
+            
+            /* Ultra-Light Glow-State Pastels */
+            --glow-mint: #f0fdf4;
+            --glow-rose: #fef2f2;
+            --solid-mint: #86efac;
+            --solid-rose: #fca5a5;
             
             /* Alert */
             --alert-amber: #f59e0b;
@@ -43,10 +49,48 @@
             overflow-x: hidden;
         }
         
+        /* 00 / NAV - STICKY COMMAND STRIP */
+        .nav-strip {
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--slate-border);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+        }
+        
+        .nav-button {
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--label-medium);
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid var(--slate-border);
+            background: var(--true-white);
+            transition: all 0.2s ease;
+        }
+        
+        .nav-button:hover {
+            color: var(--charcoal);
+            border-color: var(--charcoal);
+        }
+        
+        /* SCROLL OFFSET */
+        .section {
+            scroll-margin-top: 80px;
+        }
+        
         /* GLOBAL SITREP - Fixed Header */
         .global-sitrep {
             position: sticky;
-            top: 0;
+            top: 45px;
             z-index: 1000;
             background: var(--true-white);
             border-bottom: 1px solid var(--slate-border);
@@ -90,11 +134,11 @@
         }
         
         .metric-value.positive {
-            color: var(--emerald-solid);
+            color: var(--harvest-mint);
         }
         
         .metric-value.negative {
-            color: var(--crimson-solid);
+            color: var(--solid-rose);
         }
         
         .fortress-alert-banner {
@@ -120,41 +164,6 @@
             padding: 0;
         }
         
-        /* SENTINEL POT STATUS STRIP */
-        .sentinel-strip {
-            background: var(--true-white);
-            border-bottom: 1px solid var(--slate-border);
-            padding: 20px 24px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-        }
-        
-        .sentinel-metric {
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 700;
-        }
-        
-        .sentinel-label {
-            color: var(--label-medium);
-            font-size: 10px;
-            margin-bottom: 4px;
-        }
-        
-        .sentinel-value {
-            font-size: 16px;
-            color: var(--charcoal);
-        }
-        
-        .sentinel-value.positive {
-            color: var(--emerald-solid);
-        }
-        
-        .sentinel-value.negative {
-            color: var(--crimson-solid);
-        }
-        
         /* SECTION HEADERS */
         .section-header {
             background: var(--true-white);
@@ -168,7 +177,35 @@
             color: var(--label-medium);
         }
         
-        /* MOMENTUM HEATMAP */
+        /* 01 / SENTINEL - THE LABORATORY */
+        .sentinel-lab {
+            background: var(--true-white);
+            border-bottom: 1px solid var(--slate-border);
+            padding: 24px;
+        }
+        
+        .sentinel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .sentinel-left,
+        .sentinel-right {
+            border: 1px solid var(--slate-border);
+            padding: 20px;
+            background: var(--lab-white);
+        }
+        
+        #sentinel-donut {
+            height: 400px;
+        }
+        
+        #equity-curve {
+            height: 400px;
+        }
+        
+        /* 02 / MOMENTUM - HEATMAP */
         .heatmap-container {
             background: var(--true-white);
             border-bottom: 1px solid var(--slate-border);
@@ -182,7 +219,7 @@
             border: 1px solid var(--slate-border);
         }
         
-        /* SECTOR POWER-GRID */
+        /* 03 / MACRO - POWER-GRID */
         .power-grid {
             display: grid;
             grid-template-columns: 1fr 2fr;
@@ -233,7 +270,7 @@
         .bar-fill {
             position: absolute;
             height: 100%;
-            background: var(--emerald-solid);
+            background: var(--harvest-mint);
             opacity: 0.3;
             transition: width 0.3s ease;
         }
@@ -251,7 +288,7 @@
         }
         
         .bar-status.over {
-            color: var(--crimson-solid);
+            color: var(--solid-rose);
         }
         
         .bar-status.under {
@@ -259,10 +296,10 @@
         }
         
         .bar-status.match {
-            color: var(--emerald-solid);
+            color: var(--harvest-mint);
         }
         
-        /* AI BRIEF */
+        /* 04 / STRATEGIC BRIEF */
         .ai-brief-section {
             background: var(--true-white);
             border-bottom: 1px solid var(--slate-border);
@@ -274,39 +311,6 @@
             color: var(--label-dark);
             line-height: 1.6;
             max-width: 900px;
-        }
-        
-        /* TARGET TRACKER */
-        .target-tracker {
-            background: var(--true-white);
-            padding: 24px;
-        }
-        
-        .target-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 16px;
-        }
-        
-        .target-card {
-            background: var(--lab-white);
-            border: 1px solid var(--slate-border);
-            padding: 16px;
-        }
-        
-        .target-ticker {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--charcoal);
-        }
-        
-        .target-metric {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 4px;
-            font-size: 11px;
-            color: var(--label-medium);
         }
         
         /* FOOTER */
@@ -323,10 +327,18 @@
     </style>
 </head>
 <body>
+    <!-- 00 / NAV - STICKY COMMAND STRIP -->
+    <nav class="nav-strip">
+        <a href="#sentinel" class="nav-button">01 / SENTINEL</a>
+        <a href="#momentum" class="nav-button">02 / MOMENTUM</a>
+        <a href="#macro" class="nav-button">03 / MACRO</a>
+        <a href="#strategic" class="nav-button">04 / STRATEGIC</a>
+    </nav>
+    
     <!-- GLOBAL SITREP HEADER -->
     <header class="global-sitrep">
         <div class="vibe-lab-header">
-            <span class="vibe-lab-title">S. DEWSBERY | VIBE LAB (v0.01)</span> // STATUS: NOMINAL
+            <span class="vibe-lab-title">WEALTH SEEKER v1.0 - PRODUCTION TERMINAL</span> // STATUS: NOMINAL
         </div>
         
         {% if fortress_alert %}
@@ -354,109 +366,80 @@
         
         <div class="metric">
             <div class="metric-label">SYSTEM STATUS</div>
-            <div class="metric-value">GHOST MODE ACTIVE</div>
+            <div class="metric-value">{{ connectivity }}</div>
         </div>
     </header>
     
     <div class="container">
-        <!-- SENTINEL POT STATUS STRIP -->
-        <div class="section-header">SENTINEL POT - £1,000 SEED LOCK</div>
-        <div class="sentinel-strip">
-            <div class="sentinel-metric">
-                <div class="sentinel-label">REALIZED PROFIT</div>
-                <div class="sentinel-value {% if sentinel.realized_profit >= 0 %}positive{% else %}negative{% endif %}">
-                    £{{ "%.2f"|format(sentinel.realized_profit) }}
+        <!-- 01 / SENTINEL - THE LABORATORY -->
+        <div id="sentinel" class="section">
+            <div class="section-header">01 / SENTINEL - THE LABORATORY (£1,000 BOT TRACKING)</div>
+            <div class="sentinel-lab">
+                <div class="sentinel-grid">
+                    <!-- Left: Seed vs Harvest Donut -->
+                    <div class="sentinel-left">
+                        <div id="sentinel-donut"></div>
+                    </div>
+                    
+                    <!-- Right: Equity Growth Curve -->
+                    <div class="sentinel-right">
+                        <div id="equity-curve"></div>
+                    </div>
                 </div>
             </div>
-            
-            <div class="sentinel-metric">
-                <div class="sentinel-label">CURRENT DRAWDOWN</div>
-                <div class="sentinel-value">£{{ "%.2f"|format(sentinel.current_drawdown) }}</div>
-            </div>
-            
-            <div class="sentinel-metric">
-                <div class="sentinel-label">STATUS</div>
-                <div class="sentinel-value">{{ sentinel.status }}</div>
-            </div>
-            
-            <div class="sentinel-metric">
-                <div class="sentinel-label">TOTAL TRADES</div>
-                <div class="sentinel-value">{{ sentinel.total_trades }}</div>
-           </div>
         </div>
         
-        <!-- T212 SOVEREIGN PORTFOLIO ANALYSIS -->
-        <div class="section-header">T212 SOVEREIGN PORTFOLIO - FULL HOLDINGS ANALYSIS</div>
-        
-        <!-- 01 / MOMENTUM HEATMAP -->
-        <div class="section-header">01 / MOMENTUM HEATMAP - INVERTED INTENSITY</div>
-        <div class="heatmap-container">
-            <div id="performance-heatmap"></div>
+        <!-- 02 / MOMENTUM - GLOBAL HEATMAP -->
+        <div id="momentum" class="section">
+            <div class="section-header">02 / MOMENTUM - GLOBAL HEATMAP (ALL T212 HOLDINGS)</div>
+            <div class="heatmap-container">
+                <div id="performance-heatmap"></div>
+            </div>
         </div>
         
-        <!-- 02 / SECTOR POWER-GRID -->
-        <div class="section-header">02 / SECTOR POWER-GRID - MACRO-CLOCK DELTAS</div>
-        <div class="power-grid">
-            <!-- Left: Asset Mix Donut -->
-            <div class="power-grid-left">
-                <div id="asset-donut"></div>
-            </div>
-            
-            <!-- Right: Sector Delta Bars -->
-            <div class="power-grid-right">
-                <div class="sector-bar-chart">
-                    {% for delta in sector_deltas %}
-                    <div class="sector-bar-row">
-                        <div class="sector-name">{{ delta.sector }}</div>
-                        <div class="bar-container">
-                            <div class="bar-fill" style="width: {{ delta.current }}%;"></div>
-                            <div class="bar-target-line" style="left: {{ delta.target }}%;"></div>
+        <!-- 03 / MACRO - POWER-GRID -->
+        <div id="macro" class="section">
+            <div class="section-header">03 / MACRO - POWER-GRID (SECTOR DELTAS)</div>
+            <div class="power-grid">
+                <!-- Left: Asset Mix Donut -->
+                <div class="power-grid-left">
+                    <div id="asset-donut"></div>
+                </div>
+                
+                <!-- Right: Sector Delta Bars -->
+                <div class="power-grid-right">
+                    <div class="sector-bar-chart">
+                        {% for delta in sector_deltas %}
+                        <div class="sector-bar-row">
+                            <div class="sector-name">{{ delta.sector }}</div>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: {{ delta.current }}%;"></div>
+                                <div class="bar-target-line" style="left: {{ delta.target }}%;"></div>
+                            </div>
+                            <div class="bar-status {{ delta.status|lower }}">
+                                {{ delta.current }}% | {{ delta.status }}
+                            </div>
                         </div>
-                        <div class="bar-status {{ delta.status|lower }}">
-                            {{ delta.current }}% | {{ delta.status }}
-                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 </div>
             </div>
         </div>
         
-        <!-- 03 / AI STRATEGIC BRIEF -->
-        <div class="section-header">03 / STRATEGIC BRIEF - JOB A MOAT ANALYSIS</div>
-        <div class="ai-brief-section">
-            <div class="ai-brief-content">
-                {{ ai_brief }}
-            </div>
-        </div>
-        
-        <!-- 04 / ORB TARGET TRACKER -->
-        <div class="section-header">04 / ORB TARGET TRACKER - JOB C CANDIDATES</div>
-        <div class="target-tracker">
-            <div class="target-grid">
-                {% for target in orb_targets %}
-                <div class="target-card">
-                    <div class="target-ticker">{{ target.ticker }}</div>
-                    <div class="target-metric">
-                        <span>ORB HIGH</span>
-                        <span>${{ "%.2f"|format(target.orb_high) }}</span>
-                    </div>
-                    <div class="target-metric">
-                        <span>CURRENT</span>
-                        <span>${{ "%.2f"|format(target.current_price) }}</span>
-                    </div>
-                    <div class="target-metric">
-                        <span>VWAP</span>
-                        <span>${{ "%.2f"|format(target.vwap) }}</span>
-                    </div>
+        <!-- 04 / STRATEGIC - AI BRIEF -->
+        <div id="strategic" class="section">
+            <div class="section-header">04 / STRATEGIC - JOB A MOAT ANALYSIS</div>
+            <div class="ai-brief-section">
+                <div class="ai-brief-content">
+                    {{ ai_brief }}
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>
     
     <!-- FOOTER -->
     <footer class="footer">
-        VIBE LAB v0.01 - LIGHT INDUSTRIAL - S. DEWSBERY<br>
+        WEALTH SEEKER v1.0 - PRODUCTION TERMINAL<br>
         Last Update: {{ timestamp }}
     </footer>
     
@@ -464,10 +447,192 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     
     <script>
-        // HEATMAP DATA
+        // ============================================
+        // 01 / SENTINEL - SEED VS HARVEST DONUT
+        // ============================================
+        const sentinelLedger = {{ sentinel_ledger|tojson|safe }};
+        const seedAmount = sentinelLedger.seed_amount;
+        const harvestProfit = sentinelLedger.realized_profit;
+        
+        const sentinelDonutOptions = {
+            series: [seedAmount, Math.max(0, harvestProfit)],
+            labels: ['SEED FUNDS', 'HARVEST (PROFIT)'],
+            chart: {
+                type: 'donut',
+                height: 400,
+                background: 'transparent',
+                foreColor: '#111827',
+                fontFamily: "'JetBrains Mono', 'Courier New', monospace"
+            },
+            theme: {
+                mode: 'light'
+            },
+            colors: ['#f3f4f6', '#86efac'],
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '11px',
+                    fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                    fontWeight: 700,
+                    colors: ['#111827']
+                }
+            },
+            legend: {
+                show: true,
+                position: 'bottom',
+                fontSize: '11px',
+                fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                labels: {
+                    colors: '#6b7280'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '65%',
+                        labels: {
+                            show: true,
+                            name: {
+                                fontSize: '12px',
+                                color: '#111827'
+                            },
+                            value: {
+                                fontSize: '16px',
+                                color: '#111827',
+                                formatter: function(val) {
+                                    return '£' + parseFloat(val).toFixed(2);
+                                }
+                            },
+                            total: {
+                                show: true,
+                                label: 'POT VALUE',
+                                fontSize: '11px',
+                                color: '#6b7280',
+                                formatter: function() {
+                                    return '£' + (seedAmount + Math.max(0, harvestProfit)).toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            stroke: {
+                show: true,
+                width: 1,
+                colors: ['#f9fafb']
+            },
+            tooltip: {
+                theme: 'light',
+                style: {
+                    fontFamily: "'JetBrains Mono', 'Courier New', monospace"
+                }
+            }
+        };
+        
+        const sentinelDonutChart = new ApexCharts(
+            document.querySelector("#sentinel-donut"),
+            sentinelDonutOptions
+        );
+        sentinelDonutChart.render();
+        
+        // ============================================
+        // 01 / SENTINEL - EQUITY GROWTH CURVE
+        // ============================================
+        const historyData = sentinelLedger.history.map(h => ({
+            x: h.date,
+            y: h.pot_value
+        }));
+        
+        const equityCurveOptions = {
+            series: [{
+                name: 'Pot Value',
+                data: historyData
+            }],
+            chart: {
+                type: 'area',
+                height: 400,
+                background: 'transparent',
+                foreColor: '#111827',
+                fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                toolbar: { show: false }
+            },
+            theme: {
+                mode: 'light'
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 2,
+                colors: ['#86efac']
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.4,
+                    opacityTo: 0.1,
+                    stops: [0, 90, 100],
+                    colorStops: [
+                        {
+                            offset: 0,
+                            color: '#86efac',
+                            opacity: 0.4
+                        },
+                        {
+                            offset: 100,
+                            color: '#86efac',
+                            opacity: 0.1
+                        }
+                    ]
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+                labels: {
+                    style: {
+                        colors: '#6b7280',
+                        fontSize: '10px'
+                    }
+                }
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        colors: '#6b7280',
+                        fontSize: '10px'
+                    },
+                    formatter: function(val) {
+                        return '£' + val.toFixed(0);
+                    }
+                }
+            },
+            grid: {
+                show: true,
+                borderColor: '#e5e7eb'
+            },
+            tooltip: {
+                theme: 'light',
+                style: {
+                    fontFamily: "'JetBrains Mono', 'Courier New', monospace"
+                },
+                y: {
+                    formatter: function(val) {
+                        return '£' + val.toFixed(2);
+                    }
+                }
+            }
+        };
+        
+        const equityCurveChart = new ApexCharts(
+            document.querySelector("#equity-curve"),
+            equityCurveOptions
+        );
+        equityCurveChart.render();
+        
+        // ============================================
+        // 02 / MOMENTUM - HEATMAP (7-POINT TOOLTIP)
+        // ============================================
         const heatmapData = {{ heatmap_data|safe }};
         
-        // MOMENTUM HEATMAP (Light Mode - Inverted Intensity)
         const heatmapOptions = {
             series: [{
                 data: heatmapData.map(item => ({
@@ -480,7 +645,7 @@
                 type: 'treemap',
                 height: 550,
                 background: 'transparent',
-                foreColor: '#374151',
+                foreColor: '#111827',
                 toolbar: { show: false },
                 fontFamily: "'JetBrains Mono', 'Courier New', monospace"
             },
@@ -489,10 +654,15 @@
             },
             plotOptions: {
                 treemap: {
-                    distributed: true,
+                    distributed: false,  // SQUARIFIED BLOCKS
                     enableShades: false,
                     colorScale: {
-                        ranges: []
+                        ranges: [
+                            { from: 3.0, to: 100, color: '#86efac' },      // Solid Mint
+                            { from: 0.1, to: 2.99, color: '#f0fdf4' },     // Ultra-Light Mint
+                            { from: -2.99, to: -0.1, color: '#fef2f2' },   // Ultra-Light Rose
+                            { from: -100, to: -3.0, color: '#fca5a5' }     // Solid Rose
+                        ]
                     }
                 }
             },
@@ -515,11 +685,25 @@
                 style: {
                     fontFamily: "'JetBrains Mono', 'Courier New', monospace"
                 },
-                y: {
-                    formatter: function(value, { dataPointIndex }) {
-                        const item = heatmapData[dataPointIndex];
-                        return `P/L: £${item.pnl.toFixed(2)} (${item.pnl_percent.toFixed(2)}%)`;
-                    }
+                custom: function({ dataPointIndex }) {
+                    const item = heatmapData[dataPointIndex];
+                    const pos = {{ positions|tojson|safe }}[dataPointIndex] || {};
+                    
+                    return `
+                        <div style="padding: 12px; background: white; border: 1px solid #e5e7eb;">
+                            <div style="font-weight: 700; margin-bottom: 8px; color: #111827;">
+                                ${pos.ticker || item.ticker} - ${pos.name || 'N/A'}
+                            </div>
+                            <div style="font-size: 11px; color: #374151; line-height: 1.6;">
+                                <div>Value: £${(pos.normalized_value || item.y).toFixed(2)}</div>
+                                <div>P/L: £${item.pnl.toFixed(2)} (${item.pnl_percent.toFixed(2)}%)</div>
+                                <div>VWAP Distance: ${(pos.vwap_distance_percent || 0).toFixed(2)}%</div>
+                                <div>Job: ${pos.job_assignment || 'N/A'}</div>
+                                <div>ROIC Spread: ${(pos.roic_wacc_spread || 0).toFixed(1)}%</div>
+                                <div>Hold Time: ${pos.hold_time_days || 0} days</div>
+                            </div>
+                        </div>
+                    `;
                 }
             },
             grid: {
@@ -534,7 +718,9 @@
         );
         heatmapChart.render();
         
-        // ASSET MIX DONUT (Light Mode)
+        // ============================================
+        // 03 / MACRO - ASSET MIX DONUT
+        // ============================================
         const sectors = {{ sectors|tojson|safe }};
         const sectorNames = Object.keys(sectors);
         const sectorValues = sectorNames.map(s => sectors[s].percent);
@@ -546,13 +732,13 @@
                 type: 'donut',
                 height: 400,
                 background: 'transparent',
-                foreColor: '#374151',
+                foreColor: '#111827',
                 fontFamily: "'JetBrains Mono', 'Courier New', monospace"
             },
             theme: {
                 mode: 'light'
             },
-            colors: ['#22c55e', '#ef4444', '#f59e0b', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#f59e0b'],
+            colors: ['#86efac', '#fca5a5', '#f59e0b', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#f59e0b'],
             dataLabels: {
                 enabled: true,
                 style: {
