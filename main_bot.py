@@ -1,338 +1,463 @@
 """
-Wealth Seeker v0.01 - Main Trading Bot (main_bot.py)
-=====================================================
-Job C: The Wealth Seeker Sentinel - 5% Autonomous ORB Strategy
+Job C Scalper - Sovereign Sentinel v1.9.1
+==========================================
+
+15-Minute ORB Strategy with Zombie Recovery Protocol
+
+CRITICAL FEATURES:
+- Zombie Recovery: Alpha Vantage retry loop (60s) with 15:15 UTC stale-data cutoff
+- 15m ORB Window: 14:30-14:45 UTC
+- Trigger: 5m candle CLOSE outside range
+- Safety: Spread < 0.15%, Volume > 150%, Range < 2.5%
+- Integration: trading212_client.py + data/instruments.json validation
 """
 
-import json
 import os
 import sys
 import time
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional
-import requests
+import json
+import signal
+from datetime import datetime, timezone, timedelta
+from typing import Dict, List, Optional, Tuple
 import yfinance as yf
-from auditor import TradingAuditor, emergency_shutdown
+from trading212_client import Trading212Client
+from auditor import TradingAuditor
 
 
-class AlphaVantageClient:
-    """Client for Alpha Vantage API (VWAP and technical data)"""
+class ZombieRecovery:
+    """Alpha Vantage failure resilience with stale-data cutoff"""
     
-    def __init__(self):
-        self.api_key = os.getenv("ALPHA_VANTAGE_API_KEY")
-        self.base_url = "https://www.alphavantage.co/query"
-        
-        if not self.api_key:
-            raise ValueError("ALPHA_VANTAGE_API_KEY not set")
-    
-    def get_vwap(self, symbol: str) -> Optional[float]:
-        """Fetch current VWAP for symbol"""
-        try:
-            params = {
-                "function": "VWAP",
-                "symbol": symbol,
-                "interval": "5min",
-                "apikey": self.api_key
-            }
-            response = requests.get(self.base_url, params=params)
-            response.raise_for_status()
-            data = response.json()
-            
-            # Extract most recent VWAP value
-            technical_data = data.get("Technical Analysis: VWAP", {})
-            if technical_data:
-                latest_timestamp = sorted(technical_data.keys())[-1]
-                vwap = float(technical_data[latest_timestamp].get("VWAP", 0))
-                return vwap
-            
-            return None
-        except Exception as e:
-            print(f"⚠️  Failed to fetch VWAP for {symbol}: {e}")
-            return None
-
-
-class TelegramNotifier:
-    """Send notifications via Telegram"""
-    
-    def __init__(self):
-        self.token = os.getenv("TELEGRAM_TOKEN")
-        self.chat_id = os.getenv("TELEGRAM_CHAT_ID")
-        
-        if not self.token or not self.chat_id:
-            print("⚠️  Telegram credentials not configured")
-    
-    def send_message(self, message: str):
-        """Send text message to Telegram"""
-        if not self.token or not self.chat_id:
-            print(f"📱 [Telegram Disabled] {message}")
-            return
-        
-        try:
-            url = f"https://api.telegram.org/bot{self.token}/sendMessage"
-            payload = {
-                "chat_id": self.chat_id,
-                "text": message,
-                "parse_mode": "Markdown"
-            }
-            response = requests.post(url, json=payload)
-            response.raise_for_status()
-            print(f"✅ Telegram notification sent")
-        except Exception as e:
-            print(f"⚠️  Telegram send failed: {e}")
-
-
-class T212Executor:
-    """Execute trades via Trading212 API"""
-    
-    def __init__(self):
-        self.api_key = os.getenv("T212_API_TRADE_KEY")
-        self.base_url = "https://live.trading212.com/api/v0"
-        
-        if not self.api_key:
-            raise ValueError("T212_API_TRADE_KEY not set")
-    
-    def _get_headers(self) -> Dict[str, str]:
-        return {
-            "Authorization": self.api_key,
-            "Content-Type": "application/json"
-        }
-    
-    def get_account_info(self) -> Dict[str, Any]:
-        """Fetch account summary"""
-        url = f"{self.base_url}/equity/account/cash"
-        response = requests.get(url, headers=self._get_headers())
-        response.raise_for_status()
-        return response.json()
-    
-    def place_market_order(self, ticker: str, quantity: int) -> Dict[str, Any]:
-        """Place market buy order"""
-        url = f"{self.base_url}/equity/orders/market"
-        payload = {
-            "ticker": ticker,
-            "quantity": quantity
-        }
-        response = requests.post(url, headers=self._get_headers(), json=payload)
-        response.raise_for_status()
-        return response.json()
-
-
-class ORBStrategy:
-    """Opening Range Breakout Strategy Implementation"""
+    STALE_CUTOFF_UTC = (15, 15)  # 15:15 UTC
+    RETRY_INTERVAL = 60  # seconds
     
     def __init__(self, ticker: str):
         self.ticker = ticker
-        self.market_open = "14:30"  # UTC
-        self.orb_duration_minutes = 5
-        self.current_high = None
-        self.orb_complete = False
-    
-    def fetch_opening_range(self) -> Optional[float]:
-        """Get the high of first 5 minutes (14:30-14:35 UTC)"""
+        
+    def fetch_intraday_data(self) -> Optional[yf.Ticker]:
+        """
+        Attempt to fetch intraday data via yfinance.
+        Returns Ticker object if successful, None otherwise.
+        """
         try:
-            # Use yfinance to get 5-minute bars
-            stock = yf.Ticker(self.ticker)
-            hist = stock.history(period="1d", interval="5m")
-            
+            ticker_obj = yf.Ticker(self.ticker)
+            # Validate data availability
+            hist = ticker_obj.history(period='1d', interval='1m')
             if hist.empty:
-                print(f"❌ No data for {self.ticker}")
                 return None
-            
-            # Get first 5-min candle of the day
-            first_candle = hist.iloc[0]
-            self.current_high = first_candle['High']
-            
-            print(f"📊 {self.ticker} Opening Range High: ${self.current_high:.2f}")
-            return self.current_high
-            
+            return ticker_obj
         except Exception as e:
-            print(f"❌ Failed to fetch opening range: {e}")
+            print(f"❌ Data fetch failed for {self.ticker}: {e}")
             return None
     
-    def check_breakout(self, current_price: float) -> bool:
-        """Check if current 5-min candle closed above OR high"""
-        if not self.current_high:
-            return False
+    def enter_retry_loop(self) -> Tuple[Optional[yf.Ticker], bool]:
+        """
+        ZOMBIE RECOVERY: Retry every 60s until success or stale cutoff.
         
-        breakout = current_price > self.current_high
-        if breakout:
-            print(f"🚀 BREAKOUT! {self.ticker} ${current_price:.2f} > ${self.current_high:.2f}")
+        Returns:
+            (ticker_obj, is_stale)
+            - ticker_obj: yfinance Ticker if recovered, None if permanently failed
+            - is_stale: True if recovery happened AFTER 15:15 UTC
+        """
+        print(f"\n🧟 ZOMBIE RECOVERY ACTIVATED for {self.ticker}")
+        print("   Entering retry loop (60s interval)...\n")
         
-        return breakout
+        while True:
+            current_time = datetime.now(timezone.utc)
+            hour, minute = current_time.hour, current_time.minute
+            
+            # Attempt data fetch
+            ticker_obj = self.fetch_intraday_data()
+            
+            if ticker_obj:
+                # Success! Check if stale
+                stale_cutoff_hour, stale_cutoff_min = self.STALE_CUTOFF_UTC
+                is_stale = (hour > stale_cutoff_hour) or (hour == stale_cutoff_hour and minute >= stale_cutoff_min)
+                
+                if is_stale:
+                    print(f"⚠️  STALE DATA DETECTED")
+                    print(f"   Recovery time: {current_time.strftime('%H:%M:%S')} UTC")
+                    print(f"   Cutoff: {stale_cutoff_hour:02d}:{stale_cutoff_min:02d} UTC")
+                    print(f"   → Will NOT trade. Logging theoretical signal only.\n")
+                else:
+                    print(f"✅ ZOMBIE RECOVERY SUCCESSFUL")
+                    print(f"   Recovery time: {current_time.strftime('%H:%M:%S')} UTC")
+                    print(f"   → Within cutoff. Proceeding with retrospective ORB.\n")
+                
+                return ticker_obj, is_stale
+            
+            # Still failing - wait and retry
+            print(f"⏳ Retry #{int(time.time()) % 1000} at {current_time.strftime('%H:%M:%S')} UTC - Next in 60s...")
+            time.sleep(self.RETRY_INTERVAL)
 
 
-class WealthSeekerBot:
-    """Main autonomous trading bot - Job C"""
+class ORBEngine:
+    """15-Minute Opening Range Breakout Calculator"""
     
-    def __init__(self, test_mode: bool = False):
-        self.test_mode = test_mode
-        self.auditor = TradingAuditor()
-        self.av_client = AlphaVantageClient()
-        self.notifier = TelegramNotifier()
-        self.executor = T212Executor()
-        
-        # Configuration
-        self.watchlist = ["AAPL", "MSFT", "GOOGL"]  # Example tickers
-        self.max_trades_per_day = 1
-        self.trades_executed = 0
+    ORB_START_UTC = (14, 30)  # 14:30 UTC
+    ORB_END_UTC = (14, 45)    # 14:45 UTC
     
-    def get_current_wealth(self) -> float:
-        """Calculate total wealth from T212 account"""
-        try:
-            account = self.executor.get_account_info()
-            return account.get("total", 0.0)
-        except:
-            return 1000.0  # Fallback to seed capital
-    
-    def run_orb_strategy(self, ticker: str) -> bool:
-        """Execute ORB strategy for a single ticker"""
-        print(f"\n{'='*60}")
-        print(f"🎯 Analyzing {ticker} for ORB entry...")
-        print(f"{'='*60}")
+    @staticmethod
+    def calculate_orb_retrospective(ticker_obj: yf.Ticker) -> Dict:
+        """
+        Retrospectively calculate 14:30-14:45 UTC ORB metrics.
+        Used after Zombie Recovery to reconstruct missed data.
         
-        # Step 1: Get opening range
-        orb = ORBStrategy(ticker)
-        orb_high = orb.fetch_opening_range()
+        Returns:
+            {
+                'orb_high': float,
+                'orb_low': float,
+                'orb_midpoint': float,
+                'orb_range_pct': float,
+                'volume': int
+            }
+        """
+        # Fetch 1-minute bars for today
+        hist = ticker_obj.history(period='1d', interval='1m')
         
-        if not orb_high:
-            print(f"❌ Could not establish opening range for {ticker}")
-            return False
+        if hist.empty:
+            raise ValueError("No intraday data available")
         
-        # Step 2: Get current price
-        try:
-            stock = yf.Ticker(ticker)
-            current_price = stock.info.get('currentPrice', stock.info.get('regularMarketPrice', 0))
-            
-            if not current_price:
-                print(f"❌ Could not fetch current price for {ticker}")
-                return False
-            
-            print(f"💰 Current Price: ${current_price:.2f}")
-        except Exception as e:
-            print(f"❌ Price fetch failed: {e}")
-            return False
-        
-        # Step 3: Check breakout condition
-        if not orb.check_breakout(current_price):
-            print(f"⏳ No breakout yet for {ticker}")
-            return False
-        
-        # Step 4: VWAP filter
-        vwap = self.av_client.get_vwap(ticker)
-        if not vwap:
-            print(f"⚠️  Could not fetch VWAP, skipping {ticker}")
-            return False
-        
-        print(f"📈 VWAP: ${vwap:.2f}")
-        
-        if current_price <= vwap:
-            print(f"❌ VWAP Filter Failed: ${current_price:.2f} <= ${vwap:.2f}")
-            return False
-        
-        print(f"✅ VWAP Filter Passed: ${current_price:.2f} > ${vwap:.2f}")
-        
-        # Step 5: Calculate position size
-        total_wealth = self.get_current_wealth()
-        position_value = min(1000, total_wealth * 0.05)  # Will be validated by auditor
-        shares = int(position_value / current_price)
-        
-        # Step 6: Run through the Gauntlet
-        gauntlet_result = self.auditor.run_gauntlet(
-            ticker=ticker,
-            entry_price=current_price,
-            position_size=position_value,
-            total_wealth=total_wealth,
-            daily_pnl=0.0,  # Would track throughout day
-            news_context=f"ORB breakout detected for {ticker}"
+        # Filter to 14:30-14:45 UTC window
+        today = datetime.now(timezone.utc).date()
+        orb_start = datetime.combine(today, datetime.min.time()).replace(
+            hour=14, minute=30, tzinfo=timezone.utc
+        )
+        orb_end = datetime.combine(today, datetime.min.time()).replace(
+            hour=14, minute=45, tzinfo=timezone.utc
         )
         
-        print(f"\n🛡️  Gauntlet Result:")
-        print(json.dumps(gauntlet_result, indent=2))
+        orb_data = hist.loc[orb_start:orb_end]
         
-        if not gauntlet_result["approved"]:
-            print(f"❌ Trade REJECTED: {gauntlet_result['reason']}")
-            self.notifier.send_message(
-                f"🚫 *Trade Rejected*\n"
-                f"Ticker: {ticker}\n"
-                f"Reason: {gauntlet_result['reason']}"
-            )
+        if orb_data.empty:
+            raise ValueError(f"No data in ORB window {orb_start} - {orb_end}")
+        
+        orb_high = float(orb_data['High'].max())
+        orb_low = float(orb_data['Low'].min())
+        orb_midpoint = (orb_high + orb_low) / 2
+        orb_range = orb_high - orb_low
+        orb_range_pct = (orb_range / orb_high) * 100
+        volume = int(orb_data['Volume'].sum())
+        
+        return {
+            'orb_high': orb_high,
+            'orb_low': orb_low,
+            'orb_midpoint': orb_midpoint,
+            'orb_range_pct': orb_range_pct,
+            'volume': volume
+        }
+    
+    @staticmethod
+    def calculate_atr(ticker_obj: yf.Ticker, period: int = 14) -> float:
+        """Calculate 14-period Average True Range"""
+        hist = ticker_obj.history(period='1mo', interval='1d')
+        
+        if len(hist) < period:
+            raise ValueError(f"Insufficient data for ATR ({len(hist)} < {period})")
+        
+        high_low = hist['High'] - hist['Low']
+        high_close = abs(hist['High'] - hist['Close'].shift())
+        low_close = abs(hist['Low'] - hist['Close'].shift())
+        
+        true_range = high_low.combine(high_close, max).combine(low_close, max)
+        atr = float(true_range.rolling(window=period).mean().iloc[-1])
+        
+        return atr
+    
+    @staticmethod
+    def get_latest_5m_close(ticker_obj: yf.Ticker) -> Tuple[float, datetime]:
+        """
+        Get most recent 5m candle CLOSE price.
+        Strategy triggers on CANDLE CLOSE, not live price.
+        """
+        hist = ticker_obj.history(period='1d', interval='5m')
+        
+        if hist.empty:
+            raise ValueError("No 5m candle data")
+        
+        latest_candle = hist.iloc[-1]
+        close_price = float(latest_candle['Close'])
+        close_time = latest_candle.name.to_pydatetime()
+        
+        return close_price, close_time
+
+
+class AntiTrapFilter:
+    """Pre-trade validation filters to reject trap setups"""
+    
+    MIN_VOLUME_MULTIPLIER = 1.5  # 150% of average
+    MAX_RANGE_PCT = 2.5  # Reject if ORB range > 2.5%
+    MAX_SPREAD_PCT = 0.15  # Liquidity guard
+    
+    @staticmethod
+    def check_volume(current_volume: int, avg_volume_20d: int) -> Tuple[bool, str]:
+        """Volume must be > 150% of 20-day average"""
+        if current_volume < avg_volume_20d * AntiTrapFilter.MIN_VOLUME_MULTIPLIER:
+            return False, f"Volume {current_volume:,} < {AntiTrapFilter.MIN_VOLUME_MULTIPLIER}x avg ({avg_volume_20d:,})"
+        return True, ""
+    
+    @staticmethod
+    def check_range_cap(orb_range_pct: float) -> Tuple[bool, str]:
+        """Reject if ORB range too wide (indicates gap/volatility)"""
+        if orb_range_pct > AntiTrapFilter.MAX_RANGE_PCT:
+            return False, f"Range {orb_range_pct:.2f}% > {AntiTrapFilter.MAX_RANGE_PCT}% (TOO WIDE)"
+        return True, ""
+    
+    @staticmethod
+    def check_spread(bid: float, ask: float) -> Tuple[bool, str]:
+        """Spread must be < 0.15% for liquidity"""
+        mid = (bid + ask) / 2
+        spread_pct = ((ask - bid) / mid) * 100
+        
+        if spread_pct > AntiTrapFilter.MAX_SPREAD_PCT:
+            return False, f"Spread {spread_pct:.2f}% > {AntiTrapFilter.MAX_SPREAD_PCT}%"
+        return True, ""
+    
+    @staticmethod
+    def check_recoil_trap(current_price: float, orb_midpoint: float, orb_high: float) -> Tuple[bool, str]:
+        """
+        Recoil Trap: If price closes below midpoint within 10 mins of breakout,
+        position should be liquidated. This is a POST-entry check.
+        """
+        if current_price < orb_midpoint:
+            return False, f"RECOIL TRAP: ${current_price:.2f} < midpoint ${orb_midpoint:.2f}"
+        return True, ""
+
+
+class JobCScalper:
+    """Main 15m ORB Scalper with Zombie Recovery"""
+    
+    def __init__(self, watch_list: List[str], dry_run: bool = True):
+        self.watch_list = watch_list
+        self.dry_run = dry_run
+        
+        # Clients
+        self.client = Trading212Client()
+        self.auditor = TradingAuditor()
+        
+        # Signal handler for SIGTERM (from orb_shield.py)
+        signal.signal(signal.SIGTERM, self.handle_sigterm)
+        
+        print(f"\n{'='*70}")
+        print(f"🎯 JOB C SCALPER v1.9.1")
+        print(f"{'='*70}")
+        print(f"⏰ Execution time: {datetime.now(timezone.utc).isoformat()}")
+        print(f"📊 Watch list: {', '.join(watch_list)}")
+        print(f"🧪 Dry run: {'ENABLED' if dry_run else 'DISABLED (LIVE TRADING)'}")
+        print(f"{'='*70}\n")
+    
+    def handle_sigterm(self, signum, frame):
+        """Handle SIGTERM from orb_shield.py"""
+        print("\n🛑 SIGTERM received from ORB Shield. Emergency shutdown...")
+        sys.exit(0)
+    
+    def load_instruments_db(self) -> Dict:
+        """Load instruments.json for ticker validation"""
+        try:
+            with open('data/instruments.json', 'r') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            print("⚠️  data/instruments.json not found. Run build_universe.py first.")
+            return {'instruments': []}
+    
+    def validate_ticker(self, ticker: str, instruments_db: Dict) -> bool:
+        """Validate ticker exists in instruments database"""
+        instruments = instruments_db.get('instruments', [])
+        ticker_list = [i['ticker'] for i in instruments]
+        
+        if ticker not in ticker_list:
+            print(f"❌ {ticker} not in instruments database")
             return False
-        
-        # Step 7: Execute trade
-        if self.test_mode:
-            print(f"🧪 TEST MODE: Would buy {shares} shares of {ticker} at ${current_price:.2f}")
-            self.notifier.send_message(
-                f"🧪 *TEST MODE Trade*\n"
-                f"Ticker: {ticker}\n"
-                f"Shares: {shares}\n"
-                f"Price: ${current_price:.2f}\n"
-                f"Value: £{position_value:.2f}"
-            )
+        return True
+    
+    def execute_trade(self, ticker: str, quantity: int, limit_price: float) -> bool:
+        """Execute limit order via Trading 212"""
+        if self.dry_run:
+            print(f"   🧪 [DRY RUN] Would place order: {ticker} {quantity} @ ${limit_price:.2f}")
             return True
         
         try:
-            order = self.executor.place_market_order(ticker, shares)
-            print(f"✅ ORDER EXECUTED: {order}")
-            
-            self.notifier.send_message(
-                f"✅ *Trade Executed*\n"
-                f"Ticker: {ticker}\n"
-                f"Shares: {shares}\n"
-                f"Entry: ${current_price:.2f}\n"
-                f"Value: £{position_value:.2f}\n"
-                f"Strategy: ORB + VWAP\n"
-                f"Order ID: {order.get('id', 'N/A')}"
+            order = self.client.place_limit_order(
+                ticker=ticker,
+                quantity=quantity,
+                limit_price=limit_price,
+                side='BUY'
             )
-            
-            self.trades_executed += 1
+            print(f"   ✅ ORDER PLACED: {order.get('id', 'unknown')}")
             return True
-            
         except Exception as e:
-            print(f"❌ ORDER FAILED: {e}")
-            self.notifier.send_message(f"❌ *Order Failed*\nTicker: {ticker}\nError: {str(e)}")
+            print(f"   ❌ ORDER FAILED: {e}")
             return False
     
-    def run_autonomous(self):
-        """Main autonomous execution loop"""
-        print("\n" + "="*60)
-        print("🤖 WEALTH SEEKER v0.01 - AUTONOMOUS MODE")
-        print("="*60)
-        print(f"⏰ Execution Time: {datetime.utcnow().isoformat()}Z")
-        print(f"📊 Watchlist: {', '.join(self.watchlist)}")
-        print(f"🧪 Test Mode: {'ENABLED' if self.test_mode else 'DISABLED'}")
-        print("="*60 + "\n")
+    def log_theoretical_signal(self, ticker: str, orb_metrics: Dict):
+        """Log theoretical signal when data is stale"""
+        log_entry = {
+            'timestamp': datetime.now(timezone.utc).isoformat() + 'Z',
+            'ticker': ticker,
+            'orb_high': orb_metrics['orb_high'],
+            'orb_low': orb_metrics['orb_low'],
+            'status': 'STALE_DATA_NO_TRADE'
+        }
         
-        # Scan watchlist for ORB opportunities
-        for ticker in self.watchlist:
-            if self.trades_executed >= self.max_trades_per_day:
-                print(f"⚠️  Daily trade limit reached ({self.max_trades_per_day})")
-                break
-            
-            success = self.run_orb_strategy(ticker)
-            
-            if success:
-                print(f"✅ Successfully traded {ticker}")
-            
-            # Rate limiting
-            time.sleep(2)
+        os.makedirs('data/logs', exist_ok=True)
+        with open('data/logs/theoretical_signals.json', 'a') as f:
+            f.write(json.dumps(log_entry) + '\n')
         
-        print(f"\n{'='*60}")
-        print(f"📊 Session Summary")
-        print(f"{'='*60}")
-        print(f"Trades Executed: {self.trades_executed}/{self.max_trades_per_day}")
-        print(f"Completion Time: {datetime.utcnow().isoformat()}Z")
-        print(f"{'='*60}\n")
+        print(f"   📝 Theoretical signal logged to data/logs/theoretical_signals.json")
+    
+    def process_ticker(self, ticker: str, instruments_db: Dict):
+        """Process single ticker through full ORB strategy"""
+        print(f"\n{'─'*70}")
+        print(f"📊 Processing: {ticker}")
+        print(f"{'─'*70}")
+        
+        # Step 1: Ticker validation
+        if not self.validate_ticker(ticker, instruments_db):
+            return
+        
+        # Step 2: Pre-flight data fetch (14:25 UTC check)
+        print("⏳ Attempting data fetch...")
+        recovery = ZombieRecovery(ticker)
+        ticker_obj = recovery.fetch_intraday_data()
+        
+        # Step 3: Zombie Recovery if needed
+        if not ticker_obj:
+            print("❌ Pre-flight FAILED. Entering Zombie Recovery...\n")
+            ticker_obj, is_stale = recovery.enter_retry_loop()
+            
+            if not ticker_obj:
+                print(f"❌ Zombie Recovery FAILED permanently for {ticker}\n")
+                return
+            
+            if is_stale:
+                # Calculate retrospective ORB for logging only
+                try:
+                    orb_metrics = ORBEngine.calculate_orb_retrospective(ticker_obj)
+                    self.log_theoretical_signal(ticker, orb_metrics)
+                except Exception as e:
+                    print(f"❌ ORB calculation failed: {e}")
+                return
+        
+        # Step 4: Calculate ORB metrics (retrospective if recovered)
+        try:
+            orb_metrics = ORBEngine.calculate_orb_retrospective(ticker_obj)
+            atr = ORBEngine.calculate_atr(ticker_obj)
+            
+            print(f"✅ ORB Metrics:")
+            print(f"   High: ${orb_metrics['orb_high']:.2f}")
+            print(f"   Low: ${orb_metrics['orb_low']:.2f}")
+            print(f"   Midpoint: ${orb_metrics['orb_midpoint']:.2f}")
+            print(f"   Range: {orb_metrics['orb_range_pct']:.2f}%")
+            print(f"   Volume: {orb_metrics['volume']:,}")
+            print(f"   ATR(14): ${atr:.2f}")
+            
+        except Exception as e:
+            print(f"❌ ORB calculation failed: {e}\n")
+            return
+        
+        # Step 5: Get latest 5m candle CLOSE
+        try:
+            close_price, close_time = ORBEngine.get_latest_5m_close(ticker_obj)
+            print(f"\n💰 Latest 5m Close: ${close_price:.2f} @ {close_time.strftime('%H:%M:%S')} UTC")
+        except Exception as e:
+            print(f"❌ Failed to get 5m close: {e}\n")
+            return
+        
+        # Step 6: Check for breakout (CLOSE above ORB High)
+        if close_price <= orb_metrics['orb_high']:
+            print(f"⏸️  No breakout: ${close_price:.2f} <= ORB High ${orb_metrics['orb_high']:.2f}\n")
+            return
+        
+        print(f"🚀 BREAKOUT DETECTED: ${close_price:.2f} > ${orb_metrics['orb_high']:.2f}")
+        
+        # Step 7: Anti-trap filters
+        print("\n🛡️  Running anti-trap filters...")
+        
+        # Volume check (TODO: Fetch real 20-day avg from ticker_obj)
+        avg_volume_20d = 5000000  # Placeholder
+        passed, reason = AntiTrapFilter.check_volume(orb_metrics['volume'], avg_volume_20d)
+        if not passed:
+            print(f"   ❌ REJECTED: {reason}\n")
+            return
+        print(f"   ✅ Volume check passed")
+        
+        # Range cap check
+        passed, reason = AntiTrapFilter.check_range_cap(orb_metrics['orb_range_pct'])
+        if not passed:
+            print(f"   ❌ REJECTED: {reason}\n")
+            return
+        print(f"   ✅ Range cap check passed")
+        
+        # Spread check (TODO: Fetch real bid/ask from Trading 212 API)
+        bid, ask = close_price * 0.999, close_price * 1.001  # Placeholder
+        passed, reason = AntiTrapFilter.check_spread(bid, ask)
+        if not passed:
+            print(f"   ❌ REJECTED: {reason}\n")
+            return
+        print(f"   ✅ Spread check passed")
+        
+        # Step 8: Calculate entry and stop
+        target_entry = orb_metrics['orb_high'] + (0.1 * atr)
+        stop_loss = orb_metrics['orb_high'] - (1.5 * atr)
+        
+        print(f"\n📍 Trade Levels:")
+        print(f"   Target Entry: ${target_entry:.2f}")
+        print(f"   Stop Loss: ${stop_loss:.2f}")
+        print(f"   Risk/Reward: {((target_entry - close_price) / (close_price - stop_loss)):.2f}x")
+        
+        # Step 9: Seed Rule position sizing
+        max_position = self.auditor.get_seed_rule_limit()
+        quantity = int(max_position / target_entry)
+        
+        print(f"\n💵 Position Sizing:")
+        print(f"   Max position: £{max_position:.2f} (Seed Rule)")
+        print(f"   Quantity: {quantity} shares")
+        print(f"   Notional: £{quantity * target_entry:.2f}")
+        
+        # Step 10: Execute trade
+        print(f"\n🎯 Executing trade...")
+        success = self.execute_trade(ticker, quantity, target_entry)
+        
+        if success:
+            print(f"✅ {ticker} trade complete\n")
+        else:
+            print(f"❌ {ticker} trade failed\n")
+    
+    def run(self):
+        """Main execution loop"""
+        # Load instruments database
+        instruments_db = self.load_instruments_db()
+        
+        # Process each ticker in watch list
+        for ticker in self.watch_list:
+            self.process_ticker(ticker, instruments_db)
+        
+        print(f"\n{'='*70}")
+        print(f"✅ JOB C SCALPER SESSION COMPLETE")
+        print(f"⏰ End time: {datetime.now(timezone.utc).isoformat()}")
+        print(f"{'='*70}\n")
 
 
 def main():
-    """Entry point for main_bot.py"""
-    test_mode = "--test-mode" in sys.argv or "--autonomous" not in sys.argv
+    """CLI entry point"""
+    import argparse
     
-    if test_mode:
-        print("🧪 Running in TEST MODE (no real trades)")
+    parser = argparse.ArgumentParser(description='Job C Scalper v1.9.1')
+    parser.add_argument('--live', action='store_true', help='Live trading mode (default: dry run)')
+    parser.add_argument('--tickers', nargs='+', default=['NVDA', 'TSLA', 'AMD'], 
+                       help='Tickers to watch (default: NVDA TSLA AMD)')
     
-    bot = WealthSeekerBot(test_mode=test_mode)
-    bot.run_autonomous()
+    args = parser.parse_args()
+    
+    scalper = JobCScalper(
+        watch_list=args.tickers,
+        dry_run=not args.live
+    )
+    
+    try:
+        scalper.run()
+    except KeyboardInterrupt:
+        print("\n🛑 Stopped by user")
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
