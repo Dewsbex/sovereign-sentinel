@@ -32,6 +32,35 @@ def get_inverted_color(pnl_percent: float) -> str:
         return '#7f1d1d'  # Deep Blood (Extreme loss - ultra heavy)
 
 
+def get_sentinel_stats(state: dict) -> dict:
+    """Extract Sentinel trading pot statistics (£1,000 seed lock)"""
+    realized_profit = state.get("realized_profit", 0.0)
+    scaling_unlocked = realized_profit >= 1000.0
+    
+    # Calculate current drawdown from seed
+    seed_amount = 1000.0
+    current_drawdown = seed_amount - realized_profit if realized_profit < 0 else 0.0
+    
+    return {
+        "seed_amount": seed_amount,
+        "realized_profit": realized_profit,
+        "current_drawdown": current_drawdown,
+        "scaling_unlocked": scaling_unlocked,
+        "status": "UNLOCKED" if scaling_unlocked else "LOCKED",
+        "total_trades": state.get("total_trades", 0)
+    }
+
+
+def get_t212_portfolio_data(state: dict) -> dict:
+    """Extract full T212 portfolio data for analysis"""
+    return {
+        "total_wealth": state.get("total_wealth", 0.0),
+        "cash": state.get("cash", 0.0),
+        "positions": state.get("positions", []),
+        "session_pnl": state.get("session_pnl", 0.0)
+    }
+
+
 def load_state() -> dict:
     """Load live state from JSON files"""
     state = {
@@ -43,6 +72,7 @@ def load_state() -> dict:
         "pending_orders": [],
         "realized_profit": 0.0,
         "scaling_unlocked": False,
+        "total_trades": 0,
         "connectivity": "Unknown",
         "market_phase": "MID_BULL",
         "fortress_alert": False
@@ -160,20 +190,27 @@ def generate_dashboard(state: dict) -> str:
     market_phase = phase_data["phase"]
     fortress_alert = phase_data.get("fortress_alert", False)
     
-    # Prepare data
-    heatmap_data = calculate_performance_data(state.get("positions", []))
+    # Split data feeds
+    sentinel_stats = get_sentinel_stats(state)
+    t212_portfolio = get_t212_portfolio_data(state)
+    
+    # Prepare T212 portfolio analysis data
+    heatmap_data = calculate_performance_data(t212_portfolio["positions"])
     sectors = calculate_sector_allocation(
-        state.get("positions", []),
-        state.get("total_wealth", 0),
-        state.get("cash", 0)
+        t212_portfolio["positions"],
+        t212_portfolio["total_wealth"],
+        t212_portfolio["cash"]
     )
     sector_deltas = calculate_sector_deltas(sectors, market_phase)
     
     # Render
     html = template.render(
         timestamp=state["timestamp"],
-        total_wealth=state.get("total_wealth", 0),
-        cash=state.get("cash", 0),
+        # Sentinel Pot Stats
+        sentinel=sentinel_stats,
+        # T212 Portfolio Analysis
+        total_wealth=t212_portfolio["total_wealth"],
+        cash=t212_portfolio["cash"],
         session_pnl=state.get("session_pnl", 0),
         connectivity=state.get("connectivity", "Unknown"),
         market_phase=market_phase.replace("_", "-"),

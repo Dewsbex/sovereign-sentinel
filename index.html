@@ -120,6 +120,41 @@
             padding: 0;
         }
         
+        /* SENTINEL POT STATUS STRIP */
+        .sentinel-strip {
+            background: var(--true-white);
+            border-bottom: 1px solid var(--slate-border);
+            padding: 20px 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .sentinel-metric {
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+        }
+        
+        .sentinel-label {
+            color: var(--label-medium);
+            font-size: 10px;
+            margin-bottom: 4px;
+        }
+        
+        .sentinel-value {
+            font-size: 16px;
+            color: var(--charcoal);
+        }
+        
+        .sentinel-value.positive {
+            color: var(--emerald-solid);
+        }
+        
+        .sentinel-value.negative {
+            color: var(--crimson-solid);
+        }
+        
         /* SECTION HEADERS */
         .section-header {
             background: var(--true-white);
@@ -320,6 +355,35 @@
     </header>
     
     <div class="container">
+        <!-- SENTINEL POT STATUS STRIP -->
+        <div class="section-header">SENTINEL POT - £1,000 SEED LOCK</div>
+        <div class="sentinel-strip">
+            <div class="sentinel-metric">
+                <div class="sentinel-label">REALIZED PROFIT</div>
+                <div class="sentinel-value positive">
+                    £0.00
+                </div>
+            </div>
+            
+            <div class="sentinel-metric">
+                <div class="sentinel-label">CURRENT DRAWDOWN</div>
+                <div class="sentinel-value">£0.00</div>
+            </div>
+            
+            <div class="sentinel-metric">
+                <div class="sentinel-label">STATUS</div>
+                <div class="sentinel-value">LOCKED</div>
+            </div>
+            
+            <div class="sentinel-metric">
+                <div class="sentinel-label">TOTAL TRADES</div>
+                <div class="sentinel-value">0</div>
+           </div>
+        </div>
+        
+        <!-- T212 SOVEREIGN PORTFOLIO ANALYSIS -->
+        <div class="section-header">T212 SOVEREIGN PORTFOLIO - FULL HOLDINGS ANALYSIS</div>
+        
         <!-- 01 / MOMENTUM HEATMAP -->
         <div class="section-header">01 / MOMENTUM HEATMAP - INVERTED INTENSITY</div>
         <div class="heatmap-container">
