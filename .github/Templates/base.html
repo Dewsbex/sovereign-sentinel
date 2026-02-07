@@ -1,0 +1,12 @@
+def audit_gauntlet(ticker, price, news_facts):
+    # Fix the Pence Bug
+    norm_price = price / 100 if "_UK_EQ" in ticker else price
+    
+    # Deterministic Kill-Switches
+    if news_facts.get('dividend_cut'): return False
+    if news_facts.get('ceo_resignation'): return False
+    
+    # Technical Check
+    if norm_price < 20.0: return False # Penny stock guard
+    
+    return True
