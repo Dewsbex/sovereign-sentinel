@@ -150,7 +150,7 @@ def generate_oracle_ring(holdings, total_invested):
 def render():
     env_mode = "LIVE" if os.environ.get('ENV') == 'LIVE' else "DEMO"
     prefix = f"({env_mode})"
-    print(f"{prefix} Starting Sector Sentinel (Job B) [v32.80]... ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"{prefix} Starting Sector Sentinel (Job B) [v33.00]... ({datetime.now().strftime('%H:%M:%S')})")
     
     # Load Sector Mapping (Tier 1)
     mapping_data = {"mappings": {}, "gics_colors": {}}
@@ -319,11 +319,10 @@ def render():
             'name': h.get('Name', ticker)
         })
 
-    # Performance Heatmap Series (Flat)
-    performance_series = [{
-        'name': 'Holdings',
-        'data': performance_data
-    }]
+    # v33.00 GOLDEN SOURCE: TRUE FLAT SERIES
+    # NO wrapper array - ApexCharts will receive raw data directly
+    performance_series = performance_data  # Direct assignment, no nesting
+    
     
     # Sector Allocation Series (Grouped by GICS)
     allocation_series = []
@@ -460,9 +459,9 @@ def render():
     legend_html += "</div>"
 
     context = {
-        'version': 'v32.80',
+        'version': 'v33.00',
         'last_update': datetime.now().strftime('%H:%M %d/%m'),
-        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v32.80 Sovereign Separation"},
+        "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"), "version": "v33.00 Golden Source"},
         'sync_time': datetime.now().strftime('%d/%m %H:%M'),
         'total_wealth_str': format_gbp_truncate(total_wealth),
         'total_return_str': f"{'+' if total_return >= 0 else ''}{format_gbp_truncate(total_return)}",

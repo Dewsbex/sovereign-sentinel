@@ -1238,7 +1238,9 @@
 
         function renderPerformanceHeatmap(data) {
             const options = {
-                series: data, // Grouped Data [ { name: 'SECTOR', data: [...] } ]
+                series: [{
+                    data: data  // v33.00: Wrap raw array here, not in Python
+                }],
                 legend: { show: false },
                 chart: {
                     type: 'treemap',
