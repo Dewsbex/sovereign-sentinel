@@ -26,8 +26,8 @@
             --label-dark: #374151;
             --label-medium: #6b7280;
             
-            /* Industrial Instrument v1.1 */
-            --industrial-orange: #fb923c;
+            /* Industrial Instrument v1.2 - PALE INDUSTRIAL */
+            --industrial-orange: #ffedd5;  /* Ultra-Pale Orange */
             --visible-mint: #f0fdf4;
             --visible-rose: #fff1f2;
             
@@ -333,17 +333,17 @@
         </div>
         
         <div class="nav-buttons">
-            <a href="#sentinel" class="nav-btn">01</a>
-            <a href="#momentum" class="nav-btn">02</a>
-            <a href="#macro" class="nav-btn">03</a>
-            <a href="#strategic" class="nav-btn">04</a>
+            <a href="#sentinel" class="nav-btn">SENTINEL</a>
+            <a href="#momentum" class="nav-btn">MOMENTUM</a>
+            <a href="#macro" class="nav-btn">MACRO</a>
+            <a href="#strategic" class="nav-btn">BRIEF</a>
         </div>
     </header>
     
-    <!-- 01 / SENTINEL - THE LABORATORY -->
+    <!-- SENTINEL - THE LABORATORY -->
     <div class="responsive-grid">
         <div id="sentinel" class="section">
-            <div class="section-label">01 / SENTINEL</div>
+            <div class="section-label">SENTINEL LABORATORY</div>
             <div class="chart-container">
                 <div id="sentinel-donut"></div>
             </div>
@@ -357,18 +357,18 @@
         </div>
     </div>
     
-    <!-- 02 / MOMENTUM - GLOBAL HEATMAP -->
+    <!-- MOMENTUM - GLOBAL HEATMAP -->
     <div id="momentum" class="section">
-        <div class="section-label">02 / MOMENTUM</div>
+        <div class="section-label">GLOBAL MOMENTUM</div>
         <div class="chart-container">
             <div id="performance-heatmap"></div>
         </div>
     </div>
     
-    <!-- 03 / MACRO - POWER-GRID -->
+    <!-- MACRO - POWER-GRID -->
     <div class="responsive-grid">
         <div id="macro" class="section">
-            <div class="section-label">03 / MACRO</div>
+            <div class="section-label">ASSET MIX</div>
             <div class="chart-container">
                 <div id="asset-donut"></div>
             </div>
@@ -492,9 +492,9 @@
         </div>
     </div>
     
-    <!-- 04 / STRATEGIC - AI BRIEF -->
+    <!-- STRATEGIC - AI BRIEF -->
     <div id="strategic" class="section">
-        <div class="section-label">04 / STRATEGIC</div>
+        <div class="section-label">STRATEGIC BRIEF</div>
         <div class="ai-brief-content">
             **Mid-Bull Market Phase** - Portfolio shows healthy diversification with Technology weighted at 70%. Consider rebalancing toward Industrials and Materials per Macro-Clock targets.
         </div>
@@ -520,7 +520,7 @@
         let sentinelSeries, sentinelLabels, sentinelColors;
         
         if (harvestProfit >= 0) {
-            // Case A: Profit - Orange Seed + Visible Mint Harvest
+            // Case A: Profit - Ultra-Pale Orange Seed + Visible Mint Harvest
             const seedPercent = (seedAmount / totalPotValue * 100).toFixed(1);
             const harvestPercent = (harvestProfit / totalPotValue * 100).toFixed(1);
             
@@ -529,7 +529,7 @@
                 `SEED: £${seedAmount.toFixed(2)} (${seedPercent}%)`,
                 `HARVEST: £+${harvestProfit.toFixed(2)} (${harvestPercent}%)`
             ];
-            sentinelColors = ['#fb923c', '#f0fdf4'];  // Industrial Orange + Visible Mint
+            sentinelColors = ['#ffedd5', '#f0fdf4'];  // Ultra-Pale Orange + Visible Mint
         } else {
             // Case B: Loss - Visible Rose Tint
             sentinelSeries = [totalPotValue];
@@ -622,7 +622,7 @@
                 toolbar: { show: false }
             },
             theme: { mode: 'light' },
-            stroke: { curve: 'smooth', width: 2, colors: ['#fb923c'] },
+            stroke: { curve: 'smooth', width: 2, colors: ['#ffedd5'] },
             fill: {
                 type: 'gradient',
                 gradient: {
@@ -630,8 +630,8 @@
                     opacityFrom: 0.3,
                     opacityTo: 0.05,
                     colorStops: [
-                        { offset: 0, color: '#fb923c', opacity: 0.3 },
-                        { offset: 100, color: '#fb923c', opacity: 0.05 }
+                        { offset: 0, color: '#ffedd5', opacity: 0.3 },
+                        { offset: 100, color: '#ffedd5', opacity: 0.05 }
                     ]
                 }
             },
@@ -751,7 +751,7 @@
                 fontFamily: "'JetBrains Mono', monospace"
             },
             theme: { mode: 'light' },
-            colors: ['#fb923c', '#fef2f2', '#f0fdf4', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4'],
+            colors: ['#ffedd5', '#fef2f2', '#f0fdf4', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4'],
             dataLabels: {
                 enabled: true,
                 style: {
