@@ -10,7 +10,14 @@ import sys
 from datetime import datetime
 from typing import Dict, Any, Tuple
 import os
-import google.generativeai as genai
+
+# Optional AI fact-checking
+try:
+    import google.generativeai as genai
+    GEMINI_AVAILABLE = True
+except ImportError:
+    GEMINI_AVAILABLE = False
+    print("⚠️  google-generativeai not installed, fact-checking disabled")
 
 
 class TradingAuditor:
@@ -28,9 +35,11 @@ class TradingAuditor:
         from trading212_client import Trading212Client
         self.client = Trading212Client()
         
-        # Configure Gemini for fact-checking only
-        genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-        self.model = genai.GenerativeModel('gemini-pro')
+        # Configure Gemini for fact-checking only (if available)
+        self.model = None
+        if GEMINI_AVAILABLE and os.getenv("GOOGLE_API_KEY"):
+            genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+            self.model = genai.GenerativeModel('gemini-pro')
     
     def normalize_uk_price(self, ticker: str, raw_price: float) -> float:
         """
@@ -90,6 +99,11 @@ class TradingAuditor:
         
         Returns: (is_blocked, fact_dict)
         """
+        # Skip fact-checking if Gemini unavailable
+        if not self.model:
+            print(f"⚠️  Gemini unavailable, skipping fact-check for {ticker}")
+            return False, {"skipped": True}
+        
         prompt = f"""
 You are a financial fact-checker. Analyze the following information about {ticker}.
 
