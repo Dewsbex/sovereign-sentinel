@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEALTH SEEKER v0.01 - VIBE STATION ALPHA</title>
+    <title>S. DEWSBERY | VIBE LAB v0.01</title>
     
     <style>
-        /* INDUSTRIAL VIBE - CYBER BRUTALIST AESTHETIC */
+        /* VIBE LAB - LIGHT INDUSTRIAL AESTHETIC */
         * {
             margin: 0;
             padding: 0;
@@ -14,29 +14,29 @@
         }
         
         :root {
-            /* Industrial Color Palette */
-            --true-black: #000000;
-            --grid-line: #333333;
-            --border-color: #444444;
-            --label-white: #ffffff;
-            --label-gray: #cccccc;
+            /* Light Industrial Palette */
+            --lab-white: #f9fafb;
+            --true-white: #ffffff;
+            --charcoal: #111827;
+            --slate-border: #e5e7eb;
+            --label-dark: #374151;
+            --label-medium: #6b7280;
             
-            /* Inverted Momentum Colors */
-            --deep-forest: #064e3b;
-            --emerald: #10b981;
-            --mint-pastel: #d1fae5;
+            /* Light Mode Inverted Momentum */
+            --mint-pastel: #dcfce7;
             --rose-pastel: #fee2e2;
-            --crimson: #ef4444;
-            --blood-red: #7f1d1d;
-            --deep-blood: #450a0a;
+            --emerald-solid: #22c55e;
+            --crimson-solid: #ef4444;
+            --forest-deep: #166534;
+            --blood-deep: #991b1b;
             
-            /* Alert Colors */
-            --fortress-alert: #fbbf24;
+            /* Alert */
+            --alert-amber: #f59e0b;
         }
         
         body {
-            background: var(--true-black);
-            color: var(--label-white);
+            background: var(--lab-white);
+            color: var(--charcoal);
             font-family: 'JetBrains Mono', 'Courier New', monospace;
             font-size: 13px;
             line-height: 1.4;
@@ -48,45 +48,61 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: var(--true-black);
-            border-bottom: 1px solid var(--grid-line);
+            background: var(--true-white);
+            border-bottom: 1px solid var(--slate-border);
             padding: 20px 24px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 16px;
         }
         
+        .vibe-lab-header {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            color: var(--label-medium);
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--slate-border);
+            margin-bottom: 8px;
+        }
+        
+        .vibe-lab-title {
+            font-weight: 700;
+            color: var(--charcoal);
+        }
+        
         .metric {
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             font-weight: 700;
         }
         
         .metric-label {
-            color: var(--label-gray);
+            color: var(--label-medium);
             font-size: 10px;
             margin-bottom: 4px;
         }
         
         .metric-value {
             font-size: 18px;
-            color: var(--label-white);
+            color: var(--charcoal);
         }
         
         .metric-value.positive {
-            color: var(--emerald);
+            color: var(--emerald-solid);
         }
         
         .metric-value.negative {
-            color: var(--crimson);
+            color: var(--crimson-solid);
         }
         
         .fortress-alert-banner {
             grid-column: 1 / -1;
-            background: var(--fortress-alert);
-            color: var(--true-black);
+            background: var(--alert-amber);
+            color: var(--true-white);
             padding: 12px;
-            border: 1px solid var(--fortress-alert);
+            border: 1px solid var(--alert-amber);
             text-align: center;
             font-weight: 700;
             animation: pulse 2s infinite;
@@ -94,7 +110,7 @@
         
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+            50% { opacity: 0.8; }
         }
         
         /* CONTAINER */
@@ -106,28 +122,29 @@
         
         /* SECTION HEADERS */
         .section-header {
-            background: var(--true-black);
-            border-top: 1px solid var(--grid-line);
-            border-bottom: 1px solid var(--grid-line);
+            background: var(--true-white);
+            border-top: 1px solid var(--slate-border);
+            border-bottom: 1px solid var(--slate-border);
             padding: 16px 24px;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             font-weight: 700;
             font-size: 11px;
-            color: var(--label-gray);
+            color: var(--label-medium);
         }
         
         /* MOMENTUM HEATMAP */
         .heatmap-container {
-            background: var(--true-black);
-            border-bottom: 1px solid var(--grid-line);
+            background: var(--true-white);
+            border-bottom: 1px solid var(--slate-border);
             padding: 24px;
         }
         
         #performance-heatmap {
-            height: 550px;
+            height: 550px !important;
+            min-height: 550px;
             width: 100%;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--slate-border);
         }
         
         /* SECTOR POWER-GRID */
@@ -136,14 +153,15 @@
             grid-template-columns: 1fr 2fr;
             gap: 24px;
             padding: 24px;
-            background: var(--true-black);
-            border-bottom: 1px solid var(--grid-line);
+            background: var(--true-white);
+            border-bottom: 1px solid var(--slate-border);
         }
         
         .power-grid-left,
         .power-grid-right {
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--slate-border);
             padding: 20px;
+            background: var(--lab-white);
         }
         
         #asset-donut {
@@ -167,27 +185,28 @@
             text-transform: uppercase;
             font-size: 11px;
             letter-spacing: 0.05em;
-            color: var(--label-gray);
+            color: var(--label-dark);
         }
         
         .bar-container {
             position: relative;
             height: 24px;
-            background: #111;
-            border: 1px solid var(--border-color);
+            background: #f3f4f6;
+            border: 1px solid var(--slate-border);
         }
         
         .bar-fill {
             position: absolute;
             height: 100%;
-            background: var(--emerald);
+            background: var(--emerald-solid);
+            opacity: 0.3;
             transition: width 0.3s ease;
         }
         
         .bar-target-line {
             position: absolute;
             height: 100%;
-            border-left: 2px dotted var(--label-white);
+            border-left: 2px dotted var(--charcoal);
         }
         
         .bar-status {
@@ -197,34 +216,34 @@
         }
         
         .bar-status.over {
-            color: var(--crimson);
+            color: var(--crimson-solid);
         }
         
         .bar-status.under {
-            color: var(--fortress-alert);
+            color: var(--alert-amber);
         }
         
         .bar-status.match {
-            color: var(--emerald);
+            color: var(--emerald-solid);
         }
         
         /* AI BRIEF */
         .ai-brief-section {
-            background: var(--true-black);
-            border-bottom: 1px solid var(--grid-line);
+            background: var(--true-white);
+            border-bottom: 1px solid var(--slate-border);
             padding: 24px;
         }
         
         .ai-brief-content {
             font-family: system-ui, -apple-system, sans-serif;
-            color: var(--label-gray);
+            color: var(--label-dark);
             line-height: 1.6;
             max-width: 900px;
         }
         
         /* TARGET TRACKER */
         .target-tracker {
-            background: var(--true-black);
+            background: var(--true-white);
             padding: 24px;
         }
         
@@ -235,8 +254,8 @@
         }
         
         .target-card {
-            background: #111;
-            border: 1px solid var(--border-color);
+            background: var(--lab-white);
+            border: 1px solid var(--slate-border);
             padding: 16px;
         }
         
@@ -244,6 +263,7 @@
             font-size: 16px;
             font-weight: 700;
             margin-bottom: 8px;
+            color: var(--charcoal);
         }
         
         .target-metric {
@@ -251,16 +271,16 @@
             justify-content: space-between;
             margin-bottom: 4px;
             font-size: 11px;
-            color: var(--label-gray);
+            color: var(--label-medium);
         }
         
         /* FOOTER */
         .footer {
-            background: var(--true-black);
-            border-top: 1px solid var(--grid-line);
+            background: var(--true-white);
+            border-top: 1px solid var(--slate-border);
             padding: 24px;
             text-align: center;
-            color: var(--label-gray);
+            color: var(--label-medium);
             font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 0.1em;
@@ -270,6 +290,10 @@
 <body>
     <!-- GLOBAL SITREP HEADER -->
     <header class="global-sitrep">
+        <div class="vibe-lab-header">
+            <span class="vibe-lab-title">S. DEWSBERY | VIBE LAB (v0.01)</span> // STATUS: NOMINAL
+        </div>
+        
         
         
         <div class="metric">
@@ -447,7 +471,7 @@
     
     <!-- FOOTER -->
     <footer class="footer">
-        WEALTH SEEKER v0.01 - VIBE STATION ALPHA - GHOST SOVEREIGN<br>
+        VIBE LAB v0.01 - LIGHT INDUSTRIAL - S. DEWSBERY<br>
         Last Update: 2026-02-07T02:53:08Z
     </footer>
     
@@ -458,7 +482,7 @@
         // HEATMAP DATA
         const heatmapData = [];
         
-        // MOMENTUM HEATMAP (Inverted Intensity)
+        // MOMENTUM HEATMAP (Light Mode - Inverted Intensity)
         const heatmapOptions = {
             series: [{
                 data: heatmapData.map(item => ({
@@ -470,16 +494,20 @@
             chart: {
                 type: 'treemap',
                 height: 550,
-                background: '#000',
+                background: 'transparent',
+                foreColor: '#374151',
                 toolbar: { show: false },
                 fontFamily: "'JetBrains Mono', 'Courier New', monospace"
+            },
+            theme: {
+                mode: 'light'
             },
             plotOptions: {
                 treemap: {
                     distributed: true,
                     enableShades: false,
                     colorScale: {
-                        ranges: []  // Using custom colors per item
+                        ranges: []
                     }
                 }
             },
@@ -489,7 +517,7 @@
                     fontSize: '14px',
                     fontFamily: "'JetBrains Mono', 'Courier New', monospace",
                     fontWeight: 700,
-                    colors: ['#fff']
+                    colors: ['#111827']
                 },
                 formatter: function(text, op) {
                     const item = heatmapData[op.dataPointIndex];
@@ -498,7 +526,7 @@
             },
             legend: { show: false },
             tooltip: {
-                theme: 'dark',
+                theme: 'light',
                 style: {
                     fontFamily: "'JetBrains Mono', 'Courier New', monospace"
                 },
@@ -510,7 +538,8 @@
                 }
             },
             grid: {
-                show: false
+                show: true,
+                borderColor: '#e5e7eb'
             }
         };
         
@@ -520,7 +549,7 @@
         );
         heatmapChart.render();
         
-        // ASSET MIX DONUT
+        // ASSET MIX DONUT (Light Mode)
         const sectors = {"Cash": {"percent": 100.0, "tickers": ["CASH"], "value": 1000.0}};
         const sectorNames = Object.keys(sectors);
         const sectorValues = sectorNames.map(s => sectors[s].percent);
@@ -531,17 +560,21 @@
             chart: {
                 type: 'donut',
                 height: 400,
-                background: '#000',
+                background: 'transparent',
+                foreColor: '#374151',
                 fontFamily: "'JetBrains Mono', 'Courier New', monospace"
             },
-            colors: ['#10b981', '#ef4444', '#fbbf24', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#f59e0b'],
+            theme: {
+                mode: 'light'
+            },
+            colors: ['#22c55e', '#ef4444', '#f59e0b', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#f59e0b'],
             dataLabels: {
                 enabled: true,
                 style: {
                     fontSize: '11px',
                     fontFamily: "'JetBrains Mono', 'Courier New', monospace",
                     fontWeight: 700,
-                    colors: ['#fff']
+                    colors: ['#111827']
                 },
                 dropShadow: { enabled: false }
             },
@@ -551,7 +584,7 @@
                 fontSize: '11px',
                 fontFamily: "'JetBrains Mono', 'Courier New', monospace",
                 labels: {
-                    colors: '#ccc',
+                    colors: '#6b7280',
                     useSeriesColors: false
                 }
             },
@@ -563,11 +596,11 @@
                             show: true,
                             name: {
                                 fontSize: '12px',
-                                color: '#fff'
+                                color: '#111827'
                             },
                             value: {
                                 fontSize: '16px',
-                                color: '#fff',
+                                color: '#111827',
                                 formatter: function(val) {
                                     return val.toFixed(1) + '%';
                                 }
@@ -576,7 +609,7 @@
                                 show: true,
                                 label: 'TOTAL WEALTH',
                                 fontSize: '11px',
-                                color: '#ccc',
+                                color: '#6b7280',
                                 formatter: function() {
                                     return '£1000.00';
                                 }
@@ -588,10 +621,10 @@
             stroke: {
                 show: true,
                 width: 1,
-                colors: ['#000']
+                colors: ['#f9fafb']
             },
             tooltip: {
-                theme: 'dark',
+                theme: 'light',
                 style: {
                     fontFamily: "'JetBrains Mono', 'Courier New', monospace"
                 }

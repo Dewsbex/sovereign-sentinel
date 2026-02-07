@@ -13,23 +13,23 @@ from macro_clock import MacroClock
 
 def get_inverted_color(pnl_percent: float) -> str:
     """
-    Inverted Momentum Color Logic:
+    Inverted Momentum Color Logic (LIGHT MODE - VIBE LAB):
     Small moves glow bright (pastels), large moves weigh heavy (deep solid)
     """
     if pnl_percent > 3.0:
-        return '#064e3b'  # Deep Forest (High gain - heavy)
+        return '#166534'  # Forest Deep (High gain - heavy)
     elif pnl_percent > 1.0:
-        return '#10b981'  # Emerald (Mid gain - solid)
+        return '#22c55e'  # Emerald Solid (Mid gain - solid)
     elif pnl_percent > 0.1:
-        return '#d1fae5'  # Mint Pastel (Low gain - glowing)
+        return '#dcfce7'  # Mint Pastel (Low gain - glowing)
     elif pnl_percent > -0.1:
         return '#fee2e2'  # Rose Pastel (Low loss - glowing)
     elif pnl_percent > -1.0:
-        return '#ef4444'  # Crimson (Mid loss - solid)
+        return '#ef4444'  # Crimson Solid (Mid loss - solid)
     elif pnl_percent > -3.0:
-        return '#7f1d1d'  # Blood Red (High loss - heavy)
+        return '#991b1b'  # Blood Deep (High loss - heavy)
     else:
-        return '#450a0a'  # Deep Blood (Extreme loss - ultra heavy)
+        return '#7f1d1d'  # Deep Blood (Extreme loss - ultra heavy)
 
 
 def load_state() -> dict:
