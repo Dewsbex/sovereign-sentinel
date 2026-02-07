@@ -1,12 +1,105 @@
 {
-  "timestamp": "2026-02-07T02:53:08Z",
-  "total_wealth": 1000.0,
-  "cash": 1000.0,
-  "session_pnl": 0.0,
-  "realized_profit": 0.0,
+  "timestamp": "2026-02-07T12:22:05Z",
+  "total_wealth": 12500.00,
+  "cash": 2500.00,
+  "session_pnl": 125.50,
   "scaling_unlocked": false,
-  "connectivity": "Unknown",
-  "positions": [],
-  "orb_targets": [],
-  "ai_strategic_brief": "_Strategic analysis will appear here after first moat research run._"
+  "realized_profit": 250.00,
+  "total_trades": 15,
+  "connectivity": "LIVE",
+  "positions": [
+    {
+      "ticker": "AAPL",
+      "name": "Apple Inc.",
+      "sector": "Technology",
+      "current_value": 3000.00,
+      "pnl": 150.00,
+      "pnl_percent": 5.26,
+      "vwap_distance_percent": 0.5,
+      "job_assignment": "A",
+      "roic_wacc_spread": 8.5,
+      "hold_time_days": 45,
+      "normalized_value": 3000.00
+    },
+    {
+      "ticker": "MSFT",
+      "name": "Microsoft Corporation",
+      "sector": "Technology",
+      "current_value": 2500.00,
+      "pnl": -50.00,
+      "pnl_percent": -1.96,
+      "vwap_distance_percent": -0.3,
+      "job_assignment": "A",
+      "roic_wacc_spread": 7.2,
+      "hold_time_days": 30,
+      "normalized_value": 2500.00
+    },
+    {
+      "ticker": "NVDA",
+      "name": "NVIDIA Corporation",
+      "sector": "Technology",
+      "current_value": 1500.00,
+      "pnl": 200.00,
+      "pnl_percent": 15.38,
+      "vwap_distance_percent": 2.1,
+      "job_assignment": "C",
+      "roic_wacc_spread": 12.3,
+      "hold_time_days": 3,
+      "normalized_value": 1500.00
+    },
+    {
+      "ticker": "JNJ",
+      "name": "Johnson & Johnson",
+      "sector": "Healthcare",
+      "current_value": 1000.00,
+      "pnl": 25.00,
+      "pnl_percent": 2.56,
+      "vwap_distance_percent": 0.8,
+      "job_assignment": "A",
+      "roic_wacc_spread": 5.1,
+      "hold_time_days": 60,
+      "normalized_value": 1000.00
+    },
+    {
+      "ticker": "XOM",
+      "name": "Exxon Mobil Corporation",
+      "sector": "Energy",
+      "current_value": 800.00,
+      "pnl": -10.00,
+      "pnl_percent": -1.23,
+      "vwap_distance_percent": -0.4,
+      "job_assignment": "A",
+      "roic_wacc_spread": 3.8,
+      "hold_time_days": 90,
+      "normalized_value": 800.00
+    },
+    {
+      "ticker": "CAT",
+      "name": "Caterpillar Inc.",
+      "sector": "Industrials",
+      "current_value": 1200.00,
+      "pnl": 5.00,
+      "pnl_percent": 0.42,
+      "vwap_distance_percent": 0.1,
+      "job_assignment": "A",
+      "roic_wacc_spread": 6.4,
+      "hold_time_days": 120,
+      "normalized_value": 1200.00
+    }
+  ],
+  "ai_strategic_brief": "**Mid-Bull Market Phase** - Portfolio shows healthy diversification with Technology weighted at 70%. Consider rebalancing toward Industrials and Materials per Macro-Clock targets.",
+  "orb_targets": [
+    {
+      "ticker": "TSLA",
+      "orb_high": 250.50,
+      "current_price": 248.30,
+      "vwap": 249.10
+    },
+    {
+      "ticker": "AMD",
+      "orb_high": 165.80,
+      "current_price": 164.20,
+      "vwap": 165.00
+    }
+  ]
 }

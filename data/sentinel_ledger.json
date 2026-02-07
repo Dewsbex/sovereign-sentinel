@@ -1,0 +1,16 @@
+{
+  "seed_amount": 1000.00,
+  "realized_profit": 0.00,
+  "total_trades": 0,
+  "status": "LOCKED",
+  "history": [
+    {
+      "date": "2026-02-07",
+      "session_pnl": 0.00,
+      "cumulative_profit": 0.00,
+      "pot_value": 1000.00,
+      "trades_count": 0
+    }
+  ],
+  "last_updated": "2026-02-07T12:39:38Z"
+}

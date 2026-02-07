@@ -333,13 +333,13 @@
         
         <div class="metric">
             <div class="metric-label">TOTAL WEALTH</div>
-            <div class="metric-value">£1000.00</div>
+            <div class="metric-value">£12500.00</div>
         </div>
         
         <div class="metric">
             <div class="metric-label">SESSION P/L</div>
             <div class="metric-value positive">
-                £0.00
+                £125.50
             </div>
         </div>
         
@@ -361,7 +361,7 @@
             <div class="sentinel-metric">
                 <div class="sentinel-label">REALIZED PROFIT</div>
                 <div class="sentinel-value positive">
-                    £0.00
+                    £250.00
                 </div>
             </div>
             
@@ -377,7 +377,7 @@
             
             <div class="sentinel-metric">
                 <div class="sentinel-label">TOTAL TRADES</div>
-                <div class="sentinel-value">0</div>
+                <div class="sentinel-value">15</div>
            </div>
         </div>
         
@@ -405,11 +405,11 @@
                     <div class="sector-bar-row">
                         <div class="sector-name">Industrials</div>
                         <div class="bar-container">
-                            <div class="bar-fill" style="width: 0.0%;"></div>
+                            <div class="bar-fill" style="width: 9.6%;"></div>
                             <div class="bar-target-line" style="left: 18.0%;"></div>
                         </div>
                         <div class="bar-status under">
-                            0.0% | UNDER
+                            9.6% | UNDER
                         </div>
                     </div>
                     
@@ -427,22 +427,22 @@
                     <div class="sector-bar-row">
                         <div class="sector-name">Energy</div>
                         <div class="bar-container">
-                            <div class="bar-fill" style="width: 0.0%;"></div>
+                            <div class="bar-fill" style="width: 6.4%;"></div>
                             <div class="bar-target-line" style="left: 15.0%;"></div>
                         </div>
                         <div class="bar-status under">
-                            0.0% | UNDER
+                            6.4% | UNDER
                         </div>
                     </div>
                     
                     <div class="sector-bar-row">
                         <div class="sector-name">Technology</div>
                         <div class="bar-container">
-                            <div class="bar-fill" style="width: 0.0%;"></div>
+                            <div class="bar-fill" style="width: 56.0%;"></div>
                             <div class="bar-target-line" style="left: 15.0%;"></div>
                         </div>
-                        <div class="bar-status under">
-                            0.0% | UNDER
+                        <div class="bar-status over">
+                            56.0% | OVER
                         </div>
                     </div>
                     
@@ -471,11 +471,11 @@
                     <div class="sector-bar-row">
                         <div class="sector-name">Healthcare</div>
                         <div class="bar-container">
-                            <div class="bar-fill" style="width: 0.0%;"></div>
+                            <div class="bar-fill" style="width: 8.0%;"></div>
                             <div class="bar-target-line" style="left: 8.0%;"></div>
                         </div>
-                        <div class="bar-status under">
-                            0.0% | UNDER
+                        <div class="bar-status match">
+                            8.0% | MATCH
                         </div>
                     </div>
                     
@@ -504,11 +504,11 @@
                     <div class="sector-bar-row">
                         <div class="sector-name">Cash</div>
                         <div class="bar-container">
-                            <div class="bar-fill" style="width: 100.0%;"></div>
+                            <div class="bar-fill" style="width: 20.0%;"></div>
                             <div class="bar-target-line" style="left: 0.0%;"></div>
                         </div>
                         <div class="bar-status over">
-                            100.0% | OVER
+                            20.0% | OVER
                         </div>
                     </div>
                     
@@ -520,7 +520,7 @@
         <div class="section-header">03 / STRATEGIC BRIEF - JOB A MOAT ANALYSIS</div>
         <div class="ai-brief-section">
             <div class="ai-brief-content">
-                _Strategic analysis will appear here after first moat research run._
+                **Mid-Bull Market Phase** - Portfolio shows healthy diversification with Technology weighted at 70%. Consider rebalancing toward Industrials and Materials per Macro-Clock targets.
             </div>
         </div>
         
@@ -529,6 +529,38 @@
         <div class="target-tracker">
             <div class="target-grid">
                 
+                <div class="target-card">
+                    <div class="target-ticker">TSLA</div>
+                    <div class="target-metric">
+                        <span>ORB HIGH</span>
+                        <span>$250.50</span>
+                    </div>
+                    <div class="target-metric">
+                        <span>CURRENT</span>
+                        <span>$248.30</span>
+                    </div>
+                    <div class="target-metric">
+                        <span>VWAP</span>
+                        <span>$249.10</span>
+                    </div>
+                </div>
+                
+                <div class="target-card">
+                    <div class="target-ticker">AMD</div>
+                    <div class="target-metric">
+                        <span>ORB HIGH</span>
+                        <span>$165.80</span>
+                    </div>
+                    <div class="target-metric">
+                        <span>CURRENT</span>
+                        <span>$164.20</span>
+                    </div>
+                    <div class="target-metric">
+                        <span>VWAP</span>
+                        <span>$165.00</span>
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>
@@ -536,7 +568,7 @@
     <!-- FOOTER -->
     <footer class="footer">
         VIBE LAB v0.01 - LIGHT INDUSTRIAL - S. DEWSBERY<br>
-        Last Update: 2026-02-07T02:53:08Z
+        Last Update: 2026-02-07T12:22:05Z
     </footer>
     
     <!-- ApexCharts Library -->
@@ -544,7 +576,7 @@
     
     <script>
         // HEATMAP DATA
-        const heatmapData = [];
+        const heatmapData = [{"x": "AAPL", "y": 5.26, "color": "#4ade80", "ticker": "AAPL", "pnl": 150.0, "pnl_percent": 5.26, "value": 3000.0}, {"x": "MSFT", "y": 1.96, "color": "#fee2e2", "ticker": "MSFT", "pnl": -50.0, "pnl_percent": -1.96, "value": 2500.0}, {"x": "NVDA", "y": 15.38, "color": "#4ade80", "ticker": "NVDA", "pnl": 200.0, "pnl_percent": 15.38, "value": 1500.0}, {"x": "JNJ", "y": 2.56, "color": "#dcfce7", "ticker": "JNJ", "pnl": 25.0, "pnl_percent": 2.56, "value": 1000.0}, {"x": "XOM", "y": 1.23, "color": "#fee2e2", "ticker": "XOM", "pnl": -10.0, "pnl_percent": -1.23, "value": 800.0}, {"x": "CAT", "y": 0.42, "color": "#dcfce7", "ticker": "CAT", "pnl": 5.0, "pnl_percent": 0.42, "value": 1200.0}];
         
         // MOMENTUM HEATMAP (Light Mode - Inverted Intensity)
         const heatmapOptions = {
@@ -614,7 +646,7 @@
         heatmapChart.render();
         
         // ASSET MIX DONUT (Light Mode)
-        const sectors = {"Cash": {"percent": 100.0, "tickers": ["CASH"], "value": 1000.0}};
+        const sectors = {"Cash": {"percent": 20.0, "tickers": ["CASH"], "value": 2500.0}, "Energy": {"percent": 6.4, "tickers": ["XOM"], "value": 800.0}, "Healthcare": {"percent": 8.0, "tickers": ["JNJ"], "value": 1000.0}, "Industrials": {"percent": 9.6, "tickers": ["CAT"], "value": 1200.0}, "Technology": {"percent": 56.00000000000001, "tickers": ["AAPL", "MSFT", "NVDA"], "value": 7000.0}};
         const sectorNames = Object.keys(sectors);
         const sectorValues = sectorNames.map(s => sectors[s].percent);
         
@@ -675,7 +707,7 @@
                                 fontSize: '11px',
                                 color: '#6b7280',
                                 formatter: function() {
-                                    return '£1000.00';
+                                    return '£12500.00';
                                 }
                             }
                         }

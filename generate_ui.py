@@ -13,23 +13,17 @@ from macro_clock import MacroClock
 
 def get_inverted_color(pnl_percent: float) -> str:
     """
-    Inverted Momentum Color Logic (LIGHT MODE - VIBE LAB):
-    Small moves glow bright (pastels), large moves weigh heavy (deep solid)
+    Inverted Momentum Color Logic (v1.0 - HIGH-KEY PASTELS):
+    Breakout moves (>3%) use solid colors, noise uses pastels
     """
     if pnl_percent > 3.0:
-        return '#166534'  # Forest Deep (High gain - heavy)
-    elif pnl_percent > 1.0:
-        return '#22c55e'  # Emerald Solid (Mid gain - solid)
+        return '#4ade80'  # Solid Mint (Breakout gain)
     elif pnl_percent > 0.1:
-        return '#dcfce7'  # Mint Pastel (Low gain - glowing)
-    elif pnl_percent > -0.1:
-        return '#fee2e2'  # Rose Pastel (Low loss - glowing)
-    elif pnl_percent > -1.0:
-        return '#ef4444'  # Crimson Solid (Mid loss - solid)
+        return '#dcfce7'  # Pastel Mint (Noise gain)
     elif pnl_percent > -3.0:
-        return '#991b1b'  # Blood Deep (High loss - heavy)
+        return '#fee2e2'  # Pastel Rose (Noise loss)
     else:
-        return '#7f1d1d'  # Deep Blood (Extreme loss - ultra heavy)
+        return '#f87171'  # Solid Rose (Breakout loss)
 
 
 def get_sentinel_stats(state: dict) -> dict:
@@ -59,6 +53,34 @@ def get_t212_portfolio_data(state: dict) -> dict:
         "positions": state.get("positions", []),
         "session_pnl": state.get("session_pnl", 0.0)
     }
+
+
+def load_sentinel_ledger() -> dict:
+    """Load Sentinel bot ledger for growth curve tracking"""
+    try:
+        with open("data/sentinel_ledger.json", 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        # Initialize if doesn't exist
+        ledger = {
+            "seed_amount": 1000.00,
+            "realized_profit": 0.00,
+            "total_trades": 0,
+            "status": "LOCKED",
+            "history": [
+                {
+                    "date": datetime.utcnow().strftime("%Y-%m-%d"),
+                    "session_pnl": 0.00,
+                    "cumulative_profit": 0.00,
+                    "pot_value": 1000.00,
+                    "trades_count": 0
+                }
+            ],
+            "last_updated": datetime.utcnow().isoformat() + "Z"
+        }
+        with open("data/sentinel_ledger.json", 'w') as f:
+            json.dump(ledger, f, indent=2)
+        return ledger
 
 
 def load_state() -> dict:
@@ -193,10 +215,12 @@ def generate_dashboard(state: dict) -> str:
     # Split data feeds
     sentinel_stats = get_sentinel_stats(state)
     t212_portfolio = get_t212_portfolio_data(state)
+    sentinel_ledger = load_sentinel_ledger()
     
     print(f"📊 Data Feed Split:")
     print(f"   Sentinel Pot: Realized P/L = £{sentinel_stats['realized_profit']:.2f}")
     print(f"   T212 Portfolio: {len(t212_portfolio['positions'])} positions for heatmap")
+    print(f"   Sentinel History: {len(sentinel_ledger['history'])} data points")
     
     # Prepare T212 portfolio analysis data (ALL HOLDINGS)
     heatmap_data = calculate_performance_data(t212_portfolio["positions"])
@@ -212,17 +236,18 @@ def generate_dashboard(state: dict) -> str:
         timestamp=state["timestamp"],
         # Sentinel Pot Stats
         sentinel=sentinel_stats,
+        sentinel_ledger=sentinel_ledger,
         # T212 Portfolio Analysis
         total_wealth=t212_portfolio["total_wealth"],
         cash=t212_portfolio["cash"],
-        session_pnl=state.get("session_pnl", 0),
+        session_pnl=t212_portfolio["session_pnl"],
         connectivity=state.get("connectivity", "Unknown"),
         market_phase=market_phase.replace("_", "-"),
         fortress_alert=fortress_alert,
         heatmap_data=json.dumps(heatmap_data),
         sectors=sectors,
         sector_deltas=sector_deltas,
-        positions=state.get("positions", []),
+        positions=t212_portfolio["positions"],
         ai_brief=state.get("ai_strategic_brief", "_Strategic analysis pending..._"),
         orb_targets=state.get("orb_targets", [])
     )
