@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-02-07T02:53:08Z",
+  "total_wealth": 1000.0,
+  "cash": 1000.0,
+  "session_pnl": 0.0,
+  "realized_profit": 0.0,
+  "scaling_unlocked": false,
+  "connectivity": "Unknown",
+  "positions": [],
+  "orb_targets": [],
+  "ai_strategic_brief": "_Strategic analysis will appear here after first moat research run._"
+}

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEALTH SEEKER v0.01 - VIBE STATION ALPHA</title>
+    
+    <style>
+        /* INDUSTRIAL VIBE - CYBER BRUTALIST AESTHETIC */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            /* Industrial Color Palette */
+            --true-black: #000000;
+            --grid-line: #333333;
+            --border-color: #444444;
+            --label-white: #ffffff;
+            --label-gray: #cccccc;
+            
+            /* Inverted Momentum Colors */
+            --deep-forest: #064e3b;
+            --emerald: #10b981;
+            --mint-pastel: #d1fae5;
+            --rose-pastel: #fee2e2;
+            --crimson: #ef4444;
+            --blood-red: #7f1d1d;
+            --deep-blood: #450a0a;
+            
+            /* Alert Colors */
+            --fortress-alert: #fbbf24;
+        }
+        
+        body {
+            background: var(--true-black);
+            color: var(--label-white);
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+        
+        /* GLOBAL SITREP - Fixed Header */
+        .global-sitrep {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--true-black);
+            border-bottom: 1px solid var(--grid-line);
+            padding: 20px 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .metric {
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+        }
+        
+        .metric-label {
+            color: var(--label-gray);
+            font-size: 10px;
+            margin-bottom: 4px;
+        }
+        
+        .metric-value {
+            font-size: 18px;
+            color: var(--label-white);
+        }
+        
+        .metric-value.positive {
+            color: var(--emerald);
+        }
+        
+        .metric-value.negative {
+            color: var(--crimson);
+        }
+        
+        .fortress-alert-banner {
+            grid-column: 1 / -1;
+            background: var(--fortress-alert);
+            color: var(--true-black);
+            padding: 12px;
+            border: 1px solid var(--fortress-alert);
+            text-align: center;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* CONTAINER */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        /* SECTION HEADERS */
+        .section-header {
+            background: var(--true-black);
+            border-top: 1px solid var(--grid-line);
+            border-bottom: 1px solid var(--grid-line);
+            padding: 16px 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+            font-size: 11px;
+            color: var(--label-gray);
+        }
+        
+        /* MOMENTUM HEATMAP */
+        .heatmap-container {
+            background: var(--true-black);
+            border-bottom: 1px solid var(--grid-line);
+            padding: 24px;
+        }
+        
+        #performance-heatmap {
+            height: 550px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+        }
+        
+        /* SECTOR POWER-GRID */
+        .power-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 24px;
+            padding: 24px;
+            background: var(--true-black);
+            border-bottom: 1px solid var(--grid-line);
+        }
+        
+        .power-grid-left,
+        .power-grid-right {
+            border: 1px solid var(--border-color);
+            padding: 20px;
+        }
+        
+        #asset-donut {
+            height: 400px;
+        }
+        
+        .sector-bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .sector-bar-row {
+            display: grid;
+            grid-template-columns: 120px 1fr 80px;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .sector-name {
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            color: var(--label-gray);
+        }
+        
+        .bar-container {
+            position: relative;
+            height: 24px;
+            background: #111;
+            border: 1px solid var(--border-color);
+        }
+        
+        .bar-fill {
+            position: absolute;
+            height: 100%;
+            background: var(--emerald);
+            transition: width 0.3s ease;
+        }
+        
+        .bar-target-line {
+            position: absolute;
+            height: 100%;
+            border-left: 2px dotted var(--label-white);
+        }
+        
+        .bar-status {
+            text-align: right;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        
+        .bar-status.over {
+            color: var(--crimson);
+        }
+        
+        .bar-status.under {
+            color: var(--fortress-alert);
+        }
+        
+        .bar-status.match {
+            color: var(--emerald);
+        }
+        
+        /* AI BRIEF */
+        .ai-brief-section {
+            background: var(--true-black);
+            border-bottom: 1px solid var(--grid-line);
+            padding: 24px;
+        }
+        
+        .ai-brief-content {
+            font-family: system-ui, -apple-system, sans-serif;
+            color: var(--label-gray);
+            line-height: 1.6;
+            max-width: 900px;
+        }
+        
+        /* TARGET TRACKER */
+        .target-tracker {
+            background: var(--true-black);
+            padding: 24px;
+        }
+        
+        .target-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+        }
+        
+        .target-card {
+            background: #111;
+            border: 1px solid var(--border-color);
+            padding: 16px;
+        }
+        
+        .target-ticker {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .target-metric {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            font-size: 11px;
+            color: var(--label-gray);
+        }
+        
+        /* FOOTER */
+        .footer {
+            background: var(--true-black);
+            border-top: 1px solid var(--grid-line);
+            padding: 24px;
+            text-align: center;
+            color: var(--label-gray);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+    </style>
+</head>
+<body>
+    <!-- GLOBAL SITREP HEADER -->
+    <header class="global-sitrep">
+        {% if fortress_alert %}
+        <div class="fortress-alert-banner">
+            ⚠️ FORTRESS MIGRATION ALERT - DEFENSIVE PIVOT RECOMMENDED ⚠️
+        </div>
+        {% endif %}
+        
+        <div class="metric">
+            <div class="metric-label">TOTAL WEALTH</div>
+            <div class="metric-value">£{{ "%.2f"|format(total_wealth) }}</div>
+        </div>
+        
+        <div class="metric">
+            <div class="metric-label">SESSION P/L</div>
+            <div class="metric-value {% if session_pnl >= 0 %}positive{% else %}negative{% endif %}">
+                £{{ "%.2f"|format(session_pnl) }}
+            </div>
+        </div>
+        
+        <div class="metric">
+            <div class="metric-label">MACRO-CLOCK PHASE</div>
+            <div class="metric-value">{{ market_phase }}</div>
+        </div>
+        
+        <div class="metric">
+            <div class="metric-label">SYSTEM STATUS</div>
+            <div class="metric-value">GHOST MODE ACTIVE</div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- 01 / MOMENTUM HEATMAP -->
+        <div class="section-header">01 / MOMENTUM HEATMAP - INVERTED INTENSITY</div>
+        <div class="heatmap-container">
+            <div id="performance-heatmap"></div>
+        </div>
+        
+        <!-- 02 / SECTOR POWER-GRID -->
+        <div class="section-header">02 / SECTOR POWER-GRID - MACRO-CLOCK DELTAS</div>
+        <div class="power-grid">
+            <!-- Left: Asset Mix Donut -->
+            <div class="power-grid-left">
+                <div id="asset-donut"></div>
+            </div>
+            
+            <!-- Right: Sector Delta Bars -->
+            <div class="power-grid-right">
+                <div class="sector-bar-chart">
+                    {% for delta in sector_deltas %}
+                    <div class="sector-bar-row">
+                        <div class="sector-name">{{ delta.sector }}</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: {{ delta.current }}%;"></div>
+                            <div class="bar-target-line" style="left: {{ delta.target }}%;"></div>
+                        </div>
+                        <div class="bar-status {{ delta.status|lower }}">
+                            {{ delta.current }}% | {{ delta.status }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- 03 / AI STRATEGIC BRIEF -->
+        <div class="section-header">03 / STRATEGIC BRIEF - JOB A MOAT ANALYSIS</div>
+        <div class="ai-brief-section">
+            <div class="ai-brief-content">
+                {{ ai_brief }}
+            </div>
+        </div>
+        
+        <!-- 04 / ORB TARGET TRACKER -->
+        <div class="section-header">04 / ORB TARGET TRACKER - JOB C CANDIDATES</div>
+        <div class="target-tracker">
+            <div class="target-grid">
+                {% for target in orb_targets %}
+                <div class="target-card">
+                    <div class="target-ticker">{{ target.ticker }}</div>
+                    <div class="target-metric">
+                        <span>ORB HIGH</span>
+                        <span>${{ "%.2f"|format(target.orb_high) }}</span>
+                    </div>
+                    <div class="target-metric">
+                        <span>CURRENT</span>
+                        <span>${{ "%.2f"|format(target.current_price) }}</span>
+                    </div>
+                    <div class="target-metric">
+                        <span>VWAP</span>
+                        <span>${{ "%.2f"|format(target.vwap) }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- FOOTER -->
+    <footer class="footer">
+        WEALTH SEEKER v0.01 - VIBE STATION ALPHA - GHOST SOVEREIGN<br>
+        Last Update: {{ timestamp }}
+    </footer>
+    
+    <!-- ApexCharts Library -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+    <script>
+        // HEATMAP DATA
+        const heatmapData = {{ heatmap_data|safe }};
+        
+        // MOMENTUM HEATMAP (Inverted Intensity)
+        const heatmapOptions = {
+            series: [{
+                data: heatmapData.map(item => ({
+                    x: item.ticker,
+                    y: item.y,
+                    fillColor: item.color
+                }))
+            }],
+            chart: {
+                type: 'treemap',
+                height: 550,
+                background: '#000',
+                toolbar: { show: false },
+                fontFamily: "'JetBrains Mono', 'Courier New', monospace"
+            },
+            plotOptions: {
+                treemap: {
+                    distributed: true,
+                    enableShades: false,
+                    colorScale: {
+                        ranges: []  // Using custom colors per item
+                    }
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '14px',
+                    fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                    fontWeight: 700,
+                    colors: ['#fff']
+                },
+                formatter: function(text, op) {
+                    const item = heatmapData[op.dataPointIndex];
+                    return [text, item.pnl_percent.toFixed(2) + '%'];
+                }
+            },
+            legend: { show: false },
+            tooltip: {
+                theme: 'dark',
+                style: {
+                    fontFamily: "'JetBrains Mono', 'Courier New', monospace"
+                },
+                y: {
+                    formatter: function(value, { dataPointIndex }) {
+                        const item = heatmapData[dataPointIndex];
+                        return `P/L: £${item.pnl.toFixed(2)} (${item.pnl_percent.toFixed(2)}%)`;
+                    }
+                }
+            },
+            grid: {
+                show: false
+            }
+        };
+        
+        const heatmapChart = new ApexCharts(
+            document.querySelector("#performance-heatmap"),
+            heatmapOptions
+        );
+        heatmapChart.render();
+        
+        // ASSET MIX DONUT
+        const sectors = {{ sectors|tojson|safe }};
+        const sectorNames = Object.keys(sectors);
+        const sectorValues = sectorNames.map(s => sectors[s].percent);
+        
+        const donutOptions = {
+            series: sectorValues,
+            labels: sectorNames,
+            chart: {
+                type: 'donut',
+                height: 400,
+                background: '#000',
+                fontFamily: "'JetBrains Mono', 'Courier New', monospace"
+            },
+            colors: ['#10b981', '#ef4444', '#fbbf24', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#f59e0b'],
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '11px',
+                    fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                    fontWeight: 700,
+                    colors: ['#fff']
+                },
+                dropShadow: { enabled: false }
+            },
+            legend: {
+                show: true,
+                position: 'bottom',
+                fontSize: '11px',
+                fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                labels: {
+                    colors: '#ccc',
+                    useSeriesColors: false
+                }
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '65%',
+                        labels: {
+                            show: true,
+                            name: {
+                                fontSize: '12px',
+                                color: '#fff'
+                            },
+                            value: {
+                                fontSize: '16px',
+                                color: '#fff',
+                                formatter: function(val) {
+                                    return val.toFixed(1) + '%';
+                                }
+                            },
+                            total: {
+                                show: true,
+                                label: 'TOTAL WEALTH',
+                                fontSize: '11px',
+                                color: '#ccc',
+                                formatter: function() {
+                                    return '£{{ "%.2f"|format(total_wealth) }}';
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            stroke: {
+                show: true,
+                width: 1,
+                colors: ['#000']
+            },
+            tooltip: {
+                theme: 'dark',
+                style: {
+                    fontFamily: "'JetBrains Mono', 'Courier New', monospace"
+                }
+            }
+        };
+        
+        const donutChart = new ApexCharts(
+            document.querySelector("#asset-donut"),
+            donutOptions
+        );
+        donutChart.render();
+    </script>
+</body>
+</html>

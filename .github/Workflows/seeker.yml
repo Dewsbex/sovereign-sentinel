@@ -1,0 +1,66 @@
+name: Wealth Seeker v0.01 - Autonomous Trading Pipeline
+
+on:
+  schedule:
+    - cron: '25 14 * * 1-5'
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  autonomous_trading:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Step 1 - Sync Ledger from T212
+        env:
+          T212_API_TRADE_KEY: ${{ secrets.T212_API_TRADE_KEY }}
+          T212_API_TRADE_SECRET: ${{ secrets.T212_API_TRADE_SECRET }}
+        run: |
+          python sync_ledger.py
+          echo "✅ Ledger synchronized from Trading212"
+      
+      - name: Step 2 - Execute Autonomous Bot (Job C)
+        env:
+          T212_API_TRADE_KEY: ${{ secrets.T212_API_TRADE_KEY }}
+          T212_API_TRADE_SECRET: ${{ secrets.T212_API_TRADE_SECRET }}
+          ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          python main_bot.py --autonomous
+          echo "✅ Autonomous trading logic executed"
+      
+      - name: Step 3 - Generate Static Dashboard
+        run: |
+          python generate_ui.py
+          echo "✅ Dashboard HTML generated"
+      
+      - name: Step 4 - Auto-Commit Profit Ledger
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "v0.01: State Saved [skip ci]"
+          file_pattern: "data/eod_balance.json live_state.json index.html"
+      
+      - name: Step 5 - Deploy Status
+        run: |
+          echo "🚀 Deployment triggered to Cloudflare Pages"
+          echo "📈 Dashboard available at configured domain"
