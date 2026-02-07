@@ -30,11 +30,11 @@
             --seed-gray: #f3f4f6;
             --harvest-mint: #86efac;
             
-            /* Ultra-Light Glow-State Pastels */
-            --glow-mint: #f0fdf4;
-            --glow-rose: #fef2f2;
-            --solid-mint: #86efac;
-            --solid-rose: #fca5a5;
+            /* WHISPER PALETTE - Ultra-Light Glow-State */
+            --glow-mint: #f0fdf4;        /* Noise gain (nearly white) */
+            --glow-rose: #fff1f2;        /* Noise loss (nearly white) */
+            --solid-mint: #bbf7d0;       /* Breakout gain (soft) */
+            --solid-rose: #fecaca;       /* Breakout loss (soft) */
             
             /* Alert */
             --alert-amber: #f59e0b;
@@ -55,8 +55,8 @@
             top: 0;
             z-index: 2000;
             background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--slate-border);
             padding: 12px 24px;
             display: flex;
@@ -548,10 +548,18 @@
         const sentinelLedger = {"history": [{"cumulative_profit": 0.0, "date": "2026-02-07", "pot_value": 1000.0, "session_pnl": 0.0, "trades_count": 0}], "last_updated": "2026-02-07T12:39:38Z", "realized_profit": 0.0, "seed_amount": 1000.0, "status": "LOCKED", "total_trades": 0};
         const seedAmount = sentinelLedger.seed_amount;
         const harvestProfit = sentinelLedger.realized_profit;
+        const totalPotValue = seedAmount + Math.max(0, harvestProfit);
+        
+        // Calculate percentages
+        const seedPercent = (seedAmount / totalPotValue * 100).toFixed(1);
+        const harvestPercent = (Math.max(0, harvestProfit) / totalPotValue * 100).toFixed(1);
         
         const sentinelDonutOptions = {
             series: [seedAmount, Math.max(0, harvestProfit)],
-            labels: ['SEED FUNDS', 'HARVEST (PROFIT)'],
+            labels: [
+                `SEED FUNDS: £${seedAmount.toFixed(2)} (${seedPercent}%)`,
+                `HARVEST PROFIT: £${Math.max(0, harvestProfit).toFixed(2)} (${harvestPercent}%)`
+            ],
             chart: {
                 type: 'donut',
                 height: 400,
@@ -570,12 +578,15 @@
                     fontFamily: "'JetBrains Mono', 'Courier New', monospace",
                     fontWeight: 700,
                     colors: ['#111827']
+                },
+                formatter: function(val) {
+                    return val.toFixed(1) + '%';
                 }
             },
             legend: {
                 show: true,
                 position: 'bottom',
-                fontSize: '11px',
+                fontSize: '10px',
                 fontFamily: "'JetBrains Mono', 'Courier New', monospace",
                 labels: {
                     colors: '#6b7280'
@@ -594,17 +605,19 @@
                             value: {
                                 fontSize: '16px',
                                 color: '#111827',
+                                fontWeight: '700',
                                 formatter: function(val) {
                                     return '£' + parseFloat(val).toFixed(2);
                                 }
                             },
                             total: {
                                 show: true,
-                                label: 'POT VALUE',
+                                label: 'TOTAL POT VALUE',
                                 fontSize: '11px',
-                                color: '#6b7280',
+                                fontWeight: '700',
+                                color: '#111827',
                                 formatter: function() {
-                                    return '£' + (seedAmount + Math.max(0, harvestProfit)).toFixed(2);
+                                    return '£' + totalPotValue.toFixed(2);
                                 }
                             }
                         }
@@ -724,7 +737,7 @@
         equityCurveChart.render();
         
         // ============================================
-        // 02 / MOMENTUM - HEATMAP (7-POINT TOOLTIP)
+        // 02 / MOMENTUM - HEATMAP (WHISPER PALETTE)
         // ============================================
         const heatmapData = [{"x": "AAPL", "y": 5.26, "color": "#4ade80", "ticker": "AAPL", "pnl": 150.0, "pnl_percent": 5.26, "value": 3000.0}, {"x": "MSFT", "y": 1.96, "color": "#fee2e2", "ticker": "MSFT", "pnl": -50.0, "pnl_percent": -1.96, "value": 2500.0}, {"x": "NVDA", "y": 15.38, "color": "#4ade80", "ticker": "NVDA", "pnl": 200.0, "pnl_percent": 15.38, "value": 1500.0}, {"x": "JNJ", "y": 2.56, "color": "#dcfce7", "ticker": "JNJ", "pnl": 25.0, "pnl_percent": 2.56, "value": 1000.0}, {"x": "XOM", "y": 1.23, "color": "#fee2e2", "ticker": "XOM", "pnl": -10.0, "pnl_percent": -1.23, "value": 800.0}, {"x": "CAT", "y": 0.42, "color": "#dcfce7", "ticker": "CAT", "pnl": 5.0, "pnl_percent": 0.42, "value": 1200.0}];
         
@@ -751,12 +764,13 @@
                 treemap: {
                     distributed: false,  // SQUARIFIED BLOCKS
                     enableShades: false,
+                    useFillColorAsStroke: false,  // Keep 1px white grid lines
                     colorScale: {
                         ranges: [
-                            { from: 3.0, to: 100, color: '#86efac' },      // Solid Mint
-                            { from: 0.1, to: 2.99, color: '#f0fdf4' },     // Ultra-Light Mint
-                            { from: -2.99, to: -0.1, color: '#fef2f2' },   // Ultra-Light Rose
-                            { from: -100, to: -3.0, color: '#fca5a5' }     // Solid Rose
+                            { from: 3.0, to: 100, color: '#bbf7d0' },       // Soft Mint (Breakout gain)
+                            { from: 0.1, to: 2.99, color: '#f0fdf4' },      // Glow White-Green (Noise)
+                            { from: -2.99, to: -0.1, color: '#fff1f2' },    // Glow White-Red (Noise)
+                            { from: -100, to: -3.0, color: '#fecaca' }      // Soft Rose (Breakout loss)
                         ]
                     }
                 }
@@ -778,24 +792,25 @@
             tooltip: {
                 theme: 'light',
                 style: {
-                    fontFamily: "'JetBrains Mono', 'Courier New', monospace"
+                    fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                    fontSize: '11px'
                 },
                 custom: function({ dataPointIndex }) {
                     const item = heatmapData[dataPointIndex];
                     const pos = [{"current_value": 3000.0, "hold_time_days": 45, "job_assignment": "A", "name": "Apple Inc.", "normalized_value": 3000.0, "pnl": 150.0, "pnl_percent": 5.26, "roic_wacc_spread": 8.5, "sector": "Technology", "ticker": "AAPL", "vwap_distance_percent": 0.5}, {"current_value": 2500.0, "hold_time_days": 30, "job_assignment": "A", "name": "Microsoft Corporation", "normalized_value": 2500.0, "pnl": -50.0, "pnl_percent": -1.96, "roic_wacc_spread": 7.2, "sector": "Technology", "ticker": "MSFT", "vwap_distance_percent": -0.3}, {"current_value": 1500.0, "hold_time_days": 3, "job_assignment": "C", "name": "NVIDIA Corporation", "normalized_value": 1500.0, "pnl": 200.0, "pnl_percent": 15.38, "roic_wacc_spread": 12.3, "sector": "Technology", "ticker": "NVDA", "vwap_distance_percent": 2.1}, {"current_value": 1000.0, "hold_time_days": 60, "job_assignment": "A", "name": "Johnson \u0026 Johnson", "normalized_value": 1000.0, "pnl": 25.0, "pnl_percent": 2.56, "roic_wacc_spread": 5.1, "sector": "Healthcare", "ticker": "JNJ", "vwap_distance_percent": 0.8}, {"current_value": 800.0, "hold_time_days": 90, "job_assignment": "A", "name": "Exxon Mobil Corporation", "normalized_value": 800.0, "pnl": -10.0, "pnl_percent": -1.23, "roic_wacc_spread": 3.8, "sector": "Energy", "ticker": "XOM", "vwap_distance_percent": -0.4}, {"current_value": 1200.0, "hold_time_days": 120, "job_assignment": "A", "name": "Caterpillar Inc.", "normalized_value": 1200.0, "pnl": 5.0, "pnl_percent": 0.42, "roic_wacc_spread": 6.4, "sector": "Industrials", "ticker": "CAT", "vwap_distance_percent": 0.1}][dataPointIndex] || {};
                     
                     return `
-                        <div style="padding: 12px; background: white; border: 1px solid #e5e7eb;">
-                            <div style="font-weight: 700; margin-bottom: 8px; color: #111827;">
+                        <div style="padding: 16px; background: #ffffff; border: 1px solid #111827; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <div style="font-weight: 700; margin-bottom: 10px; color: #111827; font-size: 12px; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px;">
                                 ${pos.ticker || item.ticker} - ${pos.name || 'N/A'}
                             </div>
-                            <div style="font-size: 11px; color: #374151; line-height: 1.6;">
-                                <div>Value: £${(pos.normalized_value || item.y).toFixed(2)}</div>
-                                <div>P/L: £${item.pnl.toFixed(2)} (${item.pnl_percent.toFixed(2)}%)</div>
-                                <div>VWAP Distance: ${(pos.vwap_distance_percent || 0).toFixed(2)}%</div>
-                                <div>Job: ${pos.job_assignment || 'N/A'}</div>
-                                <div>ROIC Spread: ${(pos.roic_wacc_spread || 0).toFixed(1)}%</div>
-                                <div>Hold Time: ${pos.hold_time_days || 0} days</div>
+                            <div style="font-size: 11px; color: #374151; line-height: 1.8;">
+                                <div><strong>Value:</strong> £${(pos.normalized_value || item.y).toFixed(2)}</div>
+                                <div><strong>P/L:</strong> £${item.pnl.toFixed(2)} (${item.pnl_percent.toFixed(2)}%)</div>
+                                <div><strong>VWAP Distance:</strong> ${(pos.vwap_distance_percent || 0).toFixed(2)}%</div>
+                                <div><strong>Job Assignment:</strong> ${pos.job_assignment || 'N/A'}</div>
+                                <div><strong>ROIC Spread:</strong> ${(pos.roic_wacc_spread || 0).toFixed(1)}%</div>
+                                <div><strong>Hold Time:</strong> ${pos.hold_time_days || 0} days</div>
                             </div>
                         </div>
                     `;
