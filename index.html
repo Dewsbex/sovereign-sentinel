@@ -339,6 +339,41 @@
             font-weight: 600;
         }
         
+        .job-c-target {
+            color: #10b981;
+            font-weight: 700;
+        }
+        
+        .job-c-stop {
+            color: #ef4444;
+            font-weight: 700;
+        }
+        
+        .job-c-buy-btn {
+            background: #10b981;
+            color: #ffffff;
+            border: none;
+            padding: 6px 16px;
+            font-size: 9px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .job-c-buy-btn:hover {
+            background: #059669;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+        }
+        
+        .job-c-buy-btn:active {
+            transform: translateY(0);
+        }
+        
         /* MOBILE OPTIMIZATION */
         @media (max-width: 768px) {
             .unified-header {
@@ -566,31 +601,38 @@
         </div>
     </div>
     
-    <!-- STRATEGIC - AI BRIEF -->
+    <!-- STRATEGIC - TACTICAL BRIEF -->
     <div id="strategic" class="section">
         <div class="chart-container">
-            <div class="section-label">STRATEGIC BRIEF</div>
+            <div class="section-label">TACTICAL BRIEF</div>
             <div class="ai-brief-content">
-                **Mid-Bull Market Phase** - Portfolio shows healthy diversification with Technology weighted at 70%. Consider rebalancing toward Industrials and Materials per Macro-Clock targets.
+                <strong>MARKET PHASE:</strong> MID-BULL<br><br>
+                <strong>TACTICAL ASSESSMENT:</strong><br>
+                **Mid-Bull Market Phase** - Portfolio shows healthy diversification with Technology weighted at 70%. Consider rebalancing toward Industrials and Materials per Macro-Clock targets.<br><br>
+                <strong>LIMIT ENTRY SUGGESTIONS:</strong><br>
+                • <strong>MSFT:</strong> Target entry at $395.50 (5% delta to VWAP)<br>
+                • <strong>AAPL:</strong> Target entry at $182.20 (pullback to ORB low)<br>
+                • <strong>GOOGL:</strong> Target entry at $168.75 (VWAP support level)<br><br>
+                <em>Use Job C Sniper Command for immediate breakout entries.</em>
             </div>
         </div>
     </div>
     
-    <!-- JOB C SNIPER LIST - SCALPER CANDIDATES -->
+    <!-- JOB C SNIPER COMMAND - TACTICAL EXECUTION -->
     <div id="job-c-targets" class="section">
         <div class="chart-container">
-            <div class="section-label">JOB C SNIPER LIST</div>
+            <div class="section-label">JOB C SNIPER COMMAND</div>
             <table class="job-c-table">
                 <thead>
                     <tr>
                         <th>TICKER</th>
                         <th>STATUS</th>
                         <th>ORB HIGH</th>
-                        <th>CURRENT</th>
-                        <th>VWAP DIST</th>
-                        <th>ATR</th>
+                        <th>TARGET ENTRY</th>
+                        <th>STOP LOSS</th>
                         <th>RVOL</th>
                         <th>SIGNAL</th>
+                        <th>ACTION</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -599,33 +641,54 @@
                         <td class="job-c-ticker">TSLA</td>
                         <td><span class="job-c-status ready">READY</span></td>
                         <td class="job-c-metric">$245.50</td>
-                        <td class="job-c-metric">$242.75</td>
-                        <td class="job-c-metric">-1.2%</td>
-                        <td class="job-c-metric">3.80</td>
+                        <td class="job-c-metric job-c-target">$245.88</td>
+                        <td class="job-c-metric job-c-stop">$239.80</td>
                         <td class="job-c-metric">1.45x</td>
                         <td class="job-c-signal">WAITING FOR BREAKOUT</td>
+                        <td>
+                            <button class="job-c-buy-btn" 
+                                    data-ticker="TSLA"
+                                    data-price="245.88"
+                                    onclick="executeSniperTrade('TSLA', 245.88)">
+                                BUY
+                            </button>
+                        </td>
                     </tr>
                     
                     <tr>
                         <td class="job-c-ticker">AMD</td>
                         <td><span class="job-c-status ready">READY</span></td>
                         <td class="job-c-metric">$178.20</td>
-                        <td class="job-c-metric">$176.80</td>
-                        <td class="job-c-metric">-0.8%</td>
-                        <td class="job-c-metric">2.15</td>
+                        <td class="job-c-metric job-c-target">$178.41</td>
+                        <td class="job-c-metric job-c-stop">$174.97</td>
                         <td class="job-c-metric">2.10x</td>
                         <td class="job-c-signal">COILING AT VWAP</td>
+                        <td>
+                            <button class="job-c-buy-btn" 
+                                    data-ticker="AMD"
+                                    data-price="178.41"
+                                    onclick="executeSniperTrade('AMD', 178.41)">
+                                BUY
+                            </button>
+                        </td>
                     </tr>
                     
                     <tr>
                         <td class="job-c-ticker">NVDA</td>
                         <td><span class="job-c-status active">ACTIVE</span></td>
                         <td class="job-c-metric">$620.10</td>
-                        <td class="job-c-metric">$625.30</td>
-                        <td class="job-c-metric">+0.5%</td>
-                        <td class="job-c-metric">8.40</td>
+                        <td class="job-c-metric job-c-target">$620.94</td>
+                        <td class="job-c-metric job-c-stop">$607.50</td>
                         <td class="job-c-metric">1.85x</td>
                         <td class="job-c-signal">BREAKING ORB HIGH</td>
+                        <td>
+                            <button class="job-c-buy-btn" 
+                                    data-ticker="NVDA"
+                                    data-price="620.94"
+                                    onclick="executeSniperTrade('NVDA', 620.94)">
+                                BUY
+                            </button>
+                        </td>
                     </tr>
                     
                 </tbody>
@@ -635,7 +698,7 @@
     
     <!-- FOOTER -->
     <footer class="footer">
-        SOVEREIGN TERMINAL v1.3.1 - PRECISION // 2026-02-07T12:22:05Z
+        SOVEREIGN TERMINAL v1.4 - TACTICAL EXECUTION // 2026-02-07T12:22:05Z
     </footer>
     
     <!-- ApexCharts -->
@@ -802,7 +865,7 @@
             }],
             chart: {
                 type: 'treemap',
-                height: 450,
+                height: 550,
                 background: 'transparent',
                 foreColor: '#111827',
                 toolbar: { show: false },
@@ -931,6 +994,44 @@
         };
         
         new ApexCharts(document.querySelector("#asset-donut"), donutOptions).render();
+    </script>
+    <script>
+        // SNIPER COMMAND - Trade Execution
+        function executeSniperTrade(ticker, targetPrice) {
+            // Confirmation dialog
+            const confirmed = confirm(
+                `🎯 SNIPER COMMAND\n\n` +
+                `Ticker: ${ticker}\n` +
+                `Target Entry: $${targetPrice}\n\n` +
+                `Execute limit buy order?`
+            );
+            
+            if (confirmed) {
+                console.log(`[SNIPER] Executing BUY order: ${ticker} @ $${targetPrice}`);
+                
+                // TODO: Replace with actual Trading 212 API call
+                // fetch('/api/execute_trade', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({ ticker, price: targetPrice, action: 'BUY' })
+                // })
+                
+                alert(`✅ ORDER QUEUED\n\nBUY ${ticker} @ $${targetPrice}\n\nPending API integration...`);
+            }
+        }
+        
+        // Smooth scroll offset for sticky header
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offset = 80; // Header height + padding
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                }
+            });
+        });
     </script>
 </body>
 </html>

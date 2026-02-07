@@ -258,30 +258,36 @@ def generate_dashboard(state: dict) -> str:
                 'orb_high': 245.50,
                 'current': 242.75,
                 'vwap_dist': '-1.2%',
-                'atr': '3.80',
+                'atr': 3.80,
                 'rvol': '1.45x',
                 'status': 'READY',
-                'signal': 'WAITING FOR BREAKOUT'
+                'signal': 'WAITING FOR BREAKOUT',
+                'target_entry': 245.50 + (0.1 * 3.80),  # ORB High + (0.1 * ATR)
+                'stop_loss': 245.50 - (1.5 * 3.80)      # ORB High - (1.5 * ATR)
             },
             {
                 'ticker': 'AMD',
                 'orb_high': 178.20,
                 'current': 176.80,
                 'vwap_dist': '-0.8%',
-                'atr': '2.15',
+                'atr': 2.15,
                 'rvol': '2.10x',
                 'status': 'READY',
-                'signal': 'COILING AT VWAP'
+                'signal': 'COILING AT VWAP',
+                'target_entry': 178.20 + (0.1 * 2.15),
+                'stop_loss': 178.20 - (1.5 * 2.15)
             },
             {
                 'ticker': 'NVDA',
                 'orb_high': 620.10,
                 'current': 625.30,
                 'vwap_dist': '+0.5%',
-                'atr': '8.40',
+                'atr': 8.40,
                 'rvol': '1.85x',
                 'status': 'ACTIVE',
-                'signal': 'BREAKING ORB HIGH'
+                'signal': 'BREAKING ORB HIGH',
+                'target_entry': 620.10 + (0.1 * 8.40),
+                'stop_loss': 620.10 - (1.5 * 8.40)
             }
         ]
     )
