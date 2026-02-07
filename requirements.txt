@@ -1,8 +1,0 @@
-requests
-jinja2
-feedparser
-yfinance
-python-dotenv
-pandas
-websocket-client
-alpha-vantage
