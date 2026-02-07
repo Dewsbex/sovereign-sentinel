@@ -252,7 +252,11 @@ def generate_dashboard(state: dict) -> str:
         sector_deltas=sector_deltas,
         positions=t212_portfolio["positions"],
         ai_brief=state.get("ai_strategic_brief", "_Strategic analysis pending..._"),
-        orb_targets=state.get("orb_targets", [])
+        job_c_candidates=[
+            {'ticker': 'TSLA', 'orb_high': 245.50, 'current': 242.75, 'vwap': 243.10, 'status': 'WATCHING'},
+            {'ticker': 'AMD', 'orb_high': 178.20, 'current': 176.80, 'vwap': 177.40, 'status': 'READY'},
+            {'ticker': 'NVDA', 'orb_high': 620.10, 'current': 625.30, 'vwap': 618.50, 'status': 'ACTIVE'}
+        ]
     )
     
     return html
