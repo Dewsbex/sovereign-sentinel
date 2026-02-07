@@ -194,7 +194,11 @@ def generate_dashboard(state: dict) -> str:
     sentinel_stats = get_sentinel_stats(state)
     t212_portfolio = get_t212_portfolio_data(state)
     
-    # Prepare T212 portfolio analysis data
+    print(f"📊 Data Feed Split:")
+    print(f"   Sentinel Pot: Realized P/L = £{sentinel_stats['realized_profit']:.2f}")
+    print(f"   T212 Portfolio: {len(t212_portfolio['positions'])} positions for heatmap")
+    
+    # Prepare T212 portfolio analysis data (ALL HOLDINGS)
     heatmap_data = calculate_performance_data(t212_portfolio["positions"])
     sectors = calculate_sector_allocation(
         t212_portfolio["positions"],
