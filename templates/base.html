@@ -26,8 +26,8 @@
             --label-dark: #374151;
             --label-medium: #6b7280;
             
-            /* Industrial Instrument v1.2 - PALE INDUSTRIAL */
-            --industrial-orange: #ffedd5;  /* Ultra-Pale Orange */
+            /* Industrial Instrument v1.4.1 - GHOST SOVEREIGN */
+            --industrial-orange: #fff7ed;  /* Ghost Whisper Orange */
             --visible-mint: #f0fdf4;
             --visible-rose: #fff1f2;
             
@@ -153,26 +153,31 @@
             scroll-margin-top: 70px;
         }
         
-        .section-label {
-            position: absolute;
-            top: 8px;
-            left: 12px;
-            font-size: 8px;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            color: var(--label-medium);
-            text-transform: uppercase;
-            z-index: 10;
-            background: var(--true-white);
-            padding: 2px 6px;
-            border: 1px solid var(--slate-border);
-        }
-        
+        /* HARD OVERRIDE - ZERO-WASTE FLOATING LABELS */
         .chart-container {
-            margin-top: 24px;
+            position: relative !important;
+            background: var(--true-white);
             border: 1px solid var(--slate-border);
             padding: 16px;
-            background: var(--lab-white);
+            padding-top: 0 !important; /* Kill top padding */
+            min-height: 400px;
+        }
+        
+        .section-label {
+            position: absolute !important;
+            top: 8px !important;
+            left: 12px !important;
+            z-index: 100 !important;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8px;
+            color: #9ca3af; /* Slate Gray */
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            pointer-events: none; /* Don't interfere with mouse-overs */
+            background: transparent;
+            padding: 0;
+            border: none;
         }
         
         #sentinel-donut,
@@ -567,7 +572,7 @@
     
     <!-- FOOTER -->
     <footer class="footer">
-        SOVEREIGN TERMINAL v1.4 - TACTICAL EXECUTION // {{ timestamp }}
+        SOVEREIGN TERMINAL v1.4.1 - PRECISION LOCK // {{ timestamp }}
     </footer>
     
     <!-- ApexCharts -->
@@ -687,7 +692,7 @@
                 toolbar: { show: false }
             },
             theme: { mode: 'light' },
-            stroke: { curve: 'smooth', width: 2, colors: ['#ffedd5'] },
+            stroke: { curve: 'smooth', width: 2, colors: ['#fff7ed'] },
             fill: {
                 type: 'gradient',
                 gradient: {
@@ -695,8 +700,8 @@
                     opacityFrom: 0.3,
                     opacityTo: 0.05,
                     colorStops: [
-                        { offset: 0, color: '#ffedd5', opacity: 0.3 },
-                        { offset: 100, color: '#ffedd5', opacity: 0.05 }
+                        { offset: 0, color: '#fff7ed', opacity: 0.3 },
+                        { offset: 100, color: '#fff7ed', opacity: 0.05 }
                     ]
                 }
             },
@@ -734,7 +739,7 @@
             }],
             chart: {
                 type: 'treemap',
-                height: 550,
+                height: 600, // BRUTE-FORCE ANTI-SLIVER
                 background: 'transparent',
                 foreColor: '#111827',
                 toolbar: { show: false },
@@ -769,7 +774,7 @@
                     return [text, item.pnl_percent.toFixed(2) + '%'];
                 }
             },
-            stroke: { show: true, width: 4, colors: ['#f9fafb'] },  // Industrial Laboratory Dividers
+            stroke: { show: true, width: 5, colors: ['#f9fafb'] },  // MASSIVE LABORATORY DIVIDERS
             legend: { show: false },
             tooltip: {
                 theme: 'light',
@@ -816,7 +821,7 @@
                 fontFamily: "'JetBrains Mono', monospace"
             },
             theme: { mode: 'light' },
-            colors: ['#ffedd5', '#f0fdf4', '#fff1f2', '#eff6ff', '#f5f3ff', '#fef2f2', '#fafafa'],
+            colors: ['#fff7ed', '#f0fdf4', '#fff1f2', '#eff6ff', '#f5f3ff', '#fef2f2', '#fafafa'],
             dataLabels: {
                 enabled: true,
                 style: {
