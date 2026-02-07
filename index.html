@@ -268,65 +268,55 @@
         }
         
         
-        /* JOB C TARGET TRACKER */
-        .job-c-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
-            padding-top: 24px;
-        }
-        
-        .job-c-card {
-            background: #fafafa;
-            border: 1px solid #e5e7eb;
-            padding: 12px;
-            border-radius: 2px;
-        }
-        
-        .job-c-ticker {
-            font-size: 14px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 8px;
-            letter-spacing: 0.05em;
-        }
-        
-        .job-c-metrics {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-bottom: 8px;
-        }
-        
-        .job-c-metric {
-            display: flex;
-            justify-content: space-between;
-            font-size: 10px;
-        }
-        
-        .job-c-label {
-            color: #6b7280;
-            font-weight: 600;
-        }
-        
-        .job-c-value {
-            color: #111827;
-            font-weight: 700;
+        /* JOB C SNIPER LIST - HIGH DENSITY */
+        .job-c-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+            font-size: 9px;
             font-family: 'JetBrains Mono', monospace;
         }
         
-        .job-c-status {
-            font-size: 9px;
+        .job-c-table th {
+            text-align: left;
+            padding: 8px 6px;
+            border-bottom: 1px solid #e5e7eb;
             font-weight: 700;
-            text-align: center;
-            padding: 4px;
+            color: #6b7280;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.05em;
+            font-size: 8px;
+        }
+        
+        .job-c-table td {
+            padding: 10px 6px;
+            border-bottom: 1px solid #f3f4f6;
+            color: #111827;
+        }
+        
+        .job-c-table tr:hover {
+            background: #fafafa;
+        }
+        
+        .job-c-ticker {
+            font-weight: 700;
+            font-size: 10px;
+            letter-spacing: 0.02em;
+        }
+        
+        .job-c-status {
+            font-size: 8px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: inline-block;
         }
         
         .job-c-status.watching {
-            background: #eff6ff;
-            color: #3b82f6;
+            background: #ffedd5;
+            color: #ea580c;
         }
         
         .job-c-status.ready {
@@ -334,14 +324,19 @@
             color: #10b981;
         }
         
-        .job-c-status.waiting {
-            background: #fffbeb;
-            color: #f59e0b;
+        .job-c-status.active {
+            background: #eff6ff;
+            color: #3b82f6;
         }
         
-        .job-c-status.active {
-            background: #ffedd5;
-            color: #ea580c;
+        .job-c-signal {
+            font-size: 8px;
+            color: #6b7280;
+            font-style: italic;
+        }
+        
+        .job-c-metric {
+            font-weight: 600;
         }
         
         /* MOBILE OPTIMIZATION */
@@ -581,82 +576,66 @@
         </div>
     </div>
     
-    <!-- JOB C TARGET TRACKER -->
+    <!-- JOB C SNIPER LIST - SCALPER CANDIDATES -->
     <div id="job-c-targets" class="section">
         <div class="chart-container">
-            <div class="section-label">JOB C CANDIDATES</div>
-            <div class="job-c-grid">
-                
-                <div class="job-c-card">
-                    <div class="job-c-ticker">TSLA</div>
-                    <div class="job-c-metrics">
-                        <div class="job-c-metric">
-                            <span class="job-c-label">ORB HIGH</span>
-                            <span class="job-c-value">$245.50</span>
-                        </div>
-                        <div class="job-c-metric">
-                            <span class="job-c-label">CURRENT</span>
-                            <span class="job-c-value">$242.75</span>
-                        </div>
-                        <div class="job-c-metric">
-                            <span class="job-c-label">VWAP</span>
-                            <span class="job-c-value">$243.10</span>
-                        </div>
-                    </div>
-                    <div class="job-c-status watching">
-                        WATCHING
-                    </div>
-                </div>
-                
-                <div class="job-c-card">
-                    <div class="job-c-ticker">AMD</div>
-                    <div class="job-c-metrics">
-                        <div class="job-c-metric">
-                            <span class="job-c-label">ORB HIGH</span>
-                            <span class="job-c-value">$178.20</span>
-                        </div>
-                        <div class="job-c-metric">
-                            <span class="job-c-label">CURRENT</span>
-                            <span class="job-c-value">$176.80</span>
-                        </div>
-                        <div class="job-c-metric">
-                            <span class="job-c-label">VWAP</span>
-                            <span class="job-c-value">$177.40</span>
-                        </div>
-                    </div>
-                    <div class="job-c-status ready">
-                        READY
-                    </div>
-                </div>
-                
-                <div class="job-c-card">
-                    <div class="job-c-ticker">NVDA</div>
-                    <div class="job-c-metrics">
-                        <div class="job-c-metric">
-                            <span class="job-c-label">ORB HIGH</span>
-                            <span class="job-c-value">$620.10</span>
-                        </div>
-                        <div class="job-c-metric">
-                            <span class="job-c-label">CURRENT</span>
-                            <span class="job-c-value">$625.30</span>
-                        </div>
-                        <div class="job-c-metric">
-                            <span class="job-c-label">VWAP</span>
-                            <span class="job-c-value">$618.50</span>
-                        </div>
-                    </div>
-                    <div class="job-c-status active">
-                        ACTIVE
-                    </div>
-                </div>
-                
-            </div>
+            <div class="section-label">JOB C SNIPER LIST</div>
+            <table class="job-c-table">
+                <thead>
+                    <tr>
+                        <th>TICKER</th>
+                        <th>STATUS</th>
+                        <th>ORB HIGH</th>
+                        <th>CURRENT</th>
+                        <th>VWAP DIST</th>
+                        <th>ATR</th>
+                        <th>RVOL</th>
+                        <th>SIGNAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td class="job-c-ticker">TSLA</td>
+                        <td><span class="job-c-status ready">READY</span></td>
+                        <td class="job-c-metric">$245.50</td>
+                        <td class="job-c-metric">$242.75</td>
+                        <td class="job-c-metric">-1.2%</td>
+                        <td class="job-c-metric">3.80</td>
+                        <td class="job-c-metric">1.45x</td>
+                        <td class="job-c-signal">WAITING FOR BREAKOUT</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="job-c-ticker">AMD</td>
+                        <td><span class="job-c-status ready">READY</span></td>
+                        <td class="job-c-metric">$178.20</td>
+                        <td class="job-c-metric">$176.80</td>
+                        <td class="job-c-metric">-0.8%</td>
+                        <td class="job-c-metric">2.15</td>
+                        <td class="job-c-metric">2.10x</td>
+                        <td class="job-c-signal">COILING AT VWAP</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="job-c-ticker">NVDA</td>
+                        <td><span class="job-c-status active">ACTIVE</span></td>
+                        <td class="job-c-metric">$620.10</td>
+                        <td class="job-c-metric">$625.30</td>
+                        <td class="job-c-metric">+0.5%</td>
+                        <td class="job-c-metric">8.40</td>
+                        <td class="job-c-metric">1.85x</td>
+                        <td class="job-c-signal">BREAKING ORB HIGH</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
         </div>
     </div>
     
     <!-- FOOTER -->
     <footer class="footer">
-        SOVEREIGN TERMINAL v1.3 - RESTORATION // 2026-02-07T12:22:05Z
+        SOVEREIGN TERMINAL v1.3.1 - PRECISION // 2026-02-07T12:22:05Z
     </footer>
     
     <!-- ApexCharts -->
@@ -905,7 +884,7 @@
                 fontFamily: "'JetBrains Mono', monospace"
             },
             theme: { mode: 'light' },
-            colors: ['#ffedd5', '#fef2f2', '#f0fdf4', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4'],
+            colors: ['#ffedd5', '#f0fdf4', '#fff1f2', '#eff6ff', '#f5f3ff', '#fef2f2', '#fafafa'],
             dataLabels: {
                 enabled: true,
                 style: {

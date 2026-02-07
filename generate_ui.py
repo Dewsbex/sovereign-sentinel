@@ -253,9 +253,36 @@ def generate_dashboard(state: dict) -> str:
         positions=t212_portfolio["positions"],
         ai_brief=state.get("ai_strategic_brief", "_Strategic analysis pending..._"),
         job_c_candidates=[
-            {'ticker': 'TSLA', 'orb_high': 245.50, 'current': 242.75, 'vwap': 243.10, 'status': 'WATCHING'},
-            {'ticker': 'AMD', 'orb_high': 178.20, 'current': 176.80, 'vwap': 177.40, 'status': 'READY'},
-            {'ticker': 'NVDA', 'orb_high': 620.10, 'current': 625.30, 'vwap': 618.50, 'status': 'ACTIVE'}
+            {
+                'ticker': 'TSLA',
+                'orb_high': 245.50,
+                'current': 242.75,
+                'vwap_dist': '-1.2%',
+                'atr': '3.80',
+                'rvol': '1.45x',
+                'status': 'READY',
+                'signal': 'WAITING FOR BREAKOUT'
+            },
+            {
+                'ticker': 'AMD',
+                'orb_high': 178.20,
+                'current': 176.80,
+                'vwap_dist': '-0.8%',
+                'atr': '2.15',
+                'rvol': '2.10x',
+                'status': 'READY',
+                'signal': 'COILING AT VWAP'
+            },
+            {
+                'ticker': 'NVDA',
+                'orb_high': 620.10,
+                'current': 625.30,
+                'vwap_dist': '+0.5%',
+                'atr': '8.40',
+                'rvol': '1.85x',
+                'status': 'ACTIVE',
+                'signal': 'BREAKING ORB HIGH'
+            }
         ]
     )
     
