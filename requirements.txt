@@ -1,4 +1,5 @@
 # Wealth Seeker v0.01 - Dependencies
+
 # Core Trading & Data
 requests>=2.31.0
 yfinance>=0.2.35
@@ -8,9 +9,8 @@ numpy>=1.24.0
 # AI/ML
 google-generativeai>=0.3.0
 
-# Web & UI
+# Web & UI (ApexCharts loaded via CDN in HTML)
 jinja2>=3.1.2
-apexcharts>=0.1.4
 
 # Utilities
 python-dateutil>=2.8.2
