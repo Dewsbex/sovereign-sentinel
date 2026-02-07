@@ -17,13 +17,14 @@ def get_inverted_color(pnl_percent: float) -> str:
     Breakout moves (>3%) use solid colors, noise uses pastels
     """
     if pnl_percent > 3.0:
-        return '#4ade80'  # Solid Mint (Breakout gain)
+        return '#dcfce7'  # Soft Pastel Mint (Breakout gain)
     elif pnl_percent > 0.1:
-        return '#dcfce7'  # Pastel Mint (Noise gain)
+        return '#f7fee7'  # Whisper Lime Glow (Noise gain)
     elif pnl_percent > -3.0:
-        return '#fee2e2'  # Pastel Rose (Noise loss)
+        return '#fffafb'  # White-Rose Glow (Noise loss)
     else:
-        return '#f87171'  # Solid Rose (Breakout loss)
+        return '#fee2e2'  # Soft Pastel Rose (Breakout loss)
+
 
 
 def get_sentinel_stats(state: dict) -> dict:

@@ -26,15 +26,16 @@
             --label-dark: #374151;
             --label-medium: #6b7280;
             
-            /* Sentinel Colors */
-            --seed-gray: #f3f4f6;
-            --harvest-mint: #86efac;
+            /* INDUSTRIAL INSTRUMENT PALETTE */
+            --industrial-orange: #fb923c;
+            --whisper-mint: #f7fee7;
+            --whisper-rose: #fffafb;
             
-            /* WHISPER PALETTE - Ultra-Light Glow-State */
-            --glow-mint: #f0fdf4;        /* Noise gain (nearly white) */
-            --glow-rose: #fff1f2;        /* Noise loss (nearly white) */
-            --solid-mint: #bbf7d0;       /* Breakout gain (soft) */
-            --solid-rose: #fecaca;       /* Breakout loss (soft) */
+            /* WHISPER-GLOW HEATMAP */
+            --glow-mint-solid: #dcfce7;      /* Gain >3% */
+            --glow-lime-whisper: #f7fee7;    /* Gain 0.1-2.9% */
+            --glow-rose-white: #fffafb;      /* Loss -0.1 to -2.9% */
+            --glow-rose-solid: #fee2e2;      /* Loss <-3% */
             
             /* Alert */
             --alert-amber: #f59e0b;
@@ -54,9 +55,9 @@
             position: sticky;
             top: 0;
             z-index: 2000;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            background: rgba(249, 250, 251, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--slate-border);
             padding: 12px 24px;
             display: flex;
@@ -453,18 +454,34 @@
         const sentinelLedger = {{ sentinel_ledger|tojson|safe }};
         const seedAmount = sentinelLedger.seed_amount;
         const harvestProfit = sentinelLedger.realized_profit;
-        const totalPotValue = seedAmount + Math.max(0, harvestProfit);
+        const totalPotValue = seedAmount + harvestProfit;
         
-        // Calculate percentages
-        const seedPercent = (seedAmount / totalPotValue * 100).toFixed(1);
-        const harvestPercent = (Math.max(0, harvestProfit) / totalPotValue * 100).toFixed(1);
+        // CONDITION LOGIC: Orange/Mint if profit, Whisper Rose if loss
+        let sentinelSeries, sentinelLabels, sentinelColors;
+        
+        if (harvestProfit >= 0) {
+            //Case A: Profit - Industrial Orange Seed + Whisper Mint Harvest
+            const seedPercent = (seedAmount / totalPotValue * 100).toFixed(1);
+            const harvestPercent = (harvestProfit / totalPotValue * 100).toFixed(1);
+            
+            sentinelSeries = [seedAmount, harvestProfit];
+            sentinelLabels = [
+                `SEED FUNDS: £${seedAmount.toFixed(2)} (${seedPercent}%)
+
+`,
+                `HARVEST: £+${harvestProfit.toFixed(2)} (${harvestPercent}%)`
+            ];
+            sentinelColors = ['#fb923c', '#f7fee7'];  // Industrial Orange, Whisper Mint
+        } else {
+            // Case B: Loss - Entire donut turns Whisper Rose
+            sentinelSeries = [totalPotValue];
+            sentinelLabels = [`CAPITAL EROSION: £${totalPotValue.toFixed(2)}`];
+            sentinelColors = ['#fffafb'];  // Whisper Rose
+        }
         
         const sentinelDonutOptions = {
-            series: [seedAmount, Math.max(0, harvestProfit)],
-            labels: [
-                `SEED FUNDS: £${seedAmount.toFixed(2)} (${seedPercent}%)`,
-                `HARVEST PROFIT: £${Math.max(0, harvestProfit).toFixed(2)} (${harvestPercent}%)`
-            ],
+            series: sentinelSeries,
+            labels: sentinelLabels,
             chart: {
                 type: 'donut',
                 height: 400,
@@ -475,7 +492,7 @@
             theme: {
                 mode: 'light'
             },
-            colors: ['#f3f4f6', '#86efac'],
+            colors: sentinelColors,
             dataLabels: {
                 enabled: true,
                 style: {
@@ -669,13 +686,13 @@
                 treemap: {
                     distributed: false,  // SQUARIFIED BLOCKS
                     enableShades: false,
-                    useFillColorAsStroke: false,  // Keep 1px white grid lines
+                    useFillColorAsStroke: false,  // Keep white grid lines
                     colorScale: {
                         ranges: [
-                            { from: 3.0, to: 100, color: '#bbf7d0' },       // Soft Mint (Breakout gain)
-                            { from: 0.1, to: 2.99, color: '#f0fdf4' },      // Glow White-Green (Noise)
-                            { from: -2.99, to: -0.1, color: '#fff1f2' },    // Glow White-Red (Noise)
-                            { from: -100, to: -3.0, color: '#fecaca' }      // Soft Rose (Breakout loss)
+                            { from: 3.0, to: 100, color: '#dcfce7' },       // Soft Pastel Mint
+                            { from: 0.1, to: 2.99, color: '#f7fee7' },      // Whisper Lime Glow
+                            { from: -2.99, to: -0.1, color: '#fffafb' },    // White-Rose Glow
+                            { from: -100, to: -3.0, color: '#fee2e2' }      // Soft Pastel Rose
                         ]
                     }
                 }
@@ -692,6 +709,11 @@
                     const item = heatmapData[op.dataPointIndex];
                     return [text, item.pnl_percent.toFixed(2) + '%'];
                 }
+            },
+            stroke: {
+                show: true,
+                width: 3,
+                colors: ['#f9fafb']  // Laboratory White gaps
             },
             legend: { show: false },
             tooltip: {
