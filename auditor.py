@@ -18,9 +18,15 @@ class TradingAuditor:
     
     def __init__(self):
         self.eod_balance_path = "data/eod_balance.json"
+        self.live_state_path = "data/live_state.json"  # NEW: Volatile state
+        self.instruments_path = "data/instruments.json"  # NEW: Ticker map
         self.daily_drawdown_limit = 1000.0  # £1,000 circuit breaker
         self.seed_capital = 1000.0
         self.scaling_threshold = 1000.0  # Unlock at £1,000 realized profit
+        
+        # Trading 212 API client
+        from trading212_client import Trading212Client
+        self.client = Trading212Client()
         
         # Configure Gemini for fact-checking only
         genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
@@ -176,6 +182,98 @@ Respond ONLY with valid JSON, no other text.
         result["approved"] = True
         result["reason"] = "All gauntlet checks passed"
         return result
+    
+    def generate_live_state(self) -> Dict[str, Any]:
+        """
+        NEW v1.7.0: Generate live_state.json for UI rendering
+        Fetches current positions from Trading 212 with pence normalization
+        """
+        print("📊 Generating live state...")
+        try:
+            positions = self.client.get_positions()
+            
+            total_invested = 0.0
+            total_current_value = 0.0
+            total_pnl = 0.0
+            holdings = []
+            
+            for pos in positions:
+                ticker = pos['ticker']
+                quantity = pos['quantity']
+                avg_price = self.normalize_uk_price(ticker, pos['averagePrice'])
+                current_price = self.normalize_uk_price(ticker, pos['currentPrice'])
+                pnl = self.normalize_uk_price(ticker, pos['ppl'])
+                
+                invested = quantity * avg_price
+                current_value = quantity * current_price
+                
+                total_invested += invested
+                total_current_value += current_value
+                total_pnl += pnl
+                
+                holdings.append({
+                    'ticker': ticker,
+                    'quantity': quantity,
+                    'avg_price': avg_price,
+                    'current_price': current_price,
+                    'invested': invested,
+                    'current_value': current_value,
+                    'pnl': pnl,
+                    'pnl_percent': (pnl / invested * 100) if invested > 0 else 0
+                })
+            
+            # TODO: Fetch actual cash balance from Trading 212 account endpoint
+            cash_balance = 2500.0  # Placeholder
+            
+            live_state = {
+                'timestamp': datetime.utcnow().isoformat() + 'Z',
+                'total_wealth': total_current_value + cash_balance,
+                'cash': cash_balance,
+                'total_invested': total_invested,
+                'total_current_value': total_current_value,
+                'total_pnl': total_pnl,
+                'positions_count': len(holdings),
+                'holdings': holdings
+            }
+            
+            # Ensure data directory exists
+            os.makedirs('data', exist_ok=True)
+            
+            with open(self.live_state_path, 'w') as f:
+                json.dump(live_state, f, indent=2)
+            
+            print(f"✅ Live state updated: £{live_state['total_wealth']:.2f}")
+            return live_state
+            
+        except Exception as e:
+            print(f"❌ Failed to generate live state: {e}")
+            return {}
+    
+    def generate_instruments_map(self):
+        """
+        NEW v1.7.0: Generate instruments.json for Manual Hub search
+        Fetches all tradeable instruments from Trading 212
+        """
+        print("🔍 Fetching full instrument list...")
+        try:
+            instruments = self.client._request('GET', '/api/v0/equity/metadata/instruments')
+            
+            instrument_map = {
+                'last_updated': datetime.utcnow().isoformat() + 'Z',
+                'count': len(instruments),
+                'instruments': instruments
+            }
+            
+            # Ensure data directory exists
+            os.makedirs('data', exist_ok=True)
+            
+            with open(self.instruments_path, 'w') as f:
+                json.dump(instrument_map, f, indent=2)
+            
+            print(f"✅ Instrument map generated: {len(instruments)} tickers")
+            
+        except Exception as e:
+            print(f"❌ Failed to generate instrument map: {e}")
 
 
 def emergency_shutdown(reason: str):
