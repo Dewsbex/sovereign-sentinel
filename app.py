@@ -15,6 +15,7 @@ import json
 import os
 import sys
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 from datetime import datetime, timezone
 from auditor import TradingAuditor
 from data_mapper import (
@@ -23,6 +24,7 @@ from data_mapper import (
     get_inverted_color
 )
 from trading212_client import Trading212Client
+from app_config import CORS_CONFIG
 
 # ========================================================================
 # v1.9.4 PERSISTENCE LOCK: Verify /data volume is mounted and writable
@@ -77,6 +79,9 @@ verify_persistence_lock()
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
+# Enable CORS for Cloudflare Pages frontend
+CORS(app, **CORS_CONFIG)
+
 # Initialize services
 auditor = TradingAuditor()
 client = Trading212Client()
@@ -107,6 +112,36 @@ def dashboard():
                              positions=[],
                              market_phase='ERROR',
                              connectivity_status='OFFLINE')
+
+
+@app.route('/api/dashboard', methods=['GET'])
+def api_dashboard():
+    """
+    API endpoint for static frontend.
+    Returns dashboard data as JSON instead of rendering template.
+    """
+    try:
+        # Generate fresh live state from auditor
+        live_state = auditor.generate_live_state()
+        
+        # Map to UI context
+        context = map_live_state_to_ui_context(live_state)
+        
+        # Return JSON response
+        return jsonify(context)
+        
+    except Exception as e:
+        print(f"❌ API Dashboard error: {e}")
+        return jsonify({
+            'total_wealth': 0.0,
+            'cash': 0.0,
+            'session_pnl': 0.0,
+            'positions': [],
+            'market_phase': 'ERROR',
+            'connectivity_status': 'OFFLINE',
+            'job_c_candidates': [],
+            'error': str(e)
+        }), 500
 
 
 @app.route('/api/execute_trade', methods=['POST'])

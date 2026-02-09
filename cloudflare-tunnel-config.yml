@@ -1,0 +1,13 @@
+# Sovereign Sentinel Cloudflare Tunnel Configuration
+# Named tunnel for persistent backend API access
+
+tunnel: sovereign-api
+credentials-file: /home/ubuntu/.cloudflared/sovereign-api.json
+
+ingress:
+  # Route API traffic to Flask application
+  - hostname: api.sovereign-sentinel.pages.dev
+    service: http://localhost:5000
+  
+  # Catch-all rule (required)
+  - service: http_status:404

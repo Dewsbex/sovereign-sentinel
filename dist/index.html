@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOVEREIGN SENTINEL v1.9.4</title>
+    
+    <!-- Google Fonts: JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+    <!-- Sovereign Sentinel Stylesheet -->
+    <link rel="stylesheet" href="css/sovereign.css">
+</head>
+<body>
+
+    <div class="ghost-sovereign-grid">
+        
+        <!-- ROW 1: HEADER -->
+        <header class="row-1-header">
+            <div class="header-left">
+                <div class="header-metric">
+                    <span class="metric-label">TOTAL WEALTH</span>
+                    <span class="metric-value" id="total-wealth">£0.00</span>
+                </div>
+                <div class="header-metric">
+                    <span class="metric-label">SESSION P/L</span>
+                    <span class="metric-value" id="session-pnl">£0.00</span>
+                </div>
+            </div>
+            
+            <div class="header-mid">
+                <div class="header-metric" style="align-items: center;">
+                    <span class="metric-label">MARKET PHASE</span>
+                    <span class="metric-value" id="market-phase">LOADING</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="header-metric">
+                    <span class="metric-label">T212 STATUS</span>
+                    <span class="metric-value" id="t212-status">CONNECTING</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ROW 2: PERFORMANCE HEATMAP -->
+        <section class="row-2-heatmap">
+            <span class="section-label">02_GLOBAL_MOMENTUM_ENGINE</span>
+            <div id="performance-heatmap"></div>
+        </section>
+
+        <!-- ROW 3: SENTINEL GROWTH -->
+        <section class="row-3-sentinel">
+            <div class="curve-container">
+                <span class="section-label" style="position: initial;">03_SENTINEL_POT_GROWTH</span>
+                <div id="equity-curve"></div>
+            </div>
+            <div class="pot-stats">
+                <div class="header-metric">
+                    <span class="metric-label">SEED CAPITAL</span>
+                    <span class="metric-value">£1,000.00</span>
+                </div>
+                <div class="header-metric">
+                    <span class="metric-label">STATUS</span>
+                    <span class="metric-value" id="pot-status">LOCKED</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROW 4: ASSET INTELLIGENCE -->
+        <section class="row-4-intel">
+            <div class="allocation-donut">
+                <span class="section-label">04_ASSET_ALLOCATION</span>
+                <div id="asset-donut"></div>
+            </div>
+            <div class="sector-bars">
+                <span class="section-label">04_SECTOR_POWER_GRID</span>
+                <div id="sector-bar-chart"></div>
+            </div>
+        </section>
+
+        <!-- ROW 5: TACTICAL BRIEF -->
+        <section class="row-5-tactical">
+            <span class="section-label">05_AI_TACTICAL_BRIEF</span>
+            <div id="research-output" class="brief-content">
+                SELECT A TICKER TO BEGIN ANALYTICAL FORENSICS...
+            </div>
+        </section>
+
+        <!-- ROW 6: SNIPER COMMAND -->
+        <section class="row-6-sniper">
+            <span class="section-label">06_SNIPER_ORB_COMMAND</span>
+            
+            <div class="search-hub">
+                <input type="text" id="instrument-search" class="search-input" placeholder="SEARCH 12,000+ INSTRUMENTS...">
+                <button class="btn" onclick="executeSearch()">SEARCH</button>
+            </div>
+            
+            <div id="search-results" style="margin-top: 20px;"></div>
+
+            <table class="sniper-table" style="margin-top: 40px;">
+                <thead>
+                    <tr>
+                        <th>TICKER</th>
+                        <th>ORB HIGH</th>
+                        <th>TARGET ENTRY</th>
+                        <th>STOP LOSS</th>
+                        <th>RVOL</th>
+                        <th>SIGNAL</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody id="orb-table-body">
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: var(--slate-gray); padding: 40px;">
+                            LOADING SNIPER SIGNALS...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </div>
+
+    <div id="feedback-toast"></div>
+
+    <!-- Configuration and Application Scripts -->
+    <script src="config.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>
