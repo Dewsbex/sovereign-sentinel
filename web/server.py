@@ -9,6 +9,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from trading212_client import Trading212Client
 from auditor import TradingAuditor
+from macro_clock import MacroClock
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -18,20 +20,8 @@ CORS(app, origins=['https://sovereign-sentinel.pages.dev', 'http://localhost:808
 # Paths
 STATE_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "live_state.json")
 EOD_BALANCE_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "eod_balance.json")
-
-# Sector target allocations (Macro-Clock)
-SECTOR_TARGETS = {
-    "Technology": 15.0,
-    "Industrials": 18.0,
-    "Materials": 15.0,
-    "Energy": 15.0,
-    "Financials": 12.0,
-    "Consumer Discretionary": 10.0,
-    "Healthcare": 8.0,
-    "Consumer Staples": 5.0,
-    "Utilities": 2.0,
-    "Cash": 0.0
-}
+EQUITY_HISTORY_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "equity_history.json")
+SNIPER_TARGETS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "job_c_targets.json")
 
 @app.route('/')
 def index():
@@ -39,101 +29,122 @@ def index():
 
 @app.route('/api/live_data')
 def live_data():
-    """Enhanced API endpoint providing full dashboard data"""
+    """
+    Enhanced API endpoint providing full dashboard data.
+    Mapped strictly to Trading 212 Public API (v0) documentation.
+    """
     try:
         # Initialize clients
         client = Trading212Client()
         auditor = TradingAuditor()
+        clock = MacroClock()
         
-        # Fetch live data from Trading 212
-        account_info = client.get_account_info()
+        # 1. Fetch live data from Trading 212
+        # account_summary = /api/v0/equity/account/summary
+        account_summary = client.get_account_info() 
         positions = client.get_positions()
         
-        # Get account cash
-        cash_data = client.get_account_summary()
-        cash = float(cash_data.get('free', 0.0)) if cash_data else 0.0
+        # 2. Extract Header Metrics (The "Pulse")
+        # Mapping: WEALTH = totalValue, P/L = unrealizedProfitLoss
+        total_wealth = float(account_summary.get('totalValue', 0.0))
+        investments = account_summary.get('investments', {})
+        session_pnl = float(investments.get('unrealizedProfitLoss', 0.0))
+        realized_profit = float(investments.get('realizedProfitLoss', 0.0))
         
-        # Load balance state for realized profit
-        balance_state = {}
-        if os.path.exists(EOD_BALANCE_FILE):
-            with open(EOD_BALANCE_FILE, 'r') as f:
-                balance_state = json.load(f)
+        # 3. Extract Cash Metrics
+        # Mapping: CASH = availableToTrade
+        cash_data = account_summary.get('cash', {})
+        cash = float(cash_data.get('availableToTrade', 0.0))
         
-        realized_profit = balance_state.get('realized_profit', 0.0)
-        
-        # Calculate total wealth and session P/L
-        total_invested = 0.0
-        total_current_value = 0.0
-        session_pnl = 0.0
-        
-        # Process positions and calculate sectors
+        # 4. Process Global Momentum (Heatmap) & Sectors
+        # Iterate through open positions for granular data mapping
         sectors = {}
         enriched_positions = []
         
         if isinstance(positions, list):
             for pos in positions:
                 ticker = pos.get('ticker', '')
-                quantity = pos.get('quantity', 0)
-                avg_price = auditor.normalize_uk_price(ticker, pos.get('averagePrice', 0))
-                current_price = auditor.normalize_uk_price(ticker, pos.get('currentPrice', 0))
-                ppl = auditor.normalize_uk_price(ticker, pos.get('ppl', 0))
+                qty = float(pos.get('quantity', 0.0))
+                avg_price = auditor.normalize_uk_price(ticker, pos.get('averagePrice', 0.0))
+                current_price = auditor.normalize_uk_price(ticker, pos.get('currentPrice', 0.0))
+                ppl = float(pos.get('ppl', 0.0))
                 
-                invested = quantity * avg_price
-                current_value = quantity * current_price
+                # Mapping: Heatmap Box Size = quantity * currentPrice
+                box_size = qty * current_price
                 
-                total_invested += invested
-                total_current_value += current_value
-                session_pnl += ppl
+                # Mapping: Heatmap Color (Performance %) 
+                # Formula: ((currentPrice - averagePrice) / averagePrice) * 100
+                pnl_percent = ((current_price - avg_price) / avg_price * 100) if avg_price > 0 else 0.0
                 
-                # Determine sector (simple heuristic - can be enhanced with instrument metadata)
+                # Determine sector (local logic or database)
                 sector = get_sector_for_ticker(ticker)
                 
                 # Aggregate by sector
                 if sector not in sectors:
                     sectors[sector] = {"value": 0.0, "tickers": [], "percent": 0.0}
-                sectors[sector]["value"] += current_value
+                sectors[sector]["value"] += box_size
                 sectors[sector]["tickers"].append(ticker)
                 
-                # Enrich position data
+                # Enrich position data for Heatmap
                 enriched_positions.append({
                     "ticker": ticker.replace('_US_EQ', '').replace('_UK_EQ', ''),
-                    "current_value": current_value,
+                    "current_value": box_size,
                     "pnl": ppl,
-                    "pnl_percent": (ppl / invested * 100) if invested > 0 else 0.0
+                    "pnl_percent": pnl_percent
                 })
         
-        # Add cash as a sector
+        # Add cash as a sector for Asset Mix donut
         if cash > 0:
             sectors["Cash"] = {"value": cash, "tickers": ["CASH"], "percent": 0.0}
         
-        # Calculate total wealth
-        total_wealth = total_current_value + cash
-        
-        # Calculate sector percentages
+        # Calculate sector percentages relative to Total Wealth
         for sector in sectors:
             sectors[sector]["percent"] = (sectors[sector]["value"] / total_wealth * 100) if total_wealth > 0 else 0.0
         
+        # 5. Macro-Clock Phase and Targets
+        phase_data = clock.detect_market_phase()
+        market_phase = phase_data["phase"]
+        sector_targets = clock.get_sector_targets(market_phase)
+        
         # Generate tactical brief
-        tactical_brief = generate_tactical_brief(sectors, session_pnl, total_wealth)
+        tactical_brief = generate_tactical_brief(sectors, session_pnl, total_wealth, sector_targets, phase_data["analysis"])
         
-        # Generate Job C targets (placeholder - can be enhanced with ORB data)
-        job_c_targets = generate_job_c_targets()
+        # Job C Sniper Targets (Read from main_bot.py output)
+        job_c_targets = []
+        if os.path.exists(SNIPER_TARGETS_FILE):
+             try:
+                 with open(SNIPER_TARGETS_FILE, 'r') as f:
+                     job_c_targets = json.load(f)
+             except: pass
         
-        # Build response
+        # 6. Persistent Equity Curve Logging
+        log_equity_curve(total_wealth)
+        equity_history = []
+        if os.path.exists(EQUITY_HISTORY_FILE):
+             try:
+                 with open(EQUITY_HISTORY_FILE, 'r') as f:
+                     equity_history = json.load(f)
+             except: pass
+        
+        # Build strict response object
         response = {
-            "timestamp": account_info.get('timestamp', ''),
+            "timestamp": datetime.now().isoformat() + "Z",
             "total_wealth": total_wealth,
-            "cash": cash,
             "session_pnl": session_pnl,
             "realized_profit": realized_profit,
-            "connectivity_status": "CONNECTED",
-            "market_phase": determine_market_phase(session_pnl, total_wealth),
+            "cash": cash,
+            "connectivity_status": "LIVE",
+            "market_phase": market_phase,
             "positions": enriched_positions,
             "sectors": sectors,
-            "sector_targets": SECTOR_TARGETS,
+            "sector_targets": sector_targets,
             "tactical_brief": tactical_brief,
-            "job_c_targets": job_c_targets
+            "job_c_targets": job_c_targets,
+            "equity_history": equity_history[-50:] # Last 50 points
         }
+        
+        # Update local volatile state for other jobs
+        save_live_state(response)
         
         return jsonify(response)
         
@@ -141,24 +152,43 @@ def live_data():
         import traceback
         error_msg = f"❌ Error generating live data: {e}\n{traceback.format_exc()}"
         print(error_msg)
-        # Log to file
-        with open(os.path.join(os.path.dirname(__file__), "server.log"), "a") as f:
-            f.write(error_msg + "\n")
-        # Fallback to file-based data
+        try:
+            with open(os.path.join(os.path.dirname(__file__), "server.log"), "a") as f:
+                f.write(error_msg + "\n")
+        except: pass
+        
         if os.path.exists(STATE_FILE):
             with open(STATE_FILE, 'r') as f:
                 fallback_data = json.load(f)
-                # Ensure it has required fields
-                if "sectors" not in fallback_data:
-                    fallback_data["sectors"] = {"Cash": {"percent": 100.0, "value": 0.0, "tickers": ["CASH"]}}
-                if "sector_targets" not in fallback_data:
-                    fallback_data["sector_targets"] = SECTOR_TARGETS
-                if "tactical_brief" not in fallback_data:
-                    fallback_data["tactical_brief"] = {"phase": "UNKNOWN", "assessment": "Data unavailable."}
-                if "job_c_targets" not in fallback_data:
-                    fallback_data["job_c_targets"] = []
+                fallback_data["connectivity_status"] = "OFFLINE"
                 return jsonify(fallback_data)
         return jsonify({"error": str(e), "status": "OFFLINE"})
+
+def save_live_state(data):
+    """Saves current state to data/live_state.json for Job A/C persistence"""
+    try:
+        os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
+        with open(STATE_FILE, 'w') as f:
+            json.dump(data, f, indent=2)
+    except Exception as e:
+        print(f"⚠️ Failed to save live state: {e}")
+
+def log_equity_curve(total_wealth):
+    """Logs total wealth over time for the equity curve chart"""
+    try:
+        os.makedirs(os.path.dirname(EQUITY_HISTORY_FILE), exist_ok=True)
+        history = []
+        if os.path.exists(EQUITY_HISTORY_FILE):
+            with open(EQUITY_HISTORY_FILE, 'r') as f:
+                history = json.load(f)
+        
+        # Log if value changed or every hour
+        now = datetime.now().isoformat()
+        if not history or history[-1]["value"] != total_wealth:
+             history.append({"timestamp": now, "value": total_wealth})
+             with open(EQUITY_HISTORY_FILE, 'w') as f:
+                 json.dump(history[-1000:], f)
+    except Exception as e: print(f"⚠️ Equity log error: {e}")
 
 def get_sector_for_ticker(ticker):
     """Simple sector mapping - can be enhanced with Trading212 instrument metadata"""
@@ -209,26 +239,24 @@ def determine_market_phase(session_pnl, total_wealth):
     else:
         return "STRONG-BEAR"
 
-def generate_tactical_brief(sectors, session_pnl, total_wealth):
-    """Generate AI tactical brief based on current portfolio state"""
+def generate_tactical_brief(sectors, session_pnl, total_wealth, sector_targets, ai_analysis=""):
+    """Generate AI tactical brief based on current portfolio state and Macro-Clock"""
     phase = determine_market_phase(session_pnl, total_wealth)
     
-    # Identify overweight/underweight sectors
+    # Identify overweight/underweight sectors based on Clock targets
     analysis = []
-    for sector, target in SECTOR_TARGETS.items():
-        if sector not in sectors:
-            continue
-        current = sectors[sector]["percent"]
+    for sector, target in sector_targets.items():
+        current = sectors.get(sector, {}).get("percent", 0.0)
         delta = current - target
         if abs(delta) > 5:
             status = "overweight" if delta > 0 else "underweight"
             analysis.append(f"{sector} {status} by {abs(delta):.1f}%")
     
-    assessment = f"**{phase} Market Phase** - Portfolio analysis: "
+    assessment = f"**{phase} Market Phase** - {ai_analysis} "
     if analysis:
-        assessment += "; ".join(analysis[:3])
+        assessment += "<br><br>**Portfolio Deltas:** " + "; ".join(analysis[:3])
     else:
-        assessment += "Portfolio allocation is balanced."
+        assessment += "<br><br>Portfolio allocation is balanced relative to Macro-Clock."
     
     return {
         "phase": phase,

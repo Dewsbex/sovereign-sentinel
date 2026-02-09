@@ -23,6 +23,8 @@ import yfinance as yf
 from trading212_client import Trading212Client
 from auditor import TradingAuditor
 
+SNIPER_TARGETS_FILE = 'data/job_c_targets.json'
+
 
 class ZombieRecovery:
     """Alpha Vantage failure resilience with stale-data cutoff"""
@@ -229,6 +231,7 @@ class JobCScalper:
     def __init__(self, watch_list: List[str], dry_run: bool = True):
         self.watch_list = watch_list
         self.dry_run = dry_run
+        self.targets = []
         
         # Clients
         self.client = Trading212Client()
@@ -280,6 +283,15 @@ class JobCScalper:
             return False
         return True
     
+    def save_targets(self):
+        """Save active targets to sharing file for dashboard"""
+        try:
+            os.makedirs(os.path.dirname(SNIPER_TARGETS_FILE), exist_ok=True)
+            with open(SNIPER_TARGETS_FILE, 'w') as f:
+                json.dump(self.targets, f, indent=2)
+        except Exception as e:
+            print(f"⚠️ Failed to save targets: {e}")
+
     def execute_trade(self, ticker: str, quantity: int, limit_price: float) -> bool:
         """
         Execute limit order via Trading 212
@@ -444,6 +456,22 @@ class JobCScalper:
         max_position = self.auditor.get_seed_rule_limit()
         quantity = int(max_position / target_entry)
         
+        # Step 9.5: Update global targets list for dashboard
+        current_target = {
+            "ticker": ticker,
+            "status": "WATCHING" if close_price < orb_metrics['orb_high'] else "BREAKOUT",
+            "orb_high": orb_metrics['orb_high'],
+            "target": target_entry,
+            "stop_loss": stop_loss,
+            "rvol": orb_metrics['volume'] / avg_volume_20d,
+            "signal": "WAITING FOR BREAKOUT" if close_price < orb_metrics['orb_high'] else "TARGET ACQUIRED"
+        }
+        
+        # Merge or add target
+        self.targets = [t for t in self.targets if t['ticker'] != ticker]
+        self.targets.append(current_target)
+        self.save_targets()
+
         print(f"\n💵 Position Sizing:")
         print(f"   Max position: £{max_position:.2f} (Seed Rule)")
         print(f"   Quantity: {quantity} shares")
@@ -454,7 +482,9 @@ class JobCScalper:
         success = self.execute_trade(ticker, quantity, target_entry)
         
         if success:
-            print(f"✅ {ticker} trade complete\n")
+             current_target["status"] = "ORDER_PLACED"
+             self.save_targets()
+             print(f"✅ {ticker} trade complete\n")
         else:
             print(f"❌ {ticker} trade failed\n")
     
