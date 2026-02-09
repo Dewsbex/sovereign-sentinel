@@ -45,8 +45,8 @@ def live_data():
         positions = client.get_positions()
         
         # 2. Extract Header Metrics (The "Pulse")
-        # Mapping: WEALTH = totalValue, P/L = unrealizedProfitLoss
-        total_wealth = float(account_summary.get('totalValue', 0.0))
+        # Mapping: WEALTH = total (sum of cash + holdings), P/L = unrealizedProfitLoss
+        total_wealth = float(account_summary.get('total', 0.0))
         investments = account_summary.get('investments', {})
         session_pnl = float(investments.get('unrealizedProfitLoss', 0.0))
         realized_profit = float(investments.get('realizedProfitLoss', 0.0))
