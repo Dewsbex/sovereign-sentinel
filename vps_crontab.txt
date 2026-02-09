@@ -1,0 +1,15 @@
+# Sovereign Sentinel v1.9.5 VPS Crontab (Ground Truth)
+# Primary orchestrator for autonomous trading (Oracle VPS)
+
+# 1. WATCHDOG: Integrity Scan (07:55 UTC)
+55 7 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && /usr/bin/python3 watchdog.py >> /home/ubuntu/logs/watchdog.log 2>&1
+
+# 2. PRE-FLIGHT: London Open Checks (08:01 UTC)
+1 8 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && /usr/bin/python3 monday_preflight.py >> /home/ubuntu/logs/preflight.log 2>&1
+
+# 3. EXECUTION: US Open (14:25 UTC)
+# Logic consolidated in main_bot.py + trading212_client.py
+25 14 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && /usr/bin/python3 main_bot.py --live >> /home/ubuntu/logs/main_bot.log 2>&1
+
+# 4. POST-FLIGHT: Status Report (14:31 UTC)
+31 14 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && /usr/bin/python3 monday_preflight.py --postflight >> /home/ubuntu/logs/postflight.log 2>&1

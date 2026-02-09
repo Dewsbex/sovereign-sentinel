@@ -175,19 +175,32 @@ MASTER_UNIVERSE = [
 ]
 
 
-def generate_instruments_file():
+def generate_dual_ledger():
     """
-    Writes the MASTER_UNIVERSE to data/instruments.json
-    This file is required for the Manual Hub search functionality.
+    v1.9.4 DUAL-LEDGER SYSTEM
+    =========================
+    
+    Generates TWO separate data files:
+    
+    1. master_universe.json - Job C autonomous trading ONLY (100+ vetted Tier 1)
+       - Purpose: High-velocity, low-hallucination source for ORB scalper
+       - Safety: Prevents 429 rate limits and ticker confusion
+    
+    2. instruments.json - Manual Hub + Job A research (retains full 12,000+ from T212 API)
+       - Purpose: Discovery engine for moat research and manual fund purchases
+       - Protection: 90% fuzzy match validation ensures data quality
     """
+    
     # Ensure data directory exists
     os.makedirs("data", exist_ok=True)
-    
-    final_data = {
+
+    # LEDGER 1: Master Universe (Job C Only)
+    master_data = {
         "metadata": {
-            "version": "1.9.1",
+            "version": "1.9.4",
             "generated": datetime.utcnow().isoformat() + 'Z',
             "count": len(MASTER_UNIVERSE),
+            "purpose": "Job C Autonomous Trading - Vetted Tier 1 Only",
             "source": "Wealth Seeker Platinum Master",
             "clusters": {
                 "Trinity": "Benchmarks (NVDA, TSLA, MSTR)",
@@ -204,15 +217,41 @@ def generate_instruments_file():
         "instruments": MASTER_UNIVERSE
     }
     
-    output_path = "data/instruments.json"
-    with open(output_path, 'w') as f:
-        json.dump(final_data, f, indent=4)
+    master_path = "data/master_universe.json"
+    with open(master_path, 'w') as f:
+        json.dump(master_data, f, indent=4)
     
-    print(f"✅ Generated {output_path}")
-    print(f"   Total instruments: {len(MASTER_UNIVERSE)}")
+    print(f"✅ Ledger 1 (Job C): {master_path}")
+    print(f"   Vetted Tier 1: {len(MASTER_UNIVERSE)} tickers")
     print(f"   ISA-eligible: {sum(1 for i in MASTER_UNIVERSE if i['isa'])}")
     print(f"   UK Sovereign (.L): {sum(1 for i in MASTER_UNIVERSE if i['ticker'].endswith('.L'))}")
+    
+    # LEDGER 2: Global Instrument Map (Manual Hub + Job A)
+    # NOTE: instruments.json should be maintained from Trading 212 API fetch
+    # We keep the master universe as a fallback if T212 fetch fails
+    instruments_path = "data/instruments.json"
+    
+    if not os.path.exists(instruments_path):
+        # Fallback: If instruments.json doesn't exist, create it from master universe
+        print(f"\n⚠️  {instruments_path} not found - creating from master universe")
+        print(f"   For full 12,000+ database, fetch from Trading 212 API")
+        
+        with open(instruments_path, 'w') as f:
+            json.dump(master_data, f, indent=4)
+    else:
+        # instruments.json already exists (from T212 API or previous run)
+        with open(instruments_path, 'r') as f:
+            existing_data = json.load(f)
+        
+        existing_count = existing_data.get('metadata', {}).get('count', 0)
+        print(f"\n✅ Ledger 2 (Manual Hub + Job A): {instruments_path}")
+        print(f"   Global instruments: {existing_count:,} tickers")
+        print(f"   Source: Trading 212 API (maintained)")
+    
+    print(f"\n🏛️ DUAL-LEDGER SYSTEM ACTIVE")
+    print(f"   Job C: Hard-locked to {len(MASTER_UNIVERSE)} vetted tickers")
+    print(f"   Manual Hub/Job A: Full market access for discovery")
 
 
 if __name__ == "__main__":
-    generate_instruments_file()
+    generate_dual_ledger()

@@ -31,15 +31,13 @@ class TradingAuditor:
         self.seed_capital = 1000.0
         self.scaling_threshold = 1000.0  # Unlock at £1,000 realized profit
         
-        # Trading 212 API client
+        # Trading 212 API client (Consolidated Engine)
         from trading212_client import Trading212Client
         self.client = Trading212Client()
         
-        # Configure Gemini for fact-checking only (if available)
-        self.model = None
-        if GEMINI_AVAILABLE and os.getenv("GOOGLE_API_KEY"):
-            genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-            self.model = genai.GenerativeModel('gemini-pro')
+        # Configure Gemini via Client (No standalone genai needed)
+        self.gemini_available = bool(self.client.gemini_key)
+
     
     def normalize_uk_price(self, ticker: str, raw_price: float) -> float:
         """
@@ -100,7 +98,7 @@ class TradingAuditor:
         Returns: (is_blocked, fact_dict)
         """
         # Skip fact-checking if Gemini unavailable
-        if not self.model:
+        if not self.gemini_available:
             print(f"⚠️  Gemini unavailable, skipping fact-check for {ticker}")
             return False, {"skipped": True}
         
@@ -120,8 +118,13 @@ Respond ONLY with valid JSON, no other text.
 """
         
         try:
-            response = self.model.generate_content(prompt)
-            fact_dict = json.loads(response.text.strip())
+            # use consolidated client engine
+            response_text = self.client.gemini_query(prompt)
+            
+            # Clean response text (remove markdown code blocks if present)
+            cleaned_text = response_text.replace('```json', '').replace('```', '').strip()
+            
+            fact_dict = json.loads(cleaned_text)
             
             # Hard block if any red flag is True
             is_blocked = any([
@@ -137,6 +140,22 @@ Respond ONLY with valid JSON, no other text.
             # Fail-safe: Block trade if fact-check fails
             return True, {"error": str(e)}
     
+    def get_seed_rule_limit(self) -> float:
+        """
+        Helper for Bot - returns valid max position size based on current state.
+        Safely handles missing live state by defaulting to seed capital.
+        """
+        try:
+            # Try to get live total wealth for dynamic scaling
+            with open(self.live_state_path, 'r') as f:
+                live_state = json.load(f)
+                total_wealth = live_state.get('total_wealth', 0.0)
+        except (FileNotFoundError, json.JSONDecodeError):
+            total_wealth = 0.0
+
+        state = self.load_balance_state()
+        return self.calculate_max_position_size(total_wealth, state.get("realized_profit", 0.0))
+
     def run_gauntlet(self, 
                      ticker: str,
                      entry_price: float,
@@ -200,11 +219,15 @@ Respond ONLY with valid JSON, no other text.
     def generate_live_state(self) -> Dict[str, Any]:
         """
         NEW v1.7.0: Generate live_state.json for UI rendering
-        Fetches current positions from Trading 212 with pence normalization
+        Fetches current positions and cash from Trading 212 with pence normalization.
         """
         print("📊 Generating live state...")
         try:
             positions = self.client.get_positions()
+            account_summary = self.client.get_account_info()
+            
+            # Real cash balance from official API
+            cash_balance = float(account_summary.get('cash', {}).get('availableToTrade', 0.0))
             
             total_invested = 0.0
             total_current_value = 0.0
@@ -236,9 +259,6 @@ Respond ONLY with valid JSON, no other text.
                     'pnl_percent': (pnl / invested * 100) if invested > 0 else 0
                 })
             
-            # TODO: Fetch actual cash balance from Trading 212 account endpoint
-            cash_balance = 2500.0  # Placeholder
-            
             live_state = {
                 'timestamp': datetime.utcnow().isoformat() + 'Z',
                 'total_wealth': total_current_value + cash_balance,
@@ -247,7 +267,8 @@ Respond ONLY with valid JSON, no other text.
                 'total_current_value': total_current_value,
                 'total_pnl': total_pnl,
                 'positions_count': len(holdings),
-                'holdings': holdings
+                'holdings': holdings,
+                'connectivity_status': 'CONNECTED'
             }
             
             # Ensure data directory exists
@@ -261,7 +282,14 @@ Respond ONLY with valid JSON, no other text.
             
         except Exception as e:
             print(f"❌ Failed to generate live state: {e}")
-            return {}
+            return {
+                'timestamp': datetime.utcnow().isoformat() + 'Z',
+                'total_wealth': 0.0,
+                'cash': 0.0,
+                'total_pnl': 0.0,
+                'holdings': [],
+                'connectivity_status': 'OFFLINE'
+            }
     
     def generate_instruments_map(self):
         """

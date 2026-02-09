@@ -1,8 +1,9 @@
 {
     "metadata": {
-        "version": "1.9.1",
-        "generated": "2026-02-07T22:29:21.341000Z",
+        "version": "1.9.4",
+        "generated": "2026-02-08T16:31:09.749193Z",
         "count": 139,
+        "purpose": "Job C Autonomous Trading - Vetted Tier 1 Only",
         "source": "Wealth Seeker Platinum Master",
         "clusters": {
             "Trinity": "Benchmarks (NVDA, TSLA, MSTR)",

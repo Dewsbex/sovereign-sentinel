@@ -3,540 +3,377 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN TERMINAL v1.1</title>
+    <title>SOVEREIGN SENTINEL v1.9.4</title>
+    
+    <!-- Google Fonts: JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     
     <style>
-        /* SOVEREIGN TERMINAL v1.1 - ZERO-WASTE HYPER-EFFICIENCY */
+        /* 
+           GHOST SOVEREIGN THEME v1.9.4
+           Hard-Locked Vertical Hierarchy
+        */
+        
+        :root {
+            /* Colors: Non-Negotiable Cream Standard */
+            --ghost-cream: #fff7ed;
+            --true-black: #000000;
+            --slate-gray: #9ca3af;
+            
+            /* Inverted Momentum Colors */
+            --gain-pastel: #bbf7d0;   /* Breakout gain (>3%) */
+            --gain-tint: #f0fdf4;     /* Noise gain (0.1-3%) */
+            --loss-tint: #fff1f2;     /* Noise loss (-3 to -0.1%) */
+            --loss-pastel: #fecaca;   /* Breakout loss (<-3%) */
+            
+            --alert-amber: #f59e0b;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        :root {
-            /* Light Industrial Palette */
-            --lab-white: #f9fafb;
-            --true-white: #ffffff;
-            --charcoal: #111827;
-            --slate-border: #e5e7eb;
-            --label-dark: #374151;
-            --label-medium: #6b7280;
-            
-            /* Industrial Instrument v1.4.1 - GHOST SOVEREIGN */
-            --industrial-orange: #fff7ed;  /* Ghost Whisper Orange */
-            --visible-mint: #f0fdf4;
-            --visible-rose: #fff1f2;
-            
-            /* WHISPER-GLOW HEATMAP (Visible Tints) */
-            --soft-mint: #bbf7d0;           /* Gain >3% */
-            --visible-mint-tint: #f0fdf4;   /* Gain 0.1-2.9% */
-            --visible-rose-tint: #fff1f2;   /* Loss -0.1 to -2.9% */
-            --soft-rose: #fecaca;           /* Loss <-3% */
-            
-            /* Alert */
-            --alert-amber: #f59e0b;
-        }
-        
+
         body {
-            background: var(--lab-white);
-            color: var(--charcoal);
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            font-size: 13px;
-            line-height: 1.4;
+            background-color: var(--ghost-cream);
+            color: var(--true-black);
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
             overflow-x: hidden;
+            min-height: 100vh;
         }
-        
-        /* UNIFIED COMMAND & CONTROL HEADER */
-        .unified-header {
+
+        /* 6-ROW GRID ARCHITECTURE */
+        .ghost-sovereign-grid {
+            display: grid;
+            grid-template-rows: 80px 600px 300px 450px auto auto;
+            width: 100%;
+        }
+
+        /* ROW 1: STICKY HEADER */
+        .row-1-header {
             position: sticky;
             top: 0;
             z-index: 2000;
-            background: rgba(249, 250, 251, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--slate-border);
-            padding: 10px 20px;
+            background: var(--ghost-cream);
+            border-bottom: 1px solid var(--true-black);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
+            padding: 0 40px;
         }
-        
-        .header-metrics {
+
+        .header-left, .header-right {
             display: flex;
-            gap: 20px;
-            align-items: center;
+            gap: 40px;
         }
-        
-        .unified-header .metric {
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            font-weight: 700;
-        }
-        
-        .metric-label {
-            color: var(--label-medium);
-            font-size: 9px;
-            margin-bottom: 2px;
-        }
-        
-        .metric-value {
-            font-size: 13px;
-            color: var(--charcoal);
-        }
-        
-        .metric-value.positive {
-            color: #10b981;
-        }
-        
-        .metric-value.negative {
-            color: #ef4444;
-        }
-        
-        .nav-buttons {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .nav-btn {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--label-medium);
-            text-decoration: none;
-            padding: 6px 12px;
-            border: 1px solid var(--slate-border);
-            background: var(--true-white);
-            transition: all 0.2s ease;
-            text-align: center;
-            white-space: nowrap;
-        }
-        
-        .nav-btn:hover {
-            color: var(--charcoal);
-            border-color: var(--charcoal);
-        }
-        
-        .fortress-alert {
-            flex-basis: 100%;
-            background: var(--alert-amber);
-            color: var(--true-white);
-            padding: 8px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 10px;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.85; }
-        }
-        
-        /* RESPONSIVE GRID CONTAINER */
-        .responsive-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 0;
-        }
-        
-        /* SECTION CONTAINERS WITH FLOATING LABELS */
-        .section {
-            position: relative;
-            background: var(--true-white);
-            border-bottom: 1px solid var(--slate-border);
-            padding: 16px;
-            scroll-margin-top: 70px;
-        }
-        
-        /* HARD OVERRIDE - ZERO-WASTE FLOATING LABELS */
-        .chart-container {
-            position: relative !important;
-            background: var(--true-white);
-            border: 1px solid var(--slate-border);
-            padding: 16px;
-            padding-top: 0 !important; /* Kill top padding */
-            min-height: 400px;
-        }
-        
-        .section-label {
-            position: absolute !important;
-            top: 8px !important;
-            left: 12px !important;
-            z-index: 100 !important;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 8px;
-            color: #9ca3af; /* Slate Gray */
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            pointer-events: none; /* Don't interfere with mouse-overs */
-            background: transparent;
-            padding: 0;
-            border: none;
-        }
-        
-        #sentinel-donut,
-        #equity-curve,
-        #performance-heatmap,
-        #asset-donut {
-            min-height: 350px;
-        }
-        
-        #performance-heatmap {
-            min-height: 450px;
-        }
-        
-        /* MACRO POWER-GRID */
-        .sector-bar-chart {
-            margin-top: 24px;
+
+        .header-metric {
             display: flex;
             flex-direction: column;
-            gap: 10px;
         }
-        
-        .sector-bar-row {
-            display: grid;
-            grid-template-columns: 100px 1fr 70px;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .sector-name {
-            text-transform: uppercase;
+
+        .metric-label {
             font-size: 10px;
-            letter-spacing: 0.05em;
-            color: var(--label-dark);
+            color: var(--slate-gray);
+            margin-bottom: 2px;
         }
-        
-        .bar-container {
-            position: relative;
-            height: 20px;
-            background: #f3f4f6;
-            border: 1px solid var(--slate-border);
-        }
-        
-        .bar-fill {
-            position: absolute;
-            height: 100%;
-            background: var(--ghost-mint);
-            opacity: 0.4;
-            transition: width 0.3s ease;
-        }
-        
-        .bar-target-line {
-            position: absolute;
-            height: 100%;
-            border-left: 2px dotted var(--charcoal);
-        }
-        
-        .bar-status {
-            text-align: right;
-            font-size: 10px;
+
+        .metric-value {
+            font-size: 16px;
             font-weight: 700;
         }
-        
-        .bar-status.over {
-            color: var(--ghost-rose);
+
+        .metric-value.positive { color: #16a34a; }
+        .metric-value.negative { color: #dc2626; }
+
+        /* ROW 2: GLOBAL MOMENTUM (HEATMAP) */
+        .row-2-heatmap {
+            border-bottom: 1px solid var(--true-black);
+            padding: 20px;
+            position: relative;
         }
-        
-        .bar-status.under {
-            color: var(--alert-amber);
-        }
-        
-        .bar-status.match {
-            color: var(--ghost-mint);
-        }
-        
-        /* AI BRIEF */
-        .ai-brief-content {
-            margin-top: 24px;
-            font-family: system-ui, -apple-system, sans-serif;
-            color: var(--label-dark);
-            line-height: 1.6;
-        }
-        
-        /* FOOTER */
-        .footer {
-            background: var(--true-white);
-            border-top: 1px solid var(--slate-border);
-            padding: 16px;
-            text-align: center;
-            color: var(--label-medium);
+
+        .section-label {
+            position: absolute;
+            top: 10px;
+            left: 20px;
             font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            font-weight: 700;
+            color: var(--slate-gray);
+            z-index: 10;
         }
-        
-        
-        /* JOB C SNIPER LIST - HIGH DENSITY */
-        .job-c-table {
+
+        /* ROW 3: SENTINEL GROWTH CURVE */
+        .row-3-sentinel {
+            border-bottom: 1px solid var(--true-black);
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .curve-container {
+            flex: 2;
+        }
+
+        .pot-stats {
+            flex: 1;
+            border-left: 1px solid var(--true-black);
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* ROW 4: ASSET INTELLIGENCE */
+        .row-4-intel {
+            border-bottom: 1px solid var(--true-black);
+            display: flex;
+            height: 450px;
+        }
+
+        .allocation-donut {
+            flex: 1;
+            border-right: 1px solid var(--true-black);
+            padding: 20px;
+        }
+
+        .sector-bars {
+            flex: 2;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* ROW 5: TACTICAL BRIEF (AI RESEARCH) */
+        .row-5-tactical {
+            border-bottom: 1px solid var(--true-black);
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .brief-content {
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 20px;
+        }
+
+        /* ROW 6: SNIPER COMMAND (ORB TRACKER) */
+        .row-6-sniper {
+            padding: 40px;
+            background: rgba(0,0,0,0.02);
+        }
+
+        .sniper-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 24px;
-            font-size: 9px;
-            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
         }
-        
-        .job-c-table th {
+
+        .sniper-table th {
             text-align: left;
-            padding: 8px 6px;
-            border-bottom: 1px solid #e5e7eb;
-            font-weight: 700;
-            color: #6b7280;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-size: 8px;
+            padding: 12px;
+            border-bottom: 2px solid var(--true-black);
+            color: var(--slate-gray);
         }
-        
-        .job-c-table td {
-            padding: 10px 6px;
-            border-bottom: 1px solid #f3f4f6;
-            color: #111827;
+
+        .sniper-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
         }
-        
-        .job-c-table tr:hover {
-            background: #fafafa;
-        }
-        
-        .job-c-ticker {
-            font-weight: 700;
-            font-size: 10px;
-            letter-spacing: 0.02em;
-        }
-        
-        .job-c-status {
-            font-size: 8px;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 2px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            display: inline-block;
-        }
-        
-        .job-c-status.watching {
-            background: #ffedd5;
-            color: #ea580c;
-        }
-        
-        .job-c-status.ready {
-            background: #f0fdf4;
-            color: #10b981;
-        }
-        
-        .job-c-status.active {
-            background: #eff6ff;
-            color: #3b82f6;
-        }
-        
-        .job-c-signal {
-            font-size: 8px;
-            color: #6b7280;
-            font-style: italic;
-        }
-        
-        .job-c-metric {
-            font-weight: 600;
-        }
-        
-        .job-c-target {
-            color: #10b981;
+
+        .status-badge {
+            padding: 4px 8px;
             font-weight: 700;
         }
-        
-        .job-c-stop {
-            color: #ef4444;
-            font-weight: 700;
-        }
-        
-        .job-c-buy-btn {
-            background: #10b981;
-            color: #ffffff;
+
+        .status-badge.watching { background: var(--visible-rose-tint); }
+        .status-badge.ready { background: var(--gain-pastel); }
+
+        /* BUTTONS */
+        .btn {
+            background: var(--true-black);
+            color: var(--ghost-cream);
             border: none;
-            padding: 6px 16px;
-            font-size: 9px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 10px;
             font-weight: 700;
             font-family: 'JetBrains Mono', monospace;
-            cursor: pointer;
-            border-radius: 2px;
-            transition: all 0.2s ease;
             text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
             letter-spacing: 0.1em;
         }
-        
-        .job-c-buy-btn:hover {
-            background: #059669;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+
+        .btn-outline {
+            background: transparent;
+            color: var(--true-black);
+            border: 1px solid var(--true-black);
         }
-        
-        .job-c-buy-btn:active {
-            transform: translateY(0);
+
+        /* SEARCH HUB */
+        .search-hub {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
         }
-        
-        /* MOBILE OPTIMIZATION */
-        @media (max-width: 768px) {
-            .unified-header {
-                gap: 10px;
-                padding: 10px 12px;
-            }
-            
-            .header-metrics {
-                gap: 12px;
-            }
-            
-            .metric-label {
-                font-size: 8px;
-            }
-            
-            .metric-value {
-                font-size: 11px;
-            }
-            
-            .nav-buttons {
-                flex-basis: 100%;
-                justify-content: center;
-            }
-            
-            .nav-btn {
-                flex: 1;
-                font-size: 9px;
-                padding: 8px 6px;
-            }
-            
-            .section-label {
-                font-size: 7px;
-            }
+
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: 1px solid var(--true-black);
+            padding: 10px;
+            font-family: inherit;
+            text-transform: uppercase;
+        }
+
+        /* UTILITIES */
+        .fortress-alert {
+            background: var(--alert-amber);
+            color: white;
+            padding: 2px 10px;
+            font-size: 10px;
+            margin-left: 10px;
+        }
+
+        #feedback-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 30px;
+            background: var(--true-black);
+            color: var(--ghost-cream);
+            z-index: 9999;
+            display: none;
+        }
+
+        @keyframes spinner {
+            to {transform: rotate(360deg);}
+        }
+
+        .spinner:before {
+            content: '';
+            box-sizing: border-box;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin-top: -10px;
+            margin-left: -10px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            border-top-color: #000;
+            animation: spinner .6s linear infinite;
         }
     </style>
 </head>
 <body>
-    <!-- UNIFIED COMMAND & CONTROL HEADER -->
-    <header class="unified-header">
-        {% if fortress_alert %}
-        <div class="fortress-alert">
-            ⚠️ FORTRESS MIGRATION ALERT
-        </div>
-        {% endif %}
+
+    <div class="ghost-sovereign-grid">
         
-        <div class="header-metrics">
-            <div class="metric">
-                <div class="metric-label">WEALTH</div>
-                <div class="metric-value">£{{ "%.2f"|format(total_wealth) }}</div>
-            </div>
-            
-            <div class="metric">
-                <div class="metric-label">P/L</div>
-                <div class="metric-value {% if session_pnl >= 0 %}positive{% else %}negative{% endif %}">
-                    £{{ "%.2f"|format(session_pnl) }}
+        <!-- ROW 1: HEADER -->
+        <header class="row-1-header">
+            <div class="header-left">
+                <div class="header-metric">
+                    <span class="metric-label">TOTAL WEALTH</span>
+                    <span class="metric-value">£{{ "{:,.2f}".format(total_wealth) }}</span>
+                </div>
+                <div class="header-metric">
+                    <span class="metric-label">SESSION P/L</span>
+                    <span class="metric-value {{ 'positive' if session_pnl > 0 else 'negative' }}">
+                        £{{ "{:+,.2f}".format(session_pnl) }}
+                    </span>
                 </div>
             </div>
             
-            <div class="metric">
-                <div class="metric-label">PHASE</div>
-                <div class="metric-value">{{ market_phase }}</div>
+            <div class="header-mid">
+                <div class="header-metric" style="align-items: center;">
+                    <span class="metric-label">MARKET PHASE</span>
+                    <span class="metric-value">{{ market_phase }}</span>
+                </div>
             </div>
             
-            <div class="metric">
-                <div class="metric-label">STATUS</div>
-                <div class="metric-value">{{ connectivity }}</div>
+            <div class="header-right">
+                <div class="header-metric">
+                    <span class="metric-label">T212 STATUS</span>
+                    <span class="metric-value">{{ connectivity_status }}</span>
+                </div>
+                {% if fortress_alert %}
+                <div class="fortress-alert">FORTRESS: ACTIVE</div>
+                {% endif %}
             </div>
-        </div>
-        
-        <div class="nav-buttons">
-            <a href="#sentinel" class="nav-btn">SENTINEL</a>
-            <a href="#momentum" class="nav-btn">MOMENTUM</a>
-            <a href="#macro" class="nav-btn">MACRO</a>
-            <a href="#strategic" class="nav-btn">BRIEF</a>
-        </div>
-    </header>
-    
-    <!-- SENTINEL - THE LABORATORY -->
-    <div class="responsive-grid">
-        <div id="sentinel" class="section">
-            <div class="chart-container">
-                <div class="section-label">SENTINEL LABORATORY</div>
-                <div id="sentinel-donut"></div>
-            </div>
-        </div>
-        
-        <div class="section">
-            <div class="chart-container">
-                <div class="section-label">EQUITY CURVE</div>
+        </header>
+
+        <!-- ROW 2: PERFORMANCE HEATMAP -->
+        <section class="row-2-heatmap">
+            <span class="section-label">02_GLOBAL_MOMENTUM_ENGINE</span>
+            <div id="performance-heatmap"></div>
+        </section>
+
+        <!-- ROW 3: SENTINEL GROWTH -->
+        <section class="row-3-sentinel">
+            <div class="curve-container">
+                <span class="section-label" style="position: initial;">03_SENTINEL_POT_GROWTH</span>
                 <div id="equity-curve"></div>
             </div>
-        </div>
-    </div>
-    
-    <!-- MOMENTUM - GLOBAL HEATMAP -->
-    <div id="momentum" class="section">
-        <div class="chart-container">
-            <div class="section-label">GLOBAL MOMENTUM</div>
-            <div id="performance-heatmap"></div>
-        </div>
-    </div>
-    
-    <!-- MACRO - POWER-GRID -->
-    <div class="responsive-grid">
-        <div id="macro" class="section">
-            <div class="chart-container">
-                <div class="section-label">ASSET MIX</div>
-                <div id="asset-donut"></div>
-            </div>
-        </div>
-        
-        <div class="section">
-            <div class="chart-container">
-                <div class="section-label">SECTOR DELTAS</div>
-                <div class="sector-bar-chart">
-                    {% for delta in sector_deltas %}
-                    <div class="sector-bar-row">
-                        <div class="sector-name">{{ delta.sector }}</div>
-                        <div class="bar-container">
-                            <div class="bar-fill" style="width: {{ delta.current }}%;"></div>
-                            <div class="bar-target-line" style="left: {{ delta.target }}%;"></div>
-                        </div>
-                        <div class="bar-status {{ delta.status|lower }}">
-                            {{ delta.current }}%
-                        </div>
-                    </div>
-                    {% endfor %}
+            <div class="pot-stats">
+                <div class="header-metric">
+                    <span class="metric-label">SEED CAPITAL</span>
+                    <span class="metric-value">£1,000.00</span>
+                </div>
+                <div class="header-metric">
+                    <span class="metric-label">STATUS</span>
+                    <span class="metric-value">{{ "UNLOCKED" if total_wealth > 2000 else "LOCKED" }}</span>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- STRATEGIC - TACTICAL BRIEF -->
-    <div id="strategic" class="section">
-        <div class="chart-container">
-            <div class="section-label">TACTICAL BRIEF</div>
-            <div class="ai-brief-content">
-                <strong>MARKET PHASE:</strong> {{ market_phase }}<br><br>
-                <strong>TACTICAL ASSESSMENT:</strong><br>
-                {{ ai_brief }}<br><br>
-                <strong>LIMIT ENTRY SUGGESTIONS:</strong><br>
-                • <strong>MSFT:</strong> Target entry at $395.50 (5% delta to VWAP)<br>
-                • <strong>AAPL:</strong> Target entry at $182.20 (pullback to ORB low)<br>
-                • <strong>GOOGL:</strong> Target entry at $168.75 (VWAP support level)<br><br>
-                <em>Use Job C Sniper Command for immediate breakout entries.</em>
+        </section>
+
+        <!-- ROW 4: ASSET INTELLIGENCE -->
+        <section class="row-4-intel">
+            <div class="allocation-donut">
+                <span class="section-label">04_ASSET_ALLOCATION</span>
+                <div id="asset-donut"></div>
             </div>
-        </div>
-    </div>
-    
-    <!-- JOB C SNIPER COMMAND - TACTICAL EXECUTION -->
-    <div id="job-c-targets" class="section">
-        <div class="chart-container">
-            <div class="section-label">JOB C SNIPER COMMAND</div>
-            <table class="job-c-table">
+            <div class="sector-bars">
+                <span class="section-label">04_SECTOR_POWER_GRID</span>
+                <div id="sector-bar-chart"></div>
+            </div>
+        </section>
+
+        <!-- ROW 5: TACTICAL BRIEF -->
+        <section class="row-5-tactical">
+            <span class="section-label">05_AI_TACTICAL_BRIEF</span>
+            <div id="research-output" class="brief-content">
+                SELECT A TICKER TO BEGIN ANALYTICAL FORENSICS...
+            </div>
+        </section>
+
+        <!-- ROW 6: SNIPER COMMAND -->
+        <section class="row-6-sniper">
+            <span class="section-label">06_SNIPER_ORB_COMMAND</span>
+            
+            <div class="search-hub">
+                <input type="text" id="instrument-search" class="search-input" placeholder="SEARCH 12,000+ INSTRUMENTS...">
+                <button class="btn" onclick="executeSearch()">SEARCH</button>
+            </div>
+            
+            <div id="search-results" style="margin-top: 20px;"></div>
+
+            <table class="sniper-table" style="margin-top: 40px;">
                 <thead>
                     <tr>
                         <th>TICKER</th>
-                        <th>STATUS</th>
                         <th>ORB HIGH</th>
                         <th>TARGET ENTRY</th>
                         <th>STOP LOSS</th>
@@ -546,366 +383,211 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for candidate in job_c_candidates %}
+                    {% for item in job_c_candidates %}
                     <tr>
-                        <td class="job-c-ticker">{{ candidate.ticker }}</td>
-                        <td><span class="job-c-status {{ candidate.status|lower }}">{{ candidate.status }}</span></td>
-                        <td class="job-c-metric">${{ "%.2f"|format(candidate.orb_high) }}</td>
-                        <td class="job-c-metric job-c-target">${{ "%.2f"|format(candidate.target_entry) }}</td>
-                        <td class="job-c-metric job-c-stop">${{ "%.2f"|format(candidate.stop_loss) }}</td>
-                        <td class="job-c-metric">{{ candidate.rvol }}</td>
-                        <td class="job-c-signal">{{ candidate.signal }}</td>
-                        <td>
-                            <button class="job-c-buy-btn" 
-                                    data-ticker="{{ candidate.ticker }}"
-                                    data-price="{{ "%.2f"|format(candidate.target_entry) }}"
-                                    onclick="executeSniperTrade('{{ candidate.ticker }}', {{ "%.2f"|format(candidate.target_entry) }})">
-                                BUY
-                            </button>
-                        </td>
+                        <td>{{ item.ticker }}</td>
+                        <td>${{ "{:.2f}".format(item.orb_high) }}</td>
+                        <td>${{ "{:.2f}".format(item.target_entry) }}</td>
+                        <td>${{ "{:.2f}".format(item.stop_loss) }}</td>
+                        <td>{{ item.rvol }}x</td>
+                        <td><span class="status-badge {{ item.status.lower() }}">{{ item.status }}</span></td>
+                        <td><button class="btn" onclick="triggerResearch('{{ item.ticker }}')">RESEARCH</button></td>
                     </tr>
                     {% endfor %}
+                    {% if not job_c_candidates %}
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: var(--slate-gray); padding: 40px;">
+                            NO ACTIVE SNIPER SIGNALS DETECTED
+                        </td>
+                    </tr>
+                    {% endif %}
                 </tbody>
             </table>
-        </div>
+        </section>
+
     </div>
-    
-    <!-- FOOTER -->
-    <footer class="footer">
-        SOVEREIGN TERMINAL v1.4.1 - PRECISION LOCK // {{ timestamp }}
-    </footer>
-    
-    <!-- ApexCharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    
+
+    <div id="feedback-toast"></div>
+
     <script>
-        // ============================================
-        // 01 / SENTINEL - CONDITION LOGIC
-        // ============================================
-        const sentinelLedger = {{ sentinel_ledger|tojson|safe }};
-        const seedAmount = sentinelLedger.seed_amount;
-        const harvestProfit = sentinelLedger.realized_profit;
-        const totalPotValue = seedAmount + harvestProfit;
+        // DATA INJECTION
+        const positions = {{ positions | tojson }};
         
-        let sentinelSeries, sentinelLabels, sentinelColors;
+        // APEXCHARTS CONFIGS
         
-        if (harvestProfit >= 0) {
-            // Case A: Profit - Ultra-Pale Orange Seed + Visible Mint Harvest
-            const seedPercent = (seedAmount / totalPotValue * 100).toFixed(1);
-            const harvestPercent = (harvestProfit / totalPotValue * 100).toFixed(1);
-            
-            sentinelSeries = [seedAmount, harvestProfit];
-            sentinelLabels = [
-                `SEED: £${seedAmount.toFixed(2)} (${seedPercent}%)`,
-                `HARVEST: £+${harvestProfit.toFixed(2)} (${harvestPercent}%)`
-            ];
-            sentinelColors = ['#ffedd5', '#f0fdf4'];  // Ultra-Pale Orange + Visible Mint
-        } else {
-            // Case B: Loss - Visible Rose Tint
-            sentinelSeries = [totalPotValue];
-            sentinelLabels = [`EROSION: £${totalPotValue.toFixed(2)}`];
-            sentinelColors = ['#fff1f2'];  // Visible Rose Tint
-        }
-        
-        const sentinelDonutOptions = {
-            series: sentinelSeries,
-            labels: sentinelLabels,
+        // 1. HEATMAP (Treemap)
+        const heatmapOptions = {
+            series: [{
+                data: positions.map(p => ({
+                    x: p.ticker,
+                    y: Math.abs(p.pnl),
+                    pnl_raw: p.pnl,
+                    pnl_pct: p.pnl_percent
+                }))
+            }],
             chart: {
-                type: 'donut',
-                height: 350,
-                background: 'transparent',
-                foreColor: '#111827',
-                fontFamily: "'JetBrains Mono', monospace"
+                height: 550,
+                type: 'treemap',
+                toolbar: { show: false }
             },
-            theme: { mode: 'light' },
-            colors: sentinelColors,
+            colors: [function({ value, seriesIndex, dataPointIndex, w }) {
+                const pnl_pct = w.config.series[seriesIndex].data[dataPointIndex].pnl_pct;
+                if (pnl_pct > 3) return '#bbf7d0';
+                if (pnl_pct > 0.1) return '#f0fdf4';
+                if (pnl_pct > -3) return '#fff1f2';
+                return '#fecaca';
+            }],
+            plotOptions: {
+                treemap: {
+                    distributed: true,
+                    enableShades: false
+                }
+            },
             dataLabels: {
                 enabled: true,
                 style: {
-                    fontSize: '10px',
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontWeight: 700,
-                    colors: ['#111827']
+                    colors: ['#000'],
+                    fontSize: '12px',
+                    fontFamily: 'JetBrains Mono'
                 },
-                formatter: function(val) {
-                    return val.toFixed(1) + '%';
+                formatter: function(text, op) {
+                    return [text, op.value.toFixed(2)];
                 }
-            },
-            legend: {
-                show: true,
-                position: 'bottom',
-                fontSize: '9px',
-                fontFamily: "'JetBrains Mono', monospace",
-                labels: { colors: '#6b7280' }
-            },
-            plotOptions: {
-                pie: {
-                    donut: {
-                        size: '65%',
-                        labels: {
-                            show: true,
-                            name: { fontSize: '11px', color: '#111827' },
-                            value: {
-                                fontSize: '15px',
-                                color: '#111827',
-                                fontWeight: '700',
-                                formatter: function(val) {
-                                    return '£' + parseFloat(val).toFixed(2);
-                                }
-                            },
-                            total: {
-                                show: true,
-                                label: 'POT',
-                                fontSize: '10px',
-                                fontWeight: '700',
-                                color: '#111827',
-                                formatter: function() {
-                                    return '£' + totalPotValue.toFixed(2);
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            stroke: { show: true, width: 1, colors: ['#f9fafb'] },
-            tooltip: { theme: 'light' }
+            }
         };
-        
-        new ApexCharts(document.querySelector("#sentinel-donut"), sentinelDonutOptions).render();
-        
-        // ============================================
-        // EQUITY CURVE
-        // ============================================
-        const historyData = sentinelLedger.history.map(h => ({
-            x: h.date,
-            y: h.pot_value
-        }));
-        
-        const equityCurveOptions = {
-            series: [{ name: 'Pot Value', data: historyData }],
+        new ApexCharts(document.querySelector("#performance-heatmap"), heatmapOptions).render();
+
+        // 2. GROWTH CURVE
+        const curveOptions = {
+            series: [{
+                name: 'Equity',
+                data: [1000, 1020, 1015, 1040, 1050, 1045, 1060] // Placeholder
+            }],
             chart: {
+                height: 250,
                 type: 'area',
-                height: 350,
-                background: 'transparent',
-                foreColor: '#111827',
-                fontFamily: "'JetBrains Mono', monospace",
                 toolbar: { show: false }
             },
-            theme: { mode: 'light' },
-            stroke: { curve: 'smooth', width: 2, colors: ['#fff7ed'] },
+            colors: ['#000'],
             fill: {
                 type: 'gradient',
                 gradient: {
                     shadeIntensity: 1,
-                    opacityFrom: 0.3,
+                    opacityFrom: 0.1,
                     opacityTo: 0.05,
-                    colorStops: [
-                        { offset: 0, color: '#fff7ed', opacity: 0.3 },
-                        { offset: 100, color: '#fff7ed', opacity: 0.05 }
-                    ]
+                }
+            },
+            dataLabels: { enabled: false },
+            stroke: { curve: 'straight', width: 2 },
+            xaxis: { labels: { show: false } },
+            yaxis: {
+                labels: {
+                    style: { fontFamily: 'JetBrains Mono' },
+                    formatter: (val) => '£' + val
+                }
+            }
+        };
+        new ApexCharts(document.querySelector("#equity-curve"), curveOptions).render();
+
+        // 3. ASSET DONUT
+        const assetOptions = {
+            series: [65, 15, 10, 5, 5],
+            chart: { height: 350, type: 'donut' },
+            labels: ['Tech', 'Energy', 'Finance', 'Health', 'Cash'],
+            colors: ['#000', '#333', '#666', '#999', '#ccc'],
+            legend: { position: 'bottom', fontFamily: 'JetBrains Mono' },
+            dataLabels: { enabled: false }
+        };
+        new ApexCharts(document.querySelector("#asset-donut"), assetOptions).render();
+
+        // 4. SECTOR BARS
+        const sectorOptions = {
+            series: [{
+                name: 'Net Exposure',
+                data: [15, -5, 10, -12, 8]
+            }],
+            chart: { height: 350, type: 'bar', toolbar: { show: false } },
+            plotOptions: {
+                bar: {
+                    colors: {
+                        ranges: [{ from: -100, to: 0, color: '#fecaca' }, { from: 1, to: 100, color: '#bbf7d0' }]
+                    }
                 }
             },
             xaxis: {
-                type: 'datetime',
-                labels: { style: { colors: '#6b7280', fontSize: '9px' } }
+                categories: ['Tech', 'Energy', 'Finance', 'Health', 'Retail'],
+                labels: { style: { fontFamily: 'JetBrains Mono' } }
             },
-            yaxis: {
-                labels: {
-                    style: { colors: '#6b7280', fontSize: '9px' },
-                    formatter: function(val) { return '£' + val.toFixed(0); }
-                }
-            },
-            grid: { show: true, borderColor: '#e5e7eb' },
-            tooltip: {
-                theme: 'light',
-                y: { formatter: function(val) { return '£' + val.toFixed(2); } }
-            }
+            yaxis: { labels: { style: { fontFamily: 'JetBrains Mono' } } }
         };
-        
-        new ApexCharts(document.querySelector("#equity-curve"), equityCurveOptions).render();
-        
-        // ============================================
-        // 02 / MOMENTUM - GHOST-GLOW HEATMAP
-        // ============================================
-        const heatmapData = {{ heatmap_data|safe }};
-        
-        const heatmapOptions = {
-            series: [{
-                data: heatmapData.map(item => ({
-                    x: item.ticker,
-                    y: item.y,
-                    fillColor: item.color
-                }))
-            }],
-            chart: {
-                type: 'treemap',
-                height: 600, // BRUTE-FORCE ANTI-SLIVER
-                background: 'transparent',
-                foreColor: '#111827',
-                toolbar: { show: false },
-                fontFamily: "'JetBrains Mono', monospace"
-            },
-            theme: { mode: 'light' },
-            plotOptions: {
-                treemap: {
-                    distributed: false,
-                    enableShades: false,
-                    useFillColorAsStroke: false,
-                    colorScale: {
-                        ranges: [
-                            { from: 3.0, to: 100, color: '#bbf7d0' },       // Soft Mint Pastel
-                            { from: 0.1, to: 2.99, color: '#f0fdf4' },      // Visible Mint Tint
-                            { from: -2.99, to: -0.1, color: '#fff1f2' },    // Visible Rose Tint
-                            { from: -100, to: -3.0, color: '#fecaca' }      // Soft Rose Pastel
-                        ]
-                    }
-                }
-            },
-            dataLabels: {
-                enabled: true,
-                style: {
-                    fontSize: '13px',
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontWeight: 700,
-                    colors: ['#111827']
-                },
-                formatter: function(text, op) {
-                    const item = heatmapData[op.dataPointIndex];
-                    return [text, item.pnl_percent.toFixed(2) + '%'];
-                }
-            },
-            stroke: { show: true, width: 5, colors: ['#f9fafb'] },  // MASSIVE LABORATORY DIVIDERS
-            legend: { show: false },
-            tooltip: {
-                theme: 'light',
-                custom: function({ dataPointIndex }) {
-                    const item = heatmapData[dataPointIndex];
-                    const pos = {{ positions|tojson|safe }}[dataPointIndex] || {};
-                    
-                    return `
-                        <div style="padding: 14px; background: #ffffff; border: 1px solid #111827; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                            <div style="font-weight: 700; margin-bottom: 8px; color: #111827; font-size: 11px; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px;">
-                                ${pos.ticker || item.ticker} - ${pos.name || 'N/A'}
-                            </div>
-                            <div style="font-size: 10px; color: #374151; line-height: 1.7;">
-                                <div><strong>Value:</strong> £${(pos.normalized_value || item.y).toFixed(2)}</div>
-                                <div><strong>P/L:</strong> £${item.pnl.toFixed(2)} (${item.pnl_percent.toFixed(2)}%)</div>
-                                <div><strong>VWAP Dist:</strong> ${(pos.vwap_distance_percent || 0).toFixed(2)}%</div>
-                                <div><strong>Job:</strong> ${pos.job_assignment || 'N/A'}</div>
-                                <div><strong>ROIC:</strong> ${(pos.roic_wacc_spread || 0).toFixed(1)}%</div>
-                                <div><strong>Hold:</strong> ${pos.hold_time_days || 0} days</div>
-                            </div>
-                        </div>
-                    `;
-                }
-            }
-        };
-        
-        new ApexCharts(document.querySelector("#performance-heatmap"), heatmapOptions).render();
-        
-        // ============================================
-        // 03 / MACRO - ASSET MIX
-        // ============================================
-        const sectors = {{ sectors|tojson|safe }};
-        const sectorNames = Object.keys(sectors);
-        const sectorValues = sectorNames.map(s => sectors[s].percent);
-        
-        const donutOptions = {
-            series: sectorValues,
-            labels: sectorNames,
-            chart: {
-                type: 'donut',
-                height: 350,
-                background: 'transparent',
-                foreColor: '#111827',
-                fontFamily: "'JetBrains Mono', monospace"
-            },
-            theme: { mode: 'light' },
-            colors: ['#fff7ed', '#f0fdf4', '#fff1f2', '#eff6ff', '#f5f3ff', '#fef2f2', '#fafafa'],
-            dataLabels: {
-                enabled: true,
-                style: {
-                    fontSize: '10px',
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontWeight: 700,
-                    colors: ['#111827']
-                }
-            },
-            legend: {
-                show: true,
-                position: 'bottom',
-                fontSize: '9px',
-                fontFamily: "'JetBrains Mono', monospace",
-                labels: { colors: '#6b7280' }
-            },
-            plotOptions: {
-                pie: {
-                    donut: {
-                        size: '65%',
-                        labels: {
-                            show: true,
-                            name: { fontSize: '11px', color: '#111827' },
-                            value: {
-                                fontSize: '15px',
-                                color: '#111827',
-                                formatter: function(val) { return val.toFixed(1) + '%'; }
-                            },
-                            total: {
-                                show: true,
-                                label: 'WEALTH',
-                                fontSize: '10px',
-                                color: '#6b7280',
-                                formatter: function() {
-                                    return '£{{ "%.0f"|format(total_wealth) }}';
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            stroke: { show: true, width: 1, colors: ['#f9fafb'] },
-            tooltip: { theme: 'light' }
-        };
-        
-        new ApexCharts(document.querySelector("#asset-donut"), donutOptions).render();
-    </script>
-    <script>
-        // SNIPER COMMAND - Trade Execution
-        function executeSniperTrade(ticker, targetPrice) {
-            // Confirmation dialog
-            const confirmed = confirm(
-                `🎯 SNIPER COMMAND\n\n` +
-                `Ticker: ${ticker}\n` +
-                `Target Entry: $${targetPrice}\n\n` +
-                `Execute limit buy order?`
-            );
+        new ApexCharts(document.querySelector("#sector-bar-chart"), sectorOptions).render();
+
+        // MANUAL HUB FUNCTIONS
+        function executeSearch() {
+            const query = document.getElementById('instrument-search').value;
+            if (!query) return;
             
-            if (confirmed) {
-                console.log(`[SNIPER] Executing BUY order: ${ticker} @ $${targetPrice}`);
-                
-                // TODO: Replace with actual Trading 212 API call
-                // fetch('/api/execute_trade', {
-                //     method: 'POST',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify({ ticker, price: targetPrice, action: 'BUY' })
-                // })
-                
-                alert(`✅ ORDER QUEUED\n\nBUY ${ticker} @ $${targetPrice}\n\nPending API integration...`);
-            }
+            showToast("Searching Global Map...");
+            
+            fetch(`/api/instruments?q=${query}`)
+                .then(r => r.json())
+                .then(data => {
+                    const container = document.getElementById('search-results');
+                    container.innerHTML = '<h4>FOUND ' + data.count + ' MATCHES</h4>';
+                    
+                    const table = document.createElement('table');
+                    table.className = 'sniper-table';
+                    table.style.marginTop = '10px';
+                    table.innerHTML = '<thead><tr><th>TICKER</th><th>NAME</th><th>ACTION</th></tr></thead>';
+                    
+                    const tbody = document.createElement('tbody');
+                    data.instruments.forEach(inst => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${inst.ticker}</td>
+                            <td>${inst.company}</td>
+                            <td><button class="btn btn-outline" onclick="triggerResearch('${inst.ticker}', '${inst.company}')">RESEARCH</button></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                    table.appendChild(tbody);
+                    container.appendChild(table);
+                });
         }
-        
-        // Smooth scroll offset for sticky header
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    const offset = 80; // Header height + padding
-                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
-                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+
+        function triggerResearch(ticker, companyName = '') {
+            const output = document.getElementById('research-output');
+            output.innerHTML = '<div style="position:relative; height:100px;"><div class="spinner"></div><div style="text-align:center; padding-top:60px;">ENGAGING STEP-LOCK PROTOCOL...</div></div>';
+            
+            showToast("Locking Plan: " + ticker);
+            
+            fetch('/api/research', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ticker: ticker, company: companyName })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    output.innerHTML = data.dossier;
+                    showToast("Research Complete");
+                } else {
+                    output.innerHTML = '<div style="color:#dc2626;">🛑 RESEARCH ABORTED: ' + data.message + '</div>';
+                    showToast("ABORTED");
                 }
+            })
+            .catch(err => {
+                output.innerHTML = '<div style="color:#dc2626;">❌ SYSTEM ERROR</div>';
+                showToast("ERROR");
             });
-        });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('feedback-toast');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
     </script>
 </body>
 </html>

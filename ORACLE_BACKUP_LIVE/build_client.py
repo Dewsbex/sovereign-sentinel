@@ -9,8 +9,8 @@ class Trading212Client:
         self.base_url = "https://live.trading212.com/api/v0"
         
         # 2. PERSISTENT TELEGRAM CONFIG
-        self.bot_token = os.getenv('TELEGRAM_TOKEN', "8585563319:AAH0wx3peZycxqG1KC9q7FMuSwBw2ps1TGA")
-        self.chat_id = os.getenv('TELEGRAM_CHAT_ID', "7675773887")
+        self.bot_token = "8585563319:AAH0wx3peZycxqG1KC9q7FMuSwBw2ps1TGA"
+        self.chat_id = "7675773887"
 
         if self.api_key and self.api_secret:
             creds = f"{self.api_key}:{self.api_secret}"
@@ -32,25 +32,9 @@ class Trading212Client:
             return {"status": "FAILED", "error": f"HTTP {response.status_code}"}
 
     def get_account_summary(self):
-        """Used for Header Metrics (Cash specific)"""
+        """Used for Header Metrics"""
         res = requests.get(f"{self.base_url}/equity/account/cash", headers=self.headers)
         return self._handle_response(res)
-
-    def get_account_info(self):
-        """Returns full account summary including investments"""
-        res = requests.get(f"{self.base_url}/equity/account/summary", headers=self.headers)
-        return self._handle_response(res)
-
-    def get_positions(self):
-        """Fetches all open positions"""
-        res = requests.get(f"{self.base_url}/equity/portfolio", headers=self.headers)
-        if hasattr(res, 'status_code') and res.status_code == 404:
-             # Try alternate endpoint if portfolio fails (some versions use positions)
-             res = requests.get(f"{self.base_url}/equity/positions", headers=self.headers)
-        return self._handle_response(res)
-
-    # Alias for compatibility with other scripts
-    get_open_positions = get_positions
 
     def get_open_orders(self):
         """Fetches all pending orders"""
@@ -62,45 +46,12 @@ class Trading212Client:
         res = requests.delete(f"{self.base_url}/equity/orders/{order_id}", headers=self.headers)
         return self._handle_response(res)
 
-    def get_instrument_metadata(self, ticker):
-        """Fetches metadata for a specific instrument"""
-        # Note: API doesn't have a single-ticker metadata endpoint in v0, 
-        # usually we traverse the list, but for specific check:
-        # We can implement a filter loop or return None if not easily available.
-        # However, looking at test_trading212.py, it expects this.
-        # Efficient way: Use /equity/metadata/instruments and filter locally (heavy)
-        # Or just mocking/skipping.
-        # Let's implement a 'light' version or fetch all (cache in future)
-        # For now, simplistic implementation:
-        try:
-            res = requests.get(f"{self.base_url}/equity/metadata/instruments", headers=self.headers)
-            data = self._handle_response(res)
-            if isinstance(data, list):
-                for item in data:
-                    if item.get('ticker') == ticker:
-                        return item
-            return {}
-        except:
-            return {}
-
-    def calculate_max_buy(self, ticker, cash, price):
-        """Helper to calculate max shares affordable"""
-        if price <= 0: return 0
-        return int(cash / price)
-
-    def place_limit_order(self, ticker, quantity, limit_price, side='BUY'):
+    def place_limit_order(self, ticker, quantity, limit_price):
         """CRITICAL: Job C Execution Method"""
         url = f"{self.base_url}/equity/orders/limit"
-        
-        # Adjust quantity sign based on side if needed, or rely on caller
-        # API requires negative quantity for SELL
-        qty = float(quantity)
-        if side.upper() == 'SELL' and qty > 0:
-            qty = -qty
-            
         payload = {
             "ticker": f"{ticker}_US_EQ",
-            "quantity": qty,
+            "quantity": float(quantity),
             "limitPrice": float(limit_price),
             "timeValidity": "GOOD_TILL_CANCEL"
         }

@@ -6,9 +6,55 @@ Fetches order history from Trading212 API and updates eod_balance.json
 
 import json
 import os
+import sys
 import requests
 from datetime import datetime, timedelta
 from typing import Dict, List, Any
+
+
+# ========================================================================
+# v1.9.4 PERSISTENCE LOCK: Protect the Holy Ledger
+# ========================================================================
+def verify_persistence_lock():
+    """
+    Ensures the persistent data volume is mounted before writing Holy Ledger.
+    
+    CRITICAL: eod_balance.json contains historical profit data.
+    If written to an unmounted volume, it will be lost on next git sync.
+    """
+    data_dir = 'data'
+    
+    if not os.path.exists(data_dir):
+        print(f"\n{'='*70}")
+        print(f"❌ PERSISTENCE LOCK FAILURE")
+        print(f"{'='*70}")
+        print(f"⛔ The '{data_dir}' directory does not exist.")
+        print(f"   Cannot sync Holy Ledger (eod_balance.json)")
+        print(f"\nTo fix:")
+        print(f"  1. Mount the Oracle VPS persistent volume")
+        print(f"  2. Verify mount point: 'df -h | grep {data_dir}'")
+        print(f"{'='*70}\n")
+        sys.exit(1)
+    
+    # Check if writable
+    test_file = os.path.join(data_dir, '.persistence_test')
+    try:
+        with open(test_file, 'w') as f:
+            f.write('OK')
+        os.remove(test_file)
+    except Exception as e:
+        print(f"\n{'='*70}")
+        print(f"❌ PERSISTENCE LOCK FAILURE")
+        print(f"{'='*70}")
+        print(f"⛔ The '{data_dir}' directory exists but is NOT writable.")
+        print(f"   Error: {e}")
+        print(f"   Cannot sync Holy Ledger (eod_balance.json)")
+        print(f"{'='*70}\n")
+        sys.exit(1)
+
+# Run persistence lock BEFORE any class definitions
+verify_persistence_lock()
+print(f"✅ Persistence lock verified for Holy Ledger sync")
 
 
 class T212LedgerSync:

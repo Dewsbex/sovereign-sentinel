@@ -40,21 +40,11 @@ class ORBShield:
     def get_current_equity(self) -> float:
         """
         Fetch current account equity from Trading 212.
-        Equity = Cash + Positions Value + P/L
+        Uses /api/v0/equity/account/summary endpoint.
         """
         try:
-            positions = self.client.get_positions()
-            
-            # Calculate total position value
-            total_value = sum(
-                pos['quantity'] * pos['currentPrice'] 
-                for pos in positions
-            )
-            
-            # TODO: Fetch actual cash balance from account endpoint
-            # For now using positions value as proxy
-            return total_value
-            
+            account = self.client.get_account_info()
+            return float(account.get('totalValue', 0.0))
         except Exception as e:
             print(f"❌ Failed to fetch equity: {e}")
             return 0.0
@@ -62,7 +52,6 @@ class ORBShield:
     def record_baseline(self):
         """
         Record initial equity at 14:29 UTC (1 minute before ORB window).
-        This is the reference point for session loss calculation.
         """
         current_time = datetime.now(timezone.utc)
         hour, minute = current_time.hour, current_time.minute
@@ -73,13 +62,13 @@ class ORBShield:
             print(f"📊 Baseline recorded at 14:29 UTC: £{self.initial_equity:,.2f}")
             
             # Write to file for persistence across restarts
+            os.makedirs('data', exist_ok=True)
             with open('data/shield_baseline.txt', 'w') as f:
                 f.write(f"{self.initial_equity}\n{current_time.isoformat()}")
     
     def load_baseline(self) -> bool:
         """
         Load baseline from file if shield was restarted mid-session.
-        Returns True if baseline loaded successfully.
         """
         try:
             if os.path.exists('data/shield_baseline.txt'):
@@ -101,32 +90,46 @@ class ORBShield:
     def check_session_loss(self) -> bool:
         """
         Calculate current session loss and trigger kill protocol if >£1,000.
-        
-        Returns True if circuit breaker triggered.
         """
         if not self.baseline_recorded or self.initial_equity is None:
             return False
         
         current_equity = self.get_current_equity()
+        if current_equity == 0: return False # Skip on transient errors
+        
         session_pnl = current_equity - self.initial_equity
         
         print(f"⚡ Shield Check: Session P/L = £{session_pnl:+,.2f} | Equity: £{current_equity:,.2f}")
         
         if session_pnl <= -self.max_session_loss:
-            print(f"🚨 CIRCUIT BREAKER TRIGGERED: Session loss £{abs(session_pnl):,.2f} >= £{self.max_session_loss}")
-            self.execute_kill_protocol()
+            session_loss = abs(session_pnl)
+            print(f"🚨 CIRCUIT BREAKER TRIGGERED: Session loss £{session_loss:,.2f} >= £{self.max_session_loss}")
+            self.execute_kill_protocol(session_loss, current_equity)
             return True
         
         return False
     
-    def execute_kill_protocol(self):
+    def execute_kill_protocol(self, session_loss: float, current_equity: float):
         """
-        Emergency shutdown sequence:
-        1. SIGTERM to main_bot.py
-        2. Wait 1 second
-        3. Close all positions via Trading 212 API
+        Emergency shutdown sequence.
         """
-        print("🛑 Executing Kill Protocol...")
+        print(f"💥 Session Loss: £{session_loss:.2f} (exceeds £{self.max_session_loss} threshold)")
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        print("🚨 EXECUTING KILL PROTOCOL")
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        
+        # STEP 1: Write atomic kill flag (v1.9.4 - prevents main_bot race condition)
+        try:
+            os.makedirs('data', exist_ok=True)
+            with open('data/emergency.lock', 'w') as f:
+                f.write(f"CIRCUIT_BREAKER_TRIGGERED\n")
+                f.write(f"Timestamp: {datetime.now(timezone.utc).isoformat()}Z\n")
+                f.write(f"Session Loss: £{session_loss:.2f}\n")
+                f.write(f"Initial Equity: £{self.initial_equity:.2f}\n")
+                f.write(f"Current Equity: £{current_equity:.2f}\n")
+            print("   ✅ Atomic kill flag written: data/emergency.lock")
+        except Exception as e:
+            print(f"   ⚠️  Failed to write emergency.lock: {e}")
         
         # Step 1: Send SIGTERM to bot
         if self.bot_pid:

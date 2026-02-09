@@ -13,6 +13,7 @@ Routes:
 
 import json
 import os
+import sys
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime, timezone
 from auditor import TradingAuditor
@@ -22,6 +23,55 @@ from data_mapper import (
     get_inverted_color
 )
 from trading212_client import Trading212Client
+
+# ========================================================================
+# v1.9.4 PERSISTENCE LOCK: Verify /data volume is mounted and writable
+# ========================================================================
+def verify_persistence_lock():
+    """
+    Ensures the persistent data volume is mounted before Flask boots.
+    
+    On Oracle VPS, the /data directory MUST be a mounted volume.
+    If it's missing or read-only, Flask will refuse to start.
+    """
+    data_dir = 'data'
+    
+    # Check if directory exists
+    if not os.path.exists(data_dir):
+        print(f"\n{'='*70}")
+        print(f"❌ PERSISTENCE LOCK FAILURE")
+        print(f"{'='*70}")
+        print(f"⛔ The '{data_dir}' directory does not exist.")
+        print(f"   On Oracle VPS, this should be a mounted volume.")
+        print(f"\nTo fix:")
+        print(f"  1. Mount the Oracle VPS persistent volume")
+        print(f"  2. Verify mount point: 'df -h | grep {data_dir}'")
+        print(f"  3. Ensure write permissions: 'ls -ld {data_dir}'")
+        print(f"{'='*70}\n")
+        sys.exit(1)
+    
+    # Check if writable
+    test_file = os.path.join(data_dir, '.persistence_test')
+    try:
+        with open(test_file, 'w') as f:
+            f.write('OK')
+        os.remove(test_file)
+        print(f"✅ Persistence lock verified: {data_dir}/ is writable")
+    except Exception as e:
+        print(f"\n{'='*70}")
+        print(f"❌ PERSISTENCE LOCK FAILURE")
+        print(f"{'='*70}")
+        print(f"⛔ The '{data_dir}' directory exists but is NOT writable.")
+        print(f"   Error: {e}")
+        print(f"\nTo fix:")
+        print(f"  1. Check mount point: 'mount | grep {data_dir}'")
+        print(f"  2. Fix permissions: 'sudo chmod 755 {data_dir}'")
+        print(f"  3. Verify ownership: 'sudo chown $USER:$USER {data_dir}'")
+        print(f"{'='*70}\n")
+        sys.exit(1)
+
+# Run persistence lock BEFORE init
+verify_persistence_lock()
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -175,6 +225,62 @@ def search_instruments():
         'count': len(instruments),
         'instruments': instruments[:50]  # Limit to 50 results
     })
+
+
+@app.route('/api/research', methods=['POST'])
+def research_company():
+    """
+    Forensic Research Endpoint (Job A)
+    
+    Expected payload:
+    {
+        "ticker": "BXP",
+        "company": "Boston Properties"
+    }
+    """
+    from strategic_moat import MoatAnalyzer
+    
+    try:
+        data = request.json
+        ticker = data.get('ticker')
+        company_name = data.get('company', '')
+        
+        if not ticker:
+            return jsonify({
+                'success': False,
+                'message': 'Missing required field: ticker'
+            }), 400
+            
+        analyzer = MoatAnalyzer()
+        
+        # Step-Lock & Forensic Analysis
+        # This will raise RuntimeError if Step-Lock or Ticker Guard fails
+        dossier = analyzer.generate_moat_dossier(ticker, company_name)
+        
+        # Send to Telegram
+        analyzer.send_to_telegram(dossier, ticker)
+        
+        return jsonify({
+            'success': True,
+            'message': f'Research complete for {ticker}. Dossier sent to Telegram.',
+            'dossier': dossier
+        })
+        
+    except RuntimeError as e:
+        # Step-Lock or Forensic guard failure
+        print(f"🛑 RESEARCH ABORTED: {e}")
+        return jsonify({
+            'success': False,
+            'message': str(e),
+            'status': 'ABORTED'
+        }), 403
+    except Exception as e:
+        print(f"❌ Research error: {e}")
+        return jsonify({
+            'success': False,
+            'message': f'Research failed: {str(e)}'
+        }), 500
+
 
 
 def log_trade_execution(ticker: str, quantity: float, price: float, side: str, order_response: dict):

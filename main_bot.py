@@ -251,13 +251,24 @@ class JobCScalper:
         sys.exit(0)
     
     def load_instruments_db(self) -> Dict:
-        """Load instruments.json for ticker validation"""
+        """
+        Load master_universe.json for Job C ticker validation.
+        
+        v1.9.4 DUAL-LEDGER ENFORCEMENT:
+        - Job C (autonomous trading) uses master_universe.json (139 vetted Tier 1)
+        - Manual Hub + Job A use instruments.json (full 12,000+ from T212 API)
+        """
         try:
-            with open('data/instruments.json', 'r') as f:
+            # Job C MUST use master_universe.json to prevent:
+            # 1. API 429 rate limits from scanning 12K+ tickers
+            # 2. Ticker hallucinations (Viatris vs. Vital Farms)
+            with open('data/master_universe.json', 'r') as f:
                 return json.load(f)
         except FileNotFoundError:
-            print("⚠️  data/instruments.json not found. Run build_universe.py first.")
-            return {'instruments': []}
+            print("❌ CRITICAL: data/master_universe.json not found")
+            print("   Run: python build_universe.py")
+            print("   Job C requires the vetted Tier 1 ticker list")
+            sys.exit(1)
     
     def validate_ticker(self, ticker: str, instruments_db: Dict) -> bool:
         """Validate ticker exists in instruments database"""
@@ -270,7 +281,32 @@ class JobCScalper:
         return True
     
     def execute_trade(self, ticker: str, quantity: int, limit_price: float) -> bool:
-        """Execute limit order via Trading 212"""
+        """
+        Execute limit order via Trading 212
+        
+        v1.9.4: ATOMIC KILL FLAG CHECK before EVERY API call
+        """
+        # ========================================================================
+        # CRITICAL: Check for emergency.lock BEFORE every trade
+        # ========================================================================
+        # The circuit breaker may trigger DURING an active session.
+        # Checking only at startup is insufficient - we must check before
+        # EVERY order submission to ensure the kill protocol is truly atomic.
+        # ========================================================================
+        if os.path.exists('data/emergency.lock'):
+            print(f"\n{'='*70}")
+            print(f"🚨 EMERGENCY LOCK DETECTED (Pre-Trade Check)")
+            print(f"{'='*70}")
+            print(f"⛔ Circuit breaker triggered - aborting trade execution")
+            print(f"   Ticker: {ticker}")
+            print(f"   Planned order: {quantity} @ ${limit_price:.2f}")
+            print(f"\n📄 Lock file contents:")
+            with open('data/emergency.lock', 'r') as f:
+                print(f.read())
+            print(f"{'='*70}\n")
+            # Raise exception to halt trading loop
+            raise RuntimeError("EMERGENCY_LOCK_ACTIVE: Trading halted by circuit breaker")
+        
         if self.dry_run:
             print(f"   🧪 [DRY RUN] Would place order: {ticker} {quantity} @ ${limit_price:.2f}")
             return True
@@ -424,6 +460,21 @@ class JobCScalper:
     
     def run(self):
         """Main execution loop"""
+        # v1.9.4: Check for atomic kill flag BEFORE processing any tickers
+        if os.path.exists('data/emergency.lock'):
+            print(f"\n{'='*70}")
+            print(f"🚨 EMERGENCY LOCK DETECTED")
+            print(f"{'='*70}")
+            print(f"⛔ Circuit breaker has been triggered by orb_shield.py")
+            print(f"   Kill flag: data/emergency.lock")
+            print(f"\n📄 Lock file contents:")
+            with open('data/emergency.lock', 'r') as f:
+                print(f.read())
+            print(f"\n{'='*70}")
+            print(f"❌ ABORTING: Bot cannot execute trades while emergency lock is active")
+            print(f"{'='*70}\n")
+            sys.exit(1)
+        
         # Load instruments database
         instruments_db = self.load_instruments_db()
         

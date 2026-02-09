@@ -1,8 +1,19 @@
 name: Wealth Seeker v0.01 - Autonomous Trading Pipeline
 
 on:
-  schedule:
-    - cron: '25 14 * * 1-5'
+  # ========================================================================
+  # v1.9.4 SPLIT-BRAIN PREVENTION: GitHub Actions cron DISABLED
+  # ========================================================================
+  # CRITICAL: Oracle VPS is the PRIMARY deployment target.
+  #           If this cron runs while VPS cron is active at 14:25 UTC,
+  #           both systems will attempt to trade simultaneously.
+  #           This causes API conflicts and double-executions.
+  #
+  # ENFORCEMENT: Cron is COMMENTED OUT for VPS deployment.
+  #              Use workflow_dispatch for manual testing only.
+  # ========================================================================
+  # schedule:
+  #   - cron: '25 14 * * 1-5'  # DISABLED: VPS cron is sole orchestrator
   workflow_dispatch:
 
 env:
