@@ -138,7 +138,12 @@ def live_data():
         return jsonify(response)
         
     except Exception as e:
-        print(f"❌ Error generating live data: {e}")
+        import traceback
+        error_msg = f"❌ Error generating live data: {e}\n{traceback.format_exc()}"
+        print(error_msg)
+        # Log to file
+        with open(os.path.join(os.path.dirname(__file__), "server.log"), "a") as f:
+            f.write(error_msg + "\n")
         # Fallback to file-based data
         if os.path.exists(STATE_FILE):
             with open(STATE_FILE, 'r') as f:

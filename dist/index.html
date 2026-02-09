@@ -3,891 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN TERMINAL v1.1</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
-    <!-- Configuration -->
-    <script src="config.js"></script>
-    
+    <title>SOVEREIGN TERMINAL | PRO</title>
     <style>
-        /* SOVEREIGN TERMINAL v1.1 - ZERO-WASTE HYPER-EFFICIENCY */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html {
-            scroll-behavior: smooth;
-        }
-        
+        /* SOVEREIGN TERMINAL - HYBRID LIGHT THEME */
         :root {
-            /* Light Industrial Palette */
-            --lab-white: #f9fafb;
-            --true-white: #ffffff;
-            --charcoal: #111827;
-            --slate-border: #e5e7eb;
-            --label-dark: #374151;
-            --label-medium: #6b7280;
-            
-            /* Industrial Instrument v1.4.1 - GHOST SOVEREIGN */
-            --industrial-orange: #fff7ed;  /* Ghost Whisper Orange */
-            --visible-mint: #f0fdf4;
-            --visible-rose: #fff1f2;
-            
-            /* WHISPER-GLOW HEATMAP (Visible Tints) */
-            --soft-mint: #bbf7d0;           /* Gain >3% */
-            --visible-mint-tint: #f0fdf4;   /* Gain 0.1-2.9% */
-            --visible-rose-tint: #fff1f2;   /* Loss -0.1 to -2.9% */
-            --soft-rose: #fecaca;           /* Loss <-3% */
-            
-            /* Alert */
-            --alert-amber: #f59e0b;
+            --bg-body: #f5f7f9;
+            --bg-card: #ffffff;
+            --text-primary: #061118;
+            --text-secondary: #6e7c87;
+            --border-color: #e6e9ec;
+            --accent-blue: #00A7E1;
+            --success-green: #34c759;
+            --danger-red: #ff3b30;
         }
-        
+        * { box-sizing: border-box; }
         body {
-            background: var(--lab-white);
-            color: var(--charcoal);
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             font-size: 13px;
             line-height: 1.4;
-            overflow-x: hidden;
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
         }
-        
-        /* UNIFIED COMMAND & CONTROL HEADER */
         .unified-header {
-            position: sticky;
-            top: 0;
-            z-index: 2000;
-            background: rgba(249, 250, 251, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--slate-border);
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
-        
-        .header-metrics {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-        
-        .unified-header .metric {
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            font-weight: 700;
-        }
-        
-        .metric-label {
-            color: var(--label-medium);
-            font-size: 9px;
-            margin-bottom: 2px;
-        }
-        
-        .metric-value {
-            font-size: 13px;
-            color: var(--charcoal);
-        }
-        
-        .metric-value.positive {
-            color: #10b981;
-        }
-        
-        .metric-value.negative {
-            color: #ef4444;
-        }
-        
-        .nav-buttons {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .nav-btn {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--label-medium);
-            text-decoration: none;
-            padding: 6px 12px;
-            border: 1px solid var(--slate-border);
-            background: var(--true-white);
-            transition: all 0.2s ease;
-            text-align: center;
-            white-space: nowrap;
-        }
-        
-        .nav-btn:hover {
-            color: var(--charcoal);
-            border-color: var(--charcoal);
-        }
-        
-        /* RESPONSIVE GRID CONTAINER */
+        .brand-mark { font-weight: 800; font-size: 14px; letter-spacing: -0.3px; color: var(--text-primary); }
+        .brand-mark span { color: var(--accent-blue); }
+        .header-metrics { display: flex; gap: 32px; }
+        .metric { display: flex; flex-direction: column; }
+        .metric-label { font-size: 10px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+        .metric-value { font-size: 15px; font-weight: 700; color: var(--text-primary); font-feature-settings: "tnum"; }
+        .metric-value.positive { color: var(--success-green); }
+        .metric-value.negative { color: var(--danger-red); }
         .responsive-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 0;
+            gap: 16px;
+            padding: 16px;
         }
-        
-        /* SECTION CONTAINERS WITH FLOATING LABELS */
-        .section {
+        .card {
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            min-height: 380px;
             position: relative;
-            background: var(--true-white);
-            border-bottom: 1px solid var(--slate-border);
-            padding: 16px;
-            scroll-margin-top: 70px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
         }
-        
-        /* HARD OVERRIDE - ZERO-WASTE FLOATING LABELS */
-        .chart-container {
-            position: relative !important;
-            background: var(--true-white);
-            border: 1px solid var(--slate-border);
-            padding: 16px;
-            padding-top: 0 !important; /* Kill top padding */
-            min-height: 400px;
-        }
-        
         .section-label {
-            position: absolute !important;
-            top: 8px !important;
-            left: 12px !important;
-            z-index: 100 !important;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 8px;
-            color: #9ca3af; /* Slate Gray */
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            pointer-events: none; /* Don't interfere with mouse-overs */
-            background: transparent;
-            padding: 0;
-            border: none;
+            font-size: 11px; font-weight: 700; color: var(--text-secondary);
+            text-transform: uppercase; letter-spacing: 0.5px;
+            margin-bottom: 16px; display: block;
         }
-        
-        #sentinel-donut,
-        #equity-curve,
-        #performance-heatmap,
-        #asset-donut {
-            min-height: 350px;
+        .sniper-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .sniper-table th { text-align: left; color: var(--text-secondary); padding: 8px 0; font-weight: 600; border-bottom: 1px solid var(--border-color); }
+        .sniper-table td { padding: 12px 0; border-bottom: 1px solid var(--border-color); font-weight: 500; }
+        .ticker-badge { 
+            font-weight: 700; color: var(--text-primary); 
+            background: #f0f2f5; padding: 4px 8px; border-radius: 4px;
         }
-        
-        #performance-heatmap {
-            min-height: 450px;
+        .action-btn {
+            background: var(--accent-blue); color: white; border: none;
+            padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 11px;
+            cursor: pointer; transition: all 0.2;
         }
-        
-        /* MACRO POWER-GRID */
-        .sector-bar-chart {
-            margin-top: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .sector-bar-row {
-            display: grid;
-            grid-template-columns: 100px 1fr 70px;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .sector-name {
-            text-transform: uppercase;
-            font-size: 10px;
-            letter-spacing: 0.05em;
-            color: var(--label-dark);
-        }
-        
-        .bar-container {
-            position: relative;
-            height: 20px;
-            background: #f3f4f6;
-            border: 1px solid var(--slate-border);
-        }
-        
-        .bar-fill {
-            position: absolute;
-            height: 100%;
-            background: var(--soft-mint);
-            opacity: 0.4;
-            transition: width 0.3s ease;
-        }
-        
-        .bar-target-line {
-            position: absolute;
-            height: 100%;
-            border-left: 2px dotted var(--charcoal);
-        }
-        
-        .bar-status {
-            text-align: right;
-            font-size: 10px;
-            font-weight: 700;
-        }
-        
-        .bar-status.over {
-            color: #ef4444;
-        }
-        
-        .bar-status.under {
-            color: var(--alert-amber);
-        }
-        
-        .bar-status.match {
-            color: #10b981;
-        }
-        
-        /* AI BRIEF */
-        .ai-brief-content {
-            margin-top: 24px;
-            font-family: system-ui, -apple-system, sans-serif;
-            color: var(--label-dark);
-            line-height: 1.6;
-        }
-        
-        /* FOOTER */
-        .footer {
-            background: var(--true-white);
-            border-top: 1px solid var(--slate-border);
-            padding: 16px;
-            text-align: center;
-            color: var(--label-medium);
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-        
-        
-        /* JOB C SNIPER LIST - HIGH DENSITY */
-        .job-c-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 24px;
-            font-size: 9px;
-            font-family: 'JetBrains Mono', monospace;
-        }
-        
-        .job-c-table th {
-            text-align: left;
-            padding: 8px 6px;
-            border-bottom: 1px solid #e5e7eb;
-            font-weight: 700;
-            color: #6b7280;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-size: 8px;
-        }
-        
-        .job-c-table td {
-            padding: 10px 6px;
-            border-bottom: 1px solid #f3f4f6;
-            color: #111827;
-        }
-        
-        .job-c-table tr:hover {
-            background: #fafafa;
-        }
-        
-        .job-c-ticker {
-            font-weight: 700;
-            font-size: 10px;
-            letter-spacing: 0.02em;
-        }
-        
-        .job-c-status {
-            font-size: 8px;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 2px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            display: inline-block;
-        }
-        
-        .job-c-status.watching {
-            background: #ffedd5;
-            color: #ea580c;
-        }
-        
-        .job-c-status.ready {
-            background: #f0fdf4;
-            color: #10b981;
-        }
-        
-        .job-c-status.active {
-            background: #eff6ff;
-            color: #3b82f6;
-        }
-        
-        .job-c-signal {
-            font-size: 8px;
-            color: #6b7280;
-            font-style: italic;
-        }
-        
-        .job-c-metric {
-            font-weight: 600;
-        }
-        
-        .job-c-target {
-            color: #10b981;
-            font-weight: 700;
-        }
-        
-        .job-c-stop {
-            color: #ef4444;
-            font-weight: 700;
-        }
-        
-        .job-c-buy-btn {
-            background: #10b981;
-            color: #ffffff;
-            border: none;
-            padding: 6px 16px;
-            font-size: 9px;
-            font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
-            cursor: pointer;
-            border-radius: 2px;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-        
-        .job-c-buy-btn:hover {
-            background: #059669;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
-        }
-        
-        .job-c-buy-btn:active {
-            transform: translateY(0);
-        }
-        
-        /* MOBILE OPTIMIZATION */
-        @media (max-width: 768px) {
-            .unified-header {
-                gap: 10px;
-                padding: 10px 12px;
-            }
-            
-            .header-metrics {
-                gap: 12px;
-            }
-            
-            .metric-label {
-                font-size: 8px;
-            }
-            
-            .metric-value {
-                font-size: 11px;
-            }
-            
-            .nav-buttons {
-                flex-basis: 100%;
-                justify-content: center;
-            }
-            
-            .nav-btn {
-                flex: 1;
-                font-size: 9px;
-                padding: 8px 6px;
-            }
-            
-            .section-label {
-                font-size: 7px;
-            }
+        .action-btn:hover { background: #008ec0; transform: translateY(-1px); }
+        .apexcharts-tooltip {
+            background: #fff !important;
+            border-color: #e6e9ec !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+            color: #061118 !important;
         }
     </style>
 </head>
 <body>
-    <!-- UNIFIED COMMAND & CONTROL HEADER -->
+
     <header class="unified-header">
+        <div class="brand-mark">SOVEREIGN <span>TERMINAL</span></div>
         <div class="header-metrics">
-            <div class="metric">
-                <div class="metric-label">WEALTH</div>
-                <div class="metric-value" id="header-wealth">£--.--</div>
-            </div>
-            
-            <div class="metric">
-                <div class="metric-label">P/L</div>
-                <div class="metric-value" id="header-pnl">£--.--</div>
-            </div>
-            
-            <div class="metric">
-                <div class="metric-label">PHASE</div>
-                <div class="metric-value" id="header-phase">WAITING...</div>
-            </div>
-            
-            <div class="metric">
-                <div class="metric-label">STATUS</div>
-                <div class="metric-value" id="header-status">LIVE</div>
-            </div>
-        </div>
-        
-        <div class="nav-buttons">
-            <a href="#sentinel" class="nav-btn">SENTINEL</a>
-            <a href="#momentum" class="nav-btn">MOMENTUM</a>
-            <a href="#macro" class="nav-btn">MACRO</a>
-            <a href="#strategic" class="nav-btn">BRIEF</a>
+            <div class="metric"><span class="metric-label">Total Equity</span><span class="metric-value">£--.--</span></div>
+            <div class="metric"><span class="metric-label">Session P/L</span><span class="metric-value">£--.--</span></div>
+            <div class="metric"><span class="metric-label">Market Phase</span><span class="metric-value">LIVE</span></div>
         </div>
     </header>
-    
-    <!-- SENTINEL - THE LABORATORY -->
+
     <div class="responsive-grid">
-        <div id="sentinel" class="section">
-            <div class="chart-container">
-                <div class="section-label">SENTINEL LABORATORY</div>
-                <div id="sentinel-donut"></div>
-            </div>
+        <div class="card">
+            <span class="section-label">Capital Allocation (Seed vs Harvest)</span>
+            <div id="sentinel-donut"></div>
         </div>
-        
-        <div class="section">
-            <div class="chart-container">
-                <div class="section-label">EQUITY CURVE</div>
-                <div id="equity-curve"></div>
-            </div>
+        <div class="card">
+            <span class="section-label">Equity Curve</span>
+            <div id="equity-curve"></div>
         </div>
     </div>
-    
-    <!-- MOMENTUM - GLOBAL HEATMAP -->
-    <div id="momentum" class="section">
-        <div class="chart-container">
-            <div class="section-label">GLOBAL MOMENTUM</div>
+
+    <div class="responsive-grid">
+        <div class="card" style="grid-column: 1 / -1;">
+            <span class="section-label">Global Momentum Heatmap</span>
             <div id="performance-heatmap"></div>
         </div>
     </div>
-    
-    <!-- MACRO - POWER-GRID -->
+
     <div class="responsive-grid">
-        <div id="macro" class="section">
-            <div class="chart-container">
-                <div class="section-label">ASSET MIX</div>
-                <div id="asset-donut"></div>
-            </div>
-        </div>
-        
-        <div class="section">
-            <div class="chart-container">
-                <div class="section-label">SECTOR DELTAS</div>
-                <div id="sector-bars" class="sector-bar-chart">
-                    <!-- Dynamic sector bars will be populated by JS -->
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- STRATEGIC - TACTICAL BRIEF -->
-    <div id="strategic" class="section">
-        <div class="chart-container">
-            <div class="section-label">TACTICAL BRIEF</div>
-            <div id="tactical-brief" class="ai-brief-content">
-                <strong>MARKET PHASE:</strong> <span id="brief-phase">LOADING...</span><br><br>
-                <strong>TACTICAL ASSESSMENT:</strong><br>
-                <span id="brief-assessment">Connecting to data feed...</span>
-            </div>
-        </div>
-    </div>
-    
-    <!-- JOB C SNIPER COMMAND - TACTICAL EXECUTION -->
-    <div id="job-c-targets" class="section">
-        <div class="chart-container">
-            <div class="section-label">JOB C SNIPER COMMAND</div>
-            <table class="job-c-table">
-                <thead>
+        <div class="card">
+            <span class="section-label">Sniper Command</span>
+            <table class="sniper-table">
+                <thead><tr><th>INSTRUMENT</th><th>SIGNAL</th><th>TARGET</th><th>ACTION</th></tr></thead>
+                <tbody>
                     <tr>
-                        <th>TICKER</th>
-                        <th>STATUS</th>
-                        <th>ORB HIGH</th>
-                        <th>TARGET ENTRY</th>
-                        <th>STOP LOSS</th>
-                        <th>RVOL</th>
-                        <th>SIGNAL</th>
-                        <th>ACTION</th>
+                        <td><span class="ticker-badge">NVDA</span></td>
+                        <td style="color: var(--success-green);">BREAKOUT</td>
+                        <td style="font-weight: 700;">$620.94</td>
+                        <td><button class="action-btn" onclick="executeSniperTrade('NVDA', 620.94)">BUY</button></td>
                     </tr>
-                </thead>
-                <tbody id="sniper-table-body">
-                    <!-- Dynamic rows populated by JS -->
                 </tbody>
             </table>
         </div>
+        <div class="card">
+            <span class="section-label">Sector Deltas</span>
+            <div id="asset-donut"></div>
+        </div>
     </div>
-    
-    <!-- FOOTER -->
-    <footer class="footer" id="footer-timestamp">
-        SOVEREIGN TERMINAL v1.1 - PRECISION LOCK // SYSTEM ACTIVE
-    </footer>
-    
-    <!-- ApexCharts -->
+
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    
+
     <script>
-        const SEED_CAP = 1000.00;
-        
-        // ============================================
-        // CHART INITIALIZATION - BRUTE FORCE BLACK TEXT
-        // ============================================
         const commonOptions = {
-            chart: { 
-                background: 'transparent', 
-                foreColor: '#000000',
-                fontFamily: "'JetBrains Mono', monospace", 
-                toolbar: { show: false } 
-            },
-            theme: { 
-                mode: 'light',
-                palette: 'palette1',
-                monochrome: { enabled: false }
-            },
-            dataLabels: { 
-                enabled: false,
-                style: { 
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    color: '#000000',
-                    textAnchor: 'middle'
-                }
-            },
-            tooltip: { theme: 'light' }
+            chart: { background: 'transparent', fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", toolbar: { show: false } },
+            theme: { mode: 'light' },
+            dataLabels: { enabled: false },
+            grid: { borderColor: '#f0f2f5' },
+            colors: ['#00A7E1', '#34c759', '#ff3b30', '#ff9500']
         };
-        
-        // ============================================
-        // 01 / SENTINEL DONUT
-        // ============================================
-        const sentinelDonut = new ApexCharts(document.querySelector("#sentinel-donut"), {
-            ...commonOptions,
-            chart: { ...commonOptions.chart, type: 'donut', height: 350, id: 'sentinel-donut' },
-            series: [SEED_CAP, 0],
-            labels: ['SEED', 'HARVEST'],
-            colors: ['#ffedd5', '#f0fdf4'],
-            plotOptions: {
-                pie: {
-                    donut: {
-                        size: '65%',
-                        labels: {
-                            show: true,
-                            name: { fontSize: '11px', color: '#111827', fontWeight: 700 },
-                            value: {
-                                fontSize: '15px',
-                                color: '#111827',
-                                fontWeight: 700,
-                                formatter: function(val) {
-                                    return '£' + parseFloat(val).toFixed(2);
-                                }
-                            },
-                            total: {
-                                show: true,
-                                label: 'POT',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: '#111827',
-                                formatter: function(w) {
-                                    const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
-                                    return '£' + total.toFixed(2);
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            legend: {
-                show: true,
-                position: 'bottom',
-                fontSize: '9px',
-                fontFamily: "'JetBrains Mono', monospace",
-                labels: { colors: '#6b7280' }
-            },
-            stroke: { show: true, width: 1, colors: ['#f9fafb'] }
+
+        const sentinelChart = new ApexCharts(document.querySelector("#sentinel-donut"), {
+            ...commonOptions, series: [1000, 0], labels: ['SEED CAP', 'PROFIT'], 
+            chart: { type: 'donut', height: 300 },
+            colors: ['#e6e9ec', '#00A7E1'], 
+            plotOptions: { pie: { donut: { size: '70%', labels: { show: true, total: { show: true, label: 'TOTAL', color: '#6e7c87' } } } } }
         });
-        sentinelDonut.render();
-        
-        // ============================================
-        // 02 / EQUITY CURVE
-        // ============================================
-        const equityCurve = new ApexCharts(document.querySelector("#equity-curve"), {
-            ...commonOptions,
-            chart: { ...commonOptions.chart, type: 'area', height: 350, id: 'equity-curve' },
-            series: [{ name: 'Pot Value', data: [] }],
-            stroke: { curve: 'smooth', width: 2, colors: ['#fff7ed'] },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.3,
-                    opacityTo: 0.05,
-                    colorStops: [
-                        { offset: 0, color: '#fff7ed', opacity: 0.3 },
-                        { offset: 100, color: '#fff7ed', opacity: 0.05 }
-                    ]
-                }
-            },
-            xaxis: {
-                type: 'datetime',
-                labels: { style: { colors: '#6b7280', fontSize: '9px' } }
-            },
-            yaxis: {
-                labels: {
-                    style: { colors: '#6b7280', fontSize: '9px' },
-                    formatter: function(val) { return '£' + val.toFixed(0); }
-                }
-            },
-            grid: { show: true, borderColor: '#e5e7eb' }
+        sentinelChart.render();
+
+        const equityChart = new ApexCharts(document.querySelector("#equity-curve"), {
+            ...commonOptions, series: [], chart: { type: 'area', height: 300 },
+            colors: ['#00A7E1'], fill: { type: 'gradient', gradient: { opacityFrom: 0.2, opacityTo: 0.0 } },
+            stroke: { width: 2, curve: 'smooth' }
         });
-        equityCurve.render();
-        
-        // ============================================
-        // 03 / HEATMAP
-        // ============================================
+        equityChart.render();
+
         const heatmapChart = new ApexCharts(document.querySelector("#performance-heatmap"), {
-            ...commonOptions, series: [],
-            chart: { ...commonOptions.chart, type: 'treemap', height: 450, id: 'heatmap' },
-            plotOptions: {
-                treemap: {
-                    distributed: true,
-                    enableShades: false,
-                    colorScale: {
-                        ranges: [
-                            { from: 3.0, to: 100, color: '#bbf7d0' },
-                            { from: 0.1, to: 2.99, color: '#f0fdf4' },
-                            { from: -2.99, to: -0.1, color: '#fff1f2' },
-                            { from: -100, to: -3.0, color: '#fecaca' }
-                        ]
-                    }
-                }
-            },
-            dataLabels: {
-                enabled: true,
-                style: { 
-                    fontSize: '12px', 
-                    fontWeight: 600, 
-                    color: '#000000',
-                    textAnchor: 'middle'
-                },
-                dropShadow: { enabled: false },
-                formatter: (text, op) => [text, op.value.toFixed(2) + '%']
-            },
-            stroke: { show: true, width: 4, colors: ['#ffffff'] }
+            ...commonOptions, series: [], chart: { type: 'treemap', height: 350 },
+            plotOptions: { treemap: { distributed: true, enableShades: false } }
         });
         heatmapChart.render();
-        
-        // ============================================
-        // 04 / ASSET MIX DONUT
-        // ============================================
-        const assetDonut = new ApexCharts(document.querySelector("#asset-donut"), {
-            ...commonOptions,
-            chart: { ...commonOptions.chart, type: 'donut', height: 350, id: 'asset-donut' },
-            series: [100],
-            labels: ['Cash'],
-            colors: ['#fff7ed', '#f0fdf4', '#fff1f2', '#eff6ff', '#f5f3ff', '#fef2f2', '#fafafa'],
-            plotOptions: {
-                pie: {
-                    donut: {
-                        size: '65%',
-                        labels: {
-                            show: true,
-                            name: { fontSize: '11px', color: '#111827' },
-                            value: {
-                                fontSize: '15px',
-                                color: '#111827',
-                                formatter: function(val) { return val.toFixed(1) + '%'; }
-                            },
-                            total: {
-                                show: true,
-                                label: 'WEALTH',
-                                fontSize: '10px',
-                                color: '#6b7280',
-                                formatter: function(w) {
-                                    return '£0.00';
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            legend: {
-                show: true,
-                position: 'bottom',
-                fontSize: '9px',
-                fontFamily: "'JetBrains Mono', monospace",
-                labels: { colors: '#6b7280' }
-            },
-            stroke: { show: true, width: 1, colors: ['#f9fafb'] }
-        });
-        assetDonut.render();
-        
-        // ============================================
-        // UPDATE DASHBOARD LOGIC
-        // ============================================
+
+        const SEED_CAP = 1000.0;
+
         async function updateDashboard() {
             try {
-                const apiUrl = window.SOVEREIGN_CONFIG?.API_BASE_URL || 'http://localhost:5000';
+                // Determine API root
+                const apiUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                    ? 'http://localhost:5000'
+                    : 'https://api.sovereign-sentinel.pages.dev';
+
                 const response = await fetch(`${apiUrl}/api/live_data`);
                 const data = await response.json();
 
-                // 1. HEADER METRICS
-                if (data.total_wealth !== undefined) {
-                    document.getElementById('header-wealth').textContent = '£' + data.total_wealth.toFixed(2);
-                }
-                if (data.session_pnl !== undefined) {
-                    const pnlEl = document.getElementById('header-pnl');
-                    pnlEl.textContent = '£' + data.session_pnl.toFixed(2);
-                    pnlEl.className = data.session_pnl >= 0 ? 'metric-value positive' : 'metric-value negative';
-                }
-                if (data.market_phase) document.getElementById('header-phase').textContent = data.market_phase;
-                if (data.connectivity_status) document.getElementById('header-status').textContent = data.connectivity_status;
+                // 1. DATA MAPPING FIX: Use 'cash' if 'total_wealth' is missing
+                const wealth = data.total_wealth || data.cash || 0;
+                const pnl = data.session_pnl || data.daily_pl || 0;
+                
+                const metrics = document.querySelectorAll('.metric-value');
+                metrics[0].textContent = '£' + wealth.toFixed(2);
+                
+                metrics[1].textContent = '£' + pnl.toFixed(2);
+                metrics[1].className = pnl >= 0 ? 'metric-value positive' : 'metric-value negative';
+                
+                if (data.market_phase) metrics[2].textContent = data.market_phase;
 
-                // 2. SENTINEL DONUT
+                // 2. DONUT UPDATE
                 const profit = data.realized_profit || 0;
-                if (profit >= 0) {
-                    ApexCharts.exec('sentinel-donut', 'updateSeries', [SEED_CAP, profit]);
-                    ApexCharts.exec('sentinel-donut', 'updateOptions', {
-                        labels: [`SEED: £${SEED_CAP.toFixed(2)}`, `HARVEST: £+${profit.toFixed(2)}`],
-                        colors: ['#ffedd5', '#f0fdf4']
-                    });
-                } else {
-                    ApexCharts.exec('sentinel-donut', 'updateSeries', [SEED_CAP + profit]);
-                    ApexCharts.exec('sentinel-donut', 'updateOptions', {
-                        labels: [`EROSION: £${(SEED_CAP + profit).toFixed(2)}`],
-                        colors: ['#fff1f2']
-                    });
-                }
+                const series = profit >= 0 ? [SEED_CAP, profit] : [SEED_CAP + profit];
+                sentinelChart.updateSeries(series);
 
-                // 3. HEATMAP
+                // 3. HEATMAP UPDATE
                 if (data.positions && Array.isArray(data.positions)) {
                     const newSeries = data.positions.map(p => ({
                         x: p.ticker,
-                        y: Math.abs(p.pnl_percent || 0),
-                        pnl_raw: p.pnl || 0,
-                        pnl_pct: p.pnl_percent || 0,
-                        fillColor: (p.pnl_percent >= 3) ? '#bbf7d0' : 
-                                   (p.pnl_percent >= 0.1) ? '#f0fdf4' :
-                                   (p.pnl_percent > -3) ? '#fff1f2' : '#fecaca'
+                        y: p.pnl_percent || 0,
+                        fillColor: (p.pnl_percent >= 0) ? '#34c759' : '#ff3b30'
                     }));
-                    ApexCharts.exec('heatmap', 'updateSeries', [{ data: newSeries }]);
+                    heatmapChart.updateSeries([{ data: newSeries }]);
                 }
 
-                // 4. SECTOR BARS
-                if (data.sectors) {
-                    renderSectorBars(data.sectors, data.sector_targets || {});
-                }
+            } catch (e) { console.error("Link Failure:", e); }
+        }
 
-                // 5. ASSET MIX
-                if (data.sectors) {
-                    const sectorNames = Object.keys(data.sectors);
-                    const sectorValues = sectorNames.map(s => data.sectors[s].percent);
-                    ApexCharts.exec('asset-donut', 'updateSeries', sectorValues);
-                    ApexCharts.exec('asset-donut', 'updateOptions', { labels: sectorNames });
-                }
-
-                // 6. TACTICAL BRIEF
-                if (data.tactical_brief) {
-                    document.getElementById('brief-phase').textContent = data.tactical_brief.phase || 'N/A';
-                    document.getElementById('brief-assessment').innerHTML = data.tactical_brief.assessment || 'No assessment available.';
-                }
-
-                // 7. SNIPER TABLE
-                if (data.job_c_targets) {
-                    renderSniperTable(data.job_c_targets);
-                }
-
-                // 8. FOOTER TIMESTAMP
-                document.getElementById('footer-timestamp').textContent = 
-                    'SOVEREIGN TERMINAL v1.1 - PRECISION LOCK // ' + new Date().toISOString();
-
-            } catch (error) {
-                console.error("Link Failure:", error);
+        function executeSniperTrade(ticker, price) {
+            if(confirm(`EXECUTE ORDER: ${ticker} @ $${price}?`)) {
+                fetch('/api/execute', {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ ticker, price, action: 'BUY' })
+                }).then(r => r.json()).then(d => alert(d.message));
             }
         }
 
-        // ============================================
-        // RENDER SECTOR BARS
-        // ============================================
-        function renderSectorBars(sectors, targets) {
-            const container = document.getElementById('sector-bars');
-            const sectorOrder = ['Technology', 'Industrials', 'Materials', 'Energy', 'Financials', 
-                                 'Consumer Discretionary', 'Healthcare', 'Consumer Staples', 'Utilities', 'Cash'];
-            
-            container.innerHTML = sectorOrder.map(sectorName => {
-                const current = sectors[sectorName]?.percent || 0;
-                const target = targets[sectorName] || 0;
-                const status = Math.abs(current - target) < 0.5 ? 'match' : (current > target ? 'over' : 'under');
-                
-                return `
-                    <div class="sector-bar-row">
-                        <div class="sector-name">${sectorName}</div>
-                        <div class="bar-container">
-                            <div class="bar-fill" style="width: ${current}%;"></div>
-                            <div class="bar-target-line" style="left: ${target}%;"></div>
-                        </div>
-                        <div class="bar-status ${status}">${current.toFixed(1)}%</div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ============================================
-        // RENDER SNIPER TABLE
-        // ============================================
-        function renderSniperTable(targets) {
-            const tbody = document.getElementById('sniper-table-body');
-            tbody.innerHTML = targets.map(t => `
-                <tr>
-                    <td class="job-c-ticker">${t.ticker}</td>
-                    <td><span class="job-c-status ${t.status.toLowerCase()}">${t.status}</span></td>
-                    <td class="job-c-metric">$${t.orb_high.toFixed(2)}</td>
-                    <td class="job-c-metric job-c-target">$${t.target.toFixed(2)}</td>
-                    <td class="job-c-metric job-c-stop">$${t.stop_loss.toFixed(2)}</td>
-                    <td class="job-c-metric">${t.rvol.toFixed(2)}x</td>
-                    <td class="job-c-signal">${t.signal}</td>
-                    <td>
-                        <button class="job-c-buy-btn" onclick="executeSniperTrade('${t.ticker}', ${t.target})">
-                            BUY
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        // ============================================
-        // SNIPER COMMAND - Trade Execution
-        // ============================================
-        function executeSniperTrade(ticker, targetPrice) {
-            const confirmed = confirm(
-                `🎯 SNIPER COMMAND\n\n` +
-                `Ticker: ${ticker}\n` +
-                `Target Entry: $${targetPrice}\n\n` +
-                `Execute limit buy order?`
-            );
-            
-            if (confirmed) {
-                console.log(`[SNIPER] Executing BUY order: ${ticker} @ $${targetPrice}`);
-                alert(`✅ ORDER QUEUED\n\nBUY ${ticker} @ $${targetPrice}\n\nPending API integration...`);
-            }
-        }
-
-        // ============================================
-        // SMOOTH SCROLL
-        // ============================================
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    const offset = 80;
-                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
-                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-                }
-            });
-        });
-
-        // ============================================
-        // START LIVE UPDATES
-        // ============================================
         setInterval(updateDashboard, 2000);
         updateDashboard();
     </script>

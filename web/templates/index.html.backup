@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOVEREIGN TERMINAL v1.1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* SOVEREIGN TERMINAL v1.1 - ZERO-WASTE HYPER-EFFICIENCY */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        :root {
+            --lab-white: #f9fafb;
+            --true-white: #ffffff;
+            --charcoal: #111827;
+            --slate-border: #e5e7eb;
+            --label-dark: #374151;
+            --label-medium: #6b7280;
+            --industrial-orange: #fff7ed;
+            --visible-mint: #f0fdf4;
+            --visible-rose: #fff1f2;
+            --soft-mint: #bbf7d0;
+            --soft-rose: #fecaca;
+            --alert-amber: #f59e0b;
+        }
+        body {
+            background: var(--lab-white);
+            color: var(--charcoal);
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 13px; line-height: 1.4; overflow-x: hidden;
+        }
+        .unified-header {
+            position: sticky; top: 0; z-index: 2000;
+            background: rgba(249, 250, 251, 0.95);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--slate-border);
+            padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+        }
+        .header-metrics { display: flex; gap: 20px; align-items: center; }
+        .metric-label { color: var(--label-medium); font-size: 9px; margin-bottom: 2px; text-transform: uppercase; font-weight: 700; }
+        .metric-value { font-size: 13px; color: var(--charcoal); font-weight: 700; }
+        .metric-value.positive { color: #10b981; }
+        .metric-value.negative { color: #ef4444; }
+        .nav-buttons { display: flex; gap: 8px; }
+        .nav-btn {
+            font-size: 10px; font-weight: 700; color: var(--label-medium); text-decoration: none;
+            padding: 6px 12px; border: 1px solid var(--slate-border); background: var(--true-white);
+            transition: all 0.2s ease; text-transform: uppercase;
+        }
+        .nav-btn:hover { color: var(--charcoal); border-color: var(--charcoal); }
+        .responsive-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 0; }
+        .section { position: relative; background: var(--true-white); border-bottom: 1px solid var(--slate-border); padding: 16px; scroll-margin-top: 70px; }
+        .chart-container { position: relative !important; background: var(--true-white); border: 1px solid var(--slate-border); padding: 16px; min-height: 400px; }
+        .section-label {
+            position: absolute !important; top: 8px !important; left: 12px !important; z-index: 100 !important;
+            font-family: 'JetBrains Mono', monospace; font-size: 8px; color: #9ca3af;
+            font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; pointer-events: none;
+        }
+
+        /* TABLES */
+        .job-c-table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 9px; font-family: 'JetBrains Mono', monospace; }
+        .job-c-table th { text-align: left; padding: 8px 6px; border-bottom: 1px solid #e5e7eb; font-weight: 700; color: #6b7280; text-transform: uppercase; }
+        .job-c-table td { padding: 10px 6px; border-bottom: 1px solid #f3f4f6; color: #111827; }
+        .job-c-status { font-size: 8px; font-weight: 700; padding: 3px 8px; border-radius: 2px; text-transform: uppercase; display: inline-block; }
+        .job-c-status.ready { background: #f0fdf4; color: #10b981; }
+        .job-c-status.active { background: #eff6ff; color: #3b82f6; }
+        .job-c-buy-btn {
+            background: #10b981; color: #ffffff; border: none; padding: 6px 16px;
+            font-size: 9px; font-weight: 700; font-family: 'JetBrains Mono', monospace;
+            cursor: pointer; border-radius: 2px; text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <header class="unified-header">
+        <div class="header-metrics">
+            <div class="metric"><div class="metric-label">WEALTH</div><div class="metric-value" id="val-wealth">£--.--</div></div>
+            <div class="metric"><div class="metric-label">P/L</div><div class="metric-value" id="val-pnl">£--.--</div></div>
+            <div class="metric"><div class="metric-label">PHASE</div><div class="metric-value" id="val-phase">--</div></div>
+            <div class="metric"><div class="metric-label">STATUS</div><div class="metric-value">LIVE</div></div>
+        </div>
+        <div class="nav-buttons">
+            <a href="#sentinel" class="nav-btn">SENTINEL</a>
+            <a href="#momentum" class="nav-btn">MOMENTUM</a>
+            <a href="#macro" class="nav-btn">MACRO</a>
+            <a href="#targets" class="nav-btn">SNIPER</a>
+        </div>
+    </header>
+
+    <div class="responsive-grid">
+        <div id="sentinel" class="section">
+            <div class="chart-container"><div class="section-label">SENTINEL LABORATORY</div><div id="sentinel-donut"></div></div>
+        </div>
+        <div class="section">
+            <div class="chart-container"><div class="section-label">EQUITY CURVE</div><div id="equity-curve"></div></div>
+        </div>
+    </div>
+
+    <div id="momentum" class="section">
+        <div class="chart-container" style="min-height: 500px;"><div class="section-label">GLOBAL MOMENTUM</div><div id="performance-heatmap"></div></div>
+    </div>
+
+    <div id="targets" class="section">
+        <div class="chart-container">
+            <div class="section-label">JOB C SNIPER COMMAND</div>
+            <table class="job-c-table">
+                <thead><tr><th>TICKER</th><th>STATUS</th><th>TARGET ENTRY</th><th>ACTION</th></tr></thead>
+                <tbody id="sniper-body">
+                    <tr><td colspan="4" style="text-align:center;">SCANNING...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer style="padding: 20px; text-align: center; color: #6b7280; font-size: 9px; text-transform: uppercase;">
+        SOVEREIGN TERMINAL v1.1 // SYSTEM ACTIVE
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        const SEED_CAP = 1000.00;
+
+        // 1. CHART INITIALIZATION - BRUTE FORCE BLACK TEXT
+        const commonOptions = {
+            chart: { 
+                background: 'transparent', 
+                foreColor: '#000000',
+                fontFamily: "'JetBrains Mono', monospace", 
+                toolbar: { show: false } 
+            },
+            theme: { 
+                mode: 'light',
+                palette: 'palette1',
+                monochrome: { enabled: false }
+            },
+            dataLabels: { 
+                enabled: false,
+                style: { 
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: '#000000',
+                    textAnchor: 'middle'
+                }
+            },
+            tooltip: { theme: 'light' }
+        };
+
+        const sentinelChart = new ApexCharts(document.querySelector("#sentinel-donut"), {
+            ...commonOptions, series: [SEED_CAP, 0], labels: ['SEED', 'PROFIT'],
+            chart: { ...commonOptions.chart, type: 'donut', height: 350, id: 'sentinel-donut' },
+            colors: ['#ffedd5', '#f0fdf4'],
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '65%',
+                        labels: {
+                            show: true,
+                            name: { show: true, fontSize: '12px', fontWeight: 700, color: '#111827', offsetY: -10 },
+                            value: { show: true, fontSize: '24px', fontWeight: 800, color: '#111827', offsetY: 10, formatter: (val) => '£' + parseFloat(val).toFixed(2) },
+                            total: { show: true, label: 'POT', fontSize: '10px', color: '#6b7280' }
+                        }
+                    }
+                }
+            },
+            legend: { position: 'bottom', fontSize: '11px', fontWeight: 700 }
+        });
+        sentinelChart.render();
+
+        const equityChart = new ApexCharts(document.querySelector("#equity-curve"), {
+            ...commonOptions, series: [{ name: 'Pot Value', data: [] }],
+            chart: { ...commonOptions.chart, type: 'area', height: 350, id: 'equity-curve' },
+            stroke: { curve: 'smooth', width: 2, colors: ['#ffedd5'] },
+            fill: { type: 'gradient', gradient: { opacityFrom: 0.3, opacityTo: 0.05 } },
+            xaxis: { type: 'datetime' },
+            yaxis: { labels: { formatter: (val) => '£' + val.toFixed(0) } }
+        });
+        equityChart.render();
+
+        const heatmapChart = new ApexCharts(document.querySelector("#performance-heatmap"), {
+            ...commonOptions, series: [],
+            chart: { ...commonOptions.chart, type: 'treemap', height: 450, id: 'heatmap' },
+            plotOptions: {
+                treemap: {
+                    distributed: true,
+                    enableShades: false,
+                    colorScale: {
+                        ranges: [
+                            { from: 3.0, to: 100, color: '#bbf7d0' },
+                            { from: 0.1, to: 2.99, color: '#f0fdf4' },
+                            { from: -2.99, to: -0.1, color: '#fff1f2' },
+                            { from: -100, to: -3.0, color: '#fecaca' }
+                        ]
+                    }
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                style: { 
+                    fontSize: '12px', 
+                    fontWeight: 600, 
+                    color: '#000000',
+                    textAnchor: 'middle'
+                },
+                dropShadow: { enabled: false },
+                formatter: (text, op) => [text, op.value.toFixed(2) + '%']
+            },
+            stroke: { show: true, width: 4, colors: ['#ffffff'] }
+        });
+        heatmapChart.render();
+
+        // 2. DYNAMIC UPDATE
+        async function updateDashboard() {
+            try {
+                const response = await fetch('/api/live_data');
+                const data = await response.json();
+
+                // Metrics
+                if (data.total_wealth !== undefined) document.getElementById('val-wealth').textContent = '£' + data.total_wealth.toFixed(2);
+                if (data.session_pnl !== undefined) {
+                    const el = document.getElementById('val-pnl');
+                    el.textContent = '£' + data.session_pnl.toFixed(2);
+                    el.className = 'metric-value ' + (data.session_pnl >= 0 ? 'positive' : 'negative');
+                }
+                if (data.market_phase) document.getElementById('val-phase').textContent = data.market_phase;
+
+                // Sentinel Donut
+                const profit = data.realized_profit || 0;
+                const seedLabel = `SEED: £${SEED_CAP.toFixed(2)} (${((SEED_CAP/(SEED_CAP+Math.max(0,profit)))*100).toFixed(1)}%)`;
+                const harvestLabel = `HARVEST: £+${profit.toFixed(2)} (${((profit/(SEED_CAP+profit))*100).toFixed(1)}%)`;
+                
+                if (profit >= 0) {
+                    ApexCharts.exec('sentinel-donut', 'updateSeries', [SEED_CAP, profit]);
+                    ApexCharts.exec('sentinel-donut', 'updateOptions', { labels: [seedLabel, harvestLabel] });
+                } else {
+                    ApexCharts.exec('sentinel-donut', 'updateSeries', [SEED_CAP + profit]);
+                    ApexCharts.exec('sentinel-donut', 'updateOptions', { labels: [`EROSION: £${(SEED_CAP + profit).toFixed(2)}`] });
+                }
+
+                // Heatmap
+                if (data.positions && Array.isArray(data.positions)) {
+                    const seriesData = data.positions.map(p => ({
+                        x: p.ticker, y: p.pnl_percent || 0
+                    }));
+                    ApexCharts.exec('heatmap', 'updateSeries', [{ data: seriesData }]);
+                }
+
+            } catch (e) { console.error("Link Failure:", e); }
+        }
+
+        setInterval(updateDashboard, 5000);
+        updateDashboard();
+    </script>
+</body>
+</html>
