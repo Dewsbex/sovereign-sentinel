@@ -44,19 +44,49 @@ def live_data():
         auditor = TradingAuditor()
         clock = MacroClock()
         
-        # 1. Fetch live data from Trading 212 with fallback
-        try:
-            cash_response = client.get_account_summary()
-            positions = client.get_positions()
-        except Exception as api_error:
-            print(f"⚠️ T212 API Error: {api_error}")
-            # Fallback to persistent state
-            if os.path.exists(STATE_FILE):
-                with open(STATE_FILE, 'r') as f:
-                    cached_state = json.load(f)
-                    return jsonify(cached_state)
-            else:
-                return jsonify({"status": "OFFLINE", "error": "API unavailable"}), 503
+        # 1. Fetch live data from Trading 212 with caching (20s)
+        # Prevents "TooManyRequests" and stabilizes feed
+        CACHE_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "api_cache.json")
+        cache_valid = False
+        cash_response = {}
+        positions = []
+        
+        if os.path.exists(CACHE_FILE):
+            try:
+                with open(CACHE_FILE, 'r') as f:
+                    cache = json.load(f)
+                    if (datetime.utcnow() - datetime.fromisoformat(cache.get("timestamp", "2000-01-01"))).total_seconds() < 20:
+                        cash_response = cache.get("cash", {})
+                        positions = cache.get("positions", [])
+                        cache_valid = True
+                        # print("📦 Using cached API data")
+            except: pass
+            
+        if not cache_valid:
+            try:
+                # print("🔄 Fetching fresh API data...")
+                cash_response = client.get_account_summary()
+                positions = client.get_positions()
+                
+                # Update cache
+                try: 
+                    with open(CACHE_FILE, 'w') as f:
+                        json.dump({
+                            "timestamp": datetime.utcnow().isoformat(),
+                            "cash": cash_response,
+                            "positions": positions
+                        }, f)
+                except: pass
+                
+            except Exception as api_error:
+                print(f"⚠️ T212 API Error: {api_error}")
+                # Fallback to persistent state
+                if os.path.exists(STATE_FILE):
+                    with open(STATE_FILE, 'r') as f:
+                        cached_state = json.load(f)
+                        return jsonify(cached_state)
+                else:
+                    return jsonify({"status": "OFFLINE", "error": "API unavailable"}), 503
         
         # 2. Extract Cash Metrics
         # Mapping: CASH = free (available to trade)
