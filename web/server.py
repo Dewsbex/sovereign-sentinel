@@ -14,8 +14,13 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# Enable CORS for Cloudflare Pages deployment
-CORS(app, origins=['https://sovereign-sentinel.pages.dev', 'http://localhost:8080'], supports_credentials=True)
+# Enable CORS for Cloudflare Pages deployment (including all preview/deployment URLs)
+CORS(app, resources={r"/api/*": {"origins": [
+    "https://sovereign-sentinel.pages.dev",
+    "https://*.sovereign-sentinel.pages.dev",
+    "http://localhost:8080",
+    "http://localhost:5000"
+]}}, supports_credentials=True)
 
 # Paths
 STATE_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "live_state.json")
@@ -57,6 +62,11 @@ def live_data():
         # Mapping: CASH = free (available to trade)
         cash = float(cash_response.get('free', 0.0)) if cash_response else 0.0
         
+        # --- FIX: THE PENCE RULE ---
+        # If cash is > 50,000, it is likely in pence. Normalize to pounds.
+        if cash > 50000:
+            cash = cash / 100.0
+        
         # 3. Calculate Total Wealth from Positions
         # Formula: sum(quantity * currentPrice) for all positions + cash
         total_investments = 0.0
@@ -68,12 +78,23 @@ def live_data():
             for pos in positions:
                 ticker = pos.get('ticker', '')
                 qty = float(pos.get('quantity', 0.0))
+                
+                # Normalize prices upfront
                 avg_price = auditor.normalize_uk_price(ticker, pos.get('averagePrice', 0.0))
                 current_price = auditor.normalize_uk_price(ticker, pos.get('currentPrice', 0.0))
-                ppl = float(pos.get('ppl', 0.0))
                 
+                # Normalize PPL (Session P/L) if needed
+                ppl = float(pos.get('ppl', 0.0))
+                if abs(ppl) > 10000: # Sanity check for massive P/L
+                    ppl = ppl / 100.0
+
                 # Mapping: Heatmap Box Size = quantity * currentPrice
                 box_size = qty * current_price
+                
+                # --- FIX: POSITION VALUE SANITY CHECK ---
+                if box_size > 50000:
+                    box_size = box_size / 100.0
+                
                 total_investments += box_size
                 session_pnl += ppl
                 
