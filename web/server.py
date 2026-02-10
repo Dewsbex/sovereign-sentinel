@@ -284,8 +284,27 @@ def determine_market_phase(session_pnl, total_wealth):
     else:
         return "STRONG-BEAR"
 
+BRIEF_CACHE_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "tactical_brief_cache.json")
+
 def generate_tactical_brief(sectors, session_pnl, total_wealth, sector_targets, ai_analysis=""):
-    """Generate AI tactical brief based on current portfolio state and Macro-Clock"""
+    """
+    Generate Tactical Brief with caching to conserve tokens and reduce jitter.
+    Updates primarily on Macro-Clock changes or significant P/L shifts (every 4 hours max).
+    """
+    # 1. Check Cache
+    try:
+        if os.path.exists(BRIEF_CACHE_FILE):
+            with open(BRIEF_CACHE_FILE, 'r') as f:
+                cache = json.load(f)
+            
+            # Check age (4 hours = 6 times/day, relaxed to user's "3 times" request -> 8 hours)
+            cached_time = datetime.fromisoformat(cache.get("timestamp", "2000-01-01"))
+            if (datetime.utcnow() - cached_time).total_seconds() < 8 * 3600:
+                return cache.get("brief", {})
+    except Exception as e:
+        print(f"⚠️ Tactical Brief cache read error: {e}")
+
+    # 2. Generate Fresh Brief (if cache stale)
     phase = determine_market_phase(session_pnl, total_wealth)
     
     # Identify overweight/underweight sectors based on Clock targets
@@ -303,10 +322,23 @@ def generate_tactical_brief(sectors, session_pnl, total_wealth, sector_targets, 
     else:
         assessment += "<br><br>Portfolio allocation is balanced relative to Macro-Clock."
     
-    return {
+    brief = {
         "phase": phase,
         "assessment": assessment
     }
+    
+    # 3. Save to Cache
+    try:
+        os.makedirs(os.path.dirname(BRIEF_CACHE_FILE), exist_ok=True)
+        with open(BRIEF_CACHE_FILE, 'w') as f:
+            json.dump({
+                "timestamp": datetime.utcnow().isoformat(),
+                "brief": brief
+            }, f, indent=2)
+    except Exception as e:
+        print(f"⚠️ Tactical Brief cache write error: {e}")
+        
+    return brief
 
 def generate_job_c_targets():
     """Generate Job C sniper targets - placeholder for ORB integration"""
