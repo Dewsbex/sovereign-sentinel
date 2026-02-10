@@ -581,7 +581,9 @@
         // Update dashboard with live data
         async function updateDashboard() {
             try {
+                console.log('[DEBUG] Fetching from:', `${API_URL}/api/live_data`);
                 const response = await fetch(`${API_URL}/api/live_data`);
+                console.log('[DEBUG] Response status:', response.status);
                 const data = await response.json();
                 
                 console.log('API Response:', data);
@@ -659,7 +661,8 @@
                 }
                 
             } catch (error) {
-                console.error('Dashboard update error:', error);
+                console.error('[ERROR] Dashboard update failed:', error);
+                console.error('[ERROR] Error details:', error.message, error.stack);
             }
         }
         
