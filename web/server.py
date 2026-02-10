@@ -105,25 +105,35 @@ def live_data():
         enriched_positions = []
         
         if isinstance(positions, list):
-            for pos in positions:
-                ticker = pos.get('ticker', '')
-                qty = float(pos.get('quantity', 0.0))
-                
                 # Normalize prices upfront
                 avg_price = auditor.normalize_uk_price(ticker, pos.get('averagePrice', 0.0))
                 current_price = auditor.normalize_uk_price(ticker, pos.get('currentPrice', 0.0))
                 
                 # Normalize PPL (Session P/L) if needed
                 ppl = float(pos.get('ppl', 0.0))
-                if abs(ppl) > 10000: # Sanity check for massive P/L
-                    ppl = ppl / 100.0
-
-                # Mapping: Heatmap Box Size = quantity * currentPrice
-                box_size = qty * current_price
                 
-                # --- FIX: POSITION VALUE SANITY CHECK ---
-                if box_size > 50000:
-                    box_size = box_size / 100.0
+                # --- FIX: IMPLICIT FX CALCULATOR ---
+                # Avoid guessing currency (GBP vs GBX vs USD).
+                # Use P/L relation: Value / PPL = Current / (Current - Avg)
+                # Value = PPL * Current / (Current - Avg)
+                
+                delta = current_price - avg_price
+                
+                if abs(delta) > 0.00001 and abs(ppl) > 0.01:
+                    # Robust calculation
+                    box_size = ppl * current_price / delta
+                else:
+                    # Fallback for breakeven/zero positions
+                    # Assume UK stocks are in Pence (divide by 100)
+                    # Assume US/Other are in USD (approx 1.25 rate)
+                    raw_val = qty * current_price
+                    if "_UK" in ticker:
+                        box_size = raw_val / 100.0
+                    else:
+                        box_size = raw_val / 1.27 # Approx GBP/USD rate
+                
+                # Sanity check: Value cannot be negative (unless short, but T212 is long-only for ISA/Invest)
+                if box_size < 0: box_size = abs(box_size)
                 
                 total_investments += box_size
                 session_pnl += ppl
