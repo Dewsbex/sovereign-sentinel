@@ -39,25 +39,28 @@ def live_data():
         auditor = TradingAuditor()
         clock = MacroClock()
         
-        # 1. Fetch live data from Trading 212
-        # account_summary = /api/v0/equity/account/summary
-        account_summary = client.get_account_info() 
-        positions = client.get_positions()
+        # 1. Fetch live data from Trading 212 with fallback
+        try:
+            cash_response = client.get_account_summary()
+            positions = client.get_positions()
+        except Exception as api_error:
+            print(f"⚠️ T212 API Error: {api_error}")
+            # Fallback to persistent state
+            if os.path.exists(STATE_FILE):
+                with open(STATE_FILE, 'r') as f:
+                    cached_state = json.load(f)
+                    return jsonify(cached_state)
+            else:
+                return jsonify({"status": "OFFLINE", "error": "API unavailable"}), 503
         
-        # 2. Extract Header Metrics (The "Pulse")
-        # Mapping: WEALTH = total (sum of cash + holdings), P/L = unrealizedProfitLoss
-        total_wealth = float(account_summary.get('total', 0.0))
-        investments = account_summary.get('investments', {})
-        session_pnl = float(investments.get('unrealizedProfitLoss', 0.0))
-        realized_profit = float(investments.get('realizedProfitLoss', 0.0))
+        # 2. Extract Cash Metrics
+        # Mapping: CASH = free (available to trade)
+        cash = float(cash_response.get('free', 0.0)) if cash_response else 0.0
         
-        # 3. Extract Cash Metrics
-        # Mapping: CASH = availableToTrade
-        cash_data = account_summary.get('cash', {})
-        cash = float(cash_data.get('availableToTrade', 0.0))
-        
-        # 4. Process Global Momentum (Heatmap) & Sectors
-        # Iterate through open positions for granular data mapping
+        # 3. Calculate Total Wealth from Positions
+        # Formula: sum(quantity * currentPrice) for all positions + cash
+        total_investments = 0.0
+        session_pnl = 0.0
         sectors = {}
         enriched_positions = []
         
@@ -71,6 +74,8 @@ def live_data():
                 
                 # Mapping: Heatmap Box Size = quantity * currentPrice
                 box_size = qty * current_price
+                total_investments += box_size
+                session_pnl += ppl
                 
                 # Mapping: Heatmap Color (Performance %) 
                 # Formula: ((currentPrice - averagePrice) / averagePrice) * 100
@@ -93,6 +98,14 @@ def live_data():
                     "pnl_percent": pnl_percent
                 })
         
+        # WEALTH = Investments + Cash
+        total_wealth = total_investments + cash
+        
+        # 4. Extract Realized Profit (from historical data if available)
+        # Note: T212 API doesn't provide realized P/L in real-time
+        # This would need to be tracked separately or calculated from transaction history
+        realized_profit = 0.0  # Placeholder - requires transaction history analysis
+        
         # Add cash as a sector for Asset Mix donut
         if cash > 0:
             sectors["Cash"] = {"value": cash, "tickers": ["CASH"], "percent": 0.0}
@@ -102,12 +115,18 @@ def live_data():
             sectors[sector]["percent"] = (sectors[sector]["value"] / total_wealth * 100) if total_wealth > 0 else 0.0
         
         # 5. Macro-Clock Phase and Targets
-        phase_data = clock.detect_market_phase()
-        market_phase = phase_data["phase"]
-        sector_targets = clock.get_sector_targets(market_phase)
+        try:
+            phase_data = clock.detect_market_phase()
+            market_phase = phase_data["phase"]
+            sector_targets = clock.get_sector_targets(market_phase)
+        except Exception as clock_error:
+            print(f"⚠️ MacroClock Error: {clock_error}")
+            market_phase = "MID-BULL"
+            sector_targets = {}
+            phase_data = {"analysis": "MacroClock data unavailable."} # Define phase_data for tactical brief
         
         # Generate tactical brief
-        tactical_brief = generate_tactical_brief(sectors, session_pnl, total_wealth, sector_targets, phase_data["analysis"])
+        tactical_brief = generate_tactical_brief(sectors, session_pnl, total_wealth, sector_targets, phase_data.get("analysis", "") if 'phase_data' in locals() else "")
         
         # Job C Sniper Targets (Read from main_bot.py output)
         job_c_targets = []
@@ -143,8 +162,13 @@ def live_data():
             "equity_history": equity_history[-50:] # Last 50 points
         }
         
-        # Update local volatile state for other jobs
-        save_live_state(response)
+        # Save persistent state for fallback
+        try:
+            os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
+            with open(STATE_FILE, 'w') as f:
+                json.dump(response, f, indent=2)
+        except Exception as e:
+            print(f"⚠️ State persistence error: {e}")
         
         return jsonify(response)
         

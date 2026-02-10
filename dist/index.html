@@ -547,14 +547,21 @@
             
             heatmapChart = new ApexCharts(document.querySelector("#performance-heatmap"), {
                 series: [{ data: [] }],
-                chart: { type: 'treemap', height: 450, background: 'transparent', foreColor: '#111827', toolbar: { show: false } },
+                chart: { type: 'treemap', height: 450, background: 'transparent', foreColor: '#111827', toolbar: { show: false }, fontFamily: "'JetBrains Mono', monospace" },
                 plotOptions: { treemap: { distributed: false, enableShades: false, colorScale: { ranges: [
                     { from: 3.0, to: 100, color: '#bbf7d0' },
                     { from: 0.1, to: 2.99, color: '#f0fdf4' },
                     { from: -2.99, to: -0.1, color: '#fff1f2' },
                     { from: -100, to: -3.0, color: '#fecaca' }
                 ] } } },
-                dataLabels: { enabled: true, style: { fontSize: '13px', fontWeight: 700, colors: ['#111827'] } },
+                dataLabels: { 
+                    enabled: true, 
+                    style: { fontSize: '13px', fontWeight: 700, colors: ['#111827'], fontFamily: "'JetBrains Mono', monospace" },
+                    formatter: function(text, op) {
+                        const item = window.heatmapMetadata?.[op.dataPointIndex];
+                        return item ? [item.ticker, item.pnl_percent.toFixed(2) + '%'] : [text];
+                    }
+                },
                 stroke: { show: true, width: 5, colors: ['#f9fafb'] }
             });
             heatmapChart.render();
@@ -596,12 +603,36 @@
                     equityChart.updateSeries([{ name: 'Wealth', data: history }]);
                 }
                 
-                // Update Heatmap
+                // Update Heatmap with EXACT colors + labels
                 if (data.positions && data.positions.length > 0) {
-                    const heatmapData = data.positions.map(p => ({
-                        x: p.ticker,
-                        y: p.pnl_percent || 0
-                    }));
+                    window.heatmapMetadata = data.positions; // Store for label formatter
+                    
+                    const heatmapData = data.positions.map(p => {
+                        const pnl = p.pnl_percent || 0;
+                        let fillColor;
+                        
+                        // USER SPEC COLORS (Muted Pastels)
+                        if (pnl >= 3.0) fillColor = '#bbf7d0';        // Soft Mint
+                        else if (pnl >= 0.1) fillColor = '#f0fdf4';   // Visible Mint Tint
+                        else if (pnl >= -2.99) fillColor = '#fff1f2'; // Visible Rose Tint
+                        else fillColor = '#fecaca';                    // Soft Rose
+                        
+                        return {
+                            x: p.ticker,
+                            y: Math.abs(p.current_value || 100), // Box size
+                            fillColor: fillColor // FORCE exact color
+                        };
+                    });
+                    
+                    heatmapChart.updateOptions({
+                        plotOptions: {
+                            treemap: {
+                                distributed: true, // CRITICAL: Use individual colors
+                                enableShades: false,
+                                colorScale: { ranges: [] } // Disable auto-coloring
+                            }
+                        }
+                    });
                     heatmapChart.updateSeries([{ data: heatmapData }]);
                 }
                 
