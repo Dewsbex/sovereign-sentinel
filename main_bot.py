@@ -127,29 +127,39 @@ def run_sniper():
 
         # 2.5 MARKET OPEN ANALYSIS (Job A/C Hybrid - 14:30 UTC)
         # Provides the highly requested "15-minute analysis summary" at open.
+        # 2.5 MARKET OPEN ANALYSIS (Job A/C Hybrid - 14:30 UTC)
+        # Provides the highly requested "15-minute analysis summary" at open.
+        # v2.2 LATE-START BACKFILL: If we miss the 14:30 window (e.g. restart at 19:00),
+        # we MUST still run this to generate targets for the rest of the session.
         try:
-            if now_time >= dtime(14, 30) and now_time < dtime(14, 35):
-                open_brief_lock = 'data/open_brief.lock'
-                today_str = datetime.utcnow().strftime('%Y-%m-%d')
+            open_brief_lock = 'data/open_brief.lock'
+            today_str = datetime.utcnow().strftime('%Y-%m-%d')
+            
+            # Check if we have already run for today
+            has_run_today = False
+            if os.path.exists(open_brief_lock):
+                 with open(open_brief_lock, 'r') as f:
+                     if f.read().strip() == today_str:
+                         has_run_today = True
+            
+            # Logic: Run if time > 14:30 AND (Time < 21:00) AND Not Run Today
+            # This covers both the scheduled 14:30 slot AND any late start backfill
+            if now_time >= dtime(14, 30) and now_time < dtime(21, 0) and not has_run_today:
                 
-                run_open_brief = True
-                if os.path.exists(open_brief_lock):
-                    with open(open_brief_lock, 'r') as f:
-                        if f.read().strip() == today_str:
-                            run_open_brief = False
+                is_backfill = now_time >= dtime(14, 35)
+                print(f"🔔 OPEN BRIEF PROCOTOL: Initiating (Backfill Mode: {is_backfill})")
                 
-                if run_open_brief:
-                    print("🔔 MARKET OPEN: Generating 15-Min Analysis Summary & TACTICAL PLAN...")
-                    from strategic_moat import MorningBrief
-                    
-                    # Run analysis AND generate targets (Morning Brief)
-                    brief = MorningBrief()
-                    brief.generate_brief()
-                    
-                    # Lock it
-                    with open(open_brief_lock, 'w') as f:
-                        f.write(today_str)
-                    print("✅ Open Brief Sent & Targets Generated.")
+                from strategic_moat import MorningBrief
+                
+                # Run analysis AND generate targets (Morning Brief)
+                brief = MorningBrief()
+                brief.generate_brief()
+                
+                # Lock it
+                with open(open_brief_lock, 'w') as f:
+                    f.write(today_str)
+                print("✅ Open Brief Sent & Targets Generated.")
+
         except Exception as e:
             print(f"⚠️ Open Brief Error: {e}")
 
