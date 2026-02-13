@@ -7,6 +7,7 @@ Job A: The Strategic Fortress - 95% Advisory Moat Research
 import json
 import os
 import sys
+from datetime import datetime
 from typing import Dict, List, Any
 # Removed standalone genai import - using consolidated client
 import requests
@@ -586,9 +587,66 @@ Sector: {validation_data.get('sector', 'Unknown')}
 *Research plan locked at: {plan_path}*
 """
         
+        # ========================================================================
+        # JOB A -> JOB C HANDOVER: Export Approved Targets to Sniper
+        # ========================================================================
+        if final_recommendation in ["STRONG BUY", "BUY"]:
+            self.export_approved_target(ticker, final_recommendation)
+
         return dossier
 
-    
+    def export_approved_target(self, ticker: str, recommendation: str):
+        """
+        Exports STRONG BUY/BUY recommendations to data/targets.json for Sniper execution.
+        """
+        print(f"🔗 Handing over {ticker} ({recommendation}) to Sniper Engine...")
+        
+        targets_path = 'data/targets.json'
+        targets = []
+        
+        # Load existing
+        if os.path.exists(targets_path):
+            try:
+                with open(targets_path, 'r') as f:
+                    targets = json.load(f)
+            except:
+                pass
+            
+        # Deduplicate
+        for t in targets:
+            if t['ticker'] == ticker:
+                print(f"   ⚠️ Target {ticker} already exists. Skipping export.")
+                return
+
+        # Fetch current price for trigger setting
+        import yfinance as yf
+        try:
+            current_price = yf.Ticker(ticker).fast_info['last_price']
+        except:
+            current_price = 100.0 # Fallback
+            
+        # Set trigger slightly below current price (99%) to catch dips
+        trigger_price = current_price * 0.99
+        
+        # Default quantity (will be checked by Iron Seed / Auditor anyway)
+        quantity = 1 
+        
+        target_entry = {
+            "ticker": ticker,
+            "quantity": quantity,
+            "trigger_price": trigger_price,
+            "stop_loss": current_price * 0.90, # 10% Stop Loss
+            "added_by": "MoatAnalyzer (Job A)",
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+        targets.append(target_entry)
+        
+        with open(targets_path, 'w') as f:
+            json.dump(targets, f, indent=2)
+            
+        print(f"✅ Target exported: {ticker} @ >${trigger_price:.2f}")
+
     def send_to_telegram(self, dossier: str, ticker: str):
         """Send moat dossier to Telegram with approval link"""
         # Using client methods now
@@ -615,22 +673,424 @@ Sector: {validation_data.get('sector', 'Unknown')}
             print(dossier)
 
 
-def main():
-    """Entry point for strategic_moat.py"""
-    import sys
-    
-    if len(sys.argv) < 2:
-        print("Usage: python strategic_moat.py <TICKER>")
-        sys.exit(1)
-    
-    ticker = sys.argv[1]
-    
-    analyzer = MoatAnalyzer()
-    dossier = analyzer.generate_moat_dossier(ticker)
-    analyzer.send_to_telegram(dossier, ticker)
-    
-    print("\n✅ Moat analysis complete")
 
+
+# ========================================================================
+# SECTOR MAPPING LOGIC (JOB B/C ENHANCEMENT)
+# ========================================================================
+
+class SectorMapper:
+    """
+    Maps portfolio tickers to sectors and calculates weight deltas.
+    Caches sector data to reduce API calls.
+    """
+    def __init__(self):
+        self.client = Trading212Client()
+        self.cache_path = 'data/sector_map.json'
+        self.excluded_path = 'data/excluded_tickers.json'
+        from macro_clock import MacroClock
+        self.macro_clock = MacroClock()
+        self.sector_map = self.load_cache()
+        self.excluded = self.load_excluded()
+        
+    def load_cache(self) -> Dict[str, str]:
+        """Load sector map from disk"""
+        try:
+            with open(self.cache_path, 'r') as f:
+                return json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return {}
+            
+    def load_excluded(self) -> List[str]:
+        """Load excluded tickers from disk"""
+        try:
+            with open(self.excluded_path, 'r') as f:
+                data = json.load(f)
+                return data.get('excluded', [])
+        except (FileNotFoundError, json.JSONDecodeError):
+            return []
+            
+    def save_cache(self):
+        """Save sector map to disk"""
+        os.makedirs('data', exist_ok=True)
+        with open(self.cache_path, 'w') as f:
+            json.dump(self.sector_map, f, indent=2)
+
+    def get_ticker_sector(self, ticker: str) -> str:
+        """Get sector for a single ticker (with caching)"""
+        # specialized normalization for T212 tickers like "VOD.L" -> "VOD.L" or "VOD" for yfinance
+        # T212 often sends "AAPL_US_EQ", but get_positions usually returns "AAPL"
+        
+        # Check cache first
+        if ticker in self.sector_map:
+            return self.sector_map[ticker]
+            
+        # Fetch from yfinance
+        try:
+            import yfinance as yf
+            # Handle UK tickers for yfinance (e.g. RR.L) if needed
+            # Assuming ticker format from T212 is compatible or simple enough
+            t = yf.Ticker(ticker)
+            sector = t.info.get('sector', 'Unknown')
+            # Normalize common sector names if needed (e.g. "Financial Services" -> "Financials")
+            # Map yfinance sectors to MacroClock sectors
+            sector = self.normalize_sector_name(sector)
+            
+            self.sector_map[ticker] = sector
+            return sector
+        except Exception as e:
+            print(f"⚠️ Failed to map sector for {ticker}: {e}")
+            return "Unknown"
+
+    def normalize_sector_name(self, yf_sector: str) -> str:
+        """Map yfinance sector names to MacroClock standard"""
+        mapping = {
+            "Technology": "Technology",
+            "Financial Services": "Financials",
+            "Financials": "Financials",
+            "Consumer Cyclical": "Consumer Discretionary",
+            "Consumer Defensive": "Consumer Staples",
+            "Energy": "Energy",
+            "Healthcare": "Healthcare",
+            "Industrials": "Industrials",
+            "Basic Materials": "Materials",
+            "Utilities": "Utilities",
+            "Real Estate": "Real Estate", # MacroClock might not have RE explicit, usually falls into Financials or separate
+            "Communication Services": "Technology" # Optional mapping, or add to MacroClock
+        }
+        return mapping.get(yf_sector, yf_sector)
+
+    def calculate_portfolio_deltas(self) -> Dict[str, Any]:
+        """
+        Harvest tickers, map sectors, calculate value-weighted deltas.
+        Filters:
+        1. Value < £250 (Lab trades)
+        2. Ticker in data/excluded_tickers.json
+        """
+        print("📊 Harvesting portfolio for sector analysis...")
+        positions = self.client.get_positions()
+        
+        if not positions:
+            print("⚠️ No open positions found.")
+            return {}
+            
+        # Get Live Cash
+        acct = self.client.get_account_info()
+        cash = float(acct.get('cash', {}).get('availableToTrade', 0.0))
+        
+        sector_values = {}
+        filtered_equity = 0.0
+        ignored_count = 0
+        
+        # 1. Harvest & Map
+        new_mappings = False
+        for pos in positions:
+            ticker = pos.get('ticker')
+            
+            # Explicit Exclusion
+            if ticker in self.excluded:
+                ignored_count += 1
+                continue
+            
+            # Get Value
+            qty = float(pos.get('quantity', 0))
+            price = float(pos.get('currentPrice', 0))
+            
+            # Normalize Price (Pence to Pounds for UK)
+            if "_UK_EQ" in ticker or ticker.endswith(".L"):
+                price = price / 100.0
+            
+            position_value = qty * price
+            
+            # Value Filter (Lab Trades)
+            if position_value < 250.0:
+                ignored_count += 1
+                continue
+            
+            filtered_equity += position_value
+            
+            # Get Sector
+            sector = self.get_ticker_sector(ticker)
+            if sector not in self.sector_map: # It was just fetched
+                new_mappings = True
+            
+            sector_values[sector] = sector_values.get(sector, 0.0) + position_value
+
+        if new_mappings:
+            self.save_cache()
+            
+        print(f"📉 Filtered {ignored_count} positions (Lab/Excluded).")
+        
+        # Use Filtered Equity + Cash for Total Analysis Value
+        # This means Lab trades are effectively invisible to the sector clock
+        total_portfolio_value = filtered_equity + cash
+        
+        # Add Cash to sector values
+        sector_values['Cash'] = cash
+        
+        # 2. Calculate Weights
+        current_allocation = {}
+        for sec, val in sector_values.items():
+            weight = (val / total_portfolio_value) * 100
+            current_allocation[sec] = weight
+            
+        # 3. Get Deltas from MacroClock
+        # Detect phase first or use cached?
+        # MacroClock internal cache handles it.
+        deltas = self.macro_clock.calculate_sector_deltas(current_allocation)
+        
+        return {
+            "total_value": total_portfolio_value,
+            "allocation": current_allocation,
+            "deltas": deltas,
+            "phase": self.macro_clock.detect_market_phase()['phase'] # Just to know phase
+        }
+
+    def generate_delta_report(self) -> str:
+        """Generate text report for Telegram"""
+        data = self.calculate_portfolio_deltas()
+        if not data:
+            return "⚠️ Sector Analysis Unavailable (No Data)"
+            
+        deltas = data['deltas']
+        phase = data['phase']
+        
+        report = f"⚖️ **SECTOR DELTAS ({phase})**\n"
+        
+        # Sort by biggest drift (absolute delta)
+        sorted_sectors = sorted(deltas.items(), key=lambda x: abs(x[1]['delta']), reverse=True)
+        
+        for sector, met in sorted_sectors:
+            if abs(met['delta']) < 1.0:
+                continue # Skip negligible
+            
+            icon = "🟢" if met['status'] == 'MATCH' else "🔴" if met['status'] == 'OVER' else "🔵"
+            status_text = f"{met['delta']:+.1f}% {met['status']}"
+            report += f"{icon} **{sector}**: {met['current']:.1f}% ({status_text})\n"
+            
+        return report
+
+def generate_open_market_brief() -> str:
+    """
+    Generates the "Market Open Analysis" at 14:30 UTC.
+    Scans the FULL Master Universe (100+ Tickers) for top movers.
+    """
+    print("⚡ Analyzing Market Open (Full Universe)...")
+    import yfinance as yf
+    import pandas as pd
+    
+    # 1. Load Universe
+    try:
+        with open('data/master_universe.json', 'r') as f:
+            data = json.load(f)
+            tickers = [i['ticker'] for i in data.get('instruments', [])]
+    except:
+        tickers = ['SPY', 'QQQ', 'NVDA', 'TSLA', 'AMD'] # Fallback
+        
+    # Ensure Indices are included
+    if 'SPY' not in tickers: tickers.append('SPY')
+    if 'QQQ' not in tickers: tickers.append('QQQ')
+
+    # 2. Batch Fetch Data (Fast)
+    # We need Prev Close and Current Price
+    try:
+        # download() is faster for many tickers than Ticker() loop
+        df = yf.download(tickers, period="2d", group_by='ticker', progress=False)
+    except Exception as e:
+        return f"⚠️ Market Data Fetch Failed: {e}"
+
+    results = []
+    
+    # 3. Process Each Ticker
+    for t in tickers:
+        try:
+            # Handle MultiIndex dataframe from yfinance
+            if len(tickers) > 1:
+                t_data = df[t]
+            else:
+                t_data = df
+            
+            if t_data.empty: continue
+            
+            # Get latest close (or current price) and prev close
+            # If market is open, the last row is 'Today' (live), row -2 is 'Yesterday'
+            # If market closed, last row is Today.
+            
+            current = t_data['Close'].iloc[-1]
+            try:
+                prev = t_data['Close'].iloc[-2]
+            except:
+                prev = current # Fallback if no history
+                
+            if pd.isna(prev) or prev == 0: continue
+            
+            change = ((current - prev) / prev) * 100
+            
+            results.append({
+                'ticker': t,
+                'price': current,
+                'change': change
+            })
+        except:
+            continue
+            
+    # 4. Sort by Movers
+    # remove indices from movers list
+    movers = [x for x in results if x['ticker'] not in ['SPY', 'QQQ']]
+    movers.sort(key=lambda x: x['change'], reverse=True)
+    
+    top_gainers = movers[:3]
+    top_losers = movers[-3:]
+    
+    # 5. Construct Report
+    timestamp = datetime.utcnow().strftime('%H:%M UTC')
+    msg = f"🔔 **MARKET OPEN ANALYSIS ({timestamp})**\n"
+    msg += f"📡 Scanned {len(results)} Tickers\n\n"
+    
+    # Indices
+    spy = next((x for x in results if x['ticker'] == 'SPY'), {'price':0, 'change':0})
+    qqq = next((x for x in results if x['ticker'] == 'QQQ'), {'price':0, 'change':0})
+    
+    msg += f"**S&P 500:** ${spy['price']:.2f} ({spy['change']:+.2f}%)\n"
+    msg += f"**Nasdaq:** ${qqq['price']:.2f} ({qqq['change']:+.2f}%)\n\n"
+    
+    msg += "**🚀 Top Gainers:**\n"
+    for m in top_gainers:
+        msg += f"- {m['ticker']}: ${m['price']:.2f} ({m['change']:+.2f}%)\n"
+        
+    msg += "\n**🔻 Top Losers:**\n"
+    for m in sorted(top_losers, key=lambda x: x['change']):
+        msg += f"- {m['ticker']}: ${m['price']:.2f} ({m['change']:+.2f}%)\n"
+        
+    return msg
+
+# ========================================================================
+# MORNING BRIEF LOGIC (JOB B - 09:00 UTC)
+# ========================================================================
+
+class MorningBrief:
+    """The Strategist: Generates data/targets.json for the Sniper Engine."""
+    
+    def __init__(self):
+        from telegram_bot import SovereignAlerts
+        self.alerts = SovereignAlerts()
+        self.client = Trading212Client()
+        self.master_universe_path = 'data/master_universe.json'
+        self.targets_path = 'data/targets.json'
+        self.mapper = SectorMapper() # Initialize Mapper
+        
+    def load_watchlist(self) -> List[str]:
+        """Load vetted Tier 1 tickers from master_universe.json"""
+        try:
+            with open(self.master_universe_path, 'r') as f:
+                data = json.load(f)
+                return [inst['ticker'] for inst in data.get('instruments', [])]
+        except Exception as e:
+            print(f"⚠️ Failed to load master_universe.json: {e}")
+            return ['NVDA', 'TSLA', 'AMD'] # Fallback
+
+    def generate_brief(self):
+        """Calculates levels for ALL tickers and saves to JSON"""
+        # WEEKEND GUARD
+        now = datetime.utcnow()
+        if now.weekday() >= 5:
+            print("📅 WEEKEND: Skipping Morning Brief.")
+            return
+
+        watchlist = self.load_watchlist()
+        print(f"📊 Scanning {len(watchlist)} tickers for Morning Brief...")
+        
+        all_targets = []
+        high_prob_setups = []
+        
+        for ticker in watchlist:
+            try:
+                import yfinance as yf
+                t_obj = yf.Ticker(ticker)
+                
+                # Fetch recent history to determine ATR-based levels
+                hist = t_obj.history(period='5d', interval='1d')
+                if hist.empty:
+                    continue
+                    
+                prev_close = float(t_obj.fast_info['previous_close'])
+                
+                # Dynamic Logic:
+                # Trigger = Previous Close + 0.5% (Early breakout)
+                # Stop = Previous Close - 1.5% (Protection)
+                trigger = prev_close * 1.005
+                stop = prev_close * 0.985
+                qty = 5  # Default
+                
+                target_entry = {
+                    "ticker": ticker,
+                    "trigger_price": round(trigger, 2),
+                    "stop_loss": round(stop, 2),
+                    "quantity": qty,
+                    "prev_close": round(prev_close, 2)
+                }
+                
+                all_targets.append(target_entry)
+                
+                # Filter for Telegram (Probability Heuristic):
+                if ticker in ['NVDA', 'TSLA', 'MSTR'] or (len(high_prob_setups) < 12):
+                    high_prob_setups.append(ticker)
+                
+            except Exception as e:
+                # Silently skip errors for bulk scan
+                continue
+        
+        # Save FULL targets array
+        os.makedirs('data', exist_ok=True)
+        with open(self.targets_path, 'w') as f:
+            json.dump(all_targets, f, indent=2)
+            
+        # Unified Telegram Brief
+        timestamp = datetime.utcnow().strftime('%d/%m %H:%M UTC')
+        msg = f"📊 **MORNING BRIEF: {len(watchlist)} SCANNED**\n"
+        msg += f"📅 *{timestamp}*\n"
+        msg += f"Found {len(all_targets)} valid targets. Top {len(high_prob_setups)} high-prob setups identified:\n\n"
+        
+        # SECTOR DELTAS (Main Holdings Only)
+        try:
+            sector_report = self.mapper.generate_delta_report()
+            msg += f"{sector_report}\n" # Header is already in generate_delta_report
+        except Exception as e:
+            print(f"⚠️ Sector logic error: {e}")
+            msg += "⚠️ Sector Analysis Failed\n\n"
+            
+        msg += "🔥 **TOP PICK TRIGGERS**\n"
+        for t in all_targets:
+            if t['ticker'] in high_prob_setups:
+                msg += f"- {t['ticker']} > ${t['trigger_price']} (Stop: ${t['stop_loss']})\n"
+                
+        msg += "\nSniper engine synced. Monitoring active."
+
+        self.alerts.send_message(msg)
+        print(f"✅ Full Scan Complete. Brief sent via SovereignAlerts.")
+
+def main():
+    """Unified entry point for Moat Analysis and Morning Brief"""
+    import argparse
+    parser = argparse.ArgumentParser(description='Strategic Moat & Morning Brief')
+    parser.add_argument('ticker', nargs='?', help='Ticker for Moat Analysis')
+    parser.add_argument('--brief', action='store_true', help='Generate Morning Brief')
+    
+    args = parser.parse_args()
+    
+    try:
+        if args.brief:
+            brief = MorningBrief()
+            brief.generate_brief()
+        elif args.ticker:
+            analyzer = MoatAnalyzer()
+            dossier = analyzer.generate_moat_dossier(args.ticker)
+            analyzer.send_to_telegram(dossier, args.ticker)
+        else:
+            parser.print_help()
+    except Exception as e:
+        print(f"❌ Execution Error: {e}")
 
 if __name__ == "__main__":
     main()
+
