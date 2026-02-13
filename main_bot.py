@@ -34,6 +34,28 @@ def run_sniper():
     # ... (startup msgs)
 
     while True:
+        # 1. FORCE SESSION CLOSE (21:00 UTC - The Curfew)
+        now_dt = datetime.utcnow()
+        now_time = now_dt.time()
+        
+        if now_time >= dtime(21, 0):
+            print("🌙 21:00 UTC CURFEW: Closing all intraday positions.")
+            try:
+                positions = client.get_positions()
+                if positions:
+                    for pos in positions:
+                        print(f"   Closing {pos['ticker']} ({pos['quantity']}) for curfew.")
+                        client.execute_order(pos['ticker'], pos['quantity'], "SELL")
+                else:
+                    print("   No open positions to close.")
+            except Exception as e:
+                print(f"⚠️ Curfew Error: {e}")
+            
+            # Sleep until midnight or exit? Script restarts daily via cron or effective loop constraints.
+            # Just sleep for a while to avoid spamming API until 21:05 exit.
+            sleep_time.sleep(300) 
+            continue
+
         # 2. THE HUNT (Check Targets)
         try:
             if now_time >= dtime(14, 30):
@@ -45,14 +67,58 @@ def run_sniper():
                         triggers = [] # Wipe triggers
                         
                     for trade in triggers:
+                        ticker = trade['ticker']
+                        
                         # VALIDATE TICKER (v2.1) - Double check (Client processes it too, but safe here)
-                        if not client.validate_ticker(trade['ticker']):
-                             print(f"⛔ Skipped Invalid Ticker: {trade['ticker']}")
+                        if not client.validate_ticker(ticker):
+                             print(f"⛔ Skipped Invalid Ticker: {ticker}")
                              continue
 
+                        # DUPLICATE GUARD (Restart Safety)
+                        # Prevents re-buying if we restart the bot mid-scan
+                        # We check if we already hold this ticker
+                        current_positions = client.get_positions()
+                        is_held = False
+                        if current_positions and isinstance(current_positions, list):
+                            for p in current_positions:
+                                if p.get('ticker') == ticker:
+                                    is_held = True
+                                    break
+                        
+                        if is_held:
+                            print(f"⚠️ Skipping {ticker}: Position already held (Duplicate Guard).")
+                            continue
+
+                        # AUDITOR GAUNTLET (Safety Protocols)
+                        try:
+                            # We fetch detailed info here for the specific candidate
+                            # This adds latency but ensures safety (The "Auditor")
+                            import yfinance as yf
+                            t_info = yf.Ticker(ticker).info
+                            
+                            # A. Volume Filter
+                            avg_vol = t_info.get('averageVolume', 0)
+                            if not auditor.check_volume_filter(ticker, avg_vol):
+                                continue # Logged by auditor method
+
+                            # B. Spread Guard
+                            bid = t_info.get('bid', 0)
+                            ask = t_info.get('ask', 0)
+                            
+                            # Only check if data available
+                            if bid > 0 and ask > 0:
+                                if not auditor.check_spread_guard(ticker, bid, ask):
+                                    continue # Logged by auditor method
+                            else:
+                                print(f"⚠️ Spread Guard: No Bid/Ask for {ticker}. Proceeding (Data Unavailable).")
+
+                        except Exception as e:
+                            print(f"⚠️ Auditor Check Error ({ticker}): {e}")
+                            # On error, we allow trade but warn. (Fail Open for data errors, Fail Closed for logic)
+                        
                         # EXECUTE BUY
-                        print(f"🚀 BUY SIGNAL: {trade['ticker']} @ ${trade['price']:.2f}")
-                        client.execute_order(trade['ticker'], trade['quantity'], "BUY")
+                        print(f"🚀 BUY SIGNAL: {ticker} @ ${trade['price']:.2f}")
+                        client.execute_order(ticker, trade['quantity'], "BUY")
                         alerts.send_trade_alert(trade, "ENTRY")
             else:
                 print(f"⏳ PRE-MARKET: {now_time.strftime('%H:%M:%S')} UTC. Waiting for 14:30 open...")
@@ -138,6 +204,37 @@ def run_sniper():
             print(f"⚠️ Risk Error: {e}")
 
         print(f"... Heartbeat {datetime.now().strftime('%H:%M:%S')} ...")
+        
+        # 4. HOURLY PULSE (Proof of Life)
+        # Sends a Telegram message at the top of every hour (XX:00)
+        current_hour = now_dt.hour
+        # specific check to avoid spamming (using minute 0 and a lock variable notion)
+        # We can use a simple file lock or just rely on the sleep(60)
+        if now_dt.minute == 0:
+             pulse_lock = f"data/pulse_{now_dt.strftime('%Y%m%d_%H')}.lock"
+             if not os.path.exists(pulse_lock):
+                 try:
+                    # Get monitored targets
+                    target_list = "No Targets Loaded"
+                    if os.path.exists('data/targets.json'):
+                        with open('data/targets.json', 'r') as f:
+                             t_data = json.load(f)
+                             tickers = [t['ticker'] for t in t_data]
+                             target_list = ", ".join(tickers)
+                    
+                    msg = (f"💓 **SENTINEL PULSE**\n"
+                           f"Time: {now_dt.strftime('%H:%M')} UTC\n"
+                           f"Status: ACTIVE (Scanning)\n"
+                           f"Targets: {target_list}")
+                    
+                    alerts.send_message(msg)
+                    print(f"💓 Sent Hourly Pulse: {target_list}")
+                    
+                    with open(pulse_lock, 'w') as f:
+                        f.write(str(now_dt))
+                 except Exception as e:
+                     print(f"⚠️ Pulse Error: {e}")
+
         sleep_time.sleep(60) # Scan every minute
 
 if __name__ == "__main__":

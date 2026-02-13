@@ -38,6 +38,35 @@ class TradingAuditor:
         # Configure Gemini via Client (No standalone genai needed)
         self.gemini_available = bool(self.client.gemini_key)
 
+    def check_spread_guard(self, ticker: str, bid: float, ask: float) -> bool:
+        """
+        Spread Guard: Rejects trade if (Ask - Bid) / Bid > 0.05% (0.0005).
+        Prevents buying into massive slippage.
+        """
+        if bid <= 0: return False # Bad data
+        spread_pct = (ask - bid) / bid
+        
+        # Rulebook Limit: 0.05%
+        LIMIT = 0.0005 
+        
+        if spread_pct > LIMIT:
+            print(f"🛡️ SPREAD GUARD: {ticker} rejected. Spread {spread_pct:.4f} > {LIMIT}")
+            return False
+            
+        return True
+
+    def check_volume_filter(self, ticker: str, avg_volume: float) -> bool:
+        """
+        Volume Filter: Rejects trade if 30-day Avg Volume < 500k.
+        Ensures liquidity (No "Ghost" stocks).
+        """
+        LIMIT = 500000
+        if avg_volume < LIMIT:
+             print(f"🛡️ VOLUME FILTER: {ticker} rejected. Vol {avg_volume:,.0f} < {LIMIT:,.0f}")
+             return False
+             
+        return True
+
     
     def normalize_uk_price(self, ticker: str, raw_price: float) -> float:
         """
@@ -259,6 +288,10 @@ Respond ONLY with valid JSON, no other text.
                     'pnl_percent': (pnl / invested * 100) if invested > 0 else 0
                 })
             
+            # CRITICAL MATH FIX (Cash + Equity = Total Wealth)
+            # This ensures we match the T212 dashboard total
+            total_wealth = total_current_value + cash_balance
+            
             live_state = {
                 'timestamp': datetime.utcnow().isoformat() + 'Z',
                 'total_wealth': total_current_value + cash_balance,
@@ -317,6 +350,54 @@ Respond ONLY with valid JSON, no other text.
         except Exception as e:
             print(f"❌ Failed to generate instrument map: {e}")
 
+    def enforce_iron_seed(self) -> bool:
+        """
+        ENFORCES THE IRON SEED PROTOCOL (SPEC v2.1)
+        Prevents 'Sniper Lab' exposure from exceeding £1,000.
+        Only sums trades with value < £250.
+        """
+        try:
+            # Fetch positions via client
+            raw_positions = self.client.get_open_positions()
+            
+            # Robust parsing (Stop JSONDecodeError)
+            if isinstance(raw_positions, str):
+                try:
+                    all_positions = json.loads(raw_positions)
+                except json.JSONDecodeError:
+                    print("⚠️ Iron Seed: Failed to parse positions string.")
+                    return True # Fail open to avoid deadlock, but warn.
+            elif isinstance(raw_positions, list):
+                all_positions = raw_positions
+            else:
+                all_positions = []
+                
+            # Identify Lab trades (Value < £250) and calculate exposure
+            lab_exposure = 0.0
+            
+            for p in all_positions:
+                try:
+                    # Robust value extraction
+                    val = float(p.get('value', 0) or 0)
+                    
+                    # STRICT FILTER: Only count "Lab" trades (< £250)
+                    # Core holdings (> £250) are IGNORED by this cap.
+                    if val < 250.0:
+                        lab_exposure += val
+                except:
+                    continue
+            
+            # print(f"🛡️ CURRENT LAB EXPOSURE: £{lab_exposure:.2f} (Limit: £1,000)")
+            
+            if lab_exposure >= 1000.00:
+                print(f"🛑 IRON SEED LIMIT REACHED (£{lab_exposure:.2f}). Blocking new Sniper entries.")
+                return False
+            
+            return True
+            
+        except Exception as e:
+            print(f"⚠️ Iron Seed Check Error: {e}")
+            return True
 
 def emergency_shutdown(reason: str):
     """Send Telegram alert and halt system"""
@@ -357,3 +438,8 @@ if __name__ == "__main__":
     
     print(f"\n✅ Gauntlet Test Result:")
     print(json.dumps(test_result, indent=2))
+    
+    # Test Iron Seed
+    print("\n🛡️ Testing Iron Seed Protocol...")
+    is_safe = auditor.enforce_iron_seed()
+    print(f"Iron Seed Safe: {is_safe}")
