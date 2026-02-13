@@ -1061,7 +1061,17 @@ class MorningBrief:
             
         # Unified Telegram Brief
         timestamp = datetime.utcnow().strftime('%d/%m %H:%M UTC')
-        msg = f"📊 **MORNING BRIEF: {len(watchlist)} SCANNED**\n"
+        
+        # 1. MARKET OPEN ANALYSIS (15m Recap) - New v2.4
+        # We explicitly call the 15m analysis here so it's part of the brief
+        try:
+            open_analysis = generate_open_market_brief()
+            msg = f"{open_analysis}\n\n"
+        except Exception as e:
+            print(f"⚠️ Open Analysis Failed: {e}")
+            msg = ""
+
+        msg += f"📊 **MORNING BRIEF: {len(watchlist)} SCANNED**\n"
         msg += f"📅 *{timestamp}*\n"
         msg += f"Found {len(all_targets)} valid targets. Top {len(high_prob_setups)} high-prob setups identified:\n\n"
         
