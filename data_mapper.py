@@ -37,12 +37,14 @@ def safe_get(obj: Any, key: str, default: Any = 0) -> Any:
     return default
 
 
+# Global clock to prevent redundant initialization
+from macro_clock import MacroClock
+clock = MacroClock()
+
 def map_live_state_to_ui_context(live_state: Dict[str, Any]) -> Dict[str, Any]:
     """
     Map auditor's live_state.json to base.html Jinja2 context.
     """
-    from macro_clock import MacroClock
-    clock = MacroClock()
     phase_data = clock.detect_market_phase()
     
     # Extract holdings and sort by value (anti-sliver)
@@ -78,7 +80,7 @@ def map_live_state_to_ui_context(live_state: Dict[str, Any]) -> Dict[str, Any]:
     # Map to UI context - ALL values must be Python primitives
     context = {
         'total_wealth': float(total_wealth_normalized),  # NORMALIZED
-        'cash': float(safe_get(live_state, 'cash_available', 0.0)),
+        'cash': float(safe_get(live_state, 'cash', 0.0)),
         'session_pnl': float(session_pnl_normalized),  # NORMALIZED
         'positions': holdings_sorted,
         'positions_count': len(holdings_sorted),
