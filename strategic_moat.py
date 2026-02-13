@@ -12,6 +12,7 @@ from typing import Dict, List, Any
 # Removed standalone genai import - using consolidated client
 import requests
 from trading212_client import Trading212Client
+from audit_log import AuditLogger
 
 
 class MoatAnalyzer:
@@ -22,6 +23,7 @@ class MoatAnalyzer:
         self.client = Trading212Client()
         self.telegram_token = self.client.bot_token
         self.telegram_chat_id = self.client.chat_id
+        self.logger = AuditLogger("MoatAnalyzer")
     
     def _query_ai(self, prompt: str) -> str:
         """Wrapper for client's Gemini engine"""
@@ -486,6 +488,7 @@ Sector: {validation_data.get('sector', 'Unknown')}
             print(f"   Error: {e}")
             print(f"\n📋 ENFORCEMENT: No plan = no dossier (Step-Lock Protocol)")
             print(f"{'='*60}\n")
+            self.logger.log("STEP_LOCK_FAIL", ticker, f"Plan write failed: {e}", "ERROR")
             raise RuntimeError(
                 f"STEP_LOCK_FAILURE: Cannot write research plan\n"
                 f"Path: {plan_path}\nError: {e}\n"
@@ -600,6 +603,7 @@ Sector: {validation_data.get('sector', 'Unknown')}
         Exports STRONG BUY/BUY recommendations to data/targets.json for Sniper execution.
         """
         print(f"🔗 Handing over {ticker} ({recommendation}) to Sniper Engine...")
+        self.logger.log("TARGET_EXPORT", ticker, f"Recommendation: {recommendation}", "INFO")
         
         targets_path = 'data/targets.json'
         targets = []
@@ -993,6 +997,7 @@ class MorningBrief:
         self.master_universe_path = 'data/master_universe.json'
         self.targets_path = 'data/targets.json'
         self.mapper = SectorMapper() # Initialize Mapper
+        self.logger = AuditLogger("MorningBrief")
         
     def load_watchlist(self) -> List[str]:
         """Load vetted Tier 1 tickers from master_universe.json"""
@@ -1006,10 +1011,12 @@ class MorningBrief:
 
     def generate_brief(self):
         """Calculates levels for ALL tickers and saves to JSON"""
+        self.logger.log("BRIEF_START", "System", "Starting Morning Brief scan...")
         # WEEKEND GUARD
         now = datetime.utcnow()
         if now.weekday() >= 5:
             print("📅 WEEKEND: Skipping Morning Brief.")
+            self.logger.log("BRIEF_SKIP", "System", "Weekend detected", "INFO")
             return
 
         watchlist = self.load_watchlist()
@@ -1093,6 +1100,7 @@ class MorningBrief:
 
         self.alerts.send_message(msg)
         print(f"✅ Full Scan Complete. Brief sent via SovereignAlerts.")
+        self.logger.log("BRIEF_COMPLETE", "System", f"Found {len(all_targets)} targets", "SUCCESS")
 
 def main():
     """Unified entry point for Moat Analysis and Morning Brief"""
