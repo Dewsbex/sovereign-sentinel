@@ -891,15 +891,21 @@ def generate_open_market_brief() -> str:
     if 'SPY' not in tickers: tickers.append('SPY')
     if 'QQQ' not in tickers: tickers.append('QQQ')
 
-    # 2. Batch Fetch Data (Fast)
-    # We need Prev Close and Current Price
+    # 2. Batch Fetch Data (Fast) & Targeted 15m Candle
+    # v2.3: We now fetch intraday data to isolate the 14:30-14:45 UTC candle
+    # regardless of when this script is run (even hours later)
     try:
-        # download() is faster for many tickers than Ticker() loop
-        df = yf.download(tickers, period="2d", group_by='ticker', progress=False)
+        # Fetch 5 days of 15m data to capture "today's open" reliably
+        df = yf.download(tickers, period="5d", interval="15m", group_by='ticker', progress=False)
     except Exception as e:
         return f"⚠️ Market Data Fetch Failed: {e}"
 
     results = []
+    
+    # Target Open Time: Today at 14:30 UTC
+    today_str = datetime.utcnow().strftime('%Y-%m-%d')
+    # Use pandas compatible string for indexing/search if needed, 
+    # but yfinance returns UTC index. 
     
     # 3. Process Each Ticker
     for t in tickers:
@@ -912,23 +918,30 @@ def generate_open_market_brief() -> str:
             
             if t_data.empty: continue
             
-            # Get latest close (or current price) and prev close
-            # If market is open, the last row is 'Today' (live), row -2 is 'Yesterday'
-            # If market closed, last row is Today.
+            # Find the 14:30-14:45 candle for "Today"
+            # Resample or just find the row
+            # Index is DatetimeIndex localized to UTC usually
             
-            current = t_data['Close'].iloc[-1]
-            try:
-                prev = t_data['Close'].iloc[-2]
-            except:
-                prev = current # Fallback if no history
-                
-            if pd.isna(prev) or prev == 0: continue
+            # Filter for today
+            today_data = t_data.loc[today_str] 
             
-            change = ((current - prev) / prev) * 100
+            if today_data.empty: continue
+            
+            # Find specific 14:30 candle
+            # Approx check - take the first candle of the day if it's near 14:30 UTC
+            # US Market Open is 14:30 UTC (Standard) or 13:30 (DST). 
+            # Best proxy: The very first candle of the session.
+            
+            first_candle = today_data.iloc[0]
+            open_price = float(first_candle['Open'])
+            close_price = float(first_candle['Close'])
+            
+            # Calculate the move in that first 15m
+            change = ((close_price - open_price) / open_price) * 100
             
             results.append({
                 'ticker': t,
-                'price': current,
+                'price': close_price, # Price at end of 15m
                 'change': change
             })
         except:
@@ -944,21 +957,22 @@ def generate_open_market_brief() -> str:
     
     # 5. Construct Report
     timestamp = datetime.utcnow().strftime('%H:%M UTC')
-    msg = f"🔔 **MARKET OPEN ANALYSIS ({timestamp})**\n"
+    msg = f"🔔 **MARKET OPEN ANALYSIS (15m Recap)**\n"
+    msg += f"📅 Data: {today_str} (First 15m Interval)\n"
     msg += f"📡 Scanned {len(results)} Tickers\n\n"
     
     # Indices
     spy = next((x for x in results if x['ticker'] == 'SPY'), {'price':0, 'change':0})
     qqq = next((x for x in results if x['ticker'] == 'QQQ'), {'price':0, 'change':0})
     
-    msg += f"**S&P 500:** ${spy['price']:.2f} ({spy['change']:+.2f}%)\n"
-    msg += f"**Nasdaq:** ${qqq['price']:.2f} ({qqq['change']:+.2f}%)\n\n"
+    msg += f"**S&P 500:** ${spy['price']:.2f} (15m: {spy['change']:+.2f}%)\n"
+    msg += f"**Nasdaq:** ${qqq['price']:.2f} (15m: {qqq['change']:+.2f}%)\n\n"
     
-    msg += "**🚀 Top Gainers:**\n"
+    msg += "**🚀 15m Gainers:**\n"
     for m in top_gainers:
         msg += f"- {m['ticker']}: ${m['price']:.2f} ({m['change']:+.2f}%)\n"
         
-    msg += "\n**🔻 Top Losers:**\n"
+    msg += "\n**🔻 15m Losers:**\n"
     for m in sorted(top_losers, key=lambda x: x['change']):
         msg += f"- {m['ticker']}: ${m['price']:.2f} ({m['change']:+.2f}%)\n"
         
@@ -1090,6 +1104,11 @@ def main():
             parser.print_help()
     except Exception as e:
         print(f"❌ Execution Error: {e}")
+        try:
+            from telegram_bot import SovereignAlerts
+            SovereignAlerts().send_message(f"⚠️ **CRITICAL FAILURE**\nJob: `strategic_moat.py`\nError: `{str(e)}`")
+        except:
+            pass
 
 if __name__ == "__main__":
     main()
