@@ -925,13 +925,14 @@ def generate_open_market_brief() -> str:
             # Filter for today
             today_data = t_data.loc[today_str] 
             
+            # v2.5 Fix: Drop NaN rows! 
+            # If batch contains UK & US stocks, the index will include UK open times (08:00 UTC)
+            # where US stocks are NaN. We must filter these out to find the TRUE US open.
+            today_data = today_data.dropna()
+
             if today_data.empty: continue
             
-            # Find specific 14:30 candle
-            # Approx check - take the first candle of the day if it's near 14:30 UTC
-            # US Market Open is 14:30 UTC (Standard) or 13:30 (DST). 
-            # Best proxy: The very first candle of the session.
-            
+            # Find specific 14:30 candle (or first valid candle)
             first_candle = today_data.iloc[0]
             open_price = float(first_candle['Open'])
             close_price = float(first_candle['Close'])
