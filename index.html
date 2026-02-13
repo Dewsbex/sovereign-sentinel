@@ -507,7 +507,7 @@
     
     <!-- FOOTER -->
     <footer class="footer">
-        SOVEREIGN TERMINAL v1.1 - PRECISION LOCK // 2026-02-10T01:25Z
+        SOVEREIGN TERMINAL v1.1 - PRECISION LOCK // 2026-02-10T02:40:14Z
     </footer>
     
     <!-- ApexCharts -->
@@ -557,13 +557,29 @@
                 ] } } },
                 dataLabels: { 
                     enabled: true, 
-                    style: { fontSize: '13px', fontWeight: 700, colors: ['#111827'], fontFamily: "'JetBrains Mono', monospace" },
+                    style: { fontSize: '11px', fontWeight: 700, colors: ['#111827'], fontFamily: "'JetBrains Mono', monospace" },
                     formatter: function(text, op) {
                         const item = window.heatmapMetadata?.[op.dataPointIndex];
-                        return item ? [item.ticker, item.pnl_percent.toFixed(2) + '%'] : [text];
+                        if (!item) return [text];
+                        return [
+                            item.ticker, 
+                            item.pnl_percent + '%',
+                            item.display_value,
+                            item.display_pnl
+                        ];
                     }
                 },
-                stroke: { show: true, width: 5, colors: ['#f9fafb'] }
+                tooltip: {
+                    theme: 'light',
+                    y: {
+                        formatter: function(value, { dataPointIndex }) {
+                            const item = window.heatmapMetadata?.[dataPointIndex];
+                            if (item) return `${item.display_value} | P/L: ${item.display_pnl} (${item.pnl_percent}%)`;
+                            return value;
+                        }
+                    }
+                },
+                stroke: { show: true, width: 3, colors: ['#f9fafb'] }
             });
             heatmapChart.render();
             

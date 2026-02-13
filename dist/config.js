@@ -7,7 +7,7 @@ const CONFIG = {
     // API Base URL - automatically detects environment
     API_BASE_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:5000'  // Local development
-        : 'https://api.sovereign-sentinel.pages.dev',  // Production (Cloudflare Tunnel)
+        : 'https://felt-herbs-extremely-third.trycloudflare.com',  // Quick Tunnel (Live Backend)
     
     // Polling intervals
     DASHBOARD_REFRESH_INTERVAL: 30000,  // 30 seconds
