@@ -262,8 +262,21 @@ class Trading212Client:
         return f"Gemini All Models Failed. Last Error: {last_error}"
 
     def send_telegram(self, message):
+        """Sends message to Telegram, splitting if > 4096 chars"""
         url = f"https://api.telegram.org/bot{self.bot_token}/sendMessage"
-        requests.post(url, data={"chat_id": self.chat_id, "text": message, "parse_mode": "Markdown"})
+        
+        # Split into chunks of 4000 to be safe (limit is 4096)
+        chunk_size = 4000
+        
+        for i in range(0, len(message), chunk_size):
+            chunk = message[i:i+chunk_size]
+            try:
+                res = requests.post(url, data={"chat_id": self.chat_id, "text": chunk, "parse_mode": "Markdown"})
+                if res.status_code != 200:
+                    # Fallback: Try without Markdown if parsing fails (common with special chars)
+                    requests.post(url, data={"chat_id": self.chat_id, "text": chunk})
+            except Exception as e:
+                print(f"⚠️ Telegram Send Error: {e}")
 
     # --- SECTION C: DATA INTEGRITY (Neon Sentry) ---
     def sync_master_list(self):
