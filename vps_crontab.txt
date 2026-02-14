@@ -1,15 +1,30 @@
 # Sovereign Sentinel v1.9.5 VPS Crontab (Ground Truth)
 # Primary orchestrator for autonomous trading (Oracle VPS)
 
+# 0. SYSTEM CHECK: Daily Health Verification (13:00 UTC = 8:00 AM NY)
+00 13 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh system_check /usr/bin/python3 system_check.py
+
 # 1. WATCHDOG: Integrity Scan (07:55 UTC)
-55 7 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && /usr/bin/python3 watchdog.py >> /home/ubuntu/logs/watchdog.log 2>&1
+55 7 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh watchdog /usr/bin/python3 watchdog.py
 
 # 2. PRE-FLIGHT: London Open Checks (08:01 UTC)
-1 8 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && /usr/bin/python3 monday_preflight.py >> /home/ubuntu/logs/preflight.log 2>&1
+1 8 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh preflight /usr/bin/python3 monday_preflight.py
+
+# 2.5 ORB SHIELD: Circuit Breaker (14:25 UTC)
+25 14 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh shield /usr/bin/python3 orb_shield.py
+
+# 2.6 MORNING BRIEF: Strategies & Targets (14:30 UTC - NYSE OPEN)
+30 14 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh brief /usr/bin/python3 strategic_moat.py --brief
+
+# 2.7 ORB STRATEGY: 15m Breakout (14:46 UTC - Post-15m Candle)
+46 14 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh orb /usr/bin/python3 orb_strategy.py
 
 # 3. EXECUTION: US Open (14:25 UTC)
 # Logic consolidated in main_bot.py + trading212_client.py
-25 14 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && /usr/bin/python3 main_bot.py --live >> /home/ubuntu/logs/main_bot.log 2>&1
+25 14 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh main_bot /usr/bin/python3 main_bot.py --live
 
 # 4. POST-FLIGHT: Status Report (14:31 UTC)
-31 14 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && /usr/bin/python3 monday_preflight.py --postflight >> /home/ubuntu/logs/postflight.log 2>&1
+31 14 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh postflight /usr/bin/python3 monday_preflight.py --postflight
+
+# 5. DATA SYNC: Master List (08:30 UTC)
+30 8 * * * cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh sync /usr/bin/python3 trading212_client.py --sync
