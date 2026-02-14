@@ -38,7 +38,7 @@ def run_sniper():
     Autonomous Execution and Risk Management Lifecycle.
     """
     # Initialize Logger
-    logger = AuditLogger("SniperEngine")
+    logger = AuditLogger("SS007-MainBot")
     logger.log("STARTUP", "System", "Initializing Sniper Engine...", "INFO")
 
     # Initialize Services

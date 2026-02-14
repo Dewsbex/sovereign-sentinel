@@ -140,4 +140,14 @@ def run_recovery():
     SovereignAlerts().send_message(msg)
 
 if __name__ == "__main__":
-    run_recovery()
+    from audit_log import AuditLogger
+    
+    logger = AuditLogger("SS015-ORBStrategy")
+    logger.log("JOB_START", "Strategy", "Analyzing 15m Open Range...")
+    
+    try:
+        run_recovery()
+        logger.log("JOB_COMPLETE", "Strategy", "Analysis Complete", "SUCCESS")
+    except Exception as e:
+        logger.log("JOB_ERROR", "Strategy", f"Analysis Failed: {e}", "ERROR")
+        print(f"Critical Error: {e}")

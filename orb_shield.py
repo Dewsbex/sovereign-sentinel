@@ -208,7 +208,12 @@ class ORBShield:
             current_time = datetime.now(timezone.utc)
             hour, minute = current_time.hour, current_time.minute
             
-            # Active window: 14:25 - 21:00 UTC
+            # Active window: 14:25 - 21:05 UTC
+            if not (14 <= hour <= 21):
+                print(f"⛔ Outside market hours ({hour}:{minute} UTC). Shield deactivating.")
+                sys.exit(0)
+            
+            # Active window: 14:25 - 21:05 UTC
             if hour == 14 and minute >= 25:
                 # Record baseline at 14:29
                 if minute == 29:
@@ -257,4 +262,20 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    from audit_log import AuditLogger
+    
+    # Initialize Logger
+    logger = AuditLogger("SS014-ORBShield")
+    logger.log("JOB_START", "System", "Shield Activated")
+    
+    try:
+        main()
+        logger.log("JOB_COMPLETE", "System", "Shield Deactivated (Market Closed)", "SUCCESS")
+    except SystemExit as e:
+        if e.code == 0:
+            logger.log("JOB_COMPLETE", "System", "Shield Deactivated", "SUCCESS")
+        else:
+            logger.log("JOB_FAILURE", "System", "Shield Exited Abnormaly", "ERROR")
+    except Exception as e:
+        logger.log("JOB_ERROR", "System", f"Shield Crashed: {e}", "ERROR")
+        raise

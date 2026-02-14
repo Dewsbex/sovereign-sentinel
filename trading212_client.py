@@ -326,3 +326,29 @@ class Trading212Client:
         except Exception as e:
             print(f"⚠️ Validation Error: {e}")
             return None
+
+if __name__ == "__main__":
+    import argparse
+    from audit_log import AuditLogger
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--sync', action='store_true', help='Sync Master Instrument List')
+    args = parser.parse_args()
+    
+    if args.sync:
+        logger = AuditLogger("SS005-DataSync")
+        logger.log("JOB_START", "System", "Starting Master List Sync")
+        
+        try:
+            client = Trading212Client()
+            success = client.sync_master_list()
+            
+            if success:
+                logger.log("JOB_COMPLETE", "System", "Sync Successful", "SUCCESS")
+                # Optional: Send Telegram? Probably too noisy for daily sync unless error.
+            else:
+                logger.log("JOB_FAILURE", "System", "Sync Failed", "ERROR")
+                
+        except Exception as e:
+            logger.log("JOB_ERROR", "System", str(e), "ERROR")
+            print(f"Sync Error: {e}")

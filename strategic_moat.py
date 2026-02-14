@@ -997,7 +997,7 @@ class MorningBrief:
         self.master_universe_path = 'data/master_universe.json'
         self.targets_path = 'data/targets.json'
         self.mapper = SectorMapper() # Initialize Mapper
-        self.logger = AuditLogger("MorningBrief")
+        self.logger = AuditLogger("SS008-MorningBrief")
         
     def load_watchlist(self) -> List[str]:
         """Load vetted Tier 1 tickers from master_universe.json"""
