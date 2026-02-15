@@ -2,7 +2,7 @@
 # Primary orchestrator for autonomous trading (Oracle VPS)
 
 # 0. SYSTEM CHECK: Daily Health Verification (13:00 UTC = 8:00 AM NY)
-00 13 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh system_check /usr/bin/python3 system_check.py
+00 13 * * * cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh heartbeat /usr/bin/python3 daily_heartbeat.py
 
 # 1. WATCHDOG: Integrity Scan (07:55 UTC)
 55 7 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh watchdog /usr/bin/python3 watchdog.py
