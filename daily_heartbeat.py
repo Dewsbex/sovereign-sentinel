@@ -54,7 +54,7 @@ def main():
     is_open, status_msg = get_market_status()
     
     # Base message
-    msg = f"💓 **DAILY HEARTBEAT**\n{status_msg}\nSystem Online."
+    msg = f"💓 **DAILY HEARTBEAT**\nJob: `daily_heartbeat.py`\n{status_msg}\nSystem Online."
     
     # 1. Send Initial "Proof of Life"
     # alerts.send_message(msg) 
@@ -73,7 +73,7 @@ def main():
     else:
         # Market Open Case
         print(f"{status_msg}. Initiating System Test...")
-        alerts.send_message(f"✅ **MARKET OPEN**\nStarting Daily System Verify...")
+        alerts.send_message(f"✅ **MARKET OPEN**\nJob: `daily_heartbeat.py`\nStarting Daily System Verify...")
         
         try:
             # Run the System Test

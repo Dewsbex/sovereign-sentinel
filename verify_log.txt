@@ -1,0 +1,25 @@
+🔍 VERIFYING INSTRUMENTS WITH TRADING 212 API...
+===============================================
+1. Fetching latest instrument list from Trading 212...
+   -> File contains 16564 records.
+2. Loaded 139 candidates from Master Universe.
+3. Validating candidates...
+------------------------------
+✅ VERIFIED: 124 / 139 are definitely valid US Equities.
+❌ INVALID / NOT FOUND (15):
+   - SOFI
+   - LCID
+   - META
+   - DKNG
+   - BKNG
+   - RR.L
+   - AZN.L
+   - SHEL.L
+   - BP.L
+   - HSBA.L
+   - LLOY.L
+   - BARC.L
+   - NG.L
+   - VOD.L
+   - TSCO.L
+===============================================

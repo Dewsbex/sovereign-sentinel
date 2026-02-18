@@ -2,11 +2,13 @@
 Wealth Seeker v0.01 - Macro-Clock System (macro_clock.py)
 ==========================================================
 Market phase detection with sector target allocation.
-Uses Gemini Deep Research to analyze macro-economic indicators.
+Uses the LLM Council (multi-LLM consensus) for hallucination-resistant analysis.
+Falls back to single Gemini if Council is unavailable.
 """
 
 import json
 import os
+import sys
 from datetime import datetime, timedelta
 from typing import Dict, Tuple
 
@@ -16,6 +18,15 @@ try:
 except ImportError:
     GEMINI_AVAILABLE = False
     print("⚠️  google.generativeai not installed, using fallback mode")
+
+# LLM Council (A2A: ask_others pattern)
+try:
+    # Works when run from project root
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from services.llm_council.llm_council import LLMCouncil
+    COUNCIL_AVAILABLE = True
+except ImportError:
+    COUNCIL_AVAILABLE = False
 
 
 # Phase-Bias Matrix: Sector Target Weights by Market Phase
@@ -72,13 +83,27 @@ PHASE_TARGETS = {
 
 
 class MacroClock:
-    """Market phase detector using Gemini Deep Research"""
+    """Market phase detector using the LLM Council (multi-LLM consensus)"""
     
     def __init__(self):
         self.model = None
+        self.council = None
+
+        # Primary: LLM Council (hallucination guard)
+        if COUNCIL_AVAILABLE:
+            self.council = LLMCouncil()
+            print("🏛️  Macro Brain: LLM Council Active (multi-LLM consensus)")
+
+        # Fallback: single Gemini
         if GEMINI_AVAILABLE and os.getenv("GOOGLE_API_KEY"):
             genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-            self.model = genai.GenerativeModel('gemini-pro')
+            try:
+                self.model = genai.GenerativeModel('gemini-2.0-flash')
+                if not self.council:
+                    print("🧠 Macro Brain: Gemini (solo mode — Council unavailable)")
+            except Exception as e:
+                print(f"⚠️  Failed to initialize Gemini model: {e}")
+                self.model = None
         
         self.cache_path = "data/macro_phase_cache.json"
         self.cache_duration_hours = 24  # Refresh once per day
@@ -129,19 +154,8 @@ class MacroClock:
                 "cached": True
             }
         
-        # Check if Gemini is available
-        if not self.model:
-            print("⚠️  Gemini unavailable, using MID_BULL fallback")
-            return {
-                "phase": "MID_BULL",
-                "confidence": 0.5,
-                "analysis": "Gemini API not configured, using default phase",
-                "fortress_alert": False,
-                "cached": False
-            }
-        
         print("🔍 Analyzing macro-economic indicators...")
-        
+
         prompt = f"""
 You are a macro-economic analyst. Analyze the current market phase based on available data.
 
@@ -177,25 +191,61 @@ Respond ONLY with valid JSON:
 
 Set "fortress_alert" to true if this represents a shift to LATE_BULL or BEAR that warrants defensive repositioning.
 """
-        
+
+        # ── Path 1: LLM Council (preferred — hallucination guard) ──
+        if self.council:
+            try:
+                council_result = self.council.consult(prompt)
+                phase = council_result.get("phase", "MID_BULL")
+                confidence = council_result.get("confidence", 0.5)
+                consensus = council_result.get("consensus", False)
+                judges = council_result.get("judges", [])
+                analysis = f"Council consensus ({len(judges)} judges): {phase}"
+
+                if phase not in PHASE_TARGETS:
+                    phase = "MID_BULL"
+
+                self.save_phase_cache(phase, confidence, analysis)
+                status = "✅ CONSENSUS" if consensus else "⚠️  NO CONSENSUS (majority)"
+                print(f"🏛️  Council verdict: {phase} | {status} | Confidence: {confidence:.0%}")
+
+                return {
+                    "phase": phase,
+                    "confidence": confidence,
+                    "analysis": analysis,
+                    "fortress_alert": phase in ("LATE_BULL", "BEAR"),
+                    "council_consensus": consensus,
+                    "cached": False
+                }
+            except Exception as e:
+                print(f"⚠️  Council failed, falling back to Gemini solo: {e}")
+
+        # ── Path 2: Gemini solo (fallback) ──
+        if not self.model:
+            print("⚠️  No LLM available, using MID_BULL fallback")
+            return {
+                "phase": "MID_BULL",
+                "confidence": 0.5,
+                "analysis": "No LLM configured, using default phase",
+                "fortress_alert": False,
+                "cached": False
+            }
+
         try:
             response = self.model.generate_content(prompt)
             result = json.loads(response.text.strip())
-            
+
             phase = result.get("phase", "MID_BULL")
             confidence = result.get("confidence", 0.5)
             analysis = result.get("reasoning", "Analysis unavailable")
-            
-            # Validate phase
+
             if phase not in PHASE_TARGETS:
                 print(f"⚠️  Invalid phase '{phase}', defaulting to MID_BULL")
                 phase = "MID_BULL"
-            
-            # Save to cache
+
             self.save_phase_cache(phase, confidence, analysis)
-            
-            print(f"✅ Market Phase: {phase} (Confidence: {confidence:.0%})")
-            
+            print(f"✅ Market Phase (Gemini solo): {phase} (Confidence: {confidence:.0%})")
+
             return {
                 "phase": phase,
                 "confidence": confidence,
@@ -204,10 +254,9 @@ Set "fortress_alert" to true if this represents a shift to LATE_BULL or BEAR tha
                 "fortress_alert": result.get("fortress_alert", False),
                 "cached": False
             }
-            
+
         except Exception as e:
             print(f"❌ Macro-Clock analysis failed: {e}")
-            # Fallback to MID_BULL
             return {
                 "phase": "MID_BULL",
                 "confidence": 0.0,

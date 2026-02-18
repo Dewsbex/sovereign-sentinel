@@ -80,10 +80,13 @@ def live_data():
                 
             except Exception as api_error:
                 print(f"⚠️ T212 API Error: {api_error}")
-                # Fallback to persistent state
+                # Fallback to persistent state (Resilient Dashboard v2.1)
                 if os.path.exists(STATE_FILE):
+                    print("🛡️ Serving Stale State (Falcon Protocol)")
                     with open(STATE_FILE, 'r') as f:
                         cached_state = json.load(f)
+                        cached_state["connectivity_status"] = "STALE (API LIMIT)"
+                        cached_state["stale"] = True
                         return jsonify(cached_state)
                 else:
                     return jsonify({"status": "OFFLINE", "error": "API unavailable"}), 503
@@ -151,16 +154,21 @@ def live_data():
                 sectors[sector]["value"] += box_size
                 sectors[sector]["tickers"].append(ticker)
                 
-                # Enrich position data for Heatmap
+                        # Enrich position data for Heatmap
+                # Add formatted strings for frontend display
                 enriched_positions.append({
                     "ticker": ticker.replace('_US_EQ', '').replace('_UK_EQ', ''),
-                    "current_value": box_size,
-                    "pnl": ppl,
-                    "pnl_percent": pnl_percent
+                    "current_value": round(box_size, 2),
+                    "pnl": round(ppl, 2),
+                    "pnl_percent": round(pnl_percent, 2),
+                    "display_value": f"£{box_size:,.2f}",
+                    "display_pnl": f"{'£' if ppl >=0 else '-£'}{abs(ppl):,.2f}"
                 })
         
         # WEALTH = Investments + Cash
-        total_wealth = total_investments + cash
+        total_wealth = round(total_investments + cash, 2)
+        cash = round(cash, 2)
+        session_pnl = round(session_pnl, 2)
         
         # 4. Extract Realized Profit (from historical data if available)
         # Note: T212 API doesn't provide realized P/L in real-time
@@ -173,7 +181,9 @@ def live_data():
         
         # Calculate sector percentages relative to Total Wealth
         for sector in sectors:
-            sectors[sector]["percent"] = (sectors[sector]["value"] / total_wealth * 100) if total_wealth > 0 else 0.0
+            val = sectors[sector]["value"]
+            sectors[sector]["percent"] = round((val / total_wealth * 100), 1) if total_wealth > 0 else 0.0
+            sectors[sector]["value"] = round(val, 2)
         
         # 5. Macro-Clock Phase and Targets
         try:

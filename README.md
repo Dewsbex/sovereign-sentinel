@@ -1,13 +1,17 @@
-# Wealth Seeker v0.01
+# Sovereign Sentinel: "Neon Sentry" (v2.1)
 
-**Zero-Laptop Cloud-Native Autonomous Trading System**
+> **Status:** BATTLE READY  
+> **Codename:** NEON SENTRY  
+
+**Hybrid Autonomous Financial Defense System**
 
 ## 🎯 Overview
 
-Wealth Seeker is a fully autonomous trading system designed to operate entirely in the cloud via GitHub Actions. It combines deterministic decision logic with AI-powered research to execute two distinct strategies:
+Sovereign Sentinel is a hybrid autonomous trading system designed to protect and grow capital through strict risk protocols and AI-powered research.
 
-- **Job C (5% Autonomous)**: Opening Range Breakout (ORB) trading with VWAP filtering
-- **Job A (95% Advisory)**: Strategic moat analysis for long-term investments
+- **Job C (Autonomous)**: Opening Range Breakout (ORB) trading with VWAP filtering (14:30 - 21:05 UTC).
+- **Job A (Advisory)**: Strategic moat analysis using Gemini 1.5 Flash + Grounding.
+- **Iron Seed Protocol**: Strict £1,000 exposure cap on experimental "Lab" trades (< £250).
 
 ## 🔑 Required Secrets
 

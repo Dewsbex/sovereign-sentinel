@@ -389,7 +389,7 @@ Respond ONLY with valid JSON, no other text.
             
             # print(f"🛡️ CURRENT LAB EXPOSURE: £{lab_exposure:.2f} (Limit: £1,000)")
             
-            if lab_exposure >= 1000.00:
+            if lab_exposure >= 3000.00:
                 print(f"🛑 IRON SEED LIMIT REACHED (£{lab_exposure:.2f}). Blocking new Sniper entries.")
                 return False
             

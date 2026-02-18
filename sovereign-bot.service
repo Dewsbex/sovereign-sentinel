@@ -1,0 +1,16 @@
+[Unit]
+Description=Sovereign Sentinel Trading Bot
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/Sovereign-Sentinel
+ExecStart=/usr/bin/python3 /home/ubuntu/Sovereign-Sentinel/main_bot.py
+Restart=always
+RestartSec=5
+StandardOutput=append:/home/ubuntu/logs/main_bot.log
+StandardError=append:/home/ubuntu/logs/main_bot_error.log
+Environment="PYTHONUNBUFFERED=1"
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,23 @@
+{
+    "name": "LLM Council",
+    "version": "1.0.0",
+    "description": "Multi-LLM consensus engine for hallucination-resistant financial analysis.",
+    "role": "Financial Analyst Judge",
+    "capabilities": [
+        "market_phase_detection",
+        "macro_analysis",
+        "consensus_voting"
+    ],
+    "input_schema": {
+        "prompt": "string",
+        "context": "object"
+    },
+    "output_schema": {
+        "phase": "string",
+        "confidence": "float",
+        "consensus": "boolean",
+        "judges": "array"
+    },
+    "endpoint": "services/llm_council/llm_council.py",
+    "contact": "sovereign-sentinel"
+}

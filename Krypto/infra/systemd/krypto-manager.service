@@ -1,0 +1,17 @@
+[Unit]
+Description=Krypto Execution Manager
+After=docker.service network.target
+Requires=docker.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/Krypto
+ExecStart=/usr/bin/python3 -m manager.core
+Restart=always
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/home/ubuntu/Krypto/kryptoenv
+
+[Install]
+WantedBy=multi-user.target

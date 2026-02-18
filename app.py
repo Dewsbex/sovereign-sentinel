@@ -202,6 +202,7 @@ def execute_trade():
                 'message': f'Trade blocked by gauntlet: {gauntlet_result["reason"]}'
             }), 403
         
+
         # Execute trade via Trading 212
         order = client.place_limit_order(
             ticker=ticker,

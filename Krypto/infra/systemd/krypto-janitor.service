@@ -1,0 +1,16 @@
+[Unit]
+Description=Krypto Janitor Service
+After=krypto-manager.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/Krypto
+ExecStart=/usr/bin/python3 -m infra.janitor
+Restart=always
+RestartSec=60
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/home/ubuntu/Krypto/kryptoenv
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,18 @@
+[Unit]
+Description=Krypto Strategy Agent: %i
+After=krypto-manager.service
+PartOf=krypto-manager.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/Krypto
+# %i corresponds to the agent module name (e.g. 'orb' -> 'agents.orb')
+ExecStart=/usr/bin/python3 -m agents.%i
+Restart=always
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/home/ubuntu/Krypto/kryptoenv
+
+[Install]
+WantedBy=multi-user.target

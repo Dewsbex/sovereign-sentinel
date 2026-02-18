@@ -112,6 +112,7 @@ class ORBShield:
     def execute_kill_protocol(self, session_loss: float, current_equity: float):
         """
         Emergency shutdown sequence.
+        Safety Update (v2.5): Respects Session Whitelist to protect 95% Portfolio.
         """
         print(f"💥 Session Loss: £{session_loss:.2f} (exceeds £{self.max_session_loss} threshold)")
         print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
@@ -142,22 +143,32 @@ class ORBShield:
         # Step 2: Wait 1 second
         time.sleep(1)
         
-        # Step 3: Close all positions
+        # Step 3: Close SESSION positions only
         try:
+            from session_manager import SessionManager
+            session_manager = SessionManager()
+            
             positions = self.client.get_positions()
+            closed_count = 0
+            
             for pos in positions:
                 ticker = pos['ticker']
                 quantity = pos['quantity']
                 
-                # Market sell order
-                self.client.place_market_order(
-                    ticker=ticker,
-                    quantity=quantity,
-                    side='SELL'
-                )
-                print(f"   🔴 Closed position: {ticker} ({quantity} shares)")
+                # ISOLATION CHECK
+                if session_manager.is_whitelisted(ticker):
+                    # Market sell order
+                    self.client.place_market_order(
+                        ticker=ticker,
+                        quantity=quantity,
+                        side='SELL'
+                    )
+                    print(f"   🔴 Closed SESSION position: {ticker} ({quantity} shares)")
+                    closed_count += 1
+                else:
+                    print(f"   🛡️ PROTECTED: {ticker} (Strategic Holding) - NOT SOLD")
             
-            print("✅ All positions closed")
+            print(f"✅ Protocol Complete. Closed {closed_count} session positions.")
             
         except Exception as e:
             print(f"❌ Failed to close positions: {e}")
@@ -183,7 +194,7 @@ class ORBShield:
             "🚨 ORB SHIELD: CIRCUIT BREAKER ACTIVATED\n\n"
             f"Session loss exceeded £{self.max_session_loss}\n"
             f"Initial equity: £{self.initial_equity:,.2f}\n"
-            f"All positions closed.\n\n"
+            f"Session positions closed (Strategic holdings protected).\n\n"
             f"Timestamp: {datetime.now(timezone.utc).isoformat()}Z"
         )
         

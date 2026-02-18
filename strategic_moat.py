@@ -1025,41 +1025,61 @@ class MorningBrief:
         all_targets = []
         high_prob_setups = []
         
-        for ticker in watchlist:
+        # v2.5 FILTER: US-ONLY (No Stamp Duty)
+        us_watchlist = [t for t in watchlist if not any(t.endswith(s) for s in ['.L', '.DE', '.PA', '.AS', '.TO', '.HK', '.MC', '.MI'])]
+        print(f"🇺🇸 Filtered to {len(us_watchlist)} US Tickers (from {len(watchlist)}).")
+        
+        today_str = datetime.utcnow().strftime('%Y-%m-%d')
+
+        for ticker in us_watchlist:
             try:
                 import yfinance as yf
                 t_obj = yf.Ticker(ticker)
                 
-                # Fetch recent history to determine ATR-based levels
-                hist = t_obj.history(period='5d', interval='1d')
-                if hist.empty:
-                    continue
-                    
-                prev_close = float(t_obj.fast_info['previous_close'])
+                # v2.0 ORB: Fetch 2 days of 15m data
+                hist = t_obj.history(period='2d', interval='15m')
+                if hist.empty: continue
                 
-                # Dynamic Logic:
-                # Trigger = Previous Close + 0.5% (Early breakout)
-                # Stop = Previous Close - 1.5% (Protection)
-                trigger = prev_close * 1.005
-                stop = prev_close * 0.985
-                qty = 5  # Default
+                # Filter for TODAY
+                # Convert index to compatible string format for search
+                hist.index = hist.index.strftime('%Y-%m-%d %H:%M')    
+                
+                # Find 14:30 UTC / 09:30 ET
+                key_utc = f"{today_str} 14:30"
+                key_et = f"{today_str} 09:30"
+                
+                matching = [i for i in hist.index if key_et in str(i) or key_utc in str(i)]
+                
+                if not matching:
+                    continue # No 9:30 candle found
+                    
+                candle = hist.loc[matching[0]]
+                
+                # ORB Logic
+                orb_high = float(candle['High'])
+                orb_low = float(candle['Low'])
+                
+                # Range check
+                if (orb_high - orb_low) / orb_low < 0.002: continue # <0.2% range ignored
+                
+                trigger = orb_high + 0.01
+                stop = orb_low - 0.01
+                qty = 5
                 
                 target_entry = {
                     "ticker": ticker,
                     "trigger_price": round(trigger, 2),
                     "stop_loss": round(stop, 2),
                     "quantity": qty,
-                    "prev_close": round(prev_close, 2)
+                    "measure": "15m_ORB"
                 }
                 
                 all_targets.append(target_entry)
                 
-                # Filter for Telegram (Probability Heuristic):
                 if ticker in ['NVDA', 'TSLA', 'MSTR'] or (len(high_prob_setups) < 12):
                     high_prob_setups.append(ticker)
-                
-            except Exception as e:
-                # Silently skip errors for bulk scan
+                    
+            except Exception:
                 continue
         
         # Save FULL targets array
@@ -1080,6 +1100,7 @@ class MorningBrief:
             msg = ""
 
         msg += f"📊 **MORNING BRIEF: {len(watchlist)} SCANNED**\n"
+        msg += "Job: `strategic_moat.py` (Morning Brief)\n"
         msg += f"📅 *{timestamp}*\n"
         msg += f"Found {len(all_targets)} valid targets. Top {len(high_prob_setups)} high-prob setups identified:\n\n"
         

@@ -1,6 +1,7 @@
 import json
 import os
 import yfinance as yf
+import pandas as pd
 from trading212_client import Trading212Client
 
 class SniperStrategy:
@@ -144,6 +145,10 @@ class SniperStrategy:
     def check_risk_rules(self):
         """Checks open positions for Stop Loss / Take Profit"""
         try:
+            # 🛡️ IRON ISOLATION: Import Session Manager for whitelist enforcement
+            from session_manager import SessionManager
+            session_mgr = SessionManager()
+            
             positions = self.client.get_positions()
             exits = []
             
@@ -157,6 +162,15 @@ class SniperStrategy:
             
             for pos in positions:
                 ticker = pos['ticker']
+                
+                # 🛡️ IRON ISOLATION: Only check positions bought THIS SESSION
+                # This prevents Job C from managing risk on strategic holdings (Job A)
+                if not session_mgr.is_whitelisted(ticker):
+                    # This is a strategic holding or pre-existing position
+                    # Job C has NO AUTHORITY to touch it
+                    print(f"🛡️ PROTECTED HOLDING: {ticker} skipped (not in session whitelist)")
+                    continue
+                
                 # T212 might return ticker without suffix, but our targets use raw ticker
                 # We check both just in case
                 lookup_ticker = ticker

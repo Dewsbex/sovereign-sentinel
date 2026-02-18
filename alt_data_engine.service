@@ -1,0 +1,15 @@
+[Unit]
+Description=Alternative Data Engine Service
+After=network.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/Sovereign-Sentinel
+ExecStart=/home/ubuntu/Sovereign-Sentinel/.venv/bin/python3 alt_data_engine.py
+Restart=always
+Environment="PATH=/home/ubuntu/Sovereign-Sentinel/.venv/bin:/usr/local/bin:/usr/bin:/bin"
+EnvironmentFile=/home/ubuntu/Sovereign-Sentinel/.env
+
+[Install]
+WantedBy=multi-user.target

@@ -27,6 +27,7 @@ def alert_human(missing_files):
     """
     error_msg = (
         f"🚨 **CRITICAL FAILURE: WATCHDOG ALERT** 🚨\n\n"
+        f"Job: `watchdog.py`\n"
         f"The following sovereign files are MISSING from the Oracle VPS:\n"
         f"`{', '.join(missing_files)}`\n\n"
         f"⚠️ AUTOMATED TRADING WILL FAIL AT 14:25 UTC."

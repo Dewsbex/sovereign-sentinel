@@ -1,0 +1,20 @@
+[Unit]
+Description=Sovereign Krypto Heartbeat
+After=network.target
+
+[Service]
+# Master Specification: Section 9.5 Service Recovery
+Restart=always
+RestartSec=10
+StartLimitIntervalSec=0
+
+# Environment & Exec
+User=ubuntu
+WorkingDirectory=/home/ubuntu/ai_brain
+# Ensure environment variables (Krypto keys) are available
+EnvironmentFile=/home/ubuntu/ai_brain/.env
+ExecStart=/usr/bin/python3 /home/ubuntu/ai_brain/AI_Brain/remote/heartbeat.py
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

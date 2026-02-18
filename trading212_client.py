@@ -261,9 +261,17 @@ class Trading212Client:
                 
         return f"Gemini All Models Failed. Last Error: {last_error}"
 
-    def send_telegram(self, message):
+    def send_telegram(self, message, use_krypto_channel=False):
         """Sends message to Telegram, splitting if > 4096 chars"""
-        url = f"https://api.telegram.org/bot{self.bot_token}/sendMessage"
+        # Select channel based on flag
+        if use_krypto_channel:
+            bot_token = os.getenv('TELEGRAM_TOKEN_KRYPTO', self.bot_token)
+            chat_id = os.getenv('TELEGRAM_CHAT_ID_KRYPTO', self.chat_id)
+        else:
+            bot_token = self.bot_token
+            chat_id = self.chat_id
+            
+        url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
         
         # Split into chunks of 4000 to be safe (limit is 4096)
         chunk_size = 4000
@@ -271,10 +279,10 @@ class Trading212Client:
         for i in range(0, len(message), chunk_size):
             chunk = message[i:i+chunk_size]
             try:
-                res = requests.post(url, data={"chat_id": self.chat_id, "text": chunk, "parse_mode": "Markdown"})
+                res = requests.post(url, data={"chat_id": chat_id, "text": chunk, "parse_mode": "Markdown"})
                 if res.status_code != 200:
                     # Fallback: Try without Markdown if parsing fails (common with special chars)
-                    requests.post(url, data={"chat_id": self.chat_id, "text": chunk})
+                    requests.post(url, data={"chat_id": chat_id, "text": chunk})
             except Exception as e:
                 print(f"⚠️ Telegram Send Error: {e}")
 

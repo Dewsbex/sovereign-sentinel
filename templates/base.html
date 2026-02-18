@@ -416,11 +416,13 @@
         // APEXCHARTS CONFIGS
         
         // 1. HEATMAP (Treemap)
+        // 1. HEATMAP (Treemap)
         const heatmapOptions = {
             series: [{
                 data: positions.map(p => ({
                     x: p.ticker,
                     y: Math.abs(p.pnl),
+                    val_pos: p.current_value,
                     pnl_raw: p.pnl,
                     pnl_pct: p.pnl_percent
                 }))
@@ -428,10 +430,12 @@
             chart: {
                 height: 550,
                 type: 'treemap',
-                toolbar: { show: false }
+                toolbar: { show: false },
+                fontFamily: 'JetBrains Mono'
             },
             colors: [function({ value, seriesIndex, dataPointIndex, w }) {
-                const pnl_pct = w.config.series[seriesIndex].data[dataPointIndex].pnl_pct;
+                const data = w.config.series[seriesIndex].data[dataPointIndex];
+                const pnl_pct = data.pnl_pct;
                 if (pnl_pct > 3) return '#bbf7d0';
                 if (pnl_pct > 0.1) return '#f0fdf4';
                 if (pnl_pct > -3) return '#fff1f2';
@@ -448,10 +452,26 @@
                 style: {
                     colors: ['#000'],
                     fontSize: '12px',
-                    fontFamily: 'JetBrains Mono'
+                    fontFamily: 'JetBrains Mono',
+                    fontWeight: 700
                 },
                 formatter: function(text, op) {
-                    return [text, op.value.toFixed(2)];
+                    const data = op.w.config.series[op.seriesIndex].data[op.dataPointIndex];
+                    const val = parseFloat(data.val_pos).toFixed(2);
+                    const pnl = parseFloat(data.pnl_raw).toFixed(2);
+                    const sign = data.pnl_raw >= 0 ? '+' : '';
+                    return [text, `£${val}`, `${sign}£${pnl}`];
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function(value, { series, seriesIndex, dataPointIndex, w }) {
+                        const data = w.config.series[seriesIndex].data[dataPointIndex];
+                        const val = parseFloat(data.val_pos).toFixed(2);
+                        const pnl = parseFloat(data.pnl_raw).toFixed(2);
+                        const sign = data.pnl_raw >= 0 ? '+' : '';
+                        return `Value: £${val} | P/L: ${sign}£${pnl} (${data.pnl_pct.toFixed(2)}%)`;
+                    }
                 }
             }
         };
@@ -483,7 +503,7 @@
             yaxis: {
                 labels: {
                     style: { fontFamily: 'JetBrains Mono' },
-                    formatter: (val) => '£' + val
+                    formatter: (val) => '£' + parseFloat(val).toFixed(2)
                 }
             }
         };

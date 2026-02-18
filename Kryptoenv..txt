@@ -1,0 +1,25 @@
+# --- EXCHANGE KRAKEN ---
+# Generate these at https://www.kraken.com/u/security/api
+# Permissions needed: Query Funds, Query Open Orders, Modify Orders
+KRAKEN_API_KEY=a2KLgCqIZTefZu/7NFzuyiiOC91kpLj5Jf1A0RJbOs1/BSqb+7Z/ltp/
+KRAKEN_SECRET=cfQr3NQQ/Igvm/mQ0MyrMA84KMIOAG89+9aHp7oZswaUQKSXj615ThtkDDzrXvz9YjfA9rJQRctekplyHwylxg==
+
+# --- SYSTEM SETTINGS ---
+# Environment: 'production' or 'paper'
+KRYPTO_ENV=paper
+
+# Redis Connection (Internal Docker Name is 'redis', port 6379)
+REDIS_HOST=localhost
+REDIS_PORT=6379
+
+# --- STRATEGY PARAMETERS ---
+# Max daily loss in USD before Kill Switch triggers
+MAX_DAILY_LOSS=1000.0
+
+# --- OPTIONAL KEYS ---
+# Required only if using Meme Sentiment Agent (when fully implemented)
+# X_API_KEY=
+# X_API_SECRET=
+
+# Required only if using DEX Sniper (when fully implemented)
+# WEB3_RPC_URL=https://mainnet.infura.io/v3/YOUR_KEY

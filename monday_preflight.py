@@ -18,6 +18,7 @@ try:
 
     report = [
         f"*=== {job_id} STATUS ===*",
+        f"Job: `monday_preflight.py` ({job_id})",
         f"Free Cash: £{cash.get('free', 0):,.2f}",
         f"Portfolio P/L: £{cash.get('ppl', 0):,.2f}\n",
         "*=== TOP POSITIONS ===*"

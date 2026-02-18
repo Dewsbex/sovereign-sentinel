@@ -115,6 +115,7 @@ def run_recovery():
     
     # 5. Notify (Clean List Only)
     msg = f"🚑 **ORB QUALIFIED TARGETS ({len(orb_targets)})**\n"
+    msg += "Job: `orb_strategy.py`\n"
     msg += "Criteria: Range > 0.8% & Green 15m Candle\n\n"
     
     # Sort by Volatility (Range %)

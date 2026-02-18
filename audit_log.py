@@ -1,14 +1,32 @@
 import csv
 import os
+import sys
 import time
 from datetime import datetime
 from typing import Optional
+
+# Dual-write: also log to centralized orchestrator audit trail
+_CENTRAL_AVAILABLE = False
+try:
+    # 1. Try local dev path
+    sys.path.append(r"C:\Users\steve\.gemini\antigravity\orchestrator")
+    from audit_trail import CentralAuditLogger
+    _CENTRAL_AVAILABLE = True
+except ImportError:
+    # 2. Try relative import (VPS / Production)
+    try:
+        from shared.audit_trail import CentralAuditLogger
+        _CENTRAL_AVAILABLE = True
+    except ImportError as e:
+        print(f"⚠️ Central Audit Logger Unavailable: {e}")
+        _CENTRAL_AVAILABLE = False
 
 class AuditLogger:
     """
     Persistent CSV Audit Logger for Sovereign Sentinel.
     Tracks every action, decision, and process state.
     Thread-safe(ish) and ensures flush to disk.
+    Now also dual-writes to the centralized orchestrator audit trail.
     """
     
     def __init__(self, process_name: str = "Unknown"):
@@ -16,6 +34,8 @@ class AuditLogger:
         self.log_dir = "data"
         self.log_file = os.path.join(self.log_dir, "audit_log.csv")
         self._ensure_log_exists()
+        # Central audit logger (dual-write)
+        self._central = CentralAuditLogger("sovereign-sentinel") if _CENTRAL_AVAILABLE else None
         
     def _ensure_log_exists(self):
         """Creates the log file with headers if it doesn't exist."""
@@ -70,6 +90,13 @@ class AuditLogger:
                     
         except Exception as e:
             print(f"⚠️ Critical Audit Failure: {e}")
+
+        # Dual-write to central audit trail (fire-and-forget, never blocks)
+        if self._central:
+            try:
+                self._central.log(action, target, details, status)
+            except Exception:
+                pass  # Central write failure must never affect Sentinel
 
     def _get_status_icon(self, status: str) -> str:
         icons = {

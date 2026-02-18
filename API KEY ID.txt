@@ -1,0 +1,36 @@
+API KEY ID 
+SECRET KEy dPx4V3wK_zFfR-n0lIYgZbostSDTmMydP3PMrqHe9Fk
+
+export TRADING212_API_KEY=31785628ZSUfgUAlnzcPtIWSXCIOFzbiLmkDC
+export TRADING212_API_SECRET=NS1py4q_JdPrYQUWv7nK1TSSBl9YTvXPkyyBtlbfW8Y
+
+ALPHA_VANTAGE_API_KEY=493PNJ4J3HXW078X
+
+8585563319:AAH0wx3peZycxqG1KC9q7FMuSwBw2ps1TGA
+
+echo 'export TELEGRAM_TOKEN="8585563319:AAH0wx3peZycxqG1KC9q7FMuSwBw2ps1TGA"' >> ~/.bashrc
+echo 'export TELEGRAM_CHAT_ID="7675773887"' >> ~/.bashrc
+
+
+Oracle bot
+ssh -i "Stores\ssh-key-2026-02-08.key" ubuntu@145.241.226.107
+
+
+
+export GOOGLE_API_KEY="AIzaSyD9KdVurLYtma7pUHUFLPSfsJkgs5S8_UI"
+echo 'export GOOGLE_API_KEY="AIzaSyD9KdVurLYtma7pUHUFLPSfsJkgs5S8_UI"' >> ~/.bashrc
+
+
+(echo "GOOGLE_API_KEY=\"$GOOGLE_API_KEY\""; crontab -l) | crontab -
+
+
+Gogle AIzaSyDcKN_gsJV0UNGBMjnXGjSzVpoMJXq4EQ4
+
+echo 'export GOOGLE_API_KEY="AIzaSyDcKN_gsJV0UNGBMjnXGjSzVpoMJXq4EQ4"' >> ~/.bashrc
+source ~/.bashrc
+
+echo 'export ALPHA_VANTAGE_API_KEY="493PNJ4J3HXW078X"' >> ~/.bashrc
+source ~/.bashrc
+
+KRAKEN_API_KEY=a2KLgCqIZTefZu/7NFzuyiiOC91kpLj5Jf1A0RJbOs1/BSqb+7Z/ltp/
+KRAKEN_SECRET=cfQr3NQQ/Igvm/mQ0MyrMA84KMIOAG89+9aHp7oZswaUQKSXj615ThtkDDzrXvz9YjfA9rJQRctekplyHwylxg==
