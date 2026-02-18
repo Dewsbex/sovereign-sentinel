@@ -2,6 +2,11 @@
 # Universal Job Wrapper with Failure Notification
 # Usage: ./run_job.sh <job_name> <command...>
 
+# Force UTF-8 encoding for all Python output (fixes charmap emoji crashes)
+export PYTHONIOENCODING=utf-8
+export LANG=C.UTF-8
+export LC_ALL=C.UTF-8
+
 JOB_NAME="$1"
 shift
 LOG_FILE="/home/ubuntu/logs/${JOB_NAME}.log"

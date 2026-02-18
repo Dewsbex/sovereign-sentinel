@@ -1,6 +1,7 @@
 import csv
 import os
 import sys
+import io
 import time
 from datetime import datetime
 from typing import Optional
@@ -20,6 +21,14 @@ except ImportError:
     except ImportError as e:
         print(f"⚠️ Central Audit Logger Unavailable: {e}")
         _CENTRAL_AVAILABLE = False
+
+# Force UTF-8 for standard output (Windows AND VPS Linux locale issues)
+try:
+    if hasattr(sys.stdout, 'buffer'):
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+except Exception:
+    pass  # Already wrapped or running in non-standard environment
 
 class AuditLogger:
     """
@@ -65,10 +74,15 @@ class AuditLogger:
         
         # Console output for immediate visibility (skip HEARTBEATS to avoid spamming console if desired, 
         # but user asked for "every action", so we print it.)
-        icon = self._get_status_icon(status)
         
         if status != "HEARTBEAT":
-            print(f"{icon} [{timestamp}] {self.process_name} | {action}: {target} - {details}")
+            try:
+                # console print safe for Windows charmap
+                print(f"[{timestamp}] {self.process_name} | {action}: {target} - {details}")
+            except UnicodeEncodeError:
+                # fallback for basic console if UTF-8 wrapper didn't catch it
+                safe_details = details.encode('ascii', 'replace').decode('ascii')
+                print(f"[{timestamp}] {self.process_name} | {action}: {target} - {safe_details}")
         
         try:
             # retry logic for file contention

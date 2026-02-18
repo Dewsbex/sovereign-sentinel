@@ -16,13 +16,24 @@ try:
     cash = client.get_account_summary()
     pos = client.get_open_positions()
 
-    report = [
-        f"*=== {job_id} STATUS ===*",
-        f"Job: `monday_preflight.py` ({job_id})",
-        f"Free Cash: £{cash.get('free', 0):,.2f}",
-        f"Portfolio P/L: £{cash.get('ppl', 0):,.2f}\n",
-        "*=== TOP POSITIONS ===*"
-    ]
+    is_postflight = "--postflight" in sys.argv
+    
+    if is_postflight:
+        report = [
+            f"🏛️ 🏁 **SOVEREIGN | End-of-Day Report**\n",
+            f"*=== MARKET CLOSED (4:30 PM EST) ===*",
+            f"Free Cash: £{cash.get('free', 0):,.2f}",
+            f"Portfolio P/L: £{cash.get('ppl', 0):,.2f}\n",
+            "*=== TOP POSITIONS ===*"
+        ]
+    else:
+        report = [
+            f"🏛️ ✅ **SOVEREIGN | Job: monday_preflight.py ({job_id})**\n",
+            f"*=== {job_id} STATUS ===*",
+            f"Free Cash: £{cash.get('free', 0):,.2f}",
+            f"Portfolio P/L: £{cash.get('ppl', 0):,.2f}\n",
+            "*=== TOP POSITIONS ===*"
+        ]
 
     if isinstance(pos, list):
         for p in pos[:10]:

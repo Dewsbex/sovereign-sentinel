@@ -44,15 +44,13 @@ def send_eod_report(alerts: SovereignAlerts, logger: AuditLogger):
         except Exception as e:
             pnl_text = f"Error calculating P&L: {e}"
 
-        msg = (f"🏁 **MARKET CLOSE (21:05 UTC)**\n"
-               f"Job: `main_bot.py` (Sniper Engine)\n\n"
+        msg = (f"MARKET CLOSE (21:05 UTC)\n"
                f"**Session P&L**: {pnl_text}\n"
                f"Final Equity: £{current_equity:,.2f}\n\n"
                f"Session Status: COMPLETE\n"
-               f"Audit Log: `data/audit_log.csv`\n"
                f"Sentinel entering sleep mode.")
         
-        alerts.send_message(msg)
+        alerts.send_health_alert("main_bot.py", "✅ SESSION COMPLETE", msg)
         logger.log("EOD_REPORT_SENT", "System", "Report dispatched to Telegram", "SUCCESS")
         
     except Exception as e:
@@ -79,17 +77,18 @@ def run_sniper():
         logger.log("INIT_SUCCESS", "System", "All services loaded (Session Isolation Active)", "SUCCESS")
     except Exception as e:
         logger.log("INIT_FAILURE", "System", str(e), "CRITICAL")
-        print(f"🔥 CRITICAL STARTUP ERROR: {e}")
+        print(f"CRITICAL STARTUP ERROR: {e}")
         sys.exit(1)
 
     # State Tracking
     last_pulse_time = 0
     last_keepalive_time = 0
+    open_brief_failures = 0  # v3.1: Track failures to prevent infinite retry
 
     # SAFETY: Check for Emergency Lock (Circuit Breaker)
     if os.path.exists('data/emergency.lock'):
         logger.log("EMERGENCY_LOCK", "System", "Circuit Breaker Triggered - Bot Disabled", "CRITICAL")
-        print("🔥 EMERGENCY LOCK DETECTED. Bot disabled by Circuit Breaker.")
+        print("EMERGENCY LOCK DETECTED. Bot disabled by Circuit Breaker.")
         while True:
             time.sleep(3600)
 
@@ -113,7 +112,7 @@ def run_sniper():
             is_vacation = os.path.exists("vacation.lock")
             if is_vacation:
                 if now_ts - last_keepalive_time > 300:
-                    print(f"🌴 VACATION MODE ACTIVE: Entries Paused. Risk Management Running.")
+                    print(f"VACATION MODE ACTIVE: Entries Paused. Risk Management Running.")
                     logger.log("VACATION_PULSE", "System", "Entries Paused", "INFO")
                     # Update heartbeat so we don't spam logs
                     last_keepalive_time = now_ts
@@ -122,7 +121,7 @@ def run_sniper():
             if now_time < START:
                 # BEFORE 14:25 UTC - Standby Mode
                 if now_ts - last_keepalive_time > 300: # Log every 5 mins
-                     print(f"💤 STANDBY: Market opens at {START} UTC. Current: {now_time.strftime('%H:%M:%S')}")
+                     print(f"STANDBY: Market opens at {START} UTC. Current: {now_time.strftime('%H:%M:%S')}")
                      logger.log("STANDBY", "System", f"Waiting for {START}", "HEARTBEAT")
                      last_keepalive_time = now_ts
                 sleep_time.sleep(60)
@@ -159,7 +158,7 @@ def run_sniper():
             # 2. FORCE SESSION CLOSE (21:00 UTC - The Curfew)
             # (Run regardless of vacation to clear session trades)
             if now_time >= dtime(21, 0):
-                print("🌙 21:00 UTC CURFEW: Closing SESSION positions.")
+                print("21:00 UTC CURFEW: Closing SESSION positions.")
                 try:
                     positions = client.get_positions()
                     if positions:
@@ -172,8 +171,10 @@ def run_sniper():
                                 print(f"   Closing {ticker} ({qty}) for curfew.")
                                 logger.log("CURFEW_CLOSE", ticker, f"Closing {qty} units", "WARNING")
                                 client.execute_order(ticker, qty, "SELL")
+                                # 🧾 RECORD SELL IN LEDGER
+                                session_manager.record_sale(ticker, qty, 0.0) # Price fallback to 0 for curfew
                             else:
-                                print(f"   🛡️ PROTECTED: {ticker} ignored (Long-term Hold)")
+                                print(f"   PROTECTED: {ticker} ignored (Long-term Hold)")
                     else:
                         pass # No positions
                 except Exception as e:
@@ -216,7 +217,7 @@ def run_sniper():
                         try:
                             ticker = trade['ticker']
                             
-                            # 🚫 STRATEGIC HOLDINGS GUARD (v2.4)
+                            # 🛡️ STRATEGIC HOLDINGS GUARD (v2.4)
                             # Prevents Job C from buying tickers managed by Job A
                             if ticker in strategic_blacklist:
                                 logger.log("STRATEGIC_BLOCK", ticker, "Protected by Job A blacklist", "WARNING")
@@ -241,35 +242,81 @@ def run_sniper():
                                 logger.log("DUPLICATE_GUARD", ticker, "Position already held", "INFO")
                                 continue
     
-                            # AUDITOR GAUNTLET
+                            # APROMS IRONCLAD GAUNTLET (SPEC v2.1)
+                            # 1. Volume Filter
                             import yfinance as yf
-                            t_info = yf.Ticker(ticker).info
+                            t_ticker = yf.Ticker(ticker)
+                            t_info = t_ticker.info
                             
                             avg_vol = t_info.get('averageVolume', 0)
                             if not auditor.check_volume_filter(ticker, avg_vol):
                                 logger.log("VOLUME_FILTER", ticker, f"Vol: {avg_vol}", "INFO")
                                 continue 
-    
+                            
+                            # 2. Spread Guard (Tight 0.05%)
                             bid = t_info.get('bid', 0)
                             ask = t_info.get('ask', 0)
-                            
-                            # Basic liquidity check
                             if not (bid > 0 and ask > 0):
                                 logger.log("DATA_WARNING", ticker, "No Bid/Ask data", "WARNING")
-                                
-                            if bid > 0 and ask > 0:
-                                if not auditor.check_spread_guard(ticker, bid, ask):
-                                    logger.log("SPREAD_GUARD", ticker, f"{bid}/{ask}", "INFO")
-                                    continue
-                                
+                                continue
+
+                            if not auditor.check_spread_guard(ticker, bid, ask):
+                                logger.log("SPREAD_GUARD", ticker, f"{bid}/{ask}", "INFO")
+                                continue
+
+                            # 3. VWAP Gate
+                            if not auditor.check_vwap_gate(ticker, trade['price']):
+                                logger.log("VWAP_GATE", ticker, "Price < VWAP, skipping Long", "INFO")
+                                continue
+
+                            # 4. Volatility Guard (ATR)
+                            if not auditor.check_volatility_guard(ticker):
+                                logger.log("VOL_GUARD", ticker, "Excessive ATR, skipping", "INFO")
+                                continue
+
+                            # 5. Dynamic Risk Calculator (APROMS SPEC)
+                            acct = client.get_account_info()
+                            total_wealth = float(acct.get('totalValue', 0.0))
+                            realized_pnl = auditor.load_balance_state().get("realized_profit", 0.0)
+
+                            # 4.5 BI-DIRECTIONAL RISK & GLOBAL CAP (SPEC vFinal.15)
+                            # GLOBAL RISK CAP Check
+                            is_capped, cap_reason = auditor.check_global_risk_cap(total_wealth)
+                            if is_capped:
+                                logger.log("GLOBAL_CAP", ticker, cap_reason, "WARNING")
+                                continue
+
+                            # Calculate floating P&L for Unrealized Mirror
+                            floating_pnl = 0.0
+                            current_positions = client.get_positions() # Refresh for accurate mirror
+                            if current_positions:
+                                for p in current_positions:
+                                    if session_manager.is_whitelisted(p['ticker']):
+                                        floating_pnl += float(p.get('ppl', 0.0))
+
+                            # THE TESLA RULE (Mandatory Quality Exclusion)
+                            TESLA_RULE_LIST = ["TSLA", "AMC", "GME", "DJT"]
+                            if ticker in TESLA_RULE_LIST:
+                                logger.log("TESLA_RULE", ticker, "Mandatory Volatility Exclusion", "WARNING")
+                                continue
+
+                            risk_pct = auditor.calculate_active_risk(0.01, realized_pnl, floating_pnl) # Start 1%
+                            max_pos_value = total_wealth * risk_pct
+                            
+                            # Adjust quantity to fit risk
+                            qty = max_pos_value / trade['price']
+                            if qty < 1: qty = 1 # Minimum 1 share for prototype
+                            
                             # EXECUTE BUY
-                            logger.log("BUY_SIGNAL", ticker, f"Price: ${trade['price']:.2f}", "SUCCESS")
-                            client.execute_order(ticker, trade['quantity'], "BUY")
+                            logger.log("BUY_SIGNAL", ticker, f"Risk: {risk_pct:.2%}, Qty: {qty:.2f}", "SUCCESS")
+                            client.execute_order(ticker, qty, "BUY")
                             
-                            # v2.3 WHITELIST ADD
-                            session_manager.add_ticker(ticker)
+                            # 🧾 PERSISTENT LEDGER RECORD
+                            session_manager.add_ticker(ticker, qty, trade['price'])
                             
-                            alerts.send_trade_alert(trade, "ENTRY")
+                            trade_copy = trade.copy()
+                            trade_copy['quantity'] = qty
+                            alerts.send_trade_alert(trade_copy, "ENTRY")
                             
                         except Exception as e:
                              logger.log("TRADE_ERROR", ticker if 'ticker' in locals() else "Unknown", str(e), "ERROR")
@@ -296,10 +343,23 @@ def run_sniper():
                     with open(open_brief_lock, 'w') as f:
                         f.write(today_str)
                     
+                    open_brief_failures = 0  # Reset on success
                     logger.log("OPEN_BRIEF_COMPLETE", "System", "Targets generated", "SUCCESS")
 
             except Exception as e:
+                open_brief_failures += 1
                 logger.log("OPEN_BRIEF_ERROR", "System", str(e), "ERROR")
+                # v3.1: After 3 failures, write lock to stop infinite retry loop
+                if open_brief_failures >= 3:
+                    try:
+                        with open('data/open_brief.lock', 'w') as f:
+                            f.write(datetime.utcnow().strftime('%Y-%m-%d'))
+                        logger.log("OPEN_BRIEF_ABORTED", "System", 
+                                   f"Gave up after {open_brief_failures} failures: {e}", "CRITICAL")
+                        alerts.send_health_alert("main_bot.py", "CRITICAL: OPEN BRIEF FAILED",
+                                                 f"Morning Brief failed {open_brief_failures}x. Error: {str(e)[:100]}")
+                    except Exception:
+                        pass  # Lock write failure shouldn't crash the bot
 
             # 5. APROMS REBALANCING (Job B - 15:00 UTC)
             try:
@@ -336,6 +396,8 @@ def run_sniper():
                         if session_manager.is_whitelisted(ticker):
                             logger.log("EXIT_SIGNAL", ticker, f"Price: ${trade['price']:.2f} ({trade['reason']})", "SUCCESS")
                             client.execute_order(ticker, trade['quantity'], "SELL")
+                            # 🧾 RECORD SELL IN LEDGER
+                            session_manager.record_sale(ticker, trade['quantity'], trade['price'])
                             alerts.send_trade_alert(trade, "EXIT")
                         else:
                              # Strategy engine might return exits based on targets.json
@@ -355,12 +417,7 @@ def run_sniper():
                              tickers = [t['ticker'] for t in t_data]
                              target_list = ", ".join(tickers)
                     
-                    msg = (f"💓 **SENTINEL PULSE**\n"
-                           f"Time: {now_dt.strftime('%H:%M')} UTC\n"
-                           f"Status: ACTIVE (Scanning)\n"
-                           f"Targets: {target_list}")
-                    
-                    alerts.send_message(msg)
+                    alerts.send_pulse(len(tickers), now_dt.strftime('%H:%M'))
                     logger.log("PULSE_SENT", "System", f"Targets: {len(tickers)}", "INFO")
                     last_pulse_time = now_ts 
                     

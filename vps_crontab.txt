@@ -1,10 +1,16 @@
-# Sovereign Sentinel v1.9.5 VPS Crontab (Ground Truth)
+# Sovereign Sentinel v1.9.6 VPS Crontab (Ground Truth)
 # Primary orchestrator for autonomous trading (Oracle VPS)
 
-# 0. SYSTEM CHECK: Daily Health Verification (13:00 UTC = 8:00 AM NY)
+# 🛡️ SAFETY: Daily Reboot to prevent Oracle ARM lock-up (03:00 UTC)
+00 03 * * * sudo /sbin/reboot
+
+# 0. BRAIN: Daily Project Athena Update (04:00 UTC)
+00 04 * * * cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh brain_update /usr/bin/python3 athena_brain_updater.py
+
+# 0.5 SYSTEM CHECK: Daily Health Verification (13:00 UTC = 8:00 AM NY)
 00 13 * * * cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh heartbeat /usr/bin/python3 daily_heartbeat.py
 
-# 0.5 KRYPTO HEALTH: Daily Validation (13:05 UTC = 8:05 AM NY)
+# 0.6 KRYPTO HEALTH: Daily Validation (13:05 UTC = 8:05 AM NY)
 05 13 * * * cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh krypto_health /usr/bin/python3 krypto_healthcheck.py
 
 # 1. WATCHDOG: Integrity Scan (07:55 UTC)
@@ -26,8 +32,8 @@
 # Logic consolidated in main_bot.py + trading212_client.py
 25 14 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh main_bot /usr/bin/python3 main_bot.py --live
 
-# 4. POST-FLIGHT: Status Report (14:31 UTC)
-31 14 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh postflight /usr/bin/python3 monday_preflight.py --postflight
+# 4. POST-FLIGHT: End-of-Day Report (21:30 UTC = 4:30 PM EST)
+30 21 * * 1-5 cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh postflight /usr/bin/python3 monday_preflight.py --postflight
 
 # 5. DATA SYNC: Master List (08:30 UTC)
 30 8 * * * cd /home/ubuntu/Sovereign-Sentinel && ./run_job.sh sync /usr/bin/python3 trading212_client.py --sync
