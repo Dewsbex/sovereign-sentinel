@@ -12,17 +12,27 @@ logger = logging.getLogger(__name__)
 # Dual-write: also log to centralized orchestrator audit trail
 _CENTRAL_AVAILABLE = False
 try:
-    # 1. Try local dev path
-    sys.path.append(r"C:\Users\steve\.gemini\antigravity\orchestrator")
-    from audit_trail import CentralAuditLogger
-    _CENTRAL_AVAILABLE = True
-except ImportError:
-    # 2. Try relative import (VPS / Production)
-    try:
-        from shared.audit_trail import CentralAuditLogger
+    # 1. Try local dev path (Windows)
+    if os.name == 'nt' and os.path.exists(r"C:\Users\steve\.gemini\antigravity\orchestrator"):
+        if r"C:\Users\steve\.gemini\antigravity\orchestrator" not in sys.path:
+            sys.path.append(r"C:\Users\steve\.gemini\antigravity\orchestrator")
+        from audit_trail import CentralAuditLogger
         _CENTRAL_AVAILABLE = True
-    except ImportError:
-        _CENTRAL_AVAILABLE = False
+    else:
+        # 2. Try sibling import (VPS / Distribution)
+        try:
+            from .audit_trail import CentralAuditLogger
+            _CENTRAL_AVAILABLE = True
+        except (ImportError, ValueError):
+            # 3. Try relative to package root
+            try:
+                from shared.audit_trail import CentralAuditLogger
+                _CENTRAL_AVAILABLE = True
+            except ImportError:
+                _CENTRAL_AVAILABLE = False
+except Exception as e:
+    logger.debug(f"Central audit not linked: {e}")
+    _CENTRAL_AVAILABLE = False
 
 class MessageBroker:
     def __init__(self, host='localhost', port=6379, db=0):

@@ -2,7 +2,7 @@ import asyncio
 import logging
 import os
 from shared.broker import MessageBroker
-from shared.schemas import TradeSignal, MarketData
+from shared.schemas import TradeSignal, MarketData, AuditLogEntry
 import ccxt.async_support as ccxt
 from .ratelimit import DecayingTokenBucket
 from .normalization import Normalizer
