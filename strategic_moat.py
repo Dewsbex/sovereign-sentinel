@@ -7,13 +7,17 @@ Job A: The Strategic Fortress - 95% Advisory Moat Research
 import json
 import os
 import sys
+import io
 from datetime import datetime
 from typing import Dict, List, Any
 # Removed standalone genai import - using consolidated client
 import requests
 from trading212_client import Trading212Client
 from audit_log import AuditLogger
-
+# Avoid forced encoding overrides that can break in some environments
+# if sys.platform == "win32":
+#     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+#     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 class MoatAnalyzer:
     """Analyzes companies for economic moats using UDR framework"""
@@ -417,6 +421,29 @@ Format as JSON:
 
     
     
+    def execute_smog_check(self, ticker: str) -> Tuple[float, str]:
+        """
+        APROMS Smog Check: NLP-driven sentiment validation. 
+        Checks for management double-speak, excessive litigation, or accounting 'smog'.
+        Returns (Sentiment Score -1 to 1, Analysis Text).
+        """
+        try:
+             prompt = f"""
+Analyze the recent press releases, earnings transcript tone, and legal news for {ticker}.
+Look specifically for:
+1. Management 'Double-speak' or obfuscation.
+2. Sudden changes in accounting methods.
+3. Escalating litigation that threatens the core moat.
+
+Rate the 'Smog Level' from -1 (Extremely Toxic) to 1 (Crystal Clear).
+Respond with JSON: {{'score': float, 'analysis': string}}
+"""
+             response = self._query_ai(prompt)
+             res = self._parse_json_response(response)
+             return res.get('score', 0.0), res.get('analysis', 'No data.')
+        except:
+             return 0.0, "Sentiment analysis failed (Neutrally assumed)."
+
     def generate_moat_dossier(self, ticker: str, company_name: str = "") -> str:
         """
         v1.9.4: Generate comprehensive moat analysis with Step-Lock and Short-Seller Debate
@@ -425,8 +452,37 @@ Format as JSON:
         1. Ticker Guard: 90% fuzzy match between request and instruments.json
         2. Step-Lock: Research plan MUST be written to persistent volume before proceeding
         3. Sector Quant: Enforce sector-specific metrics (Price/AFFO for REITs, TAM/LoS for Pharma)
-        4. Short-Seller Debate: AI must challenge its own thesis before final recommendation
+        4. Lemon Purge: Hard-coded exclusion of toxic or overvalued assets
+        5. Smog Check: NLP-driven sentiment and management audit
+        6. Short-Seller Debate: AI must challenge its own thesis before final recommendation
         """
+        # ========================================================================
+        # LEMON PURGE (v1.9.4)
+        # ========================================================================
+        # Hard check before starting expensive AI analysis
+        # (Current PE placeholder: fetching via yfinance if possible)
+        pe = 0.0
+        try:
+             import yfinance as yf
+             pe = yf.Ticker(ticker).info.get('trailingPE', 0)
+        except: pass
+
+        is_lemon, reason = self.check_lemon_purge(ticker, pe)
+        if is_lemon:
+             print(f"🛑 {reason}")
+             self.logger.log("LEMON_PURGE", ticker, reason, "WARNING")
+             return f"### 🛑 RESEARCH ABORTED: {reason}\n*Asset failed APROMS Quality Standard.*"
+
+        # ========================================================================
+        # SMOG CHECK (NLP SENTIMENT)
+        # ========================================================================
+        sentiment_score, smog_analysis = self.execute_smog_check(ticker)
+        if sentiment_score < -0.5:
+             reason = f"SMOG CHECK FAILURE: Sentiment {sentiment_score} (Management/Legal Red Flags)"
+             print(f"🛑 {reason}")
+             self.logger.log("SMOG_CHECK", ticker, reason, "WARNING")
+             return f"### 🛑 RESEARCH ABORTED: {reason}\n\n**Analysis:** {smog_analysis}"
+
         # ========================================================================
         # TICKER HALLUCINATION GUARD (v1.9.4)
         # ========================================================================
@@ -600,12 +656,12 @@ Sector: {validation_data.get('sector', 'Unknown')}
 
     def export_approved_target(self, ticker: str, recommendation: str):
         """
-        Exports STRONG BUY/BUY recommendations to data/targets.json for Sniper execution.
+        Exports STRONG BUY/BUY recommendations to data/moat_targets.json for manual tracking.
         """
         print(f"🔗 Handing over {ticker} ({recommendation}) to Sniper Engine...")
         self.logger.log("TARGET_EXPORT", ticker, f"Recommendation: {recommendation}", "INFO")
         
-        targets_path = 'data/targets.json'
+        targets_path = 'data/moat_targets.json'
         targets = []
         
         # Load existing
@@ -653,24 +709,13 @@ Sector: {validation_data.get('sector', 'Unknown')}
 
     def send_to_telegram(self, dossier: str, ticker: str):
         """Send moat dossier to Telegram with approval link"""
-        # Using client methods now
-        if not self.telegram_token:
-            print("⚠️  Telegram not configured")
-            print(dossier)
-            return
-        
-        # Add approval button (would link to dashboard)
         dashboard_url = "https://your-cloudflare-domain.pages.dev"
         message = dossier + f"\n\n[📊 Review Dashboard]({dashboard_url})"
         
         try:
-            # We can use the client's send_telegram method directly or custom request
-            # Since client.send_telegram is simple text, we'll keep the custom request here 
-            # to support the specific prompt format if needed, OR just plain send.
-            # Client's method: requests.post(url, data={"chat_id": self.chat_id, "text": message, "parse_mode": "Markdown"})
-            
-            # Reusing client method:
-            self.client.send_telegram(message)
+            from telegram_bot import SovereignAlerts
+            alerts = SovereignAlerts()
+            alerts.send_message(message, category="BRIEF")
             print(f"✅ Moat Dossier sent to Telegram")
         except Exception as e:
             print(f"❌ Failed to send to Telegram: {e}")
@@ -997,7 +1042,7 @@ class MorningBrief:
         self.master_universe_path = 'data/master_universe.json'
         self.targets_path = 'data/targets.json'
         self.mapper = SectorMapper() # Initialize Mapper
-        self.logger = AuditLogger("SS008-MorningBrief")
+        self.logger = AuditLogger("SS007-MorningBrief")
         
     def load_watchlist(self) -> List[str]:
         """Load vetted Tier 1 tickers from master_universe.json"""
@@ -1018,6 +1063,25 @@ class MorningBrief:
             print("📅 WEEKEND: Skipping Morning Brief.")
             self.logger.log("BRIEF_SKIP", "System", "Weekend detected", "INFO")
             return
+
+        # HOLIDAY GUARD
+        try:
+            import pytz
+            from pandas.tseries.holiday import USFederalHolidayCalendar
+            from datetime import timedelta
+            
+            ny_tz = pytz.timezone('America/New_York')
+            now_ny = datetime.now(ny_tz)
+            today_str = now_ny.strftime('%Y-%m-%d')
+            
+            cal = USFederalHolidayCalendar()
+            holidays = cal.holidays(start=now_ny - timedelta(days=5), end=now_ny + timedelta(days=5))
+            if today_str in holidays:
+                print(f"📅 HOLIDAY: US Market Closed ({today_str}). Skipping Morning Brief.")
+                self.logger.log("BRIEF_SKIP", "System", "US Holiday detected", "INFO")
+                return
+        except ImportError:
+            pass # Fallback if pandas is missing
 
         watchlist = self.load_watchlist()
         print(f"📊 Scanning {len(watchlist)} tickers for Morning Brief...")
@@ -1090,36 +1154,41 @@ class MorningBrief:
         # Unified Telegram Brief
         timestamp = datetime.utcnow().strftime('%d/%m %H:%M UTC')
         
+        brief_body = ""
+        
         # 1. MARKET OPEN ANALYSIS (15m Recap) - New v2.4
-        # We explicitly call the 15m analysis here so it's part of the brief
         try:
             open_analysis = generate_open_market_brief()
-            msg = f"{open_analysis}\n\n"
+            brief_body += f"{open_analysis}\n\n"
         except Exception as e:
             print(f"⚠️ Open Analysis Failed: {e}")
-            msg = ""
-
-        msg += f"📊 **MORNING BRIEF: {len(watchlist)} SCANNED**\n"
-        msg += "Job: `strategic_moat.py` (Morning Brief)\n"
-        msg += f"📅 *{timestamp}*\n"
-        msg += f"Found {len(all_targets)} valid targets. Top {len(high_prob_setups)} high-prob setups identified:\n\n"
+            
+        brief_body += f"📊 **SCANNED: {len(watchlist)} Tickers**\n"
+        brief_body += f"📅 *{timestamp}*\n"
+        brief_body += f"Found {len(all_targets)} valid targets. Top {len(high_prob_setups)} high-prob setups identified:\n\n"
         
         # SECTOR DELTAS (Main Holdings Only)
         try:
             sector_report = self.mapper.generate_delta_report()
-            msg += f"{sector_report}\n" # Header is already in generate_delta_report
+            brief_body += f"{sector_report}\n" 
         except Exception as e:
             print(f"⚠️ Sector logic error: {e}")
-            msg += "⚠️ Sector Analysis Failed\n\n"
+            brief_body += "⚠️ Sector Analysis Failed\n\n"
             
-        msg += "🔥 **TOP PICK TRIGGERS**\n"
+        brief_body += "🔥 **TOP PICK TRIGGERS**\n"
         for t in all_targets:
             if t['ticker'] in high_prob_setups:
-                msg += f"- {t['ticker']} > ${t['trigger_price']} (Stop: ${t['stop_loss']})\n"
+                brief_body += f"- {t['ticker']} > ${t['trigger_price']} (Stop: ${t['stop_loss']})\n"
                 
-        msg += "\nSniper engine synced. Monitoring active."
-
-        self.alerts.send_message(msg)
+        brief_body += "\nSniper engine synced. Monitoring active."
+        
+        self.alerts.send_formatted_message(
+            "strategic_moat.py",
+            "🧠",
+            "MORNING BRIEF: STRATEGIC OVERVIEW",
+            brief_body,
+            category="BRIEF"
+        )
         print(f"✅ Full Scan Complete. Brief sent via SovereignAlerts.")
         self.logger.log("BRIEF_COMPLETE", "System", f"Found {len(all_targets)} targets", "SUCCESS")
 
