@@ -9,7 +9,7 @@ import os
 import sys
 import io
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Tuple
 # Removed standalone genai import - using consolidated client
 import requests
 from trading212_client import Trading212Client
