@@ -27,8 +27,9 @@ try:
             "*=== TOP POSITIONS ===*"
         ]
     else:
+        day_name = datetime.datetime.now().strftime("%A")
         report = [
-            f"🏛️ ✅ **SOVEREIGN | Job: monday_preflight.py ({job_id})**\n",
+            f"🏛️ ✅ **SOVEREIGN | Job: Daily Preflight ({day_name}) ({job_id})**\n",
             f"*=== {job_id} STATUS ===*",
             f"Free Cash: £{cash.get('free', 0):,.2f}",
             f"Portfolio P/L: £{cash.get('ppl', 0):,.2f}\n",
