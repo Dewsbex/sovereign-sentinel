@@ -17,11 +17,23 @@ class GeometricGridAgent(StrategyAgent):
         self.grid_levels = []
         self.grid_step = 0.01 # 1%
         self.active_orders = {}
+        self.max_capital_allocation = 1000.0  # Limit maximum capital exposed
+        self.hard_stop_pct = 0.05  # 5% max drawdown from center
+
+    async def liquidate_all_positions(self):
+        logger.warning("Liquidating all open grid positions and cancelling limits due to Hard Stop Loss...")
+        # Add actual liquidation logic over broker here
 
     async def on_tick(self, data: MarketData):
         if self.center_price is None:
             self.center_price = data.price
             self.initialize_grid(data.price)
+            return
+            
+        if data.price <= self.center_price * (1 - self.hard_stop_pct):
+            logger.error(f"HARD STOP LOSS: Price ({data.price}) dropped 5% below center ({self.center_price}).")
+            await self.liquidate_all_positions()
+            self.running = False
             return
             
         # Monitor for fills (in real system, we'd get OrderUpdate events)

@@ -3,6 +3,12 @@ import logging
 from .base import StrategyAgent
 from shared.schemas import TradeSignal, MarketData, OrderSide, OrderType
 from shared.alt_data_bridge import get_market_sentiment_score, get_crypto_fear_greed
+try:
+    from audit_log import AuditLogger
+except ImportError:
+    class AuditLogger:
+        def __init__(self, name): pass
+        def log(self, *args): pass
 
 logger = logging.getLogger("Sentiment_Agent")
 
@@ -12,7 +18,10 @@ class CrossProjectSentimentAgent(StrategyAgent):
     to drive sentiment-based crypto trades.
     """
     def __init__(self):
-        super().__init__(strategy_id="x_proj_sentiment_v1", symbols=["BTC/USD", "ETH/USD", "DOGE/USD"])
+        super().__init__(strategy_id="x_proj_sentiment_v1", 
+                         symbols=["BTC/USD", "ETH/USD", "SOL/USD", "DOGE/USD", "BONK/USD", "SHIB/USD", "PEPE/USD"])
+        self.audit = AuditLogger("AGT02-KryptoSent")
+        self.audit.log("INIT", "System", "Sentiment Agent Initialized", "INFO")
         self.sentiment_threshold_buy = 0.75  # High Greed -> Buy Momentum? Or Contrarian Sell?
         self.sentiment_threshold_sell = 0.25 # Extreme Fear -> Buy the Dip?
         # Let's assume Momentum Strategy for now:
@@ -35,11 +44,13 @@ class CrossProjectSentimentAgent(StrategyAgent):
             # Example: Buy BTC
             await self.send_order("BTC/USD", OrderSide.BUY, 0.05, f"Sentiment Bullish {score:.2f}")
             await asyncio.sleep(600) # Cooldown
+            self.audit.log("TRIGGER_BUY", "BTC/USD", f"Bullish Sentiment {score:.2f}", "SUCCESS")
 
         elif score < self.sentiment_threshold_sell:
             logger.info(f"🐻 BEARISH Sentiment Dip ({score:.2f})!")
             # Example: Sell or Short
             # await self.send_order("BTC/USD", OrderSide.SELL, 0.05, f"Sentiment Bearish {score:.2f}")
+            self.audit.log("TRIGGER_SELL", "BTC/USD", f"Bearish Sentiment {score:.2f} (Simulated)", "INFO")
             await asyncio.sleep(600) 
 
     async def on_tick(self, data: MarketData):
